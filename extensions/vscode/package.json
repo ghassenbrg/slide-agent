@@ -65,8 +65,8 @@
       "properties": {
         "slideAgent.cliPath": {
           "type": "string",
-          "default": "slide-agent",
-          "description": "Path to the Slide Agent CLI."
+          "default": "",
+          "description": "Optional custom path to the Slide Agent CLI. When empty, the extension uses the managed launcher under ~/.local/bin."
         },
         "slideAgent.autoInstall": {
           "type": "boolean",

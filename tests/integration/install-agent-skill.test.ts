@@ -1,5 +1,5 @@
 import { execFile } from "node:child_process";
-import { lstat, mkdtemp, readlink, rm } from "node:fs/promises";
+import { lstat, mkdir, mkdtemp, readFile, readlink, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
@@ -78,6 +78,30 @@ describe("agent skill installers", () => {
       }
     } finally {
       await rm(automatic, { recursive: true, force: true });
+    }
+  });
+
+  it("refreshes a skill copy previously created by the managed Windows fallback", async () => {
+    const updateRoot = await mkdtemp(path.join(tmpdir(), "slide-agent-copy-update-"));
+    try {
+      const destination = path.join(updateRoot, "codex", "slide-agent");
+      await mkdir(destination, { recursive: true });
+      await writeFile(path.join(destination, "SKILL.md"), "stale skill\n", "utf8");
+      await writeFile(
+        path.join(destination, ".slide-agent-install.json"),
+        `${JSON.stringify({ packageRoot: root }, null, 2)}\n`,
+        "utf8",
+      );
+      await execute(process.execPath, [path.join(scripts, "setup.mjs"), "--target", "codex", "--skip-cli"], {
+        env: {
+          ...installerEnvironment(),
+          SLIDE_AGENT_CODEX_SKILLS_DIR: path.join(updateRoot, "codex"),
+        },
+      });
+      expect(await readFile(path.join(destination, "SKILL.md"), "utf8"))
+        .toBe(await readFile(path.join(root, "SKILL.md"), "utf8"));
+    } finally {
+      await rm(updateRoot, { recursive: true, force: true });
     }
   });
 

@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-import { access, lstat, mkdir, mkdtemp, readdir, rm } from "node:fs/promises";
+import { access, lstat, mkdir, mkdtemp, readdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { spawn } from "node:child_process";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const workspace = await mkdtemp(path.join(tmpdir(), "slide-agent-install-test-"));
@@ -36,7 +36,7 @@ async function run(command, args, options = {}) {
   return new Promise((resolve, reject) => {
     const shell = process.platform === "win32" && /\.(?:cmd|bat)$/i.test(command);
     const child = spawn(command, args, {
-      cwd: root,
+      cwd: options.cwd ?? root,
       env: options.env ?? env,
       stdio: options.quiet ? "ignore" : "inherit",
       shell,
@@ -74,14 +74,23 @@ try {
   if (!archiveName) throw new Error("npm pack did not produce a .tgz archive.");
   const archive = path.join(packageDirectory, archiveName);
 
+  await mkdir(consumer, { recursive: true });
+  await writeFile(path.join(consumer, "package.json"), `${JSON.stringify({
+    name: "slide-agent-install-verifier",
+    version: "0.0.0",
+    private: true,
+    allowScripts: {
+      [pathToFileURL(archive).href]: true,
+    },
+  }, null, 2)}\n`);
   await runNpm([
-    "install", "--prefix", consumer, "--omit=dev", "--no-audit", "--no-fund", archive,
-  ], { env: automaticEnv });
+    "install", "--omit=dev", "--no-audit", "--no-fund", archive,
+  ], { cwd: consumer, env: automaticEnv });
   for (const agent of ["codex", "copilot", "claude", "gemini"]) {
     const skill = path.join(automaticSkillRoot, agent, "slide-agent", "SKILL.md");
     if (!await exists(skill)) throw new Error(`npm package install did not register ${agent}: ${skill}`);
   }
-  process.stdout.write("Normal npm package install skill registration verified.\n");
+  process.stdout.write("Approved npm package install skill registration verified.\n");
 
   await runNpm([
     "exec",

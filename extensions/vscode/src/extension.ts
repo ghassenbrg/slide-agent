@@ -1,6 +1,6 @@
 import { spawn } from "node:child_process";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
-import { tmpdir } from "node:os";
+import { homedir, tmpdir } from "node:os";
 import path from "node:path";
 
 import * as vscode from "vscode";
@@ -51,6 +51,13 @@ function configuration(): vscode.WorkspaceConfiguration {
   return vscode.workspace.getConfiguration("slideAgent");
 }
 
+function cliPath(): string {
+  const configured = configuration().get<string>("cliPath", "").trim();
+  if (configured) return configured;
+  const prefix = path.resolve(process.env.SLIDE_AGENT_CLI_PREFIX ?? path.join(homedir(), ".local"));
+  return path.join(prefix, "bin", process.platform === "win32" ? "slide-agent.cmd" : "slide-agent");
+}
+
 function workspaceRoot(): string {
   return vscode.workspace.workspaceFolders?.[0]?.uri.fsPath ?? process.cwd();
 }
@@ -89,7 +96,7 @@ async function run(command: string, args: string[]): Promise<{ stdout: string; e
 }
 
 async function runCli(args: string[]): Promise<AgentResult | undefined> {
-  const cli = configuration().get<string>("cliPath", "slide-agent");
+  const cli = cliPath();
   try {
     const result = await run(cli, args);
     let parsed: AgentResult | undefined;
@@ -261,6 +268,8 @@ async function install(context: vscode.ExtensionContext, automatic = false): Pro
       () => run("npx", ["--yes", "--package", packageSpecifier, "--", "slide-agent", "install", "--package", packageSpecifier]),
     );
     if (result.exitCode !== 0) throw new Error(`installer exited with code ${result.exitCode}`);
+    const verification = await run(cliPath(), ["--version"]);
+    if (verification.exitCode !== 0) throw new Error(`installed CLI exited with code ${verification.exitCode}`);
     await context.globalState.update(INSTALLED_VERSION_KEY, version);
     const reload = "Reload Window";
     const choice = await vscode.window.showInformationMessage(

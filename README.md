@@ -52,7 +52,17 @@ If you are adding Slide Agent as a JavaScript/TypeScript dependency, a regular l
 npm install @slide-agent/core
 ```
 
-The package's `postinstall` hook registers its bundled skill in every supported personal skill directory. The project-local CLI is available as `npx --no-install slide-agent`, and the library is available through `import { SlideAgent } from "@slide-agent/core"`. A global npm install is not required. `npm install -g @slide-agent/core` is supported when your npm global prefix is already user-writable, but the managed `npx … slide-agent install` command above is preferred because it never needs administrator permissions and installs a persistent user-local CLI.
+The package's `postinstall` hook registers its bundled skill in every supported personal skill directory. npm 12 blocks dependency lifecycle scripts unless the consuming project explicitly approves them. Projects using that policy must add the following field to their `package.json` before installing:
+
+```json
+{
+  "allowScripts": {
+    "@slide-agent/core": true
+  }
+}
+```
+
+The project-local CLI is available as `npx --no-install slide-agent`, and the library is available through `import { SlideAgent } from "@slide-agent/core"`. A global npm install is not required. `npm install -g @slide-agent/core` is supported when your npm global prefix is already user-writable, but the managed `npx … slide-agent install` command above is preferred because it never needs administrator permissions, installs a persistent user-local CLI, and does not depend on project lifecycle-script approval.
 
 Automated library-only environments can set `SLIDE_AGENT_SKIP_AUTO_INSTALL=1` to suppress personal skill registration. This opt-out is intended for CI and container builds, not normal end-user installation.
 
@@ -70,7 +80,7 @@ slide-agent uninstall
 
 ### VS Code and GitHub Copilot
 
-Install `Slide Agent` from the VS Code Marketplace, or download `slide-agent-vscode-<version>.vsix` from a GitHub release and run **Extensions: Install from VSIX**. On its first activation for each extension version, it automatically installs the matching core engine and registers the skills. This behavior can be disabled with `slideAgent.autoInstall`; **Slide Agent: Install or Update** remains available for an explicit retry. The extension lets you choose any language model exposed through VS Code's Language Model API. That model invents the artistic direction and authors the complete editable NDJSON scene; Slide Agent builds, renders, validates, and repairs it.
+Install `Slide Agent` from the VS Code Marketplace, or download `slide-agent-vscode-<version>.vsix` from a GitHub release and run **Extensions: Install from VSIX**. On its first activation for each extension version, it automatically installs the matching core engine and registers the skills. The extension invokes the managed launcher directly under `~/.local/bin`, so it does not depend on VS Code inheriting a newly updated shell `PATH`. This behavior can be disabled with `slideAgent.autoInstall`; **Slide Agent: Install or Update** remains available for an explicit retry. The extension lets you choose any language model exposed through VS Code's Language Model API. That model invents the artistic direction and authors the complete editable NDJSON scene; Slide Agent builds, renders, validates, and repairs it.
 
 ### Development checkout only
 

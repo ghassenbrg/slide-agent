@@ -44,8 +44,8 @@ Never reuse or overwrite a published version. If a release is wrong, publish a n
 1. Create or confirm the Visual Studio Marketplace publisher ID `ghassenbrg` and ensure the publishing identity is a Contributor.
 2. Confirm the extension identifier `ghassenbrg.slide-agent-vscode` is available or already owned by that publisher.
 3. Preferred long-term path: use Microsoft Entra identity-based publishing from the publisher's managed release pipeline.
-4. GitHub Actions fallback: add an appropriately scoped Marketplace token as the `VSCE_PAT` secret in the protected `release` GitHub Environment. The release workflow publishes automatically only when this secret exists.
-5. No-token fallback: download the `.vsix` produced by GitHub Actions and upload it through the Marketplace publisher management page.
+4. Add an appropriately scoped Marketplace token as the `VSCE_PAT` secret in the protected `release` GitHub Environment. The release workflow fails before creating a GitHub release when this required publishing credential is absent.
+5. For manual recovery only, download the verified `.vsix` artifact and upload that exact file through the Marketplace publisher management page.
 
 Microsoft's current guidance is in [Publishing Extensions](https://code.visualstudio.com/api/working-with-extensions/publishing-extension). Recheck it before changing authentication because Marketplace identity and token policies evolve.
 
@@ -125,7 +125,7 @@ cd ..
 Inspect what npm will publish:
 
 ```bash
-npm publish --dry-run --access public
+npm publish ./release/slide-agent-core-<version>.tgz --dry-run --access public
 ```
 
 Inspect the VSIX manifest without installing it:
@@ -168,7 +168,7 @@ For a version tag, GitHub Actions:
 5. builds the npm tarball, VSIX, Codex plugin ZIP, and SHA-256 checksums;
 6. uploads the artifacts with the Node.js 24-based artifact action;
 7. runs **Publish npm Package** to publish `@slide-agent/core` through npm trusted publishing or the temporary `NPM_TOKEN` fallback;
-8. runs **Publish VS Code Extension** only when `VSCE_PAT` is configured;
+8. runs **Publish VS Code Extension** with the required `VSCE_PAT` release-environment secret and fails clearly if it is absent;
 9. runs **Create GitHub Release** after both publication jobs and attaches every verified artifact.
 
 The workflow is displayed as **Publish Slide Agent Release**. Its four jobs are **Verify Release**, **Publish npm Package**, **Publish VS Code Extension**, and **Create GitHub Release**.
@@ -197,11 +197,11 @@ slide-agent uninstall
 Confirm that:
 
 - the npm package shows the expected version and provenance badge;
-- a normal local npm install creates valid skill registrations without requiring a global install;
+- a normal local npm install creates valid skill registrations without requiring a global install (with `@slide-agent/core` approved in the consuming project's `allowScripts` field when using npm 12);
 - the npx command prints the same version;
 - the GitHub release contains all four files and matching checksums;
 - the VS Code Marketplace shows the new version, icon, README, commands, and publisher;
-- installing the released VSIX succeeds when Marketplace publishing was skipped;
+- installing the released VSIX succeeds and performs the same managed setup as the Marketplace build;
 - the Codex plugin ZIP contains only the plugin manifest, MCP definition, original skill documentation, and official icon.
 
 ## 8. Manual publishing fallbacks

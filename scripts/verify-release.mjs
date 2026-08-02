@@ -20,6 +20,8 @@ const packageLock = await json("package-lock.json");
 const extensionJson = await json("extensions/vscode/package.json");
 const extensionLock = await json("extensions/vscode/package-lock.json");
 const pluginJson = await json("distribution/codex/plugins/slide-agent/.codex-plugin/plugin.json");
+const ciWorkflow = await readFile(path.join(root, ".github/workflows/slide-agent-ci.yml"), "utf8");
+const releaseWorkflow = await readFile(path.join(root, ".github/workflows/release.yml"), "utf8");
 const sourceVersion = (await readFile(path.join(root, "src/version.ts"), "utf8")).match(/VERSION\s*=\s*"([^"]+)"/)?.[1];
 const versions = {
   package: packageJson.version,
@@ -62,6 +64,36 @@ if (packageJson.scripts?.postinstall !== "node scripts/postinstall.mjs") problem
 if (packageLock.packages?.[""]?.hasInstallScript !== true) problems.push("package-lock root must record the npm install lifecycle script");
 if (packageJson.repository?.url !== "git+https://github.com/ghassenbrg/slide-agent.git") problems.push("npm repository URL is not the canonical public repository");
 if (extensionJson.publisher !== "ghassenbrg") problems.push("VS Code publisher id must be ghassenbrg");
+const requiredCiFragments = [
+  "name: Slide Agent CI",
+  "push:\n    branches:\n      - main",
+  "pull_request:\n    branches:\n      - main\n    types:\n      - closed",
+  "if: github.event_name == 'push' || github.event.pull_request.merged == true",
+  "actions/checkout@v6",
+  "actions/setup-node@v7",
+];
+for (const fragment of requiredCiFragments) {
+  if (!ciWorkflow.includes(fragment)) problems.push(`CI workflow is missing required configuration: ${fragment.split("\n")[0]}`);
+}
+const requiredReleaseFragments = [
+  "name: Publish Slide Agent Release",
+  "name: Verify Release",
+  "name: Publish npm Package",
+  "name: Publish VS Code Extension",
+  "name: Create GitHub Release",
+  "actions/checkout@v6",
+  "actions/setup-node@v7",
+  "actions/upload-artifact@v7",
+  "actions/download-artifact@v7",
+  "npm publish \"./release/slide-agent-core-${GITHUB_REF_NAME#v}.tgz\" --access public",
+  "::error::VSCE_PAT is not configured for the release environment.",
+];
+for (const fragment of requiredReleaseFragments) {
+  if (!releaseWorkflow.includes(fragment)) problems.push(`release workflow is missing required configuration: ${fragment.split("\n")[0]}`);
+}
+if (/actions\/(?:checkout|setup-node|upload-artifact|download-artifact)@v(?:1|2|3|4|5)(?:\D|$)/.test(`${ciWorkflow}\n${releaseWorkflow}`)) {
+  problems.push("GitHub workflows contain an outdated JavaScript action generation");
+}
 const trackedPrivateArtifacts = (await execute("git", ["ls-files", "examples/output", "reference-material"], { cwd: root })).stdout.trim();
 if (trackedPrivateArtifacts) problems.push(`generated or private reference artifacts are tracked:\n${trackedPrivateArtifacts}`);
 for (const required of ["LICENSE", "README.md", "RELEASE.md", "SECURITY.md", "THIRD_PARTY_NOTICES.md"]) {

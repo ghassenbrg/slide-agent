@@ -53,9 +53,18 @@ async function removeSkill(destination) {
   }
   const marker = path.join(destination, ".slide-agent-install.json");
   if (info.isDirectory() && await exists(marker)) {
-    await rm(destination, { recursive: true, force: true });
-    removed.push(destination);
-    return;
+    let source;
+    try {
+      const metadata = JSON.parse(await readFile(marker, "utf8"));
+      source = typeof metadata.packageRoot === "string" ? await canonical(metadata.packageRoot) : undefined;
+    } catch {
+      // A malformed or unrelated marker never grants deletion authority.
+    }
+    if (source && allowedRoots.has(source)) {
+      await rm(destination, { recursive: true, force: true });
+      removed.push(destination);
+      return;
+    }
   }
   skipped.push(destination);
 }

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { access, appendFile, chmod, cp, lstat, mkdir, readFile, readlink, realpath, symlink, writeFile } from "node:fs/promises";
+import { access, appendFile, chmod, cp, lstat, mkdir, readFile, readlink, realpath, rm, symlink, writeFile } from "node:fs/promises";
 import { homedir } from "node:os";
 import path from "node:path";
 import { spawn } from "node:child_process";
@@ -60,6 +60,30 @@ async function isSlideAgentSkill(destination) {
   return /^---[\s\S]*?^name:\s*["']?slide-agent["']?\s*$/m.test(skill);
 }
 
+async function isManagedCopy(destination) {
+  const marker = await readFile(path.join(destination, ".slide-agent-install.json"), "utf8").catch(() => undefined);
+  if (!marker) return false;
+  try {
+    const metadata = JSON.parse(marker);
+    if (typeof metadata.packageRoot !== "string") return false;
+    return await realpath(metadata.packageRoot).catch(() => path.resolve(metadata.packageRoot))
+      === await realpath(packageRoot).catch(() => packageRoot);
+  } catch {
+    return false;
+  }
+}
+
+async function copySkill(destination) {
+  await cp(packageRoot, destination, {
+    recursive: true,
+    filter: (source) => {
+      const normalized = source.split(path.sep).join("/");
+      return !["/node_modules", "/.git", "/examples/output"].some((segment) => normalized.includes(segment));
+    },
+  });
+  await writeFile(path.join(destination, ".slide-agent-install.json"), `${JSON.stringify({ packageRoot }, null, 2)}\n`, "utf8");
+}
+
 async function installSkill(agent, skillsDirectory) {
   const destination = path.join(skillsDirectory, "slide-agent");
   await mkdir(skillsDirectory, { recursive: true });
@@ -67,6 +91,7 @@ async function installSkill(agent, skillsDirectory) {
     process.stdout.write(`Already installed for ${agent}: ${destination}\n`);
     return;
   }
+  if (await isManagedCopy(destination)) await rm(destination, { recursive: true, force: true });
   if (await lstat(destination).catch(() => undefined)) {
     if (await isSlideAgentSkill(destination)) {
       process.stdout.write(`Existing Slide Agent registration preserved for ${agent}: ${destination}\n`);
@@ -80,14 +105,7 @@ async function installSkill(agent, skillsDirectory) {
     if (process.platform !== "win32") throw error;
     // Junction creation can be disabled on managed/network volumes. A compact
     // copy keeps the skill usable without administrator or Developer Mode.
-    await cp(packageRoot, destination, {
-      recursive: true,
-      filter: (source) => {
-        const normalized = source.split(path.sep).join("/");
-        return !["/node_modules", "/.git", "/examples/output"].some((segment) => normalized.includes(segment));
-      },
-    });
-    await writeFile(path.join(destination, ".slide-agent-install.json"), `${JSON.stringify({ packageRoot }, null, 2)}\n`, "utf8");
+    await copySkill(destination);
   }
   process.stdout.write(`Installed for ${agent}: ${destination}\n`);
 }

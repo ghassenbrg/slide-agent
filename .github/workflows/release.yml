@@ -42,7 +42,7 @@ jobs:
       - run: npm run verify
       - run: npm run verify:install
       - run: npm run release:artifacts
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         with:
           name: slide-agent-${{ github.ref_name }}
           path: release/*
@@ -76,7 +76,7 @@ jobs:
           if [ -n "$NPM_TOKEN_FALLBACK" ]; then
             export NODE_AUTH_TOKEN="$NPM_TOKEN_FALLBACK"
           fi
-          npm publish "release/slide-agent-core-${GITHUB_REF_NAME#v}.tgz" --access public
+          npm publish "./release/slide-agent-core-${GITHUB_REF_NAME#v}.tgz" --access public
 
   publish-vscode:
     name: Publish VS Code Extension
@@ -99,11 +99,11 @@ jobs:
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
         run: |
-          if [ -n "$VSCE_PAT" ]; then
-            npx --yes @vscode/vsce@3.9.2 publish --packagePath "release/slide-agent-vscode-${GITHUB_REF_NAME#v}.vsix" -p "$VSCE_PAT"
-          else
-            echo "VSCE_PAT is not configured; upload the packaged VSIX manually or use the publisher's identity-based pipeline."
+          if [ -z "$VSCE_PAT" ]; then
+            echo "::error::VSCE_PAT is not configured for the release environment."
+            exit 1
           fi
+          npx --yes @vscode/vsce@3.9.2 publish --packagePath "release/slide-agent-vscode-${GITHUB_REF_NAME#v}.vsix" -p "$VSCE_PAT"
 
   create-release:
     name: Create GitHub Release
