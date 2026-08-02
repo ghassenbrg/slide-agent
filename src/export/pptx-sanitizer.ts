@@ -3,6 +3,8 @@ import { readFile, writeFile } from "node:fs/promises";
 import { DOMParser, XMLSerializer, type Document, type Element } from "@xmldom/xmldom";
 import JSZip from "jszip";
 
+import { ALL_SERIES_ELEMENTS, CHART_TYPE_SCHEMAS } from "../utils/chart-schema.js";
+
 const CONTENT_TYPES = "[Content_Types].xml";
 const NOTES_MASTER = "ppt/notesMasters/notesMaster1.xml";
 const NOTES_MASTER_RELS = "ppt/notesMasters/_rels/notesMaster1.xml.rels";
@@ -163,7 +165,55 @@ function repairNegativeExtents(xml: string, partName: string): string {
       seen.add(id);
     }
   }
+  repairParagraphOrder(document);
   return serializeXml(document);
+}
+
+// ECMA-376 CT_TextParagraph is the sequence pPr?, (r|br|fld)*, endParaRPr?.
+// PptxGenJS re-emits the paragraph properties before every continued run when
+// text fragments share one paragraph, which desktop PowerPoint flags for
+// repair. Keep the first pPr at the head of the paragraph and drop the rest.
+function repairParagraphOrder(document: Document): void {
+  for (const paragraph of Array.from(document.getElementsByTagName("a:p"))) {
+    const children = directChildren(paragraph);
+    const properties = children.filter((child) => child.nodeName === "a:pPr");
+    if (properties.length > 0 && properties[0] !== paragraph.firstChild) {
+      paragraph.insertBefore(properties[0]!, paragraph.firstChild);
+    }
+    for (const extra of properties.slice(1)) paragraph.removeChild(extra);
+    const endProperties = children.find((child) => child.nodeName === "a:endParaRPr");
+    if (endProperties && endProperties !== paragraph.lastChild) {
+      paragraph.appendChild(endProperties);
+    }
+  }
+}
+
+function reorderChildren(element: Element, canonicalOrder: string[]): void {
+  const rank = new Map(canonicalOrder.map((name, index) => [name, name === "c:extLst" ? canonicalOrder.length + 1 : index]));
+  const children = directChildren(element);
+  const sorted = [...children].sort((a, b) => (rank.get(a.nodeName) ?? canonicalOrder.length) - (rank.get(b.nodeName) ?? canonicalOrder.length));
+  if (children.every((child, index) => child === sorted[index])) return;
+  for (const child of sorted) element.appendChild(child);
+}
+
+function repairChartSequences(document: Document): void {
+  for (const [containerName, schema] of Object.entries(CHART_TYPE_SCHEMAS)) {
+    for (const container of Array.from(document.getElementsByTagName(containerName))) {
+      for (const series of directChildren(container).filter((child) => child.nodeName === "c:ser")) {
+        const allowed = new Set(schema.seriesOrder);
+        for (const child of directChildren(series)) {
+          if (ALL_SERIES_ELEMENTS.has(child.nodeName) && !allowed.has(child.nodeName)) series.removeChild(child);
+        }
+        reorderChildren(series, schema.seriesOrder);
+      }
+      if (schema.requiredGrouping && !directChildren(container).some((child) => child.nodeName === "c:grouping")) {
+        const grouping = document.createElementNS(container.namespaceURI, "c:grouping");
+        grouping.setAttribute("val", schema.requiredGrouping);
+        container.insertBefore(grouping, container.firstChild);
+      }
+      reorderChildren(container, schema.containerOrder);
+    }
+  }
 }
 
 function repairChartAxes(xml: string, partName: string): string {
@@ -201,6 +251,8 @@ function repairChartAxes(xml: string, partName: string): string {
     stringRef.appendChild(stringCache);
     multiLevelRef.parentNode.replaceChild(stringRef, multiLevelRef);
   }
+  repairChartSequences(document);
+  repairParagraphOrder(document);
   return serializeXml(document);
 }
 

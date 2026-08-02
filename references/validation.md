@@ -12,10 +12,11 @@
 
 1. Validate the generation manifest for semantic content and exact authoring geometry.
 2. Validate the PPTX ZIP package and required parts.
-3. Inspect OOXML when no generation manifest exists.
-4. Optionally render every slide to PNG when `render: true`.
-5. When rendering, confirm preview count and non-empty files.
-6. When previews exist, inspect them visually.
+3. Validate every PresentationML, DrawingML, chart, theme, and app-properties part against the official ECMA-376 transitional XML Schemas (bundled; runs offline through a WebAssembly libxml2).
+4. Inspect OOXML when no generation manifest exists.
+5. Optionally render every slide to PNG when `render: true`.
+6. When rendering, confirm preview count and non-empty files.
+7. When previews exist, inspect them visually.
 
 ## Issue categories
 
@@ -37,6 +38,11 @@ The JSON report can include:
 - `duplicate-slide-title`
 - `missing-presentation-title`
 - `corrupt-pptx`
+- `schema-violation` — an XML part violates the ECMA-376 schema; PowerPoint would show a repair prompt.
+- `invalid-paragraph-order` — a paragraph places `pPr` after runs or `endParaRPr` before the end.
+- `missing-chart-grouping` — a line chart omits its mandatory `c:grouping` element.
+- `invalid-chart-sequence` — chart container children are ordered against the schema.
+- `invalid-chart-series` — a chart series contains misplaced or disallowed elements.
 - `render-failed`
 
 ## Severity policy

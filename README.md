@@ -18,6 +18,7 @@ PptxGenJS is the primary authoring engine. New decks use native PowerPoint text 
 - Create native bar, line, pie, and area charts plus editable shape-based waterfall charts.
 - Optionally render every slide to PDF and PNG previews when external render tools are available.
 - Validate bounds, overlap, text fit, density, font size, contrast, images, fonts, margins, alignment, chart data, empty slides, titles, and package integrity.
+- Validate every XML part against the bundled official ECMA-376 transitional schemas offline, so decks open in Microsoft PowerPoint without repair prompts.
 - Run a bounded automatic repair-and-rebuild loop.
 - Return agent-neutral structured JSON results.
 

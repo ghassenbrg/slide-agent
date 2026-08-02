@@ -4,6 +4,7 @@ import { DOMParser, type Document, type Element } from "@xmldom/xmldom";
 import JSZip from "jszip";
 
 import type { ValidationIssue } from "../types/index.js";
+import { CHART_TYPE_SCHEMAS, sequenceViolations } from "../utils/chart-schema.js";
 import { relationshipOwnerPath, resolvePackageTarget } from "../utils/ooxml.js";
 
 function issue(code: string, message: string, details?: Record<string, unknown>): ValidationIssue {
@@ -28,6 +29,22 @@ function parseXml(xml: string): ParsedXml {
 
 function elements(document: Document, name: string): Element[] {
   return Array.from(document.getElementsByTagName(name)) as Element[];
+}
+
+function childElementNames(element: Element): string[] {
+  const names: string[] = [];
+  for (let node = element.firstChild; node; node = node.nextSibling) {
+    if (node.nodeType === 1) names.push(node.nodeName);
+  }
+  return names;
+}
+
+function childElements(element: Element, name: string): Element[] {
+  const children: Element[] = [];
+  for (let node = element.firstChild; node; node = node.nextSibling) {
+    if (node.nodeType === 1 && node.nodeName === name) children.push(node as Element);
+  }
+  return children;
 }
 
 function packagePartExists(zip: JSZip, partName: string): boolean {
@@ -197,9 +214,51 @@ export class PackageValidator {
       }
     }
 
+    for (const [partName, document] of parsedParts) {
+      if (!partName.endsWith(".xml")) continue;
+      for (const paragraph of elements(document, "a:p")) {
+        const names = childElementNames(paragraph);
+        const propertyCount = names.filter((name) => name === "a:pPr").length;
+        const misplaced = propertyCount > 0 && names[0] !== "a:pPr";
+        const endIndex = names.indexOf("a:endParaRPr");
+        if (propertyCount > 1 || misplaced || (endIndex >= 0 && endIndex !== names.length - 1)) {
+          issues.push(issue("invalid-paragraph-order", `${partName} contains a paragraph whose pPr/endParaRPr placement violates CT_TextParagraph.`, {
+            partName,
+            children: names,
+          }));
+        }
+      }
+    }
+
     for (const chartPath of partNames.filter((entry) => /^ppt\/charts\/chart\d+\.xml$/.test(entry))) {
       const chartDocument = parsedParts.get(chartPath);
       if (!chartDocument) continue;
+      for (const [containerName, schema] of Object.entries(CHART_TYPE_SCHEMAS)) {
+        for (const container of elements(chartDocument, containerName)) {
+          if (schema.requiredGrouping && childElements(container, "c:grouping").length === 0) {
+            issues.push(issue("missing-chart-grouping", `${chartPath} contains a ${containerName} without the mandatory c:grouping element.`, { chartPath, containerName }));
+          }
+          const containerViolations = sequenceViolations(childElementNames(container), schema.containerOrder);
+          if (containerViolations.length > 0) {
+            issues.push(issue("invalid-chart-sequence", `${chartPath} orders ${containerName} children against the ECMA-376 chart schema.`, {
+              chartPath,
+              containerName,
+              violations: containerViolations,
+            }));
+          }
+          const allowedSeriesElements = new Set(schema.seriesOrder);
+          for (const series of childElements(container, "c:ser")) {
+            const seriesViolations = sequenceViolations(childElementNames(series), schema.seriesOrder, allowedSeriesElements);
+            if (seriesViolations.length > 0) {
+              issues.push(issue("invalid-chart-series", `${chartPath} contains a ${containerName} series with misplaced or disallowed elements.`, {
+                chartPath,
+                containerName,
+                violations: seriesViolations,
+              }));
+            }
+          }
+        }
+      }
       const axisContainerNames = new Set(["c:catAx", "c:dateAx", "c:serAx", "c:valAx"]);
       const definedAxisIds = new Set(
         elements(chartDocument, "c:axId")

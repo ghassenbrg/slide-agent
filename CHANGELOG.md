@@ -4,7 +4,10 @@ All notable public changes are recorded here. Versions follow semantic versionin
 
 ## Unreleased
 
-- Add upcoming changes here before selecting the next version.
+- Repair three ECMA-376 schema violations in generated decks that could trigger PowerPoint repair prompts: paragraph properties re-emitted between continued text runs, the missing mandatory `c:grouping` in line charts, and chart-series elements that are misordered or illegal for their chart type (for example bar-only `invertIfNegative` in line, area, and pie series).
+- Validate every generated PresentationML, DrawingML, chart, theme, and app-properties part against the bundled official ECMA-376 transitional XML Schemas using a WebAssembly libxml2 (`xmllint-wasm`); schema violations now surface as `schema-violation` validation errors for any deck, including edited third-party files.
+- Detect paragraph-order, chart-grouping, chart-sequence, and chart-series defects in `slide-agent validate` package checks so existing decks report the same issues the exporter repairs.
+- Record the exported package's SHA-256 in the generation manifest and let `slide-agent validate` automatically discover and trust that manifest when the hash still matches, so standalone validation of a freshly created deck honors authoring metadata such as intentional overlap instead of reporting false overlap errors.
 
 ## 0.0.1 - 2026-08-02
 

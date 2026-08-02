@@ -469,6 +469,12 @@ export interface DeckManifest {
   height: number;
   createdAt: string;
   creativeDirection?: CreativeDirection;
+  /**
+   * SHA-256 of the exported .pptx this manifest describes. Lets later
+   * validation runs prove a discovered manifest still matches the package
+   * before trusting its authoring metadata (for example intentional overlap).
+   */
+  packageSha256?: string;
   slides: SlideManifest[];
 }
 

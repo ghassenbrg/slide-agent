@@ -23,7 +23,7 @@ import type {
   ValidationReport,
 } from "./types/index.js";
 import { errorDetails } from "./utils/errors.js";
-import { writeJson } from "./utils/files.js";
+import { fileSha256, writeJson } from "./utils/files.js";
 import { AutoFixer } from "./validation/auto-fixer.js";
 import { PresentationValidator } from "./validation/validator.js";
 import { VERSION } from "./version.js";
@@ -96,6 +96,7 @@ export class SlideAgent {
         finalBuilt = built;
         outline = built.outline;
         await new PptxExporter().export(built.presentation, output);
+        built.manifest.packageSha256 = await fileSha256(output);
         await writeJson(manifestPath, built.manifest);
         if (shouldValidate) {
           report = await new PresentationValidator(built.config, this.logger).validate(output, {

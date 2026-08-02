@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { access, mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
 
@@ -44,4 +45,8 @@ export async function writeBinary(filePath: string, bytes: Buffer | Uint8Array):
 
 export function absolute(filePath: string, base = process.cwd()): string {
   return path.isAbsolute(filePath) ? path.normalize(filePath) : path.resolve(base, filePath);
+}
+
+export async function fileSha256(filePath: string): Promise<string> {
+  return createHash("sha256").update(await readFile(path.resolve(filePath))).digest("hex");
 }
