@@ -8,13 +8,11 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 import { auditPublicContent } from "./audit-public-content.mjs";
 import { verifyLockfile } from "./verify-lockfile.mjs";
+import { hasWorkflowFragment, normalizeWorkflowText } from "./workflow-fragments.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const json = async (relative) => JSON.parse(await readFile(path.join(root, relative), "utf8"));
 const exists = async (relative) => access(path.join(root, relative)).then(() => true).catch(() => false);
-
-export const normalizeWorkflowText = (text) => text.replace(/\r\n/g, "\n");
-export const hasWorkflowFragment = (content, fragment) => normalizeWorkflowText(content).includes(normalizeWorkflowText(fragment));
 
 export async function verifyRelease() {
   const problems = [];
