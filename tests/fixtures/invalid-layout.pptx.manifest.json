@@ -1,0 +1,118 @@
+{
+  "schemaVersion": "1.0",
+  "presentationTitle": "Intentional validation failures",
+  "width": 13.333333,
+  "height": 7.5,
+  "createdAt": "2026-08-01T16:34:11.480Z",
+  "slides": [
+    {
+      "number": 1,
+      "id": "invalid-slide",
+      "title": "Crowded title",
+      "kind": "custom",
+      "notes": [],
+      "elements": [
+        {
+          "id": "title",
+          "name": "Title",
+          "type": "text",
+          "role": "title",
+          "x": 0.5,
+          "y": 0.3,
+          "w": 6,
+          "h": 0.3,
+          "text": "Crowded title",
+          "fontSize": 12,
+          "fontFace": "Unsupported Sans",
+          "textColor": "CCCCCC",
+          "fillColor": "FFFFFF"
+        },
+        {
+          "id": "overflow",
+          "name": "Overflowing text",
+          "type": "text",
+          "role": "body",
+          "x": 11.9,
+          "y": 7.05,
+          "w": 1.8,
+          "h": 0.28,
+          "text": "This text intentionally overlaps another text box and extends outside the slide.",
+          "fontSize": 10,
+          "fontFace": "Aptos",
+          "textColor": "152231",
+          "fillColor": "FFFFFF"
+        },
+        {
+          "id": "overlap",
+          "name": "Overlap",
+          "type": "text",
+          "role": "body",
+          "x": 12.05,
+          "y": 7.08,
+          "w": 1.5,
+          "h": 0.24,
+          "text": "Second overlapping box",
+          "fontSize": 9,
+          "fontFace": "Aptos",
+          "textColor": "152231",
+          "fillColor": "FFFFFF"
+        },
+        {
+          "id": "outside",
+          "name": "Outside shape",
+          "type": "shape",
+          "role": "shape",
+          "x": -0.4,
+          "y": 2,
+          "w": 1.2,
+          "h": 1,
+          "fillColor": "EEEEEE"
+        },
+        {
+          "id": "missing",
+          "name": "Missing image",
+          "type": "image",
+          "role": "image",
+          "x": 2,
+          "y": 2,
+          "w": 2,
+          "h": 2,
+          "imagePath": "tests/fixtures/missing.png"
+        },
+        {
+          "id": "align-1",
+          "name": "Align item 1",
+          "type": "shape",
+          "role": "shape",
+          "x": 3,
+          "y": 4,
+          "w": 1,
+          "h": 0.5,
+          "fillColor": "EEEEEE"
+        },
+        {
+          "id": "align-2",
+          "name": "Align item 2",
+          "type": "shape",
+          "role": "shape",
+          "x": 5,
+          "y": 4,
+          "w": 1,
+          "h": 0.5,
+          "fillColor": "EEEEEE"
+        },
+        {
+          "id": "align-3",
+          "name": "Align item 3",
+          "type": "shape",
+          "role": "shape",
+          "x": 7,
+          "y": 4.22,
+          "w": 1,
+          "h": 0.5,
+          "fillColor": "EEEEEE"
+        }
+      ]
+    }
+  ]
+}

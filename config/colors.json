@@ -1,0 +1,13 @@
+{
+  "background": "F7F5F0",
+  "surface": "FFFFFF",
+  "ink": "152231",
+  "muted": "5E6B78",
+  "accent": "C43D31",
+  "accentAlt": "0BA7A5",
+  "accentSoft": "FADBD5",
+  "rule": "D5D9DD",
+  "positive": "2E8B57",
+  "negative": "C53B3B",
+  "warning": "D58A20"
+}
