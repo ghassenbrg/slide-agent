@@ -5,7 +5,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawn } from "node:child_process";
 
-import { parseWindowsLauncherTarget } from "./managed-launcher.mjs";
+import { deferRemovalUntilProcessExits, parseWindowsLauncherTarget } from "./managed-launcher.mjs";
 
 const sourceRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const home = homedir();
@@ -65,6 +65,7 @@ async function removeLauncher(destination) {
   if (!info) return;
   const activeLauncher = process.env.SLIDE_AGENT_ACTIVE_LAUNCHER;
   if (activeLauncher && isSamePath(await canonical(activeLauncher), await canonical(destination))) {
+    deferRemovalUntilProcessExits(destination);
     deferred.push(destination);
     return;
   }

@@ -54,6 +54,14 @@ async function exists(filePath) {
   return access(filePath).then(() => true).catch(() => false);
 }
 
+async function waitForRemoval(filePath, timeoutMs = 10_000) {
+  const deadline = Date.now() + timeoutMs;
+  while (await exists(filePath)) {
+    if (Date.now() >= deadline) throw new Error(`Timed out waiting for deferred cleanup: ${filePath}`);
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+}
+
 async function expectLink(filePath) {
   const info = await lstat(filePath);
   if (!info.isSymbolicLink()) throw new Error(`Expected a symbolic link: ${filePath}`);
@@ -98,6 +106,7 @@ try {
   }
   await run(cli, ["--version"]);
   await run(cli, ["uninstall"]);
+  if (process.platform === "win32") await waitForRemoval(cli);
 
   for (const removedPath of [managedRoot, cli, mcp, path.join(skillRoot, "codex", "slide-agent")]) {
     if (await exists(removedPath)) throw new Error(`Uninstall left a managed path behind: ${removedPath}`);
