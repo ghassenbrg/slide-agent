@@ -10,6 +10,10 @@ All notable public changes are recorded here. Versions follow semantic versionin
 - Record the exported package's SHA-256 in the generation manifest and let `slide-agent validate` automatically discover and trust that manifest when the hash still matches, so standalone validation of a freshly created deck honors authoring metadata such as intentional overlap instead of reporting false overlap errors.
 - Fix `slide-agent-mcp` exiting silently instead of serving when launched through an npm or npx bin symlink on macOS and Linux; the direct-execution guard now compares realpaths.
 - Make `--report` optional for `slide-agent validate` and the `validate_presentation` MCP tool; the report defaults to `artifacts/logs/<deck>.validation.json` next to the presentation.
+- Fix Windows argument handling in the VS Code extension: CLI invocations through cmd.exe now quote the launcher path and arguments, so output paths containing spaces work.
+- Fix LibreOffice preview rendering on Windows by passing the user-profile directory as a proper `file:///` URL.
+- Add a "Get started with Slide Agent" walkthrough to the VS Code extension covering engine installation, first deck creation, AI-chat usage, and diagnostics.
+- Shrink the project icon from 1.6 MB to 373 KB in every distribution, reducing the VS Code extension package from 1.59 MB to under 400 KB.
 
 ## 0.0.1 - 2026-08-02
 

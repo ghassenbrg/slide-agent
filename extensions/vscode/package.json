@@ -93,7 +93,58 @@
           "group": "navigation"
         }
       ]
-    }
+    },
+    "walkthroughs": [
+      {
+        "id": "slideAgent.gettingStarted",
+        "title": "Get started with Slide Agent",
+        "description": "Create fully editable, AI-directed PowerPoint presentations in minutes.",
+        "steps": [
+          {
+            "id": "slideAgent.step.install",
+            "title": "Install the engine",
+            "description": "One command sets up the CLI, MCP server, and agent skills in your user directory.\n[Install or Update](command:slideAgent.install)",
+            "media": {
+              "markdown": "media/walkthrough/install.md"
+            },
+            "completionEvents": [
+              "onCommand:slideAgent.install"
+            ]
+          },
+          {
+            "id": "slideAgent.step.create",
+            "title": "Create a presentation",
+            "description": "Describe the deck; the AI model you choose directs the design.\n[Create Presentation](command:slideAgent.create)",
+            "media": {
+              "markdown": "media/walkthrough/create.md"
+            },
+            "completionEvents": [
+              "onCommand:slideAgent.create",
+              "onCommand:slideAgent.createFromCurrentFile"
+            ]
+          },
+          {
+            "id": "slideAgent.step.chat",
+            "title": "Use it from AI chats",
+            "description": "Copilot, Claude Code, Codex, and Gemini CLI all get the same skill.",
+            "media": {
+              "markdown": "media/walkthrough/chat.md"
+            }
+          },
+          {
+            "id": "slideAgent.step.doctor",
+            "title": "Verify the setup",
+            "description": "Diagnose the installation and optional preview tools.\n[Check Installation](command:slideAgent.doctor)",
+            "media": {
+              "markdown": "media/walkthrough/doctor.md"
+            },
+            "completionEvents": [
+              "onCommand:slideAgent.doctor"
+            ]
+          }
+        ]
+      }
+    ]
   },
   "scripts": {
     "compile": "node esbuild.mjs",

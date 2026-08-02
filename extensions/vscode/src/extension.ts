@@ -6,6 +6,7 @@ import path from "node:path";
 import * as vscode from "vscode";
 
 import { resolveManagedCliPath } from "./managed-paths.js";
+import { prepareSpawn } from "./shell-quote.js";
 
 interface AgentResult {
   status?: string;
@@ -83,10 +84,11 @@ async function run(command: string, args: string[]): Promise<{ stdout: string; e
   output.show(true);
   output.appendLine(`\n> ${command} ${args.map((arg) => JSON.stringify(arg)).join(" ")}`);
   return new Promise((resolve, reject) => {
-    const child = spawn(command, args, {
+    const spawnPlan = prepareSpawn(command, args);
+    const child = spawn(spawnPlan.command, spawnPlan.args, {
       cwd: workspaceRoot(),
       env: process.env,
-      shell: process.platform === "win32",
+      shell: spawnPlan.shell,
     });
     let stdout = "";
     child.stdout.setEncoding("utf8");
