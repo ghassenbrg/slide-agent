@@ -1,0 +1,9 @@
+interface:
+  display_name: "Slide Agent"
+  short_description: "Invent and craft distinctive editable PowerPoint decks"
+  icon_small: "./assets/icon.png"
+  icon_large: "./assets/icon.png"
+  brand_color: "#0B2A5B"
+  default_prompt: "Use $slide-agent to invent a deck-specific creative direction and craft a distinctive, editable, rendered, and validated PowerPoint presentation."
+policy:
+  allow_implicit_invocation: true

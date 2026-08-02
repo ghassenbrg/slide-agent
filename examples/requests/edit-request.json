@@ -1,0 +1,26 @@
+{
+  "command": "edit",
+  "input": "examples/output/product-launch/product-launch.pptx",
+  "output": "examples/output/product-launch/product-launch-updated.pptx",
+  "operations": [
+    {
+      "type": "replace-text",
+      "find": "Atlas",
+      "replace": "Atlas Pro",
+      "replaceAll": true
+    },
+    {
+      "type": "duplicate-slide",
+      "slide": 8,
+      "insertAt": 9,
+      "replacements": [
+        {
+          "find": "The 90-day roadmap protects focus while keeping owners explicit",
+          "replace": "Owners translate the 90-day roadmap into weekly commitments"
+        }
+      ]
+    }
+  ],
+  "render": true,
+  "validate": true
+}

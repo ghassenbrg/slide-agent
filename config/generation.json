@@ -1,0 +1,14 @@
+{
+  "defaultSlideCount": 8,
+  "minimumSlideCount": 3,
+  "maximumSlideCount": 40,
+  "maximumBulletsPerSlide": 5,
+  "maximumWordsPerBullet": 14,
+  "maximumBodyWords": 70,
+  "maximumRetries": 2,
+  "renderWidth": 1600,
+  "renderHeight": 900,
+  "failOnWarnings": false,
+  "includeSpeakerNotes": true,
+  "includeSlideNumbers": true
+}

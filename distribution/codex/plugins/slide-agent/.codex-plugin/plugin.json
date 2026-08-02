@@ -1,0 +1,41 @@
+{
+  "name": "slide-agent",
+  "version": "0.0.1",
+  "description": "Invent, create, edit, render, validate, and repair distinctive editable PowerPoint presentations.",
+  "author": {
+    "name": "Ghassen Bargougui",
+    "url": "https://github.com/ghassenbrg"
+  },
+  "homepage": "https://github.com/ghassenbrg/slide-agent",
+  "repository": "https://github.com/ghassenbrg/slide-agent",
+  "license": "MIT",
+  "keywords": [
+    "powerpoint",
+    "pptx",
+    "presentations",
+    "slides",
+    "agent-skill"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Slide Agent",
+    "shortDescription": "Distinctive, editable AI-authored PowerPoint decks",
+    "longDescription": "Give the model unrestricted creative direction plus production-grade editable PowerPoint construction, rendering, inspection, validation, repair, and safe editing workflows.",
+    "developerName": "Ghassen Bargougui",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/ghassenbrg/slide-agent",
+    "defaultPrompt": [
+      "Create a distinctive editable PowerPoint deck.",
+      "Edit this presentation and preserve unaffected content.",
+      "Render, validate, and repair this PowerPoint deck."
+    ],
+    "brandColor": "#0B2A5B",
+    "composerIcon": "./assets/icon.png",
+    "logo": "./assets/icon.png"
+  }
+}

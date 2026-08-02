@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "slide-agent": {
+      "command": "npx",
+      "args": ["--yes", "-p", "@slide-agent/core@latest", "slide-agent-mcp"]
+    }
+  }
+}

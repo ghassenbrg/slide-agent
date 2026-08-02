@@ -1,0 +1,97 @@
+import { readFile } from "node:fs/promises";
+import path from "node:path";
+
+import { PptxInspector } from "../editing/pptx-inspector.js";
+import type { Logger } from "../logging/logger.js";
+import { silentLogger } from "../logging/logger.js";
+import { PresentationRenderer } from "../rendering/renderer.js";
+import type { DeckManifest, SlideAgentConfig, ValidationIssue, ValidationReport } from "../types/index.js";
+import { writeJson } from "../utils/files.js";
+import { ManifestValidator } from "./manifest-validator.js";
+import { PackageValidator } from "./package-validator.js";
+
+export interface ValidationOptions {
+  manifest?: DeckManifest | string;
+  reportPath?: string;
+  render?: boolean;
+  previewsDir?: string;
+  pdfPath?: string;
+  iterations?: number;
+}
+
+function summary(issues: ValidationIssue[]): ValidationReport["summary"] {
+  return {
+    errors: issues.filter((item) => item.severity === "error").length,
+    warnings: issues.filter((item) => item.severity === "warning").length,
+    info: issues.filter((item) => item.severity === "info").length,
+  };
+}
+
+export class PresentationValidator {
+  public constructor(
+    private readonly config: SlideAgentConfig,
+    private readonly logger: Logger = silentLogger,
+  ) {}
+
+  public async validate(inputPath: string, options: ValidationOptions = {}): Promise<ValidationReport> {
+    const input = path.resolve(inputPath);
+    this.logger.info("validation.start", "Validating presentation", { input });
+    const packageResult = await new PackageValidator().validate(input);
+    let manifest: DeckManifest;
+    const issues = [...packageResult.issues];
+    if (typeof options.manifest === "string") manifest = JSON.parse(await readFile(options.manifest, "utf8")) as DeckManifest;
+    else if (options.manifest) manifest = options.manifest;
+    else {
+      const inspection = await new PptxInspector().inspect(input);
+      manifest = inspection.manifest;
+      inspection.warnings.forEach((message) => issues.push({ code: "inspection-warning", severity: "warning", message, fixable: false }));
+      inspection.unsupportedFeatures.forEach((feature) => issues.push({
+        code: "unsupported-feature-preserved",
+        severity: "info",
+        message: `Unsupported edit feature detected and preserved where possible: ${feature}.`,
+        fixable: false,
+      }));
+    }
+    issues.push(...new ManifestValidator(this.config).validate(manifest));
+
+    let render: ValidationReport["render"] = { status: "skipped", previewFiles: [] };
+    if (options.render) {
+      try {
+        const result = await new PresentationRenderer(this.logger).render(
+          input,
+          options.previewsDir ?? path.join(path.dirname(input), `${path.basename(input, ".pptx")}-previews`),
+          { width: this.config.generation.renderWidth, height: this.config.generation.renderHeight, pdfPath: options.pdfPath },
+        );
+        render = { status: "pass", previewFiles: result.previewFiles, pdfPath: result.pdfPath };
+        if (result.previewFiles.length !== manifest.slides.length) {
+          issues.push({
+            code: "render-slide-count-mismatch",
+            severity: "error",
+            message: `Rendered ${result.previewFiles.length} previews for ${manifest.slides.length} slides.`,
+            fixable: false,
+          });
+        }
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        render = { status: "fail", previewFiles: [], error: message };
+        issues.push({ code: "render-failed", severity: "error", message, fixable: false });
+      }
+    }
+    const counts = summary(issues);
+    const status: ValidationReport["status"] = counts.errors > 0 ? "fail" : counts.warnings > 0 ? "warning" : "pass";
+    const report: ValidationReport = {
+      schemaVersion: "1.0",
+      status,
+      presentation: input,
+      checkedAt: new Date().toISOString(),
+      slideCount: manifest.slides.length,
+      summary: counts,
+      iterations: options.iterations ?? 1,
+      issues,
+      render,
+    };
+    if (options.reportPath) await writeJson(options.reportPath, report);
+    this.logger.info("validation.complete", "Validated presentation", { status, ...counts });
+    return report;
+  }
+}

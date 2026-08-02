@@ -1,0 +1,123 @@
+{
+  "name": "@slide-agent/core",
+  "version": "0.0.1",
+  "description": "Portable AI-agent skill and TypeScript toolkit for creating, editing, rendering, and validating editable PowerPoint presentations.",
+  "keywords": [
+    "powerpoint",
+    "pptx",
+    "slides",
+    "presentations",
+    "ai-agent",
+    "agent-skill"
+  ],
+  "homepage": "https://github.com/ghassenbrg/slide-agent#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ghassenbrg/slide-agent.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ghassenbrg/slide-agent/issues"
+  },
+  "author": "Ghassen Bargougui",
+  "type": "module",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "bin": {
+    "slide-agent": "dist/cli.js",
+    "slide-agent-mcp": "dist/mcp-server.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "agents",
+    "assets",
+    "images/icon.png",
+    "config",
+    "examples/prompts",
+    "examples/requests",
+    "references",
+    "scripts/setup.mjs",
+    "scripts/uninstall.mjs",
+    "scripts/install-agent-skill.sh",
+    "scripts/install-all-agents.sh",
+    "scripts/install-codex.sh",
+    "scripts/install-copilot.sh",
+    "scripts/install-claude.sh",
+    "scripts/install-gemini.sh",
+    "src",
+    "install.sh",
+    "install.ps1",
+    "install.cmd",
+    "uninstall.sh",
+    "uninstall.ps1",
+    "uninstall.cmd",
+    "SKILL.md",
+    "README.md",
+    "CHANGELOG.md",
+    "SECURITY.md",
+    "LICENSE",
+    "THIRD_PARTY_NOTICES.md"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts src/cli.ts src/mcp-server.ts --format esm --dts --sourcemap --clean --shims",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run tests/unit",
+    "test:integration": "vitest run tests/integration",
+    "examples": "tsx scripts/generate-examples.ts",
+    "install:cli": "npm run build && node scripts/setup.mjs --skip-build --cli-only",
+    "install:codex": "node scripts/setup.mjs --target codex",
+    "install:copilot": "node scripts/setup.mjs --target copilot",
+    "install:claude": "node scripts/setup.mjs --target claude",
+    "install:gemini": "node scripts/setup.mjs --target gemini",
+    "install:agents": "node scripts/setup.mjs --target all",
+    "setup": "node scripts/setup.mjs",
+    "doctor": "tsx src/cli.ts doctor",
+    "plugin:build": "node scripts/build-codex-plugin.mjs",
+    "plugin:validate": "node scripts/validate-codex-plugin.mjs",
+    "release:verify": "node scripts/verify-release.mjs",
+    "release:audit-artifacts": "node scripts/audit-release-artifacts.mjs",
+    "audit:public": "node scripts/audit-public-content.mjs",
+    "lockfile:verify": "node scripts/verify-lockfile.mjs",
+    "version:set": "node scripts/set-version.mjs",
+    "release:artifacts": "node scripts/package-release.mjs",
+    "verify:install": "node scripts/verify-managed-install.mjs",
+    "fixture:invalid": "tsx scripts/generate-invalid-deck.ts",
+    "verify": "npm run typecheck && npm test && npm run build",
+    "prepack": "npm run build"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/server": "^2.0.0",
+    "@xmldom/xmldom": "^0.8.13",
+    "commander": "^15.0.0",
+    "jszip": "^3.10.1",
+    "pptxgenjs": "^4.0.1",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@emnapi/core": "2.0.0-alpha.3",
+    "@emnapi/runtime": "2.0.0-alpha.3",
+    "@modelcontextprotocol/client": "^2.0.0",
+    "@types/node": "^24.0.0",
+    "tsup": "^8.5.1",
+    "tsx": "^4.23.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.10"
+  },
+  "overrides": {
+    "esbuild": "^0.28.1"
+  }
+}

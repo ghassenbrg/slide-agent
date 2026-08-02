@@ -1,0 +1,30 @@
+{
+  "command": "create",
+  "prompt": "Create an eight-slide launch decision deck for product, sales, and customer-success leaders. Make the recommendation explicit, use editable native PowerPoint elements, include a metric-driven launch gate, and end with concrete actions.",
+  "creativeDirection": {
+    "name": "Launch collision",
+    "concept": "Operational fragments collide into one vivid customer promise and a hard ninety-day vector.",
+    "palette": {
+      "background": "F2EDFF",
+      "surface": "FFFFFF",
+      "ink": "151126",
+      "muted": "5C546B",
+      "accent": "B52B25",
+      "accentAlt": "2457FF",
+      "accentSoft": "FFD6D1",
+      "rule": "CBC4DD",
+      "positive": "158A60",
+      "negative": "D12D3E",
+      "warning": "D58900",
+      "custom": { "launchRed": "FF4B3E" }
+    },
+    "typography": { "display": "Arial Black", "body": "Aptos", "mono": "Aptos Mono" },
+    "compositionPrinciples": ["Hard scale jumps", "Cropped geometry implies forward motion", "No repeated dashboard cards"],
+    "diagramLanguage": "Chunky directional markers with one dominant route"
+  },
+  "output": "examples/output/agent-request/launch-decision.pptx",
+  "render": true,
+  "validate": true,
+  "autoFix": true,
+  "maxRetries": 2
+}

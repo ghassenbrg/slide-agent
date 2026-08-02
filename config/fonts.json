@@ -1,0 +1,14 @@
+{
+  "heading": "Aptos Display",
+  "body": "Aptos",
+  "mono": "Aptos Mono",
+  "fallbacks": ["Arial", "Helvetica", "Liberation Sans", "Noto Sans"],
+  "supported": ["Aptos", "Aptos Display", "Aptos Mono", "Arial", "Helvetica", "Liberation Sans", "Noto Sans"],
+  "minimums": {
+    "deckTitle": 50,
+    "slideTitle": 32,
+    "subheading": 22,
+    "body": 16,
+    "caption": 11
+  }
+}
