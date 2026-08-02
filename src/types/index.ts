@@ -649,7 +649,8 @@ export interface RenderRequest {
 export interface ValidateRequest {
   command: "validate";
   input: string;
-  report: string;
+  /** Validation report JSON path; defaults to artifacts/logs next to the deck. */
+  report?: string;
   manifest?: string;
   previewsDir?: string;
   configDir?: string;

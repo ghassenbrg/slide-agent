@@ -59,7 +59,7 @@ const renderRequest = z.object({
 const validateRequest = z.object({
   command: z.literal("validate"),
   input: z.string(),
-  report: z.string(),
+  report: z.string().optional(),
   manifest: z.string().optional(),
   previewsDir: z.string().optional(),
   configDir: z.string().optional(),

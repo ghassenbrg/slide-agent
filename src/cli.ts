@@ -139,7 +139,7 @@ program.command("render")
 
 program.command("validate")
   .requiredOption("--input <file>", "Input .pptx path")
-  .requiredOption("--report <file>", "Validation report JSON path")
+  .option("--report <file>", "Validation report JSON path (default: artifacts/logs next to the deck)")
   .option("--manifest <file>", "Generation manifest JSON path")
   .option("--previews <directory>", "Preview output directory")
   .option("--config <directory>", "Configuration directory")

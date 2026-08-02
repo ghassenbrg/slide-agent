@@ -1,4 +1,7 @@
 #!/usr/bin/env node
+import { realpathSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+
 import { McpServer } from "@modelcontextprotocol/server";
 import { serveStdio } from "@modelcontextprotocol/server/stdio";
 import { z } from "zod";
@@ -88,7 +91,7 @@ export function buildMcpServer(): McpServer {
     description: "Validate PPTX package integrity, editability, geometry, and legibility; optionally validate rendered output; write a structured JSON report.",
     inputSchema: z.object({
       input: z.string().min(1),
-      report: z.string().min(1),
+      report: z.string().min(1).optional(),
       manifest: z.string().optional(),
       previewsDir: z.string().optional(),
       render: z.boolean().optional(),
@@ -109,6 +112,18 @@ export function buildMcpServer(): McpServer {
   return server;
 }
 
-if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).href) {
+// npm and npx expose bin entries through symlinks on macOS and Linux, so the
+// executed argv path and this module's resolved URL differ; compare realpaths
+// or the server would silently exit instead of serving stdio.
+function executedDirectly(): boolean {
+  if (!process.argv[1]) return false;
+  try {
+    return realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url));
+  } catch {
+    return false;
+  }
+}
+
+if (executedDirectly()) {
   await serveStdio(() => buildMcpServer());
 }

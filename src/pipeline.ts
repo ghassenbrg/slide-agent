@@ -238,15 +238,16 @@ export class SlideAgent {
     const requestId = randomUUID();
     try {
       const config = await loadConfig(request.configDir);
+      const reportPath = request.report ?? outputLayout(request.input).validation;
       const report = await new PresentationValidator(config, this.logger).validate(request.input, {
-        reportPath: request.report,
+        reportPath,
         manifest: request.manifest,
         render: request.render ?? false,
         previewsDir: request.previewsDir,
       });
       return {
         status: resultStatus(report, []),
-        generatedFiles: unique([request.report, ...(report.render?.previewFiles ?? []), ...(report.render?.pdfPath ? [report.render.pdfPath] : [])]),
+        generatedFiles: unique([reportPath, ...(report.render?.previewFiles ?? []), ...(report.render?.pdfPath ? [report.render.pdfPath] : [])]),
         slideCount: report.slideCount,
         warnings: report.issues.filter((item) => item.severity !== "error").map((item) => item.message),
         validation: report,
