@@ -118,9 +118,13 @@ async function installLauncher(name, source) {
 async function persistPath(bin) {
   if (has("--skip-path-update") || process.env.SLIDE_AGENT_SKIP_PATH_UPDATE === "1") return;
   if (process.platform === "win32") {
-    const script = "$bin=$args[0]; $current=[Environment]::GetEnvironmentVariable('Path','User'); if (-not $current) {$current=''}; $parts=$current -split ';'; if ($parts -notcontains $bin) {$next=if ($current) {$current.TrimEnd(';')+';'+$bin} else {$bin}; [Environment]::SetEnvironmentVariable('Path',$next,'User')}";
+    const script = "$bin=$env:SLIDE_AGENT_PATH_ENTRY; $current=[Environment]::GetEnvironmentVariable('Path','User'); if (-not $current) {$current=''}; $parts=$current -split ';'; if ($parts -notcontains $bin) {$next=if ($current) {$current.TrimEnd(';')+';'+$bin} else {$bin}; [Environment]::SetEnvironmentVariable('Path',$next,'User')}";
     await new Promise((resolve, reject) => {
-      const child = spawn("powershell.exe", ["-NoProfile", "-NonInteractive", "-Command", script, bin], { stdio: "inherit", shell: false });
+      const child = spawn("powershell.exe", ["-NoProfile", "-NonInteractive", "-Command", script], {
+        env: { ...process.env, SLIDE_AGENT_PATH_ENTRY: bin },
+        stdio: "inherit",
+        shell: false,
+      });
       child.once("error", reject);
       child.once("exit", (code) => code === 0 ? resolve() : reject(new Error(`PowerShell PATH update exited with code ${code}`)));
     });

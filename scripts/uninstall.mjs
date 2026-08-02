@@ -72,9 +72,13 @@ async function removeLauncher(destination) {
 
 async function removePathEntry(bin) {
   if (process.platform === "win32") {
-    const script = "$bin=$args[0]; $current=[Environment]::GetEnvironmentVariable('Path','User'); if ($current) {$next=(($current -split ';' | Where-Object {$_ -and $_ -ne $bin}) -join ';'); [Environment]::SetEnvironmentVariable('Path',$next,'User')}";
+    const script = "$bin=$env:SLIDE_AGENT_PATH_ENTRY; $current=[Environment]::GetEnvironmentVariable('Path','User'); if ($current) {$next=(($current -split ';' | Where-Object {$_ -and $_ -ne $bin}) -join ';'); [Environment]::SetEnvironmentVariable('Path',$next,'User')}";
     await new Promise((resolve, reject) => {
-      const child = spawn("powershell.exe", ["-NoProfile", "-NonInteractive", "-Command", script, bin], { stdio: "inherit", shell: false });
+      const child = spawn("powershell.exe", ["-NoProfile", "-NonInteractive", "-Command", script], {
+        env: { ...process.env, SLIDE_AGENT_PATH_ENTRY: bin },
+        stdio: "inherit",
+        shell: false,
+      });
       child.once("error", reject);
       child.once("exit", (code) => code === 0 ? resolve() : reject(new Error(`PowerShell PATH cleanup exited with code ${code}`)));
     });
@@ -100,7 +104,7 @@ for (const directory of agentDirectories) await removeSkill(path.join(directory,
 for (const name of ["slide-agent", "slide-agent-mcp"]) {
   await removeLauncher(path.join(prefix, "bin", process.platform === "win32" ? `${name}.cmd` : name));
 }
-await removePathEntry(path.join(prefix, "bin"));
+if (process.env.SLIDE_AGENT_SKIP_PATH_UPDATE !== "1") await removePathEntry(path.join(prefix, "bin"));
 
 const managedPackageJson = path.join(managedPackage, "package.json");
 if (await exists(managedPackageJson)) {
