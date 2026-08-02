@@ -19,9 +19,9 @@ describe("executable discovery", () => {
       nodeExecutable: "/runtime/dependencies/node/bin/node",
     });
 
-    expect(directories).toContain("/runtime/dependencies/bin/override");
-    expect(directories).toContain("/usr/local/bin");
-    expect(directories).not.toContain("/Users/example/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override");
+    expect(directories).toContain(path.join("/runtime/dependencies/bin", "override"));
+    expect(directories).toContain(path.join("/usr/local/bin"));
+    expect(directories).not.toContain(path.join("/Users/example", ".cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override"));
   });
 
   it("finds an executable in an additional discovery directory", async () => {
