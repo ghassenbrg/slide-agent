@@ -18,3 +18,7 @@ All notable public changes are recorded here. Versions follow semantic versionin
 - Limit CI to pushes and merged pull requests entering `main`.
 - Rename and split the release workflow into professional verification and publication jobs.
 - Upgrade artifact upload and download actions to Node.js 24-compatible releases.
+
+## 0.0.3 - 2026-08-02
+
+- Minor fixes.
