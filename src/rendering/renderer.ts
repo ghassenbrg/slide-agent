@@ -1,6 +1,7 @@
 import { copyFile, mkdtemp, readdir, rm, stat, unlink } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
+import { pathToFileURL } from "node:url";
 
 import type { Logger } from "../logging/logger.js";
 import { silentLogger } from "../logging/logger.js";
@@ -39,7 +40,9 @@ export class PresentationRenderer {
       const profile = path.join(temporary, "lo-profile");
       const conversion = await runProcess(soffice, [
         "--headless",
-        `-env:UserInstallation=file://${profile}`,
+        // pathToFileURL produces the file:///C:/... form LibreOffice needs on
+        // Windows; plain string interpolation breaks there.
+        `-env:UserInstallation=${pathToFileURL(profile).href}`,
         "--convert-to",
         "pdf",
         "--outdir",
