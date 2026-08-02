@@ -1,4 +1,4 @@
-name: Release Slide Agent
+name: Publish Slide Agent Release
 
 on:
   workflow_dispatch:
@@ -7,17 +7,16 @@ on:
       - "v*"
 
 permissions:
-  contents: write
-  id-token: write
+  contents: read
 
 concurrency:
   group: release-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
-  release:
+  verify:
+    name: Verify Release
     runs-on: ubuntu-latest
-    environment: release
     steps:
       - uses: actions/checkout@v6
         with:
@@ -31,6 +30,8 @@ jobs:
         run: npm install --global npm@latest
       - run: node scripts/verify-lockfile.mjs
       - run: npm ci
+        env:
+          SLIDE_AGENT_SKIP_AUTO_INSTALL: "1"
       - run: npm ci
         working-directory: extensions/vscode
       - run: npm audit --omit=dev --audit-level=high
@@ -41,32 +42,85 @@ jobs:
       - run: npm run verify
       - run: npm run verify:install
       - run: npm run release:artifacts
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         with:
           name: slide-agent-${{ github.ref_name }}
           path: release/*
+          if-no-files-found: error
+
+  publish-npm:
+    name: Publish npm Package
+    needs: verify
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
+      - uses: actions/download-artifact@v7
+        with:
+          name: slide-agent-${{ github.ref_name }}
+          path: release
+      - name: Use an npm CLI that supports trusted publishing
+        run: npm install --global npm@latest
       - name: Publish npm package
-        if: startsWith(github.ref, 'refs/tags/v')
         env:
           NPM_TOKEN_FALLBACK: ${{ secrets.NPM_TOKEN }}
         run: |
           if [ -n "$NPM_TOKEN_FALLBACK" ]; then
             export NODE_AUTH_TOKEN="$NPM_TOKEN_FALLBACK"
           fi
-          npm publish --access public
+          npm publish "release/slide-agent-core-${GITHUB_REF_NAME#v}.tgz" --access public
+
+  publish-vscode:
+    name: Publish VS Code Extension
+    needs: verify
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - uses: actions/download-artifact@v7
+        with:
+          name: slide-agent-${{ github.ref_name }}
+          path: release
       - name: Publish VS Code extension
-        if: startsWith(github.ref, 'refs/tags/v')
-        working-directory: extensions/vscode
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
         run: |
           if [ -n "$VSCE_PAT" ]; then
-            npx vsce publish --packagePath "slide-agent-vscode-${GITHUB_REF_NAME#v}.vsix" -p "$VSCE_PAT"
+            npx --yes @vscode/vsce@3.9.2 publish --packagePath "release/slide-agent-vscode-${GITHUB_REF_NAME#v}.vsix" -p "$VSCE_PAT"
           else
             echo "VSCE_PAT is not configured; upload the packaged VSIX manually or use the publisher's identity-based pipeline."
           fi
+
+  create-release:
+    name: Create GitHub Release
+    needs: [verify, publish-npm, publish-vscode]
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/download-artifact@v7
+        with:
+          name: slide-agent-${{ github.ref_name }}
+          path: release
       - name: Create GitHub release
-        if: startsWith(github.ref, 'refs/tags/v')
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh release create "$GITHUB_REF_NAME" release/* --verify-tag --generate-notes

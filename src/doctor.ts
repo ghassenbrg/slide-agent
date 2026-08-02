@@ -16,11 +16,12 @@ async function exists(filePath: string): Promise<boolean> {
 
 export async function runDoctor(): Promise<DoctorCheck[]> {
   const home = homedir();
-  const nodeMajor = Number(process.versions.node.split(".")[0]);
+  const [nodeMajor = 0, nodeMinor = 0] = process.versions.node.split(".").map(Number);
+  const nodeSupported = nodeMajor > 22 || (nodeMajor === 22 && nodeMinor >= 12);
   const checks: DoctorCheck[] = [{
     name: "Node.js",
-    status: nodeMajor >= 20 ? "ok" : "error",
-    detail: `${process.versions.node} (${process.execPath})`,
+    status: nodeSupported ? "ok" : "error",
+    detail: `${process.versions.node} (${process.execPath})${nodeSupported ? "" : "; version 22.12 or newer is required"}`,
   }];
   const soffice = await findExecutable(["soffice", "libreoffice"], process.env.SLIDE_AGENT_SOFFICE);
   const pdftoppm = await findExecutable(["pdftoppm"], process.env.SLIDE_AGENT_PDFTOPPM);

@@ -1,6 +1,6 @@
 import { readFile } from "node:fs/promises";
 
-import { DOMParser } from "@xmldom/xmldom";
+import { DOMParser, type Document, type Element } from "@xmldom/xmldom";
 import JSZip from "jszip";
 
 import type { ValidationIssue } from "../types/index.js";
@@ -18,13 +18,11 @@ interface ParsedXml {
 function parseXml(xml: string): ParsedXml {
   const errors: string[] = [];
   const document = new DOMParser({
-    errorHandler: {
-      warning: () => undefined,
-      error: (message) => errors.push(message),
-      fatalError: (message) => errors.push(message),
+    onError: (level, message) => {
+      if (level !== "warning") errors.push(message);
     },
   }).parseFromString(xml, "application/xml");
-  if (document.documentElement.nodeName === "parsererror") errors.push(document.documentElement.textContent ?? "parse error");
+  if (!document.documentElement || document.documentElement.nodeName === "parsererror") errors.push(document.documentElement?.textContent ?? "parse error");
   return { document: errors.length === 0 ? document : undefined, errors };
 }
 
@@ -150,7 +148,7 @@ export class PackageValidator {
     }
 
     const presentation = parsedParts.get("ppt/presentation.xml");
-    if (presentation) {
+    if (presentation?.documentElement) {
       const slideIds = elements(presentation, "p:sldId").map((entry) => entry.getAttribute("id") ?? "");
       const seen = new Set<string>();
       for (const id of slideIds) {

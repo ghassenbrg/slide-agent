@@ -57,6 +57,12 @@ function inspectTarGz(archive, compressed) {
     if (JSON.stringify(metadata.bin) !== JSON.stringify(expectedBins)) {
       problems.push(`${archive}: npm package does not expose both expected CLI binaries`);
     }
+    if (metadata.scripts?.postinstall !== "node scripts/postinstall.mjs") {
+      problems.push(`${archive}: npm package does not register bundled skills after installation`);
+    }
+    if (!entries.has("package/scripts/postinstall.mjs")) {
+      problems.push(`${archive}: missing package/scripts/postinstall.mjs`);
+    }
     for (const target of Object.values(expectedBins)) {
       const entry = entries.get(`package/${target}`);
       if (!entry) problems.push(`${archive}: missing npm binary target package/${target}`);

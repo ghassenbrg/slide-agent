@@ -13,6 +13,7 @@ interface AgentResult {
 }
 
 let output: vscode.OutputChannel;
+const INSTALLED_VERSION_KEY = "slideAgent.installedCoreVersion";
 
 const SCENE_AUTHORING_PROMPT = `You are the creative director, information architect, and PowerPoint craftsperson for Slide Agent.
 
@@ -104,7 +105,7 @@ async function runCli(args: string[]): Promise<AgentResult | undefined> {
       `Slide Agent is unavailable: ${error instanceof Error ? error.message : String(error)}`,
       "Install Slide Agent",
     );
-    if (action) await install();
+    if (action) await vscode.commands.executeCommand("slideAgent.install");
     return undefined;
   }
 }
@@ -247,22 +248,48 @@ async function edit(): Promise<void> {
   });
 }
 
-async function install(): Promise<void> {
-  const terminal = vscode.window.createTerminal({ name: "Install Slide Agent" });
-  terminal.show();
-  terminal.sendText("npx --yes --package @slide-agent/core@latest -- slide-agent install", true);
+async function install(context: vscode.ExtensionContext, automatic = false): Promise<void> {
+  const version = String(context.extension.packageJSON.version);
+  const packageSpecifier = `@slide-agent/core@${version}`;
+  try {
+    const result = await vscode.window.withProgress(
+      {
+        location: vscode.ProgressLocation.Notification,
+        title: automatic ? "Setting up Slide Agent…" : "Installing or updating Slide Agent…",
+        cancellable: false,
+      },
+      () => run("npx", ["--yes", "--package", packageSpecifier, "--", "slide-agent", "install", "--package", packageSpecifier]),
+    );
+    if (result.exitCode !== 0) throw new Error(`installer exited with code ${result.exitCode}`);
+    await context.globalState.update(INSTALLED_VERSION_KEY, version);
+    const reload = "Reload Window";
+    const choice = await vscode.window.showInformationMessage(
+      "Slide Agent is installed. Reload VS Code if the new skill is not visible in an existing chat.",
+      reload,
+    );
+    if (choice === reload) await vscode.commands.executeCommand("workbench.action.reloadWindow");
+  } catch (error) {
+    output.show(true);
+    const message = `Slide Agent setup failed: ${error instanceof Error ? error.message : String(error)}. Node.js 22.12 or newer and npm/npx must be available on PATH.`;
+    const retry = "Retry";
+    if (await vscode.window.showErrorMessage(message, retry) === retry) await install(context, false);
+  }
 }
 
 export function activate(context: vscode.ExtensionContext): void {
   output = vscode.window.createOutputChannel("Slide Agent");
   context.subscriptions.push(
     output,
-    vscode.commands.registerCommand("slideAgent.install", install),
+    vscode.commands.registerCommand("slideAgent.install", () => install(context, false)),
     vscode.commands.registerCommand("slideAgent.create", create),
     vscode.commands.registerCommand("slideAgent.createFromCurrentFile", createFromCurrentFile),
     vscode.commands.registerCommand("slideAgent.edit", edit),
     vscode.commands.registerCommand("slideAgent.doctor", () => runCli(["doctor"])),
   );
+  const version = String(context.extension.packageJSON.version);
+  if (configuration().get<boolean>("autoInstall", true) && context.globalState.get<string>(INSTALLED_VERSION_KEY) !== version) {
+    void install(context, true);
+  }
 }
 
 export function deactivate(): void { /* no persistent resources */ }

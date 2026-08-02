@@ -23,7 +23,7 @@ PptxGenJS is the primary authoring engine. New decks use native PowerPoint text 
 
 ## Requirements
 
-Node.js 20 or newer is the only requirement for creating, editing, and structurally validating `.pptx` files.
+Node.js 22.12 or newer is the only requirement for installing Slide Agent and for creating, editing, and structurally validating `.pptx` files. Check with `node --version` before installing; an older system Node.js can cause npm engine errors even when VS Code itself is current.
 
 PDF and PNG previews are optional. That workflow additionally uses LibreOffice (`soffice`) for PPTX-to-PDF conversion and Poppler (`pdftoppm`) for PDF-to-PNG conversion. Missing preview tools produce warnings in `slide-agent doctor`; they do not prevent installation or PowerPoint generation.
 
@@ -46,6 +46,16 @@ npx --yes --package @slide-agent/core@latest -- slide-agent install
 
 It persistently installs the CLI and MCP server under the user-writable `~/.local`, registers the same skill for Codex, GitHub Copilot, Claude Code, and Gemini CLI, and verifies the core setup. `npx` is only the bootstrap; normal use does not redownload the package. You do not need `npm link`, an administrator-owned global npm prefix, manual skill copying, a product-specific runtime, or a GitHub source checkout.
 
+If you are adding Slide Agent as a JavaScript/TypeScript dependency, a regular local install is also supported:
+
+```bash
+npm install @slide-agent/core
+```
+
+The package's `postinstall` hook registers its bundled skill in every supported personal skill directory. The project-local CLI is available as `npx --no-install slide-agent`, and the library is available through `import { SlideAgent } from "@slide-agent/core"`. A global npm install is not required. `npm install -g @slide-agent/core` is supported when your npm global prefix is already user-writable, but the managed `npx … slide-agent install` command above is preferred because it never needs administrator permissions and installs a persistent user-local CLI.
+
+Automated library-only environments can set `SLIDE_AGENT_SKIP_AUTO_INSTALL=1` to suppress personal skill registration. This opt-out is intended for CI and container builds, not normal end-user installation.
+
 To also install the optional preview tools with Homebrew, apt, dnf, pacman, or WinGet:
 
 ```bash
@@ -60,7 +70,7 @@ slide-agent uninstall
 
 ### VS Code and GitHub Copilot
 
-Install `Slide Agent` from the VS Code Marketplace, or download `slide-agent-vscode-<version>.vsix` from a GitHub release and run **Extensions: Install from VSIX**. The extension lets you choose any language model exposed through VS Code's Language Model API. That model invents the artistic direction and authors the complete editable NDJSON scene; Slide Agent builds, renders, validates, and repairs it. The extension's **Slide Agent: Install or Update** command performs the same one-time universal installation—no clone required.
+Install `Slide Agent` from the VS Code Marketplace, or download `slide-agent-vscode-<version>.vsix` from a GitHub release and run **Extensions: Install from VSIX**. On its first activation for each extension version, it automatically installs the matching core engine and registers the skills. This behavior can be disabled with `slideAgent.autoInstall`; **Slide Agent: Install or Update** remains available for an explicit retry. The extension lets you choose any language model exposed through VS Code's Language Model API. That model invents the artistic direction and authors the complete editable NDJSON scene; Slide Agent builds, renders, validates, and repairs it.
 
 ### Development checkout only
 
@@ -109,6 +119,8 @@ npm run install:agents
 ```
 
 The targets are `~/.agents/skills/slide-agent` for Codex and the shared Agent Skills standard, `~/.copilot/skills/slide-agent` for GitHub Copilot, `~/.claude/skills/slide-agent` for Claude Code, and `~/.gemini/skills/slide-agent` for Gemini CLI. The CLI and TypeScript API are the neutral integration layer for VS Code extensions, self-hosted models, and other agents that can execute local tools. A browser-only chat session cannot run a program on your computer; connect it through a tool-capable desktop/extension host or a server that invokes the structured CLI/API.
+
+Codex detects skill changes automatically; if an already-open Codex, Copilot, Claude, Gemini, or VS Code chat does not show `$slide-agent`, restart that host or start a new chat after installation.
 
 ## CLI
 

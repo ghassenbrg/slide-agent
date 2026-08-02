@@ -53,6 +53,11 @@ async function sameDestination(destination) {
   return await realpath(resolved).catch(() => resolved) === await realpath(packageRoot).catch(() => packageRoot);
 }
 
+async function isSlideAgentSkill(destination) {
+  const skill = await readFile(path.join(destination, "SKILL.md"), "utf8").catch(() => "");
+  return /^---[\s\S]*?^name:\s*["']?slide-agent["']?\s*$/m.test(skill);
+}
+
 async function installSkill(agent, skillsDirectory) {
   const destination = path.join(skillsDirectory, "slide-agent");
   await mkdir(skillsDirectory, { recursive: true });
@@ -60,7 +65,13 @@ async function installSkill(agent, skillsDirectory) {
     process.stdout.write(`Already installed for ${agent}: ${destination}\n`);
     return;
   }
-  if (await exists(destination)) throw new Error(`Refusing to replace existing path: ${destination}`);
+  if (await lstat(destination).catch(() => undefined)) {
+    if (await isSlideAgentSkill(destination)) {
+      process.stdout.write(`Existing Slide Agent registration preserved for ${agent}: ${destination}\n`);
+      return;
+    }
+    throw new Error(`Refusing to replace existing path: ${destination}`);
+  }
   try {
     await symlink(packageRoot, destination, process.platform === "win32" ? "junction" : "dir");
   } catch (error) {

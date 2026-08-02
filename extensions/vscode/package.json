@@ -29,6 +29,7 @@
     "Gemini"
   ],
   "activationEvents": [
+    "onStartupFinished",
     "onCommand:slideAgent.install",
     "onCommand:slideAgent.create",
     "onCommand:slideAgent.createFromCurrentFile",
@@ -66,6 +67,11 @@
           "type": "string",
           "default": "slide-agent",
           "description": "Path to the Slide Agent CLI."
+        },
+        "slideAgent.autoInstall": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically install or update the matching Slide Agent engine and agent skills once per extension version."
         },
         "slideAgent.defaultOutputDirectory": {
           "type": "string",

@@ -7,9 +7,13 @@ on:
   pull_request:
     branches:
       - main
+    types:
+      - closed
 
 jobs:
   verify:
+    name: Verify on ${{ matrix.os }}
+    if: github.event_name == 'push' || github.event.pull_request.merged == true
     strategy:
       fail-fast: false
       matrix:

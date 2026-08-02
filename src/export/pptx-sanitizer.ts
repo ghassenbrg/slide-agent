@@ -1,6 +1,6 @@
 import { readFile, writeFile } from "node:fs/promises";
 
-import { DOMParser, XMLSerializer } from "@xmldom/xmldom";
+import { DOMParser, XMLSerializer, type Document, type Element } from "@xmldom/xmldom";
 import JSZip from "jszip";
 
 const CONTENT_TYPES = "[Content_Types].xml";
@@ -14,13 +14,11 @@ const THEME_CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.theme+
 function parseXml(xml: string, partName: string): Document {
   const errors: string[] = [];
   const document = new DOMParser({
-    errorHandler: {
-      warning: () => undefined,
-      error: (message) => errors.push(message),
-      fatalError: (message) => errors.push(message),
+    onError: (level, message) => {
+      if (level !== "warning") errors.push(message);
     },
   }).parseFromString(xml, "application/xml");
-  if (errors.length > 0 || document.documentElement.nodeName === "parsererror") {
+  if (errors.length > 0 || !document.documentElement || document.documentElement.nodeName === "parsererror") {
     throw new Error(`Cannot sanitize malformed XML part ${partName}: ${errors.join("; ") || "parse error"}`);
   }
   return document;
@@ -91,6 +89,7 @@ async function repairContentTypes(zip: JSZip): Promise<void> {
   if (!part) return;
   const document = parseXml(await part.async("string"), CONTENT_TYPES);
   const root = document.documentElement;
+  if (!root) throw new Error(`Cannot sanitize malformed XML part ${CONTENT_TYPES}: missing document element`);
   const seenOverrides = new Set<string>();
 
   for (const override of Array.from(document.getElementsByTagName("Override"))) {

@@ -50,6 +50,7 @@
     "examples/requests",
     "references",
     "scripts/setup.mjs",
+    "scripts/postinstall.mjs",
     "scripts/uninstall.mjs",
     "scripts/install-agent-skill.sh",
     "scripts/install-all-agents.sh",
@@ -72,7 +73,7 @@
     "THIRD_PARTY_NOTICES.md"
   ],
   "scripts": {
-    "build": "tsup src/index.ts src/cli.ts src/mcp-server.ts --format esm --dts --sourcemap --clean --shims",
+    "build": "tsup src/index.ts src/cli.ts src/mcp-server.ts --format esm --sourcemap --clean --shims && tsc --project tsconfig.build.json",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:unit": "vitest run tests/unit",
@@ -97,6 +98,7 @@
     "verify:install": "node scripts/verify-managed-install.mjs",
     "fixture:invalid": "tsx scripts/generate-invalid-deck.ts",
     "verify": "npm run typecheck && npm test && npm run build",
+    "postinstall": "node scripts/postinstall.mjs",
     "prepack": "npm run build"
   },
   "dependencies": {

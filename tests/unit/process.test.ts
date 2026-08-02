@@ -13,15 +13,18 @@ afterEach(async () => {
 
 describe("executable discovery", () => {
   it("includes portable runtime and common executable directories outside PATH", () => {
+    const filesystemRoot = path.parse(process.cwd()).root;
+    const runtimeDependencies = path.join(filesystemRoot, "runtime", "dependencies");
+    const homeDirectory = path.join(filesystemRoot, "Users", "example");
     const directories = executableSearchDirectories({
-      envPath: "/usr/bin:/bin",
-      homeDirectory: "/Users/example",
-      nodeExecutable: "/runtime/dependencies/node/bin/node",
+      envPath: [path.join(filesystemRoot, "system-bin"), path.join(filesystemRoot, "fallback-bin")].join(path.delimiter),
+      homeDirectory,
+      nodeExecutable: path.join(runtimeDependencies, "node", "bin", process.platform === "win32" ? "node.exe" : "node"),
     });
 
-    expect(directories).toContain(path.join("/runtime/dependencies/bin", "override"));
-    expect(directories).toContain(path.join("/usr/local/bin"));
-    expect(directories).not.toContain(path.join("/Users/example", ".cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override"));
+    expect(directories).toContain(path.join(runtimeDependencies, "bin", "override"));
+    expect(directories).toContain(path.join(homeDirectory, ".local", "bin"));
+    expect(directories).not.toContain(path.join(homeDirectory, ".cache", "codex-runtimes", "codex-primary-runtime", "dependencies", "bin", "override"));
   });
 
   it("finds an executable in an additional discovery directory", async () => {

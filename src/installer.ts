@@ -107,7 +107,9 @@ export async function installManaged(options: ManagedInstallOptions = {}): Promi
 
   if (options.installRenderDependencies ?? false) await installRenderingTools();
   await mkdir(managedRoot, { recursive: true });
-  await runInteractive(npm, ["install", "--prefix", managedRoot, "--omit=dev", "--no-audit", "--no-fund", packageSpecifier]);
+  await runInteractive(npm, ["install", "--prefix", managedRoot, "--omit=dev", "--no-audit", "--no-fund", packageSpecifier], {
+    SLIDE_AGENT_SKIP_AUTO_INSTALL: "1",
+  });
 
   const packageRoot = path.join(managedRoot, "node_modules", "@slide-agent", "core");
   const setup = path.join(packageRoot, "scripts", "setup.mjs");

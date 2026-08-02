@@ -21,16 +21,23 @@ export function executableSearchDirectories(options: {
   homeDirectory?: string;
   nodeExecutable?: string;
 } = {}): string[] {
+  const homeDirectory = options.homeDirectory ?? homedir();
   const nodeExecutable = options.nodeExecutable ?? process.execPath;
+  const nodeDirectory = path.dirname(nodeExecutable);
   const runtimeDependencies = path.resolve(path.dirname(nodeExecutable), "../..");
+  const platformDirectories = process.platform === "win32"
+    ? [
+        path.join(process.env.APPDATA ?? path.join(homeDirectory, "AppData", "Roaming"), "npm"),
+        path.join(process.env.LOCALAPPDATA ?? path.join(homeDirectory, "AppData", "Local"), "Microsoft", "WinGet", "Links"),
+      ]
+    : ["/opt/homebrew/bin", "/usr/local/bin", "/usr/bin", "/bin"];
   return unique([
     ...(options.envPath ?? process.env.PATH ?? "").split(path.delimiter),
+    nodeDirectory,
     path.join(runtimeDependencies, "bin", "override"),
     path.join(runtimeDependencies, "bin", "fallback"),
-    path.join("/opt/homebrew/bin"),
-    path.join("/usr/local/bin"),
-    path.join("/usr/bin"),
-    path.join("/bin"),
+    path.join(homeDirectory, ".local", "bin"),
+    ...platformDirectories,
   ]);
 }
 

@@ -166,10 +166,12 @@ For a version tag, GitHub Actions:
 3. installs both lockfiles;
 4. runs production dependency, privacy, copyright, version, build, test, plugin, VSIX, and managed-install gates;
 5. builds the npm tarball, VSIX, Codex plugin ZIP, and SHA-256 checksums;
-6. uploads the artifacts to the workflow run;
-7. publishes `@slide-agent/core` through npm trusted publishing or the temporary `NPM_TOKEN` fallback;
-8. publishes the VS Code extension only when `VSCE_PAT` is configured;
-9. creates the GitHub release from the verified tag and attaches every artifact.
+6. uploads the artifacts with the Node.js 24-based artifact action;
+7. runs **Publish npm Package** to publish `@slide-agent/core` through npm trusted publishing or the temporary `NPM_TOKEN` fallback;
+8. runs **Publish VS Code Extension** only when `VSCE_PAT` is configured;
+9. runs **Create GitHub Release** after both publication jobs and attaches every verified artifact.
+
+The workflow is displayed as **Publish Slide Agent Release**. Its four jobs are **Verify Release**, **Publish npm Package**, **Publish VS Code Extension**, and **Create GitHub Release**.
 
 If npm publishing fails, the job stops before creating the GitHub release. A published npm version is immutable; diagnose the credential, scope, or version problem and use a new version when package contents must change.
 
@@ -181,6 +183,7 @@ Replace `1.2.0` with the actual version:
 npm view @slide-agent/core@1.2.0 version dist.integrity repository.url
 npm pack @slide-agent/core@1.2.0 --dry-run
 npx --yes --package @slide-agent/core@1.2.0 -- slide-agent --version
+npm install @slide-agent/core@1.2.0
 ```
 
 Verify the end-user installer in a test account or disposable environment:
@@ -194,6 +197,7 @@ slide-agent uninstall
 Confirm that:
 
 - the npm package shows the expected version and provenance badge;
+- a normal local npm install creates valid skill registrations without requiring a global install;
 - the npx command prints the same version;
 - the GitHub release contains all four files and matching checksums;
 - the VS Code Marketplace shows the new version, icon, README, commands, and publisher;

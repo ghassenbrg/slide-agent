@@ -58,6 +58,8 @@ if (JSON.stringify(packageJson.bin) !== JSON.stringify(expectedBins)) {
 if (JSON.stringify(packageLock.packages?.[""]?.bin) !== JSON.stringify(expectedBins)) {
   problems.push("package-lock root bin entries do not match the publishable package metadata");
 }
+if (packageJson.scripts?.postinstall !== "node scripts/postinstall.mjs") problems.push("npm package must register skills through scripts/postinstall.mjs");
+if (packageLock.packages?.[""]?.hasInstallScript !== true) problems.push("package-lock root must record the npm install lifecycle script");
 if (packageJson.repository?.url !== "git+https://github.com/ghassenbrg/slide-agent.git") problems.push("npm repository URL is not the canonical public repository");
 if (extensionJson.publisher !== "ghassenbrg") problems.push("VS Code publisher id must be ghassenbrg");
 const trackedPrivateArtifacts = (await execute("git", ["ls-files", "examples/output", "reference-material"], { cwd: root })).stdout.trim();

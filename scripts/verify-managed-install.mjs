@@ -8,6 +8,8 @@ import { fileURLToPath } from "node:url";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const workspace = await mkdtemp(path.join(tmpdir(), "slide-agent-install-test-"));
 const packageDirectory = path.join(workspace, "packages");
+const consumer = path.join(workspace, "consumer");
+const automaticSkillRoot = path.join(workspace, "automatic-skills");
 const prefix = path.join(workspace, "prefix");
 const managedRoot = path.join(workspace, "managed");
 const skillRoot = path.join(workspace, "skills");
@@ -17,6 +19,14 @@ const env = {
   SLIDE_AGENT_COPILOT_SKILLS_DIR: path.join(skillRoot, "copilot"),
   SLIDE_AGENT_CLAUDE_SKILLS_DIR: path.join(skillRoot, "claude"),
   SLIDE_AGENT_GEMINI_SKILLS_DIR: path.join(skillRoot, "gemini"),
+  SLIDE_AGENT_SKIP_PATH_UPDATE: "1",
+};
+const automaticEnv = {
+  ...process.env,
+  SLIDE_AGENT_CODEX_SKILLS_DIR: path.join(automaticSkillRoot, "codex"),
+  SLIDE_AGENT_COPILOT_SKILLS_DIR: path.join(automaticSkillRoot, "copilot"),
+  SLIDE_AGENT_CLAUDE_SKILLS_DIR: path.join(automaticSkillRoot, "claude"),
+  SLIDE_AGENT_GEMINI_SKILLS_DIR: path.join(automaticSkillRoot, "gemini"),
   SLIDE_AGENT_SKIP_PATH_UPDATE: "1",
 };
 
@@ -43,6 +53,19 @@ try {
   const archiveName = (await readdir(packageDirectory)).find((name) => name.endsWith(".tgz"));
   if (!archiveName) throw new Error("npm pack did not produce a .tgz archive.");
   const archive = path.join(packageDirectory, archiveName);
+
+  await new Promise((resolve, reject) => {
+    const child = spawn(process.platform === "win32" ? "npm.cmd" : "npm", [
+      "install", "--prefix", consumer, "--omit=dev", "--no-audit", "--no-fund", archive,
+    ], { cwd: root, env: automaticEnv, stdio: "inherit", shell: process.platform === "win32" });
+    child.once("error", reject);
+    child.once("exit", (code) => code === 0 ? resolve() : reject(new Error(`npm package install exited with code ${code}`)));
+  });
+  for (const agent of ["codex", "copilot", "claude", "gemini"]) {
+    const skill = path.join(automaticSkillRoot, agent, "slide-agent", "SKILL.md");
+    if (!await exists(skill)) throw new Error(`npm package install did not register ${agent}: ${skill}`);
+  }
+  process.stdout.write("Normal npm package install skill registration verified.\n");
 
   await run(process.platform === "win32" ? "npx.cmd" : "npx", [
     "--yes",
