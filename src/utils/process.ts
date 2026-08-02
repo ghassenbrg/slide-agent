@@ -27,10 +27,10 @@ export function executableSearchDirectories(options: {
     ...(options.envPath ?? process.env.PATH ?? "").split(path.delimiter),
     path.join(runtimeDependencies, "bin", "override"),
     path.join(runtimeDependencies, "bin", "fallback"),
-    "/opt/homebrew/bin",
-    "/usr/local/bin",
-    "/usr/bin",
-    "/bin",
+    path.join("/opt/homebrew/bin"),
+    path.join("/usr/local/bin"),
+    path.join("/usr/bin"),
+    path.join("/bin"),
   ]);
 }
 
