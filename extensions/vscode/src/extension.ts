@@ -5,6 +5,8 @@ import path from "node:path";
 
 import * as vscode from "vscode";
 
+import { resolveManagedCliPath } from "./managed-paths.js";
+
 interface AgentResult {
   status?: string;
   primaryOutput?: string;
@@ -52,10 +54,11 @@ function configuration(): vscode.WorkspaceConfiguration {
 }
 
 function cliPath(): string {
-  const configured = configuration().get<string>("cliPath", "").trim();
-  if (configured) return configured;
-  const prefix = path.resolve(process.env.SLIDE_AGENT_CLI_PREFIX ?? path.join(homedir(), ".local"));
-  return path.join(prefix, "bin", process.platform === "win32" ? "slide-agent.cmd" : "slide-agent");
+  return resolveManagedCliPath({
+    configured: configuration().get<string>("cliPath", ""),
+    prefix: process.env.SLIDE_AGENT_CLI_PREFIX,
+    home: homedir(),
+  });
 }
 
 function workspaceRoot(): string {
