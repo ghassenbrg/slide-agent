@@ -91,6 +91,7 @@
     "release:verify": "node scripts/verify-release.mjs",
     "release:audit-artifacts": "node scripts/audit-release-artifacts.mjs",
     "audit:public": "node scripts/audit-public-content.mjs",
+    "lockfile:verify": "node scripts/verify-lockfile.mjs",
     "version:set": "node scripts/set-version.mjs",
     "release:artifacts": "node scripts/package-release.mjs",
     "verify:install": "node scripts/verify-managed-install.mjs",
@@ -107,6 +108,8 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@emnapi/core": "2.0.0-alpha.3",
+    "@emnapi/runtime": "2.0.0-alpha.3",
     "@modelcontextprotocol/client": "^2.0.0",
     "@types/node": "^24.0.0",
     "tsup": "^8.5.1",

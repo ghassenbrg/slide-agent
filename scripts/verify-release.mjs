@@ -7,6 +7,7 @@ import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 
 import { auditPublicContent } from "./audit-public-content.mjs";
+import { verifyLockfile } from "./verify-lockfile.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const json = async (relative) => JSON.parse(await readFile(path.join(root, relative), "utf8"));
@@ -31,6 +32,7 @@ const versions = {
   source: sourceVersion,
 };
 const allowedRuntimeLicenses = new Set(["MIT", "ISC", "(MIT AND Zlib)", "(MIT OR GPL-3.0-or-later)"]);
+await verifyLockfile().catch((error) => problems.push(error instanceof Error ? error.message : String(error)));
 for (const [packagePath, metadata] of Object.entries(packageLock.packages ?? {})) {
   if (!packagePath || metadata.dev) continue;
   if (!metadata.license) problems.push(`${packagePath} has no declared runtime license`);

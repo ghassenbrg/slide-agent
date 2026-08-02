@@ -88,6 +88,7 @@ Move the completed entries in `CHANGELOG.md` from **Unreleased** into a new date
 Install exactly from lockfiles and run all checks:
 
 ```bash
+npm run lockfile:verify
 npm ci
 npm --prefix extensions/vscode ci
 npm audit --omit=dev --audit-level=high
@@ -98,6 +99,8 @@ npm run verify
 npm run verify:install
 npm run release:artifacts
 ```
+
+Run `lockfile:verify` before `npm ci`. It validates dependencies from every locked package, including optional cross-platform branches that the current operating system may ignore. This catches a Linux-incomplete lockfile even when `npm install` on macOS reports that everything is already up to date.
 
 `release:verify` fails on version drift, confidential identifiers, source-provenance language, credentials, local developer paths, unapproved presentation/document files, missing legal/security files, or icon drift.
 
