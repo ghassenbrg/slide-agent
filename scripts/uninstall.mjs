@@ -15,6 +15,7 @@ const managedRoot = path.resolve(process.env.SLIDE_AGENT_MANAGED_ROOT ?? install
 const managedPackage = path.join(managedRoot, "node_modules", "@slide-agent", "core");
 const removed = [];
 const skipped = [];
+const deferred = [];
 
 async function exists(filePath) {
   return access(filePath).then(() => true).catch(() => false);
@@ -29,6 +30,10 @@ function isWithin(root, target) {
   const normalizedRoot = normalize(root);
   const normalizedTarget = normalize(target);
   return normalizedTarget === normalizedRoot || normalizedTarget.startsWith(`${normalizedRoot}${path.sep}`);
+}
+
+function isSamePath(left, right) {
+  return process.platform === "win32" ? left.toLowerCase() === right.toLowerCase() : left === right;
 }
 
 const allowedRoots = new Set(await Promise.all([sourceRoot, managedPackage].map(canonical)));
@@ -58,6 +63,11 @@ async function removeSkill(destination) {
 async function removeLauncher(destination) {
   const info = await lstat(destination).catch(() => undefined);
   if (!info) return;
+  const activeLauncher = process.env.SLIDE_AGENT_ACTIVE_LAUNCHER;
+  if (activeLauncher && isSamePath(await canonical(activeLauncher), await canonical(destination))) {
+    deferred.push(destination);
+    return;
+  }
   if (info.isSymbolicLink()) {
     const target = await canonical(path.resolve(path.dirname(destination), await readlink(destination)));
     if (![...allowedRoots].some((root) => target.startsWith(`${root}${path.sep}`))) {
@@ -129,4 +139,4 @@ if (await exists(managedPackageJson)) {
   }
 }
 
-process.stdout.write(`${JSON.stringify({ status: skipped.length ? "warning" : "success", removed, skipped }, null, 2)}\n`);
+process.stdout.write(`${JSON.stringify({ status: skipped.length ? "warning" : "success", removed, deferred, skipped }, null, 2)}\n`);
