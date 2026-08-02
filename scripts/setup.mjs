@@ -5,6 +5,8 @@ import path from "node:path";
 import { spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
+import { createWindowsLauncher } from "./managed-launcher.mjs";
+
 const packageRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const home = homedir();
 const args = process.argv.slice(2);
@@ -96,7 +98,7 @@ async function installLauncher(name, source) {
   await mkdir(bin, { recursive: true });
   if (process.platform === "win32") {
     const launcher = path.join(bin, `${name}.cmd`);
-    const content = `@echo off\r\n"${process.execPath}" "${source}" %*\r\n`;
+    const content = createWindowsLauncher(process.execPath, source);
     const current = await readFile(launcher, "utf8").catch(() => undefined);
     if (current !== undefined && current !== content) throw new Error(`Refusing to replace existing launcher: ${launcher}`);
     if (current === undefined) await writeFile(launcher, content, "utf8");

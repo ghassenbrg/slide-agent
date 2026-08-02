@@ -5,6 +5,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawn } from "node:child_process";
 
+import { parseWindowsLauncherTarget } from "./managed-launcher.mjs";
+
 const sourceRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const home = homedir();
 const installMetadata = JSON.parse(await readFile(path.join(sourceRoot, ".slide-agent-managed-install.json"), "utf8").catch(() => "{}"));
@@ -20,6 +22,13 @@ async function exists(filePath) {
 
 async function canonical(filePath) {
   return realpath(filePath).catch(() => path.resolve(filePath));
+}
+
+function isWithin(root, target) {
+  const normalize = (value) => process.platform === "win32" ? value.toLowerCase() : value;
+  const normalizedRoot = normalize(root);
+  const normalizedTarget = normalize(target);
+  return normalizedTarget === normalizedRoot || normalizedTarget.startsWith(`${normalizedRoot}${path.sep}`);
 }
 
 const allowedRoots = new Set(await Promise.all([sourceRoot, managedPackage].map(canonical)));
@@ -61,7 +70,9 @@ async function removeLauncher(destination) {
   }
   if (destination.endsWith(".cmd")) {
     const content = await readFile(destination, "utf8").catch(() => "");
-    if ([...allowedRoots].some((root) => content.includes(root))) {
+    const launcherTarget = parseWindowsLauncherTarget(content);
+    const target = launcherTarget ? await canonical(launcherTarget) : undefined;
+    if (target && [...allowedRoots].some((root) => isWithin(root, target))) {
       await unlink(destination);
       removed.push(destination);
       return;

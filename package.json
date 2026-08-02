@@ -51,6 +51,7 @@
     "references",
     "scripts/setup.mjs",
     "scripts/postinstall.mjs",
+    "scripts/managed-launcher.mjs",
     "scripts/uninstall.mjs",
     "scripts/install-agent-skill.sh",
     "scripts/install-all-agents.sh",
