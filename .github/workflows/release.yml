@@ -41,7 +41,7 @@ jobs:
       - run: npm run verify
       - run: npm run verify:install
       - run: npm run release:artifacts
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: slide-agent-${{ github.ref_name }}
           path: release/*
