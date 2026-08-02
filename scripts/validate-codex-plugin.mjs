@@ -3,6 +3,8 @@ import { access, readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { hasSlideAgentFrontmatter } from "./skill-frontmatter.mjs";
+
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const plugin = path.join(root, "distribution", "codex", "plugins", "slide-agent");
 const manifest = JSON.parse(await readFile(path.join(plugin, ".codex-plugin", "plugin.json"), "utf8"));
@@ -16,7 +18,7 @@ for (const relative of [manifest.skills, manifest.interface?.composerIcon, manif
   if (!target.startsWith(`${plugin}${path.sep}`) || !await access(target).then(() => true).catch(() => false)) errors.push(`missing or unsafe plugin path: ${relative}`);
 }
 const skill = await readFile(path.join(plugin, "skills", "slide-agent", "SKILL.md"), "utf8").catch(() => "");
-if (!skill.startsWith("---\nname: slide-agent\n")) errors.push("plugin skill is missing valid slide-agent frontmatter");
+if (!hasSlideAgentFrontmatter(skill)) errors.push("plugin skill is missing valid slide-agent frontmatter");
 if (errors.length) {
   process.stderr.write(`${errors.join("\n")}\n`);
   process.exitCode = 1;
