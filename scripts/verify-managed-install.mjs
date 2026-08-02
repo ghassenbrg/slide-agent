@@ -29,13 +29,25 @@ const automaticEnv = {
   SLIDE_AGENT_GEMINI_SKILLS_DIR: path.join(automaticSkillRoot, "gemini"),
   SLIDE_AGENT_SKIP_PATH_UPDATE: "1",
 };
+const npmExecutable = process.env.npm_execpath;
+if (!npmExecutable) throw new Error("npm_execpath is unavailable; run this verifier through npm run verify:install.");
 
 async function run(command, args, options = {}) {
   return new Promise((resolve, reject) => {
-    const child = spawn(command, args, { cwd: root, env, stdio: options.quiet ? "ignore" : "inherit" });
+    const shell = process.platform === "win32" && /\.(?:cmd|bat)$/i.test(command);
+    const child = spawn(command, args, {
+      cwd: root,
+      env: options.env ?? env,
+      stdio: options.quiet ? "ignore" : "inherit",
+      shell,
+    });
     child.once("error", reject);
     child.once("exit", (code) => code === 0 ? resolve() : reject(new Error(`${command} exited with code ${code}`)));
   });
+}
+
+async function runNpm(args, options = {}) {
+  return run(process.execPath, [npmExecutable, ...args], options);
 }
 
 async function exists(filePath) {
@@ -49,25 +61,22 @@ async function expectLink(filePath) {
 
 try {
   await mkdir(packageDirectory, { recursive: true });
-  await run("npm", ["pack", "--silent", "--pack-destination", packageDirectory], { quiet: true });
+  await runNpm(["pack", "--silent", "--pack-destination", packageDirectory], { quiet: true });
   const archiveName = (await readdir(packageDirectory)).find((name) => name.endsWith(".tgz"));
   if (!archiveName) throw new Error("npm pack did not produce a .tgz archive.");
   const archive = path.join(packageDirectory, archiveName);
 
-  await new Promise((resolve, reject) => {
-    const child = spawn(process.platform === "win32" ? "npm.cmd" : "npm", [
-      "install", "--prefix", consumer, "--omit=dev", "--no-audit", "--no-fund", archive,
-    ], { cwd: root, env: automaticEnv, stdio: "inherit", shell: process.platform === "win32" });
-    child.once("error", reject);
-    child.once("exit", (code) => code === 0 ? resolve() : reject(new Error(`npm package install exited with code ${code}`)));
-  });
+  await runNpm([
+    "install", "--prefix", consumer, "--omit=dev", "--no-audit", "--no-fund", archive,
+  ], { env: automaticEnv });
   for (const agent of ["codex", "copilot", "claude", "gemini"]) {
     const skill = path.join(automaticSkillRoot, agent, "slide-agent", "SKILL.md");
     if (!await exists(skill)) throw new Error(`npm package install did not register ${agent}: ${skill}`);
   }
   process.stdout.write("Normal npm package install skill registration verified.\n");
 
-  await run(process.platform === "win32" ? "npx.cmd" : "npx", [
+  await runNpm([
+    "exec",
     "--yes",
     "--package", archive,
     "--",
