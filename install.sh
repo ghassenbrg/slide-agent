@@ -15,11 +15,12 @@ done
 
 need_command() { command -v "$1" >/dev/null 2>&1; }
 
+node_supported() {
+  need_command node && need_command npm && node -e 'const [major, minor] = process.versions.node.split(".").map(Number); process.exit(major > 22 || (major === 22 && minor >= 12) ? 0 : 1)'
+}
+
 install_node() {
-  if need_command node && need_command npm; then
-    major=$(node -p 'Number(process.versions.node.split(".")[0])')
-    [ "$major" -ge 20 ] && return
-  fi
+  node_supported && return
   os=$(uname -s)
   if [ "$os" = "Darwin" ] && need_command brew; then
     brew install node
@@ -30,12 +31,11 @@ install_node() {
   elif need_command pacman; then
     sudo pacman -Sy --needed nodejs npm
   else
-    printf '%s\n' "Node.js 20+ is required and no supported package manager was found." >&2
+    printf '%s\n' "Node.js 22.12 or newer is required and no supported package manager was found." >&2
     printf '%s\n' "Install Node.js from https://nodejs.org and rerun ./install.sh." >&2
     exit 1
   fi
-  major=$(node -p 'Number(process.versions.node.split(".")[0])')
-  [ "$major" -ge 20 ] || { printf '%s\n' "The package manager installed Node.js $major; version 20+ is required." >&2; exit 1; }
+  node_supported || { printf '%s\n' "The package manager installed Node.js $(node -p 'process.versions.node' 2>/dev/null || echo unknown); version 22.12 or newer is required." >&2; exit 1; }
 }
 
 has_soffice() {

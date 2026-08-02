@@ -7,12 +7,12 @@ $SetupArgs = @($args | Where-Object { $_ -ne "--with-render-deps" })
 function Has-Command([string]$Name) { return [bool](Get-Command $Name -ErrorAction SilentlyContinue) }
 
 if (-not (Has-Command "node") -or -not (Has-Command "npm")) {
-  if (-not (Has-Command "winget")) { throw "Node.js 20+ is required. Install it from https://nodejs.org and rerun install.ps1." }
+  if (-not (Has-Command "winget")) { throw "Node.js 22.12 or newer is required. Install it from https://nodejs.org and rerun install.ps1." }
   winget install --id OpenJS.NodeJS.LTS -e --source winget --silent --accept-source-agreements --accept-package-agreements
   $env:Path = [Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [Environment]::GetEnvironmentVariable("Path", "User")
 }
-$NodeMajor = [int](& node -p "Number(process.versions.node.split('.')[0])")
-if ($NodeMajor -lt 20) { throw "Node.js 20+ is required; found $NodeMajor." }
+$NodeVersion = [version](& node -p "process.versions.node")
+if ($NodeVersion -lt [version]"22.12.0") { throw "Node.js 22.12 or newer is required; found $NodeVersion." }
 
 if ($WithRender) {
   if (-not (Has-Command "winget") -and ((-not (Has-Command "soffice")) -or (-not (Has-Command "pdftoppm")))) {
