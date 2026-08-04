@@ -1,8 +1,30 @@
 import type { SlideAgentConfig } from "../types/index.js";
 
+export interface Hsl {
+  hue: number;
+  saturation: number;
+  lightness: number;
+}
+
+/** WCAG 2.1 threshold for text at or above 18pt (or 14pt bold). */
+export const LARGE_TEXT_CONTRAST = 3;
+/** WCAG 2.1 AA threshold for normal-size text. */
+export const NORMAL_TEXT_CONTRAST = 4.5;
+/** WCAG 2.1 AAA threshold for normal-size text. */
+export const ENHANCED_TEXT_CONTRAST = 7;
+
+export function normalizeHex(value: string | undefined): string | undefined {
+  if (!value) return undefined;
+  const normalized = value.trim().replace(/^#/, "");
+  if (/^[0-9A-Fa-f]{3}$/.test(normalized)) {
+    return normalized.split("").map((character) => character.repeat(2)).join("").toUpperCase();
+  }
+  return /^[0-9A-Fa-f]{6}$/.test(normalized) ? normalized.toUpperCase() : undefined;
+}
+
 export function relativeLuminance(hex: string): number {
-  const normalized = hex.replace(/^#/, "");
-  if (!/^[0-9A-Fa-f]{6}$/.test(normalized)) return 1;
+  const normalized = normalizeHex(hex);
+  if (!normalized) return 1;
   const values = [0, 2, 4]
     .map((offset) => Number.parseInt(normalized.slice(offset, offset + 2), 16) / 255)
     .map((value) => value <= 0.03928 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4);
@@ -13,6 +35,72 @@ export function colorContrast(foreground: string, background: string): number {
   const light = Math.max(relativeLuminance(foreground), relativeLuminance(background));
   const dark = Math.min(relativeLuminance(foreground), relativeLuminance(background));
   return (light + 0.05) / (dark + 0.05);
+}
+
+export function hslToHex(hue: number, saturation: number, lightness: number): string {
+  const h = ((hue % 360) + 360) % 360 / 360;
+  const s = Math.max(0, Math.min(100, saturation)) / 100;
+  const l = Math.max(0, Math.min(100, lightness)) / 100;
+  const channel = (offset: number): number => {
+    const k = (offset + h * 12) % 12;
+    const a = s * Math.min(l, 1 - l);
+    return Math.round(255 * (l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1))));
+  };
+  return [channel(0), channel(8), channel(4)]
+    .map((value) => value.toString(16).padStart(2, "0"))
+    .join("")
+    .toUpperCase();
+}
+
+export function hexToHsl(hex: string): Hsl {
+  const normalized = normalizeHex(hex) ?? "000000";
+  const [red = 0, green = 0, blue = 0] = [0, 2, 4]
+    .map((offset) => Number.parseInt(normalized.slice(offset, offset + 2), 16) / 255);
+  const maximum = Math.max(red, green, blue);
+  const minimum = Math.min(red, green, blue);
+  const delta = maximum - minimum;
+  const lightness = (maximum + minimum) / 2;
+  if (delta === 0) return { hue: 0, saturation: 0, lightness: lightness * 100 };
+  const saturation = delta / (1 - Math.abs(2 * lightness - 1));
+  const hue = maximum === red
+    ? 60 * (((green - blue) / delta) % 6)
+    : maximum === green
+      ? 60 * ((blue - red) / delta + 2)
+      : 60 * ((red - green) / delta + 4);
+  return { hue: (hue + 360) % 360, saturation: saturation * 100, lightness: lightness * 100 };
+}
+
+/**
+ * Returns a color with the same hue and saturation as `foreground` whose
+ * contrast against `background` reaches `minimumRatio`. Only lightness moves,
+ * so a model's chosen hue survives the correction. Falls back to pure black or
+ * white when the hue cannot reach the ratio at any lightness.
+ */
+export function ensureContrast(foreground: string, background: string, minimumRatio = NORMAL_TEXT_CONTRAST): string {
+  const source = normalizeHex(foreground);
+  const field = normalizeHex(background);
+  if (!source || !field) return foreground;
+  if (colorContrast(source, field) >= minimumRatio) return source;
+
+  const { hue, saturation, lightness } = hexToHsl(source);
+  // Move away from the background's luminance: darken on light fields, lighten
+  // on dark ones. Search both directions so an ambiguous mid-tone still lands.
+  const backgroundIsLight = relativeLuminance(field) >= 0.18;
+  const directions = backgroundIsLight ? [-1, 1] : [1, -1];
+  for (const direction of directions) {
+    for (let step = 1; step <= 100; step += 1) {
+      const candidateLightness = lightness + direction * step;
+      if (candidateLightness < 0 || candidateLightness > 100) break;
+      const candidate = hslToHex(hue, saturation, candidateLightness);
+      if (colorContrast(candidate, field) >= minimumRatio) return candidate;
+    }
+  }
+  return colorContrast("000000", field) >= colorContrast("FFFFFF", field) ? "000000" : "FFFFFF";
+}
+
+/** Minimum contrast ratio required for text at a given point size. */
+export function requiredContrast(fontSize: number, bold = false): number {
+  return fontSize >= 18 || (bold && fontSize >= 14) ? LARGE_TEXT_CONTRAST : NORMAL_TEXT_CONTRAST;
 }
 
 export function emphasisField(config: SlideAgentConfig): string {
@@ -37,4 +125,13 @@ export function accentForegroundOn(background: string, config: SlideAgentConfig)
     foregroundOn(background, config),
   ];
   return candidates.reduce((best, candidate) => colorContrast(candidate, background) > colorContrast(best, background) ? candidate : best);
+}
+
+/**
+ * The deck's accent hue, corrected only as far as legibility requires for the
+ * given text size. Layouts use this for small accent labels so a prompt-derived
+ * or model-supplied accent never produces a contrast warning it cannot fix.
+ */
+export function readableAccentOn(background: string, config: SlideAgentConfig, fontSize: number, bold = false): string {
+  return ensureContrast(config.colors.accent, background, requiredContrast(fontSize, bold));
 }

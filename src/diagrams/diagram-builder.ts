@@ -2,7 +2,7 @@ import type { ArchitectureSpec, ProcessStep, SlideAgentConfig, TimelineItem } fr
 import type { Frame } from "../components/element-writer.js";
 import { ElementWriter } from "../components/element-writer.js";
 import { Shapes } from "../components/pptx-values.js";
-import { emphasisField, foregroundOn } from "../utils/color.js";
+import { ensureContrast, emphasisField, foregroundOn, readableAccentOn, requiredContrast } from "../utils/color.js";
 
 export class DiagramBuilder {
   public constructor(private readonly config: SlideAgentConfig) {}
@@ -26,13 +26,14 @@ export class DiagramBuilder {
     }
     steps.forEach((step, index) => {
       const x = frame.x + index * (width + gap);
+      const panelFill = index === 0 ? this.config.colors.accentSoft : this.config.colors.surface;
       writer.addShape(`process-step-${index + 1}`, Shapes.roundRect, {
         x,
         y: frame.y + 0.28,
         w: width,
         h: 1.72,
       }, {
-        fill: index === 0 ? this.config.colors.accentSoft : this.config.colors.surface,
+        fill: panelFill,
         lineColor: index === 0 ? this.config.colors.accent : this.config.colors.rule,
         lineWidth: 1.2,
         radius: 0.1,
@@ -44,19 +45,19 @@ export class DiagramBuilder {
         y: frame.y + 0.48,
         w: width - 0.4,
         h: 0.28,
-      }, { fontSize: 11, bold: true, color: this.config.colors.accent, role: "index" });
+      }, { fontSize: 11, bold: true, color: ensureContrast(this.config.colors.accent, panelFill, requiredContrast(11, true)), role: "index" });
       writer.addText(`process-title-${index + 1}`, step.title, {
         x: x + 0.2,
         y: frame.y + 0.82,
         w: width - 0.4,
         h: 0.42,
-      }, { fontSize: 19, bold: true, role: "diagram-label" });
+      }, { fontSize: 19, bold: true, color: ensureContrast(this.config.colors.ink, panelFill, requiredContrast(19)), role: "diagram-label" });
       writer.addText(`process-detail-${index + 1}`, step.detail ?? step.owner ?? "", {
         x: x + 0.2,
         y: frame.y + 1.28,
         w: width - 0.4,
         h: 0.48,
-      }, { fontSize: 16, color: this.config.colors.muted, role: "diagram-label" });
+      }, { fontSize: 16, color: ensureContrast(this.config.colors.muted, panelFill, requiredContrast(16)), role: "diagram-label" });
     });
   }
 
@@ -82,7 +83,7 @@ export class DiagramBuilder {
         y: frame.y + 0.66,
         w: step * 0.84,
         h: 0.32,
-      }, { fontSize: 11, bold: true, color: this.config.colors.accent, align: "center", role: "eyebrow" });
+      }, { fontSize: 11, bold: true, color: readableAccentOn(this.config.colors.background, this.config, 11, true), align: "center", role: "eyebrow" });
       writer.addText(`timeline-title-${index + 1}`, item.title, {
         x: x - step * 0.42,
         y: lineY + 0.35,

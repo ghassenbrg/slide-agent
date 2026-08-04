@@ -10,6 +10,16 @@ export interface Frame {
   h: number;
 }
 
+/** Rewrites a frame with negative extents as an equivalent positive-extent box. */
+export function normalizeFrame(frame: Frame): Frame {
+  return {
+    x: frame.w < 0 ? frame.x + frame.w : frame.x,
+    y: frame.h < 0 ? frame.y + frame.h : frame.y,
+    w: Math.abs(frame.w),
+    h: Math.abs(frame.h),
+  };
+}
+
 export interface TextStyle {
   fontSize?: number;
   fontFace?: string;
@@ -62,13 +72,15 @@ export class ElementWriter {
     private readonly config: SlideAgentConfig,
   ) {}
 
-  public addText(name: string, text: string | CanvasTextRun[], frame: Frame, style: TextStyle = {}): string {
+  public addText(name: string, text: string | CanvasTextRun[], rawFrame: Frame, style: TextStyle = {}): string {
     const id = this.nextId(name);
+    const frame = normalizeFrame(rawFrame);
     const fontSize = style.fontSize ?? this.config.fonts.minimums.body;
     const fontFace = style.fontFace ?? this.config.fonts.body;
     const color = style.color ?? this.config.colors.ink;
     const nativeText = typeof text === "string" ? text : text.map((run) => ({ text: run.text, options: run.options ?? {} }));
     const recordText = typeof text === "string" ? text : text.map((run) => run.text).join("");
+    const fit = style.fit ?? "shrink";
     this.slide.addText(nativeText, {
       ...(style.options ?? {}),
       ...frame,
@@ -81,7 +93,7 @@ export class ElementWriter {
       align: style.align ?? "left",
       valign: style.valign ?? "top",
       margin: style.margin ?? 0,
-      fit: style.fit ?? "shrink",
+      fit,
       breakLine: style.breakLine,
       rotate: style.rotate,
       ...(style.fill ? { fill: { color: style.fill, transparency: style.transparency ?? 0 } } : {}),
@@ -98,6 +110,8 @@ export class ElementWriter {
       fontSize,
       fontFace,
       textColor: color,
+      fit,
+      ...(style.bold === undefined ? {} : { bold: style.bold }),
       ...(style.fill ? { fillColor: style.fill } : {}),
       intentionalOverlap: style.intentionalOverlap ?? false,
     });
@@ -107,13 +121,22 @@ export class ElementWriter {
   public addShape(
     name: string,
     shape: string,
-    frame: Frame,
+    rawFrame: Frame,
     style: ShapeStyle = {},
   ): string {
     const id = this.nextId(name);
+    // A negative extent is not expressible in OOXML: normalize it to a positive
+    // box plus a flip so the shape draws in the same place and the recorded
+    // geometry can be validated against the slide bounds.
+    const frame = normalizeFrame(rawFrame);
+    const flip = {
+      ...(rawFrame.w < 0 ? { flipH: true } : {}),
+      ...(rawFrame.h < 0 ? { flipV: true } : {}),
+    };
     this.slide.addShape(shape, {
       ...(style.options ?? {}),
       ...frame,
+      ...flip,
       objectName: name,
       fill: { color: style.fill ?? this.config.colors.surface, transparency: style.transparency ?? 0 },
       line: { color: style.lineColor ?? style.fill ?? this.config.colors.rule, width: style.lineWidth ?? 0 },
@@ -175,8 +198,9 @@ export class ElementWriter {
     return id;
   }
 
-  public addImage(name: string, imagePath: string, alt: string, frame: Frame, style: ImageStyle = {}): string {
+  public addImage(name: string, imagePath: string, alt: string, rawFrame: Frame, style: ImageStyle = {}): string {
     const id = this.nextId(name);
+    const frame = normalizeFrame(rawFrame);
     this.slide.addImage({
       ...(style.options ?? {}),
       path: imagePath,
@@ -194,6 +218,7 @@ export class ElementWriter {
       role: style.role ?? "image",
       ...frame,
       imagePath: path.resolve(imagePath),
+      altText: alt,
       intentionalOverlap: style.intentionalOverlap ?? false,
     });
     return id;
@@ -249,7 +274,7 @@ export class ElementWriter {
     return id;
   }
 
-  public recordChart(name: string, chart: ChartSpec, frame: Frame): string {
+  public recordChart(name: string, chart: ChartSpec, frame: Frame, alt?: string): string {
     const id = this.nextId(name);
     this.records.push({
       id,
@@ -257,6 +282,7 @@ export class ElementWriter {
       type: "chart",
       role: "chart",
       ...frame,
+      altText: alt ?? `${chart.kind} chart: ${chart.series.map((series) => series.name).join(", ")}`,
       intentionalOverlap: true,
       metadata: { chart },
     });
@@ -284,6 +310,7 @@ export class ElementWriter {
       type: "chart",
       role: "chart",
       ...frame,
+      altText: alt ?? `${nativeType} chart`,
       intentionalOverlap: true,
       metadata: { nativeChart: { nativeType, data } },
     });

@@ -443,7 +443,12 @@ export interface ElementRecord {
   fontFace?: string;
   textColor?: string;
   fillColor?: string;
+  /** PowerPoint autofit mode; `shrink` lets the viewer reduce text to fit. */
+  fit?: "none" | "shrink" | "resize";
+  bold?: boolean;
   imagePath?: string;
+  /** Alternative text for images and charts; drives accessibility checks. */
+  altText?: string;
   intentionalOverlap?: boolean;
   allowOverlapWith?: string[];
   metadata?: Record<string, unknown>;
@@ -489,6 +494,8 @@ export interface ValidationIssue {
   details?: Record<string, unknown>;
   fixable: boolean;
   fixed?: boolean;
+  /** Why a fixable issue could not be repaired automatically. */
+  unfixedReason?: string;
 }
 
 export interface ValidationReport {
@@ -529,6 +536,8 @@ export interface AgentResult {
   generatedFiles: string[];
   slideCount: number;
   warnings: string[];
+  /** Repairs the auto-fixer applied. Informational: they do not degrade status. */
+  repairs?: string[];
   validation?: ValidationReport;
   errors: Array<{ code: string; message: string; details?: Record<string, unknown> }>;
   metadata: ExecutionMetadata;

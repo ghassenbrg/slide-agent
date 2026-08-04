@@ -3,7 +3,7 @@ import { ElementWriter } from "../components/element-writer.js";
 import { Shapes } from "../components/pptx-values.js";
 import { DiagramBuilder } from "../diagrams/diagram-builder.js";
 import type { LayoutContext, SlideAgentConfig, SlideSpec } from "../types/index.js";
-import { accentForegroundOn, emphasisField, foregroundOn, secondaryForegroundOn } from "../utils/color.js";
+import { accentForegroundOn, emphasisField, ensureContrast, foregroundOn, readableAccentOn, requiredContrast, secondaryForegroundOn } from "../utils/color.js";
 
 export type LayoutRenderer = (writer: ElementWriter, spec: SlideSpec, context: LayoutContext) => void;
 
@@ -83,7 +83,7 @@ function renderTitle(writer: ElementWriter, spec: SlideSpec, context: LayoutCont
     y: 0.65,
     w: 4.5,
     h: 0.32,
-  }, { fontSize: 12, bold: true, color: config.colors.accent, role: "eyebrow" });
+  }, { fontSize: 12, bold: true, color: readableAccentOn(config.colors.background, config, 12, true), role: "eyebrow" });
   writer.addText("deck-title", spec.title, {
     x: 0.72,
     y: 1.38,
@@ -154,7 +154,7 @@ function renderSummary(writer: ElementWriter, spec: SlideSpec, context: LayoutCo
       y: y + 0.08,
       w: 0.48,
       h: 0.3,
-    }, { fontSize: 12, bold: true, color: config.colors.accent, role: "index" });
+    }, { fontSize: 12, bold: true, color: readableAccentOn(config.colors.background, config, 12, true), role: "index" });
     writer.addText(`summary-point-${index + 1}`, bullet, {
       x: 6.05,
       y,
@@ -217,11 +217,12 @@ function renderComparison(writer: ElementWriter, spec: SlideSpec, context: Layou
       role: "panel",
       intentionalOverlap: true,
     });
+    const panel = emphasized ? field : config.colors.surface;
     writer.addText(`comparison-heading-${index + 1}`, column.heading, { x: x + 0.3, y: 1.95, w: width - 0.6, h: 0.55 }, {
       fontSize: 23,
       bold: true,
-      color: emphasized ? emphasizedText : config.colors.ink,
-      fill: emphasized ? field : config.colors.surface,
+      color: ensureContrast(emphasized ? emphasizedText : config.colors.ink, panel, requiredContrast(23, true)),
+      fill: panel,
       role: "subheading",
     });
     column.points.slice(0, 5).forEach((point, pointIndex) => {
@@ -230,7 +231,7 @@ function renderComparison(writer: ElementWriter, spec: SlideSpec, context: Layou
         y: 2.78 + pointIndex * 0.7,
         w: width - 0.6,
         h: 0.48,
-      }, { fontSize: 16, color: emphasized ? emphasizedSecondary : config.colors.muted, fill: emphasized ? field : config.colors.surface, role: "body" });
+      }, { fontSize: 16, color: ensureContrast(emphasized ? emphasizedSecondary : config.colors.muted, panel, requiredContrast(16)), fill: panel, role: "body" });
     });
   });
   addFooter(writer, context);
@@ -295,8 +296,9 @@ function renderKpi(writer: ElementWriter, spec: SlideSpec, context: LayoutContex
   const width = (12.1 - gap * Math.max(0, kpis.length - 1)) / Math.max(1, kpis.length);
   kpis.forEach((kpi, index) => {
     const x = 0.62 + index * (width + gap);
+    const panel = index === 0 ? config.colors.accentSoft : config.colors.surface;
     writer.addShape(`kpi-panel-${index + 1}`, Shapes.roundRect, { x, y: 1.65, w: width, h: 4.6 }, {
-      fill: index === 0 ? config.colors.accentSoft : config.colors.surface,
+      fill: panel,
       lineColor: index === 0 ? config.colors.accent : config.colors.rule,
       lineWidth: 1,
       radius: 0.06,
@@ -306,21 +308,22 @@ function renderKpi(writer: ElementWriter, spec: SlideSpec, context: LayoutContex
     writer.addText(`kpi-label-${index + 1}`, kpi.label.toUpperCase(), { x: x + 0.28, y: 2.05, w: width - 0.56, h: 0.35 }, {
       fontSize: 11,
       bold: true,
-      color: index === 0 ? config.colors.ink : config.colors.muted,
-      fill: index === 0 ? config.colors.accentSoft : config.colors.surface,
+      color: ensureContrast(index === 0 ? config.colors.ink : config.colors.muted, panel, requiredContrast(11, true)),
+      fill: panel,
       role: "eyebrow",
     });
     writer.addText(`kpi-value-${index + 1}`, kpi.value, { x: x + 0.28, y: 2.6, w: width - 0.56, h: 1.1 }, {
       fontSize: 40,
       fontFace: config.fonts.heading,
       bold: true,
-      fill: index === 0 ? config.colors.accentSoft : config.colors.surface,
+      color: ensureContrast(config.colors.ink, panel, requiredContrast(40)),
+      fill: panel,
       role: "kpi-value",
     });
     writer.addText(`kpi-detail-${index + 1}`, kpi.detail ?? "", { x: x + 0.28, y: 4.3, w: width - 0.56, h: 0.9 }, {
       fontSize: 16,
-      color: index === 0 ? config.colors.ink : config.colors.muted,
-      fill: index === 0 ? config.colors.accentSoft : config.colors.surface,
+      color: ensureContrast(index === 0 ? config.colors.ink : config.colors.muted, panel, requiredContrast(16)),
+      fill: panel,
       role: "body",
     });
   });
@@ -366,6 +369,7 @@ function renderRoadmap(writer: ElementWriter, spec: SlideSpec, context: LayoutCo
       role: "lane-label",
     });
     const itemWidth = 10.4 / Math.max(1, lane.items.length);
+    const panel = laneIndex === 0 ? config.colors.accentSoft : config.colors.surface;
     lane.items.forEach((item, itemIndex) => {
       const x = 2.15 + itemIndex * itemWidth;
       writer.addShape(`roadmap-item-${laneIndex + 1}-${itemIndex + 1}`, Shapes.roundRect, {
@@ -374,7 +378,7 @@ function renderRoadmap(writer: ElementWriter, spec: SlideSpec, context: LayoutCo
         w: itemWidth - 0.18,
         h: rowHeight - 0.18,
       }, {
-        fill: laneIndex === 0 ? config.colors.accentSoft : config.colors.surface,
+        fill: panel,
         lineColor: laneIndex === 0 ? config.colors.accent : config.colors.rule,
         lineWidth: 1,
         radius: 0.04,
@@ -386,7 +390,7 @@ function renderRoadmap(writer: ElementWriter, spec: SlideSpec, context: LayoutCo
         y: y + 0.13,
         w: itemWidth - 0.48,
         h: rowHeight - 0.44,
-      }, { fontSize: 16, bold: true, valign: "middle", role: "roadmap-label" });
+      }, { fontSize: 16, bold: true, valign: "middle", color: ensureContrast(config.colors.ink, panel, requiredContrast(16, true)), fill: panel, role: "roadmap-label" });
     });
   });
   addFooter(writer, context);

@@ -24,7 +24,7 @@ import type {
 } from "./types/index.js";
 import { errorDetails } from "./utils/errors.js";
 import { fileSha256, writeJson } from "./utils/files.js";
-import { AutoFixer } from "./validation/auto-fixer.js";
+import { AutoFixer, type UnfixedIssue } from "./validation/auto-fixer.js";
 import { PresentationValidator } from "./validation/validator.js";
 import { VERSION } from "./version.js";
 
@@ -45,6 +45,56 @@ function resultStatus(report: ValidationReport | undefined, warnings: string[]):
   if (report?.status === "fail") return "error";
   if (report?.status === "warning" || warnings.length > 0) return "warning";
   return "success";
+}
+
+function summarize(issues: ValidationReport["issues"]): ValidationReport["summary"] {
+  return {
+    errors: issues.filter((item) => item.severity === "error").length,
+    warnings: issues.filter((item) => item.severity === "warning").length,
+    info: issues.filter((item) => item.severity === "info").length,
+  };
+}
+
+function sameIssue(issue: { code: string; slide?: number; elementIds?: string[] }, unfixed: UnfixedIssue): boolean {
+  if (issue.code !== unfixed.code || issue.slide !== unfixed.slide) return false;
+  if (!unfixed.elementIds?.length || !issue.elementIds?.length) return true;
+  return unfixed.elementIds.some((id) => issue.elementIds!.includes(id));
+}
+
+/**
+ * Annotates the final report with what the repair loop actually achieved. An
+ * error the fixer provably cannot repair becomes a warning carrying the reason
+ * and the remedy, so callers get an actionable deck instead of a hard failure
+ * they cannot act on. An error the fixer could still repair stays an error —
+ * that one is genuinely a budget problem another retry would resolve.
+ */
+function reconcileReport(report: ValidationReport, unfixed: UnfixedIssue[], retriesExhausted: boolean): ValidationReport {
+  const issues = report.issues.map((issue) => {
+    if (!issue.fixable) return issue;
+    const blocked = unfixed.find((candidate) => sameIssue(issue, candidate));
+    if (blocked) {
+      return {
+        ...issue,
+        severity: issue.severity === "error" ? ("warning" as const) : issue.severity,
+        fixed: false,
+        unfixedReason: blocked.reason,
+      };
+    }
+    return {
+      ...issue,
+      fixed: false,
+      unfixedReason: retriesExhausted
+        ? "The repair retry budget was exhausted before this issue was reached. Raise maxRetries and rerun."
+        : "This issue appeared after the final repair pass.",
+    };
+  });
+  const summary = summarize(issues);
+  return {
+    ...report,
+    issues,
+    summary,
+    status: summary.errors > 0 ? "fail" : summary.warnings > 0 ? "warning" : "pass",
+  };
 }
 
 function unique(values: string[]): string[] {
@@ -90,18 +140,22 @@ export class SlideAgent {
       const shouldFix = request.autoFix ?? true;
       let report: ValidationReport | undefined;
 
+      const appliedFixes: string[] = [];
+      let effectiveConfig = config;
+      let retriesExhausted = false;
+
       for (let attempt = 0; attempt <= maximumRetries; attempt += 1) {
         this.logger.info("create.iteration", "Building presentation", { requestId, attempt: attempt + 1 });
         const built = await new DeckBuilder(config).build(outline);
         finalBuilt = built;
         outline = built.outline;
+        effectiveConfig = built.config;
         await new PptxExporter().export(built.presentation, output);
         built.manifest.packageSha256 = await fileSha256(output);
         await writeJson(manifestPath, built.manifest);
         if (shouldValidate) {
           report = await new PresentationValidator(built.config, this.logger).validate(output, {
             manifest: built.manifest,
-            reportPath,
             render: shouldRender,
             previewsDir,
             pdfPath: layout.pdf,
@@ -115,13 +169,33 @@ export class SlideAgent {
           });
           generatedFiles.push(...rendered.previewFiles, rendered.pdfPath);
         }
-        if (!report || report.status !== "fail" || !shouldFix || attempt >= maximumRetries) break;
-        const fixed = new AutoFixer(config).fix(outline, report);
-        if (fixed.changes.length === 0) break;
+        if (!report || !shouldFix) break;
+        // Repair anything the validator marked fixable, not only hard failures:
+        // duplicate titles and contrast defects are warnings, and leaving them
+        // in a deck the fixer can repair is a worse result than one more pass.
+        if (!report.issues.some((issue) => issue.fixable)) break;
+        if (attempt >= maximumRetries) {
+          retriesExhausted = true;
+          break;
+        }
+        const fixed = new AutoFixer(effectiveConfig).fix(outline, report);
+        // Converged: the fixer has nothing left to change, so another rebuild
+        // would produce an identical deck and an identical report.
+        if (fixed.outcomes.length === 0) {
+          this.logger.info("create.converged", "Repair loop converged", { requestId, unfixed: fixed.unfixed.length });
+          break;
+        }
         outline = fixed.outline;
-        warnings.push(...fixed.changes);
+        appliedFixes.push(...fixed.changes);
         retries += 1;
       }
+
+      if (report && shouldFix) {
+        const classification = new AutoFixer(effectiveConfig).fix(outline, report);
+        report = reconcileReport(report, classification.unfixed, retriesExhausted);
+      }
+      if (report && shouldValidate) await writeJson(reportPath, report);
+      const repairs = [...new Set(appliedFixes)];
 
       generatedFiles.push(output, manifestPath);
       if (shouldValidate) generatedFiles.push(reportPath);
@@ -151,6 +225,7 @@ export class SlideAgent {
         generatedFiles: unique(generatedFiles),
         slideCount: outline.slides.length,
         warnings,
+        ...(repairs.length ? { repairs } : {}),
         ...(report ? { validation: report } : {}),
         errors: report?.issues.filter((item) => item.severity === "error").map((item) => ({ code: item.code, message: item.message, ...(item.details ? { details: item.details } : {}) })) ?? [],
         metadata: execution,

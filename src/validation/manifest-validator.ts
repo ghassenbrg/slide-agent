@@ -8,19 +8,18 @@ import type {
   ValidationIssue,
 } from "../types/index.js";
 import { words } from "../utils/text.js";
-import { contrastRatio } from "./contrast.js";
+import { colorContrast as contrastRatio, requiredContrast } from "../utils/color.js";
 import { area, contains, intersectionArea, normalizedBox } from "./geometry.js";
 
 function issue(code: string, severity: ValidationIssue["severity"], message: string, fixable: boolean, options: Partial<ValidationIssue> = {}): ValidationIssue {
   return { code, severity, message, fixable, ...options };
 }
 
-function likelyTextOverflow(element: ElementRecord): boolean {
-  if (!element.text || !element.fontSize || element.w <= 0 || element.h <= 0) return false;
-  const averageCharacterWidthInches = element.fontSize * 0.33 / 72;
-  const charactersPerLine = Math.max(1, Math.floor(element.w / averageCharacterWidthInches));
-  const explicitLines = element.text.split(/\r?\n/);
-  const estimatedLines = explicitLines.reduce((total, line) => {
+/** Estimated wrapped-line count for a text run at a given point size. */
+export function estimatedLineCount(text: string, widthInches: number, fontSize: number): number {
+  const averageCharacterWidthInches = fontSize * 0.33 / 72;
+  const charactersPerLine = Math.max(1, Math.floor(widthInches / averageCharacterWidthInches));
+  return text.split(/\r?\n/).reduce((total, line) => {
     const lineWords = line.split(/\s+/).filter(Boolean);
     let lines = 1;
     let used = 0;
@@ -35,8 +34,37 @@ function likelyTextOverflow(element: ElementRecord): boolean {
     }
     return total + lines;
   }, 0);
-  const requiredHeight = estimatedLines * element.fontSize / 72;
-  return requiredHeight > element.h * 1.08;
+}
+
+/** Estimated height in inches that `text` needs at `fontSize`. */
+export function estimatedTextHeight(text: string, widthInches: number, fontSize: number): number {
+  return estimatedLineCount(text, widthInches, fontSize) * fontSize / 72;
+}
+
+export interface TextFitResult {
+  /** The size the text will actually render at once autofit is applied. */
+  effectiveFontSize: number;
+  /** True when even the smallest autofit step cannot contain the text. */
+  clipped: boolean;
+}
+
+/**
+ * PowerPoint shrinks `normAutofit` text to fit its box, so a declared size that
+ * overflows is only a defect when the shrink needed to contain it would push
+ * the text below its legibility minimum — or when autofit is off and the text
+ * would be clipped outright.
+ */
+export function measureTextFit(element: ElementRecord, minimumFontSize: number): TextFitResult | undefined {
+  if (!element.text || !element.fontSize || element.w <= 0 || element.h <= 0) return undefined;
+  const fits = (size: number): boolean => estimatedTextHeight(element.text!, element.w, size) <= element.h * 1.08;
+  if (fits(element.fontSize)) return { effectiveFontSize: element.fontSize, clipped: false };
+  if (element.fit !== "shrink") return { effectiveFontSize: element.fontSize, clipped: true };
+  // PowerPoint's autofit reduces in roughly 1pt steps down to about 25% scale.
+  const floor = Math.max(1, Math.floor(element.fontSize * 0.25));
+  for (let size = element.fontSize - 1; size >= floor; size -= 1) {
+    if (fits(size)) return { effectiveFontSize: size, clipped: size < minimumFontSize };
+  }
+  return { effectiveFontSize: floor, clipped: true };
 }
 
 function overlapAllowed(left: ElementRecord, right: ElementRecord): boolean {
@@ -153,18 +181,21 @@ export class ManifestValidator {
               details: { fontFace: element.fontFace },
             }));
           }
-          if (likelyTextOverflow(element)) {
-            issues.push(issue("text-overflow", "error", `${element.name} is likely to overflow its text box.`, true, {
+          const fit = measureTextFit(element, minimum);
+          if (fit?.clipped) {
+            issues.push(issue("text-overflow", "error", `${element.name} does not fit its text box${element.fit === "shrink" ? ` even after autofit shrinks it to ${fit.effectiveFontSize}pt` : ""}.`, true, {
               slide: slide.number,
               elementIds: [element.id],
+              details: { declaredFontSize: element.fontSize, effectiveFontSize: fit.effectiveFontSize, minimum, box: { w: element.w, h: element.h } },
             }));
           }
           const fillColor = visibleBackground(element, elementIndex, slide.elements, slide.backgroundColor ?? this.config.colors.background);
-          if (element.role !== "decorative" && element.textColor && fillColor && contrastRatio(element.textColor, fillColor) < (element.fontSize >= 18 ? 3 : 4.5)) {
+          const required = requiredContrast(fit?.effectiveFontSize ?? element.fontSize, element.bold);
+          if (element.role !== "decorative" && element.textColor && fillColor && contrastRatio(element.textColor, fillColor) < required) {
             issues.push(issue("poor-contrast", "warning", `${element.name} has insufficient text contrast.`, true, {
               slide: slide.number,
               elementIds: [element.id],
-              details: { textColor: element.textColor, fillColor },
+              details: { textColor: element.textColor, fillColor, ratio: Number(contrastRatio(element.textColor, fillColor).toFixed(2)), required },
             }));
           }
           if (element.role === "title" && slide.compositionMode !== "model-authored") {
