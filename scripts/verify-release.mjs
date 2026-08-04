@@ -68,17 +68,25 @@ export async function verifyRelease() {
   for (const lifecycle of ["postinstall", "install", "preinstall"]) {
     if (packageJson.scripts?.[lifecycle]) problems.push(`npm package must not define a ${lifecycle} lifecycle script`);
   }
-  if (packageLock.packages?.[""]?.hasInstallScript !== true) problems.push("package-lock root must record the npm install lifecycle script");
+  if (packageLock.packages?.[""]?.hasInstallScript) problems.push("package-lock root must not record an npm install lifecycle script");
   if (packageJson.repository?.url !== "git+https://github.com/ghassenbrg/slide-agent.git") problems.push("npm repository URL is not the canonical public repository");
   if (extensionJson.publisher !== "ghassenbrg") problems.push("VS Code publisher id must be ghassenbrg");
   const requiredCiFragments = [
     "name: Slide Agent CI",
-    "push:\n    branches:\n      - main",
-    "pull_request:\n    branches:\n      - main\n    types:\n      - closed",
-    "if: github.event_name == 'push' || github.event.pull_request.merged == true",
+    // Open pull requests must be verified before they can be merged.
+    "types:\n      - opened\n      - synchronize\n      - reopened",
+    // The optional preview tools must be present so render tests really run.
+    "libreoffice-impress poppler-utils",
+    "node scripts/assert-render-tested.mjs",
+    // Coverage floors and the inert-install proof are release gates.
+    "npm run test:coverage",
+    "node scripts/verify-consumer-install.mjs",
     "actions/checkout@v6",
     "actions/setup-node@v7",
   ];
+  if (hasWorkflowFragment(ciWorkflow, "types:\n      - closed")) {
+    problems.push("CI workflow must not run only on closed pull requests: open pull requests would never be verified");
+  }
   for (const fragment of requiredCiFragments) {
     if (!hasWorkflowFragment(ciWorkflow, fragment)) problems.push(`CI workflow is missing required configuration: ${fragment.split("\n")[0]}`);
   }
