@@ -77,7 +77,22 @@ const validateRequest = z.object({
   render: z.boolean().optional(),
 });
 
-export const structuredRequestSchema = z.discriminatedUnion("command", [createRequest, editRequest, renderRequest, validateRequest]);
+const reviseRequest = z.object({
+  command: z.literal("revise"),
+  input: z.string(),
+  output: z.string(),
+  slide: z.number().int().positive(),
+  sceneNdjson: z.string().min(1),
+  scene: z.string().optional(),
+  configDir: z.string().optional(),
+  render: z.boolean().optional(),
+  validate: z.boolean().optional(),
+  autoFix: z.boolean().optional(),
+  maxRetries: z.number().int().nonnegative().optional(),
+  allowRemoteAssets: z.boolean().optional(),
+});
+
+export const structuredRequestSchema = z.discriminatedUnion("command", [createRequest, editRequest, renderRequest, validateRequest, reviseRequest]);
 
 export function parseStructuredRequest(value: unknown): StructuredAgentRequest {
   return structuredRequestSchema.parse(value) as StructuredAgentRequest;

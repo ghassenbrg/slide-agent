@@ -1,19 +1,23 @@
 import type { PresentationBrief, SlideKind, SlideSpec } from "../types/index.js";
 import { truncateWords } from "../utils/text.js";
 
-const DEFAULT_INSIGHTS = [
-  "Focus the story on the decision the audience needs to make.",
-  "Separate the core message from supporting detail.",
-  "Make ownership and next actions explicit.",
-];
+/**
+ * Builds a structural draft when no model authored the deck.
+ *
+ * This deliberately produces scaffolding, not content. The previous version
+ * invented evidence — named comparison points, KPI figures, process steps, a
+ * "recommendation" — that was identical across every deck and read as though
+ * someone had researched it. A draft that fabricates is worse than one that is
+ * visibly incomplete, because only the first can be mistaken for finished work.
+ */
+
+/** Marks a slot the author still has to fill. Rendered verbatim, on purpose. */
+function placeholder(what: string): string {
+  return `[${what}]`;
+}
 
 function topicTitle(topic: string): string {
   return topic.replace(/^[-*\d.\s]+/, "").replace(/[.:]+$/, "").trim();
-}
-
-function claimFor(topic: string, objective: string): string {
-  const cleaned = topicTitle(topic);
-  return truncateWords(`${cleaned} is the practical lever for ${objective.toLowerCase()}`, 12);
 }
 
 export class ContentGenerator {
@@ -29,110 +33,54 @@ export class ContentGenerator {
   }
 
   public summarySlide(brief: PresentationBrief): SlideSpec {
-    const topics = brief.keyTopics.slice(0, 3);
+    const topics = brief.keyTopics.slice(0, 3).map(topicTitle);
     return {
       id: "executive-summary",
       kind: "executive-summary",
-      title: "The decision rests on three clear ideas",
+      title: placeholder("State the single most important takeaway"),
       body: truncateWords(brief.objective, 20),
-      bullets: topics.length > 0 ? topics.map((topic) => claimFor(topic, brief.objective)) : DEFAULT_INSIGHTS,
+      bullets: topics.length > 0
+        ? topics.map((topic) => `${topic} — ${placeholder("what the audience must conclude")}`)
+        : [placeholder("Supporting claim 1"), placeholder("Supporting claim 2"), placeholder("Supporting claim 3")],
       speakerNotes: ["Lead with the conclusion, then use the remaining slides as evidence."],
     };
   }
 
-  public topicSlide(brief: PresentationBrief, topic: string, index: number, kind: SlideKind): SlideSpec {
+  /**
+   * One slide per topic, carrying the author's own words plus an explicit gap
+   * where evidence belongs. `kind` stays generic: choosing a comparison or a
+   * timeline is an editorial judgement a template cannot make honestly.
+   */
+  public topicSlide(brief: PresentationBrief, topic: string, index: number, kind: SlideKind = "text-image"): SlideSpec {
     const clean = topicTitle(topic);
-    const common = {
+    return {
       id: `topic-${index + 1}`,
       kind,
-      title: claimFor(clean, brief.objective),
-      body: truncateWords(`What ${brief.audience} should understand about ${clean}, why it matters, and what changes next.`, 28),
-      speakerNotes: [`Connect ${clean} directly to the audience outcome: ${brief.objective}`],
-    } satisfies SlideSpec;
-
-    switch (kind) {
-      case "comparison":
-        return {
-          ...common,
-          comparison: [
-            { heading: "Current pattern", points: ["Fragmented signals", "Reactive decisions", "Unclear ownership"] },
-            { heading: "Better pattern", points: ["Shared evidence", "Deliberate choices", "Named owners"], emphasis: true },
-          ],
-        };
-      case "timeline":
-        return {
-          ...common,
-          timeline: [
-            { label: "NOW", title: "Align", detail: "Confirm the outcome and constraints" },
-            { label: "NEXT", title: "Prove", detail: "Test the highest-risk assumption" },
-            { label: "THEN", title: "Scale", detail: "Standardize the winning approach" },
-          ],
-        };
-      case "process":
-        return {
-          ...common,
-          process: [
-            { title: "Frame", detail: "Define the decision" },
-            { title: "Build", detail: "Create the evidence" },
-            { title: "Validate", detail: "Inspect the result" },
-            { title: "Act", detail: "Assign the next move" },
-          ],
-        };
-      case "architecture":
-        return {
-          ...common,
-          architecture: {
-            direction: "horizontal",
-            nodes: [
-              { id: "inputs", label: "Inputs" },
-              { id: "engine", label: clean || "Core engine", emphasis: true },
-              { id: "outputs", label: "Audience outcome" },
-            ],
-            edges: [
-              { from: "inputs", to: "engine" },
-              { from: "engine", to: "outputs" },
-            ],
-          },
-        };
-      case "kpi":
-        return {
-          ...common,
-          kpis: [
-            { label: "Clarity", value: "1 message", detail: "One primary claim per slide", trend: "up" },
-            { label: "Focus", value: "3 signals", detail: "Only decision-relevant evidence", trend: "up" },
-            { label: "Action", value: "1 owner", detail: "A named next step", trend: "flat" },
-          ],
-        };
-      case "roadmap":
-        return {
-          ...common,
-          roadmap: [
-            { label: "Phase 1", items: ["Align", "Baseline"] },
-            { label: "Phase 2", items: ["Pilot", "Measure"] },
-            { label: "Phase 3", items: ["Scale", "Govern"] },
-          ],
-        };
-      default:
-        return {
-          ...common,
-          kind: "text-image",
-          bullets: [
-            `Clarify what ${clean.toLowerCase()} changes for the audience.`,
-            "Use evidence that supports the slide title.",
-            "End with an explicit implication or next step.",
-          ],
-          visual: { alt: `Abstract visual representing ${clean}`, position: "right" },
-        };
-    }
+      title: clean,
+      body: placeholder(`What ${brief.audience} need to understand about ${clean.toLowerCase()}`),
+      bullets: [
+        placeholder("Evidence: something you can show, not assert"),
+        placeholder("Implication: what it means for the audience"),
+      ],
+      visual: { alt: `Visual support for ${clean}`, position: "right" },
+      speakerNotes: [
+        `Connect ${clean} to the outcome: ${brief.objective}`,
+        "Replace the bracketed placeholders before presenting.",
+      ],
+    };
   }
 
   public closingSlide(brief: PresentationBrief): SlideSpec {
     return {
       id: "closing",
       kind: "closing",
-      title: "Turn the shared view into a deliberate next move",
+      title: placeholder("The decision or action you are asking for"),
       subtitle: brief.objective,
-      bullets: ["Confirm the decision", "Name the owner", "Set the first checkpoint"],
+      bullets: [
+        placeholder("The decision"),
+        placeholder("The owner"),
+        placeholder("The first checkpoint"),
+      ],
       speakerNotes: ["Resolve the opening objective and ask for the concrete next action."],
     };
   }

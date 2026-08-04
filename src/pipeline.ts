@@ -12,28 +12,40 @@ import { remoteAssetPolicy } from "./images/image-manager.js";
 import { RequestAnalyzer } from "./planner/request-analyzer.js";
 import { PresentationRenderer } from "./rendering/renderer.js";
 import { parseSceneNdjson, readSceneNdjson, writeSceneNdjson } from "./serialization/scene-ndjson.js";
+import { reviseScene } from "./serialization/revise-scene.js";
 import type {
   AgentResult,
   CreateRequest,
   EditRequest,
   ExecutionMetadata,
+  DeckProvenance,
   PresentationOutline,
   RenderRequest,
+  ReviseRequest,
   StructuredAgentRequest,
   ValidateRequest,
   ValidationReport,
 } from "./types/index.js";
-import { errorDetails } from "./utils/errors.js";
-import { fileSha256, writeJson } from "./utils/files.js";
+import { SlideAgentError, errorDetails } from "./utils/errors.js";
+import { CONTRACT_VERSION } from "./contract/index.js";
+import { exists, fileSha256, readUtf8, writeJson } from "./utils/files.js";
 import { AutoFixer, type UnfixedIssue } from "./validation/auto-fixer.js";
 import { PresentationValidator } from "./validation/validator.js";
 import { VERSION } from "./version.js";
 
-function metadata(command: ExecutionMetadata["command"], requestId: string, startedAt: Date, retries: number): ExecutionMetadata {
+function metadata(
+  command: ExecutionMetadata["command"],
+  requestId: string,
+  startedAt: Date,
+  retries: number,
+  provenance?: ExecutionMetadata["provenance"],
+): ExecutionMetadata {
   const completed = new Date();
   return {
     requestId,
     command,
+    contractVersion: CONTRACT_VERSION,
+    ...(provenance ? { provenance } : {}),
     startedAt: startedAt.toISOString(),
     completedAt: completed.toISOString(),
     durationMs: completed.getTime() - startedAt.getTime(),
@@ -111,6 +123,62 @@ export class SlideAgent {
       case "edit": return this.edit(request);
       case "render": return this.render(request);
       case "validate": return this.validate(request);
+      case "revise": return this.revise(request);
+    }
+  }
+
+  /**
+   * Replaces one slide by splicing its records into the deck's own scene and
+   * rebuilding. Regenerating a deck to change one slide discards every other
+   * decision the model made; this keeps them because the scene round-trips.
+   */
+  public async revise(request: ReviseRequest): Promise<AgentResult> {
+    const startedAt = new Date();
+    const requestId = randomUUID();
+    try {
+      if (path.resolve(request.input) === path.resolve(request.output)) {
+        throw new SlideAgentError("OUTPUT_MATCHES_INPUT", "Revision must be written to a different file so the original stays intact.");
+      }
+      const scenePath = path.resolve(request.scene ?? outputLayout(request.input).inspect);
+      if (!(await exists(scenePath))) {
+        throw new SlideAgentError(
+          "SCENE_NOT_FOUND",
+          `No scene blueprint was found for this deck at ${scenePath}. Revision needs the artifacts/ directory that was written beside the deck, or an explicit scene path.`,
+          { input: path.resolve(request.input), expected: scenePath },
+        );
+      }
+      const merged = reviseScene(await readUtf8(scenePath), request.slide, request.sceneNdjson);
+      this.logger.info("revise.merged", "Spliced the revised slide into the deck scene", {
+        requestId,
+        slide: request.slide,
+        replaced: merged.replaced,
+        added: merged.added,
+      });
+
+      const result = await this.create({
+        command: "create",
+        sceneNdjson: merged.scene,
+        output: request.output,
+        ...(request.configDir === undefined ? {} : { configDir: request.configDir }),
+        ...(request.render === undefined ? {} : { render: request.render }),
+        ...(request.validate === undefined ? {} : { validate: request.validate }),
+        ...(request.autoFix === undefined ? {} : { autoFix: request.autoFix }),
+        ...(request.maxRetries === undefined ? {} : { maxRetries: request.maxRetries }),
+        ...(request.allowRemoteAssets === undefined ? {} : { allowRemoteAssets: request.allowRemoteAssets }),
+      });
+      return {
+        ...result,
+        metadata: { ...result.metadata, command: "revise", requestId, provenance: "model-authored" },
+      };
+    } catch (error) {
+      return {
+        status: "error",
+        generatedFiles: [],
+        slideCount: 0,
+        warnings: [],
+        errors: [errorDetails(error)],
+        metadata: metadata("revise", requestId, startedAt, 0),
+      };
     }
   }
 
@@ -123,10 +191,22 @@ export class SlideAgent {
     let finalBuilt: BuiltDeck | undefined;
     try {
       const config = await loadConfig(request.configDir);
-      let outline: PresentationOutline = request.outline
+      const authored = request.outline
         ?? (request.sceneNdjson ? parseSceneNdjson(request.sceneNdjson) : undefined)
-        ?? (request.scene ? await readSceneNdjson(request.scene) : undefined)
+        ?? (request.scene ? await readSceneNdjson(request.scene) : undefined);
+      // A deck a model designed and one the planner scaffolded are different
+      // products. Callers must be able to tell them apart without inspecting
+      // the slides for bracketed placeholders.
+      const provenance: DeckProvenance = authored ? "model-authored" : "template-draft";
+      let outline: PresentationOutline = authored
         ?? new OutlinePlanner().plan(new RequestAnalyzer(config).analyze(request.prompt ?? "", request.brief ?? {}));
+      if (provenance === "template-draft") {
+        this.logger.warn(
+          "create.draft",
+          "No model-authored outline or scene was supplied, so Slide Agent produced a structural draft with placeholders. Run `slide-agent contract` for the authoring guide.",
+          { requestId },
+        );
+      }
       if (request.creativeDirection) outline = { ...outline, creativeDirection: request.creativeDirection };
       const layout = outputLayout(request.output);
       const output = layout.pptx;
@@ -151,7 +231,12 @@ export class SlideAgent {
         finalBuilt = built;
         outline = built.outline;
         effectiveConfig = built.config;
+        for (const fallback of built.layoutFallbacks) {
+          const note = `Slide ${fallback.slide} uses kind "${fallback.requested}", which is not a registered layout; rendered with the "${fallback.used}" layout instead. Supply a canvas to control the composition.`;
+          if (!warnings.includes(note)) warnings.push(note);
+        }
         await new PptxExporter().export(built.presentation, output);
+        built.manifest.provenance = provenance;
         built.manifest.packageSha256 = await fileSha256(output);
         await writeJson(manifestPath, built.manifest);
         if (shouldValidate) {
@@ -202,7 +287,7 @@ export class SlideAgent {
       if (shouldValidate) generatedFiles.push(reportPath);
       if (report?.render?.previewFiles) generatedFiles.push(...report.render.previewFiles);
       if (report?.render?.pdfPath) generatedFiles.push(report.render.pdfPath);
-      const execution = metadata("create", requestId, startedAt, retries);
+      const execution = metadata("create", requestId, startedAt, retries, provenance);
       await writeSceneNdjson(inspectPath, outline, finalBuilt?.manifest);
       await writeJson(metadataPath, {
         request: {

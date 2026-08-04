@@ -4,7 +4,7 @@ import { ElementWriter } from "../components/element-writer.js";
 import { PptxGenJS, type NativePresentation } from "../components/pptx-values.js";
 import { ImageManager, remoteAssetPolicy, type ImageResolver, type RemoteAssetPolicy } from "../images/image-manager.js";
 import { FreeformComposer } from "../layouts/freeform-composer.js";
-import { LayoutRegistry } from "../layouts/layout-registry.js";
+import { LayoutRegistry, type LayoutFallback } from "../layouts/layout-registry.js";
 import { CreativeDirector } from "../themes/creative-director.js";
 import { ThemeManager } from "../themes/theme-manager.js";
 import type { DeckManifest, ElementRecord, PresentationOutline, SlideAgentConfig, SlideSpec } from "../types/index.js";
@@ -14,6 +14,8 @@ export interface BuiltDeck {
   manifest: DeckManifest;
   outline: PresentationOutline;
   config: SlideAgentConfig;
+  /** Slides whose `kind` matched no registered layout and used a substitute. */
+  layoutFallbacks: LayoutFallback[];
 }
 
 function notesFor(spec: SlideSpec): string {
@@ -62,6 +64,7 @@ export class DeckBuilder {
       slides: [],
     };
 
+    const layoutFallbacks: LayoutFallback[] = [];
     for (let index = 0; index < resolvedOutline.slides.length; index += 1) {
       const rawSpec = resolvedOutline.slides[index]!;
       const spec = await this.resolveAssets(rawSpec);
@@ -72,11 +75,12 @@ export class DeckBuilder {
       if (spec.canvas) {
         new FreeformComposer(effectiveConfig).render(writer, spec);
       } else {
-        this.layouts.render(writer, spec, {
+        const fallback = this.layouts.render(writer, spec, {
           slideNumber: index + 1,
           totalSlides: resolvedOutline.slides.length,
           config: effectiveConfig,
         });
+        if (fallback) layoutFallbacks.push(fallback);
       }
       const notes = notesFor(spec);
       if (effectiveConfig.generation.includeSpeakerNotes && notes) slide.addNotes(notes);
@@ -92,7 +96,7 @@ export class DeckBuilder {
         notes: spec.speakerNotes ?? [],
       });
     }
-    return { presentation, manifest, outline: resolvedOutline, config: effectiveConfig };
+    return { presentation, manifest, outline: resolvedOutline, config: effectiveConfig, layoutFallbacks };
   }
 
   private async resolveAssets(spec: SlideSpec): Promise<SlideSpec> {

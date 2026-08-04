@@ -4,18 +4,31 @@ import { Shapes } from "../components/pptx-values.js";
 import { DiagramBuilder } from "../diagrams/diagram-builder.js";
 import type { LayoutContext, SlideAgentConfig, SlideSpec } from "../types/index.js";
 import { accentForegroundOn, emphasisField, ensureContrast, foregroundOn, readableAccentOn, requiredContrast, secondaryForegroundOn } from "../utils/color.js";
+import { estimatedLineCount } from "../validation/manifest-validator.js";
 
 export type LayoutRenderer = (writer: ElementWriter, spec: SlideSpec, context: LayoutContext) => void;
 
+/** Two lines of title, plus the rule, still clear the content band below. */
+const MAXIMUM_TITLE_LINES = 2;
+
+/**
+ * Sizes the title band to the title. A fixed 0.72in box held exactly one line
+ * at the 32pt legibility minimum, so any title longer than roughly one line
+ * reported an unfixable overflow and collided with the accent rule beneath it.
+ */
 function addHeader(writer: ElementWriter, spec: SlideSpec, context: LayoutContext): void {
   const { config } = context;
+  const fontSize = config.fonts.minimums.slideTitle;
+  const width = config.dimensions.width - config.dimensions.margin * 2;
+  const lines = Math.min(MAXIMUM_TITLE_LINES, estimatedLineCount(spec.title, width, fontSize));
+  const height = Math.max(0.72, lines * (fontSize / 72) * 1.18);
   writer.addText("slide-title", spec.title, {
     x: config.dimensions.margin,
     y: 0.42,
-    w: config.dimensions.width - config.dimensions.margin * 2,
-    h: 0.72,
+    w: width,
+    h: height,
   }, {
-    fontSize: config.fonts.minimums.slideTitle,
+    fontSize,
     fontFace: config.fonts.heading,
     bold: true,
     role: "title",
@@ -23,7 +36,7 @@ function addHeader(writer: ElementWriter, spec: SlideSpec, context: LayoutContex
   });
   writer.addShape("title-rule", Shapes.line, {
     x: config.dimensions.margin,
-    y: 1.27,
+    y: 0.42 + height + 0.13,
     w: 0.7,
     h: 0,
   }, { fill: config.colors.accent, lineColor: config.colors.accent, lineWidth: 3, role: "rule" });
@@ -450,10 +463,18 @@ function renderCustom(writer: ElementWriter, spec: SlideSpec, context: LayoutCon
   addFooter(writer, context);
 }
 
+export interface LayoutFallback {
+  slide: number;
+  requested: string;
+  used: string;
+}
+
 export class LayoutRegistry {
   private readonly layouts = new Map<string, LayoutRenderer>();
   private diagrams: DiagramBuilder;
   private charts: ChartBuilder;
+  /** When true, an unregistered layout id throws instead of falling back. */
+  public strict = false;
 
   public constructor(private config: SlideAgentConfig) {
     this.diagrams = new DiagramBuilder(config);
@@ -475,11 +496,43 @@ export class LayoutRegistry {
     return this;
   }
 
-  public render(writer: ElementWriter, spec: SlideSpec, context: LayoutContext): void {
+  /**
+   * Picks the closest built-in renderer for an unregistered kind. The docs tell
+   * models that `kind` is free-form metadata, which is only true when a canvas
+   * is present; without this, an invented kind and no canvas threw
+   * `Unknown layout` and failed the whole build.
+   */
+  private fallbackFor(spec: SlideSpec): LayoutRenderer {
+    if (spec.canvas?.length) return this.layouts.get("custom")!;
+    if (spec.chart) return this.layouts.get("chart")!;
+    if (spec.table) return this.layouts.get("table")!;
+    if (spec.kpis?.length) return this.layouts.get("kpi")!;
+    if (spec.comparison?.length) return this.layouts.get("comparison")!;
+    if (spec.timeline?.length) return this.layouts.get("timeline")!;
+    if (spec.process?.length) return this.layouts.get("process")!;
+    if (spec.architecture?.nodes.length) return this.layouts.get("architecture")!;
+    if (spec.roadmap?.length) return this.layouts.get("roadmap")!;
+    if (spec.quote) return this.layouts.get("quote")!;
+    if (spec.custom?.length) return this.layouts.get("custom")!;
+    if (spec.bullets?.length || spec.body || spec.visual) return this.layouts.get("text-image")!;
+    return this.layouts.get("section")!;
+  }
+
+  public render(writer: ElementWriter, spec: SlideSpec, context: LayoutContext): LayoutFallback | undefined {
     const id = spec.layout ?? spec.kind;
     const renderer = this.layouts.get(id);
-    if (!renderer) throw new Error(`Unknown layout: ${id}`);
-    renderer(writer, spec, context);
+    if (renderer) {
+      renderer(writer, spec, context);
+      return undefined;
+    }
+    if (this.strict) throw new Error(`Unknown layout: ${id}`);
+    const fallback = this.fallbackFor(spec);
+    fallback(writer, spec, context);
+    return {
+      slide: context.slideNumber,
+      requested: id,
+      used: [...this.layouts.entries()].find(([, candidate]) => candidate === fallback)?.[0] ?? "section",
+    };
   }
 
   public ids(): string[] {

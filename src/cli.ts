@@ -154,6 +154,28 @@ program.command("edit")
     });
   });
 
+program.command("revise")
+  .description("Replace one slide from the deck's scene blueprint, leaving every other slide unchanged")
+  .requiredOption("--input <file>", "Existing .pptx path")
+  .requiredOption("--output <file>", "Output .pptx path; must differ from input")
+  .requiredOption("--slide <number>", "1-based slide number to replace", Number)
+  .requiredOption("--records <file>", "NDJSON file holding the replacement records for that slide")
+  .option("--scene <file>", "Scene blueprint path when it does not sit beside the deck")
+  .option("--config <directory>", "Configuration directory")
+  .option("--render", "Also render previews (requires LibreOffice and Poppler)")
+  .option("--no-validate", "Skip validation")
+  .action(async (options) => printResult({
+    command: "revise",
+    input: options.input,
+    output: options.output,
+    slide: options.slide,
+    sceneNdjson: await text(options.records),
+    scene: options.scene,
+    configDir: options.config,
+    render: options.render,
+    validate: options.validate,
+  }));
+
 program.command("render")
   .requiredOption("--input <file>", "Input .pptx path")
   .requiredOption("--output <directory>", "Preview output directory")

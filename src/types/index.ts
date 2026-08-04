@@ -470,6 +470,7 @@ export interface SlideManifest {
 export interface DeckManifest {
   schemaVersion: "1.0";
   presentationTitle: string;
+  provenance?: DeckProvenance;
   width: number;
   height: number;
   createdAt: string;
@@ -515,9 +516,19 @@ export interface ValidationReport {
   };
 }
 
+/**
+ * Where the deck's design came from. `template-draft` decks contain
+ * placeholders and no art direction; callers must not present them as
+ * finished work.
+ */
+export type DeckProvenance = "model-authored" | "template-draft";
+
 export interface ExecutionMetadata {
   requestId: string;
-  command: "create" | "edit" | "render" | "validate";
+  command: "create" | "edit" | "render" | "validate" | "revise";
+  /** The authoring contract this engine implements. */
+  contractVersion?: string;
+  provenance?: DeckProvenance;
   startedAt: string;
   completedAt: string;
   durationMs: number;
@@ -673,7 +684,26 @@ export interface ValidateRequest {
   render?: boolean;
 }
 
-export type StructuredAgentRequest = CreateRequest | EditRequest | RenderRequest | ValidateRequest;
+export interface ReviseRequest {
+  command: "revise";
+  /** The existing deck. Its scene blueprint is discovered beside it. */
+  input: string;
+  output: string;
+  /** 1-based slide number to replace. */
+  slide: number;
+  /** Replacement NDJSON records for that slide only. */
+  sceneNdjson: string;
+  /** Override the scene path when it does not sit beside the deck. */
+  scene?: string;
+  configDir?: string;
+  render?: boolean;
+  validate?: boolean;
+  autoFix?: boolean;
+  maxRetries?: number;
+  allowRemoteAssets?: boolean;
+}
+
+export type StructuredAgentRequest = CreateRequest | EditRequest | RenderRequest | ValidateRequest | ReviseRequest;
 
 export interface LayoutContext {
   slideNumber: number;
