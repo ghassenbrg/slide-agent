@@ -68,19 +68,9 @@ If you are adding Slide Agent as a JavaScript/TypeScript dependency, a regular l
 npm install @slide-agent/core
 ```
 
-The package's `postinstall` hook registers its bundled skill in every supported personal skill directory. npm 12 blocks dependency lifecycle scripts unless the consuming project explicitly approves them. Projects using that policy must add the following field to their `package.json` before installing:
-
-```json
-{
-  "allowScripts": {
-    "@slide-agent/core": true
-  }
-}
-```
+Installing the library runs no lifecycle scripts and writes nothing outside your project. Run `slide-agent install` when you also want the skill registered for your AI agents.
 
 The project-local CLI is available as `npx --no-install slide-agent`, and the library is available through `import { SlideAgent } from "@slide-agent/core"`. A global npm install is not required. `npm install -g @slide-agent/core` is supported when your npm global prefix is already user-writable, but the managed `npx … slide-agent install` command above is preferred because it never needs administrator permissions, installs a persistent user-local CLI, and does not depend on project lifecycle-script approval.
-
-Automated library-only environments can set `SLIDE_AGENT_SKIP_AUTO_INSTALL=1` to suppress personal skill registration. This opt-out is intended for CI and container builds, not normal end-user installation.
 
 To also install the optional preview tools with Homebrew, apt, dnf, pacman, or WinGet:
 
@@ -297,7 +287,7 @@ Every API and CLI operation returns:
     "completedAt": "...",
     "durationMs": 1234,
     "retries": 0,
-    "version": "1.1.0"
+    "version": "1.0.0"
   }
 }
 ```

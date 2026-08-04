@@ -50,7 +50,6 @@
     "examples/requests",
     "references",
     "scripts/setup.mjs",
-    "scripts/postinstall.mjs",
     "scripts/managed-launcher.mjs",
     "scripts/uninstall.mjs",
     "scripts/install-agent-skill.sh",
@@ -99,7 +98,6 @@
     "verify:install": "node scripts/verify-managed-install.mjs",
     "fixture:invalid": "tsx scripts/generate-invalid-deck.ts",
     "verify": "npm run typecheck && npm test && npm run build",
-    "postinstall": "node scripts/postinstall.mjs",
     "prepack": "npm run build"
   },
   "dependencies": {

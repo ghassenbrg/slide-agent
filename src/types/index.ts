@@ -565,6 +565,13 @@ export interface CreateRequest {
   validate?: boolean;
   autoFix?: boolean;
   maxRetries?: number;
+  /**
+   * Permits fetching `http(s)` image URLs. Off by default: a canvas is
+   * model-authored and often derived from untrusted input, so remote fetches
+   * are an explicit choice. Private and link-local addresses stay blocked
+   * even when this is enabled.
+   */
+  allowRemoteAssets?: boolean;
 }
 
 export interface ReplaceTextOperation {

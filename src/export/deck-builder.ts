@@ -1,8 +1,8 @@
-import { tmpdir } from "node:os";
+import { tmpdir, userInfo } from "node:os";
 import path from "node:path";
 import { ElementWriter } from "../components/element-writer.js";
 import { PptxGenJS, type NativePresentation } from "../components/pptx-values.js";
-import { ImageManager, type ImageResolver } from "../images/image-manager.js";
+import { ImageManager, remoteAssetPolicy, type ImageResolver, type RemoteAssetPolicy } from "../images/image-manager.js";
 import { FreeformComposer } from "../layouts/freeform-composer.js";
 import { LayoutRegistry } from "../layouts/layout-registry.js";
 import { CreativeDirector } from "../themes/creative-director.js";
@@ -34,10 +34,15 @@ export class DeckBuilder {
 
   public constructor(
     private readonly config: SlideAgentConfig,
-    options: { layouts?: LayoutRegistry; imageResolver?: ImageResolver } = {},
+    options: { layouts?: LayoutRegistry; imageResolver?: ImageResolver; remoteAssets?: RemoteAssetPolicy } = {},
   ) {
     this.layouts = options.layouts ?? new LayoutRegistry(config);
-    this.imageResolver = options.imageResolver ?? new ImageManager(path.join(tmpdir(), "slide-agent-image-cache"));
+    // Per-user cache: a shared, world-readable directory under the system temp
+    // path is writable by every account on the host.
+    this.imageResolver = options.imageResolver ?? new ImageManager(
+      path.join(tmpdir(), `slide-agent-image-cache-${userInfo().username}`),
+      options.remoteAssets ?? remoteAssetPolicy(),
+    );
   }
 
   public async build(outline: PresentationOutline): Promise<BuiltDeck> {

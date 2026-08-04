@@ -81,7 +81,6 @@ async function chooseOutput(defaultName: string): Promise<string | undefined> {
 }
 
 async function run(command: string, args: string[]): Promise<{ stdout: string; exitCode: number }> {
-  output.show(true);
   output.appendLine(`\n> ${command} ${args.map((arg) => JSON.stringify(arg)).join(" ")}`);
   return new Promise((resolve, reject) => {
     const spawnPlan = prepareSpawn(command, args);
@@ -208,11 +207,13 @@ async function finishCreate(result: AgentResult | undefined, requestedOutput: st
   const primary = result.primaryOutput ?? requestedOutput;
   const open = "Open PowerPoint";
   const reveal = "Reveal in Folder";
+  if (configuration().get<boolean>("openAfterCreate", true)) {
+    await vscode.env.openExternal(vscode.Uri.file(primary));
+    return;
+  }
   const choice = await vscode.window.showInformationMessage("Slide Agent finished the presentation.", open, reveal);
   if (choice === reveal) await vscode.commands.executeCommand("revealFileInOS", vscode.Uri.file(primary));
-  if (choice === open || (!choice && configuration().get<boolean>("openAfterCreate", true))) {
-    await vscode.env.openExternal(vscode.Uri.file(primary));
-  }
+  if (choice === open) await vscode.env.openExternal(vscode.Uri.file(primary));
 }
 
 async function createFromText(prompt: string, suggestedName = "presentation.pptx"): Promise<void> {
@@ -295,15 +296,23 @@ export function activate(context: vscode.ExtensionContext): void {
   context.subscriptions.push(
     output,
     vscode.commands.registerCommand("slideAgent.install", () => install(context, false)),
-    vscode.commands.registerCommand("slideAgent.create", create),
-    vscode.commands.registerCommand("slideAgent.createFromCurrentFile", createFromCurrentFile),
-    vscode.commands.registerCommand("slideAgent.edit", edit),
-    vscode.commands.registerCommand("slideAgent.doctor", () => runCli(["doctor"])),
+    vscode.commands.registerCommand("slideAgent.create", async () => { await ensureInstalled(context); await create(); }),
+    vscode.commands.registerCommand("slideAgent.createFromCurrentFile", async () => { await ensureInstalled(context); await createFromCurrentFile(); }),
+    vscode.commands.registerCommand("slideAgent.edit", async () => { await ensureInstalled(context); await edit(); }),
+    vscode.commands.registerCommand("slideAgent.doctor", async () => { await ensureInstalled(context); await runCli(["doctor"]); }),
   );
+}
+
+/**
+ * Installs on demand rather than at activation. Spawning `npx` from
+ * `onStartupFinished` performed a network fetch and focused the output panel
+ * before the user had asked Slide Agent for anything.
+ */
+async function ensureInstalled(context: vscode.ExtensionContext): Promise<void> {
   const version = String(context.extension.packageJSON.version);
-  if (configuration().get<boolean>("autoInstall", true) && context.globalState.get<string>(INSTALLED_VERSION_KEY) !== version) {
-    void install(context, true);
-  }
+  if (!configuration().get<boolean>("autoInstall", true)) return;
+  if (context.globalState.get<string>(INSTALLED_VERSION_KEY) === version) return;
+  await install(context, true);
 }
 
 export function deactivate(): void { /* no persistent resources */ }

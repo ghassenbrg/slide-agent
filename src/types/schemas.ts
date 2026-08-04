@@ -32,6 +32,7 @@ const createRequest = z.object({
   validate: z.boolean().optional(),
   autoFix: z.boolean().optional(),
   maxRetries: z.number().int().nonnegative().optional(),
+  allowRemoteAssets: z.boolean().optional(),
 });
 
 const editRequest = z.object({

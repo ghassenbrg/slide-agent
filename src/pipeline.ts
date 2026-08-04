@@ -8,6 +8,7 @@ import { PptxExporter } from "./export/pptx-exporter.js";
 import { JsonLogger, type Logger } from "./logging/logger.js";
 import { OutlinePlanner } from "./planner/outline-planner.js";
 import { outputLayout } from "./output/output-layout.js";
+import { remoteAssetPolicy } from "./images/image-manager.js";
 import { RequestAnalyzer } from "./planner/request-analyzer.js";
 import { PresentationRenderer } from "./rendering/renderer.js";
 import { parseSceneNdjson, readSceneNdjson, writeSceneNdjson } from "./serialization/scene-ndjson.js";
@@ -146,7 +147,7 @@ export class SlideAgent {
 
       for (let attempt = 0; attempt <= maximumRetries; attempt += 1) {
         this.logger.info("create.iteration", "Building presentation", { requestId, attempt: attempt + 1 });
-        const built = await new DeckBuilder(config).build(outline);
+        const built = await new DeckBuilder(config, { remoteAssets: remoteAssetPolicy(request.allowRemoteAssets) }).build(outline);
         finalBuilt = built;
         outline = built.outline;
         effectiveConfig = built.config;

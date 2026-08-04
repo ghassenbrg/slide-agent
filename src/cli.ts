@@ -4,7 +4,7 @@ import { Command } from "commander";
 
 import { parseEditPrompt } from "./editing/parse-edit-prompt.js";
 import { SlideAgent } from "./pipeline.js";
-import type { StructuredAgentRequest } from "./types/index.js";
+import type { CreateRequest, StructuredAgentRequest } from "./types/index.js";
 import { parseStructuredRequest } from "./types/schemas.js";
 import { formatDoctor, runDoctor } from "./doctor.js";
 import { installManaged } from "./installer.js";
@@ -85,22 +85,36 @@ program.command("create")
   .action(async (options) => {
     if (!options.prompt && !options.scene) throw new Error("create requires --prompt or --scene.");
     const prompt = options.prompt ? await text(options.prompt) : "";
-    const parsed = options.prompt?.endsWith(".json") ? JSON.parse(prompt) as Partial<StructuredAgentRequest> : undefined;
+    const parsed = options.prompt?.endsWith(".json")
+      ? JSON.parse(prompt) as Partial<CreateRequest>
+      : undefined;
+    if (parsed) {
+      process.stderr.write(
+        "slide-agent create --prompt <file>.json is deprecated and will be removed in the next major version. "
+        + "Use `slide-agent run --request <file>.json` for structured requests.\n",
+      );
+    }
+    const base = parsed?.command === "create" ? parsed : {};
+    // Explicit flags win, then the structured file, then the defaults. Assigning
+    // the flags unconditionally would overwrite every field the file supplied
+    // with `undefined`, silently dropping render, paths, and retry settings.
     await printResult({
-      ...(parsed && parsed.command === "create" ? parsed : {}),
+      ...base,
       command: "create",
-      prompt: parsed ? (parsed as { prompt?: string }).prompt : prompt,
-      scene: options.scene ?? (parsed as { scene?: string } | undefined)?.scene,
+      prompt: parsed ? parsed.prompt : prompt,
+      scene: options.scene ?? base.scene,
       output: options.output,
-      previewsDir: options.previews,
-      reportPath: options.report,
-      metadataPath: options.metadata,
-      inspectPath: options.inspect ?? (parsed as { inspectPath?: string } | undefined)?.inspectPath,
-      configDir: options.config,
-      render: options.render,
-      validate: options.validate,
-      autoFix: options.autoFix,
-      maxRetries: options.maxRetries,
+      previewsDir: options.previews ?? base.previewsDir,
+      reportPath: options.report ?? base.reportPath,
+      metadataPath: options.metadata ?? base.metadataPath,
+      inspectPath: options.inspect ?? base.inspectPath,
+      configDir: options.config ?? base.configDir,
+      render: options.render ?? base.render,
+      // Commander defaults `--no-*` options to true, so only an explicit
+      // negation should override the file.
+      validate: options.validate === false ? false : base.validate ?? options.validate,
+      autoFix: options.autoFix === false ? false : base.autoFix ?? options.autoFix,
+      maxRetries: options.maxRetries ?? base.maxRetries,
     });
   });
 

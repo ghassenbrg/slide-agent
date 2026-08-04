@@ -57,28 +57,19 @@ describe("agent skill installers", () => {
     }
   });
 
-  it("registers skills automatically after an npm package install", async () => {
-    const automatic = await mkdtemp(path.join(tmpdir(), "slide-agent-postinstall-"));
-    try {
-      const environment = {
-        ...process.env,
-        INIT_CWD: automatic,
-        npm_command: "install",
-        npm_lifecycle_event: "postinstall",
-        SLIDE_AGENT_CODEX_SKILLS_DIR: path.join(automatic, "codex"),
-        SLIDE_AGENT_COPILOT_SKILLS_DIR: path.join(automatic, "copilot"),
-        SLIDE_AGENT_CLAUDE_SKILLS_DIR: path.join(automatic, "claude"),
-        SLIDE_AGENT_GEMINI_SKILLS_DIR: path.join(automatic, "gemini"),
-        SLIDE_AGENT_SKIP_AUTO_INSTALL: "0",
-      };
-      const result = await execute(process.execPath, [path.join(scripts, "postinstall.mjs")], { env: environment });
-      expect(result.stdout).toContain("installation complete for: all");
-      for (const agent of ["codex", "copilot", "claude", "gemini"]) {
-        expect(await lstat(path.join(automatic, agent, "slide-agent"))).toBeDefined();
-      }
-    } finally {
-      await rm(automatic, { recursive: true, force: true });
+  it("does not register skills as a side effect of installing the library", async () => {
+    // Adding a dependency must never write into the developer's home
+    // directory, and must never point a global skill at a path inside one
+    // project's node_modules.
+    const packageJson = JSON.parse(await readFile(path.join(root, "package.json"), "utf8")) as {
+      scripts?: Record<string, string>;
+      files?: string[];
+    };
+    for (const lifecycle of ["preinstall", "install", "postinstall"]) {
+      expect(packageJson.scripts?.[lifecycle], `${lifecycle} must not exist`).toBeUndefined();
     }
+    expect(packageJson.files).not.toContain("scripts/postinstall.mjs");
+    await expect(lstat(path.join(scripts, "postinstall.mjs"))).rejects.toThrow();
   });
 
   it("refreshes a skill copy previously created by the managed Windows fallback", async () => {

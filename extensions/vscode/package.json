@@ -29,7 +29,6 @@
     "Gemini"
   ],
   "activationEvents": [
-    "onStartupFinished",
     "onCommand:slideAgent.install",
     "onCommand:slideAgent.create",
     "onCommand:slideAgent.createFromCurrentFile",
