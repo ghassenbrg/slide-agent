@@ -5,6 +5,7 @@ export { PptxSanitizer } from "./export/pptx-sanitizer.js";
 export { formatDoctor, runDoctor } from "./doctor.js";
 export { installManaged, PACKAGE_NAME, PACKAGE_VERSION, type ManagedInstallOptions, type ManagedInstallResult } from "./installer.js";
 export { VERSION } from "./version.js";
+export { findExecutable, runProcess, type ProcessResult } from "./utils/process.js";
 export { outputLayout } from "./output/output-layout.js";
 export { PptxEditor, type PptxEditResult } from "./editing/pptx-editor.js";
 export { PptxInspector } from "./editing/pptx-inspector.js";
