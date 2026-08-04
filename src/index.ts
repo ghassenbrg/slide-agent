@@ -2,7 +2,7 @@ export { SlideAgent } from "./pipeline.js";
 export { DeckBuilder, type BuiltDeck } from "./export/deck-builder.js";
 export { PptxExporter } from "./export/pptx-exporter.js";
 export { PptxSanitizer } from "./export/pptx-sanitizer.js";
-export { formatDoctor, runDoctor } from "./doctor.js";
+export { formatDoctor, formatDoctorReport, runDeepCheck, runDoctor, runDoctorReport, type AgentIntegrationCheck, type DoctorCheck, type DoctorReport } from "./doctor.js";
 export { installManaged, PACKAGE_NAME, PACKAGE_VERSION, type ManagedInstallOptions, type ManagedInstallResult } from "./installer.js";
 export { VERSION } from "./version.js";
 export { findExecutable, runProcess, type ProcessResult } from "./utils/process.js";

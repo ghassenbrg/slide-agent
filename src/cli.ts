@@ -6,7 +6,7 @@ import { parseEditPrompt } from "./editing/parse-edit-prompt.js";
 import { SlideAgent } from "./pipeline.js";
 import type { CreateRequest, StructuredAgentRequest } from "./types/index.js";
 import { parseStructuredRequest } from "./types/schemas.js";
-import { formatDoctor, runDoctor } from "./doctor.js";
+import { formatDoctorReport, runDeepCheck, runDoctorReport } from "./doctor.js";
 import { installManaged } from "./installer.js";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
@@ -39,12 +39,18 @@ const program = new Command()
   .version(VERSION);
 
 program.command("doctor")
-  .description("Check installation, agent registration, and optional rendering dependencies")
+  .description("Check installation, agent registration, MCP wiring, and optional preview tools")
   .option("--json", "Print machine-readable JSON")
+  .option("--deep", "Also build a deck end to end to prove generation works")
   .action(async (options) => {
-    const checks = await runDoctor();
-    process.stdout.write(options.json ? `${JSON.stringify(checks, null, 2)}\n` : `${formatDoctor(checks)}\n`);
-    if (checks.some((check) => check.status === "error")) process.exitCode = 1;
+    const report = await runDoctorReport();
+    const deep = options.deep ? await runDeepCheck() : undefined;
+    if (deep) {
+      report.checks.push(deep);
+      if (deep.status === "error") report.status = "error";
+    }
+    process.stdout.write(options.json ? `${JSON.stringify(report, null, 2)}\n` : `${formatDoctorReport(report)}\n`);
+    if (report.status === "error") process.exitCode = 1;
   });
 
 program.command("install")
