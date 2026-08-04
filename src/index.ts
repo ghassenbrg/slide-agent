@@ -20,6 +20,7 @@ export { JsonLogger, silentLogger, type Logger } from "./logging/logger.js";
 export { parseStructuredRequest, structuredRequestSchema } from "./types/schemas.js";
 export { parseSceneNdjson, readSceneNdjson, serializeSceneNdjson, writeSceneNdjson } from "./serialization/scene-ndjson.js";
 export * from "./types/index.js";
+export * from "./contract/index.js";
 
 import { SlideAgent } from "./pipeline.js";
 import type { AgentResult, StructuredAgentRequest } from "./types/index.js";

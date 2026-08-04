@@ -1,5 +1,10 @@
 import { z } from "zod";
 
+import {
+  creativeDirectionSchema,
+  presentationBriefSchema,
+  presentationOutlineSchema,
+} from "../contract/index.js";
 import type { StructuredAgentRequest } from "./index.js";
 
 const chartSeries = z.object({ name: z.string(), values: z.array(z.number()) });
@@ -17,11 +22,16 @@ const editOperation = z.discriminatedUnion("type", [
 const createRequest = z.object({
   command: z.literal("create"),
   prompt: z.string().optional(),
-  brief: z.record(z.string(), z.unknown()).optional(),
-  outline: z.unknown().optional(),
+  // A request-level brief supplies overrides, so every field is optional here.
+  // The outline's own brief is validated in full by the contract.
+  brief: presentationBriefSchema.partial().optional(),
+  // Previously `z.unknown()`, which left the entire high-quality path
+  // unvalidated: a malformed outline crashed deep inside the builder with no
+  // indication of which field was wrong.
+  outline: presentationOutlineSchema.optional(),
   scene: z.string().optional(),
   sceneNdjson: z.string().optional(),
-  creativeDirection: z.record(z.string(), z.unknown()).optional(),
+  creativeDirection: creativeDirectionSchema.optional(),
   output: z.string(),
   previewsDir: z.string().optional(),
   reportPath: z.string().optional(),

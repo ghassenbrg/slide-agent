@@ -12,6 +12,16 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { spawn } from "node:child_process";
 import { VERSION } from "./version.js";
+import {
+  allContractJsonSchemas,
+  authoringGuide,
+  contractDescriptor,
+  contractJsonSchema,
+  guideAsMarkdown,
+  guideAsPrompt,
+  type ContractSchemaName,
+  type GuideSectionId,
+} from "./contract/index.js";
 
 async function text(filePath: string): Promise<string> {
   return readFile(filePath, "utf8");
@@ -159,6 +169,36 @@ program.command("validate")
   .option("--config <directory>", "Configuration directory")
   .option("--render", "Also generate preview images (requires LibreOffice and Poppler)")
   .action(async (options) => printResult({ command: "validate", input: options.input, report: options.report, manifest: options.manifest, previewsDir: options.previews, configDir: options.config, render: options.render }));
+
+program.command("contract")
+  .description("Print the authoring contract: schemas, the guide, or a ready-to-use system prompt")
+  .option("--format <format>", "json, prompt, or markdown", "json")
+  .option("--schema <name>", "outline, brief, slide, canvasElement, creativeDirection, chart, table, or sceneRecord")
+  .option("--section <id>", "Limit the guide to one section")
+  .action((options) => {
+    if (options.schema) {
+      const names = contractDescriptor().schemas;
+      if (!names.includes(options.schema as ContractSchemaName)) {
+        throw new Error(`Unknown contract schema: ${options.schema}. Available: ${names.join(", ")}.`);
+      }
+      process.stdout.write(`${JSON.stringify(contractJsonSchema(options.schema as ContractSchemaName), null, 2)}\n`);
+      return;
+    }
+    if (options.format === "prompt") {
+      process.stdout.write(guideAsPrompt());
+      return;
+    }
+    if (options.format === "markdown") {
+      process.stdout.write(guideAsMarkdown(options.section as GuideSectionId | undefined));
+      return;
+    }
+    if (options.format !== "json") throw new Error(`Unsupported format: ${options.format}. Use json, prompt, or markdown.`);
+    process.stdout.write(`${JSON.stringify({
+      ...contractDescriptor(),
+      guide: authoringGuide(options.section as GuideSectionId | undefined),
+      jsonSchemas: allContractJsonSchemas(),
+    }, null, 2)}\n`);
+  });
 
 program.command("run")
   .description("Execute a structured JSON request from any VS Code AI agent")
