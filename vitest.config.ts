@@ -13,12 +13,14 @@ export default defineConfig({
       // Floors, not targets. Raise them as coverage improves; never lower them
       // to make a red build green.
       thresholds: {
-        lines: 70,
-        functions: 70,
-        statements: 70,
-        branches: 60,
-        "src/validation/**": { lines: 85, functions: 85, statements: 85, branches: 70 },
+        lines: 80,
+        functions: 80,
+        statements: 78,
+        branches: 65,
+        "src/validation/**": { lines: 88, functions: 88, statements: 85, branches: 75 },
         "src/export/**": { lines: 85, functions: 85, statements: 85, branches: 70 },
+        "src/design/**": { lines: 90, functions: 90, statements: 90, branches: 80 },
+        "src/contract/**": { lines: 85, functions: 80, statements: 85, branches: 70 },
       },
     },
   },
