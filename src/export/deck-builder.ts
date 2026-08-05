@@ -51,7 +51,7 @@ export class DeckBuilder {
     const design = new CreativeDirector().resolve(outline, this.config);
     const effectiveConfig = design.config;
     const resolvedOutline: PresentationOutline = { ...outline, creativeDirection: design.direction };
-    this.layouts.configure(effectiveConfig);
+    this.layouts.configure(effectiveConfig, design.direction);
     const presentation = new PptxGenJS();
     new ThemeManager().apply(presentation, effectiveConfig, outline.brief.title, design.direction);
     const manifest: DeckManifest = {

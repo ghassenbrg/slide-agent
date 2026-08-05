@@ -21,6 +21,8 @@ export { parseStructuredRequest, structuredRequestSchema } from "./types/schemas
 export { parseSceneNdjson, readSceneNdjson, serializeSceneNdjson, writeSceneNdjson } from "./serialization/scene-ndjson.js";
 export * from "./types/index.js";
 export * from "./contract/index.js";
+export { Grid, SLIDE_FORMATS, slideFormat, type Rect, type SlideFormat } from "./design/grid.js";
+export { densityBudget, resolveTokens, type DeckTokens, type Density, type Geometry } from "./design/tokens.js";
 
 import { SlideAgent } from "./pipeline.js";
 import type { AgentResult, StructuredAgentRequest } from "./types/index.js";
