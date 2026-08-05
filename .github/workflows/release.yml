@@ -21,6 +21,36 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
+
+      # A manual run verifies and publishes nothing, which is the safe default
+      # but looks identical to a successful release: a green tick and three
+      # skipped jobs with no stated reason. Say plainly which one this is.
+      - name: State what this run will and will not publish
+        run: |
+          {
+            if [ "$GITHUB_REF_TYPE" = "tag" ]; then
+              echo "### Release run — \`$GITHUB_REF_NAME\`"
+              echo ""
+              echo "If verification passes, this run **will publish** to npm, the VS Code"
+              echo "Marketplace, and GitHub Releases. npm publishes are irreversible."
+            else
+              echo "### Dry run — \`$GITHUB_REF_NAME\` is not a tag"
+              echo ""
+              echo "Verification only. **Nothing will be published**, and the three publish"
+              echo "jobs below will show as skipped — that is expected, not a failure."
+              echo ""
+              echo "To publish, push a matching tag from the default branch:"
+              echo ""
+              echo '```bash'
+              echo "git tag v\$(node -p \"require('./package.json').version\")"
+              echo "git push origin --tags"
+              echo '```'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+          if [ "$GITHUB_REF_TYPE" != "tag" ]; then
+            echo "::notice title=Dry run::Nothing will be published. The publish jobs skip because $GITHUB_REF_NAME is not a v* tag."
+          fi
+
       - uses: actions/setup-node@v7
         with:
           node-version: 24
