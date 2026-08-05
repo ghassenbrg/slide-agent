@@ -4,38 +4,66 @@ on:
   push:
     branches:
       - main
+      - master
+  # Verification has to run *before* a merge, not after it. The previous
+  # `types: [closed]` trigger meant no pull request was ever checked while it
+  # was still open, so nothing gated the default branch.
   pull_request:
     branches:
       - main
+      - master
     types:
-      - closed
+      - opened
+      - synchronize
+      - reopened
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
   verify:
-    name: Verify on ${{ matrix.os }}
-    if: github.event_name == 'push' || github.event.pull_request.merged == true
+    name: Verify on ${{ matrix.os }} / node ${{ matrix.node }}
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
+        node: [22, 24]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v7
         with:
-          node-version: 22
+          node-version: ${{ matrix.node }}
           cache: npm
           cache-dependency-path: package-lock.json
+
+      # The renderer and every render-dependent assertion were skipped on all
+      # three runners because the optional preview tools were never present.
+      - name: Install preview tools
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libreoffice-impress poppler-utils
+          soffice --version
+          pdftoppm -v
+
       - run: node scripts/verify-lockfile.mjs
       - run: npm ci
       - run: npm ci
         working-directory: extensions/vscode
       - run: npm run typecheck
+      - run: npm run check
+        working-directory: extensions/vscode
       - run: npm audit --omit=dev --audit-level=high
       - run: npm audit --audit-level=high
         working-directory: extensions/vscode
+      - run: npm run docs:check
       - run: npm run audit:public
-      - run: npm test
+      - run: npm run test:coverage
       - run: npm run build
       - run: npm run plugin:build
       - run: npm run plugin:validate
@@ -43,9 +71,40 @@ jobs:
       - run: npm run verify:install
       - run: npm run package
         working-directory: extensions/vscode
-      - run: node scripts/setup.mjs --target all --skip-cli
+
+      # Proves the renderer actually ran instead of silently skipping.
+      - name: Assert the render path was exercised
+        if: matrix.os == 'ubuntu-latest'
+        run: node scripts/assert-render-tested.mjs
+
+      - name: Register skills into a scratch directory
+        run: node scripts/setup.mjs --target all --skip-cli
         env:
           SLIDE_AGENT_CODEX_SKILLS_DIR: ${{ runner.temp }}/slide-agent-skills/codex
           SLIDE_AGENT_COPILOT_SKILLS_DIR: ${{ runner.temp }}/slide-agent-skills/copilot
           SLIDE_AGENT_CLAUDE_SKILLS_DIR: ${{ runner.temp }}/slide-agent-skills/claude
           SLIDE_AGENT_GEMINI_SKILLS_DIR: ${{ runner.temp }}/slide-agent-skills/gemini
+
+      - name: Upload coverage
+        if: matrix.os == 'ubuntu-latest' && matrix.node == 24
+        uses: actions/upload-artifact@v7
+        with:
+          name: coverage
+          path: coverage/
+          if-no-files-found: warn
+
+  # Adding the library as a dependency must not write outside the project.
+  consumer-install:
+    name: Consumer install is inert
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci
+      - run: npm run build
+      - run: npm pack --pack-destination "$RUNNER_TEMP"
+      - run: node scripts/verify-consumer-install.mjs "$RUNNER_TEMP"

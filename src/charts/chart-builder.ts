@@ -2,6 +2,8 @@ import type { ChartSpec, SlideAgentConfig } from "../types/index.js";
 import type { Frame } from "../components/element-writer.js";
 import { ElementWriter } from "../components/element-writer.js";
 import { ChartTypes, Shapes } from "../components/pptx-values.js";
+import { resolveTokens, type DeckTokens } from "../design/tokens.js";
+import { ensureContrast, requiredContrast } from "../utils/color.js";
 
 const CHART_TYPES: Record<Exclude<ChartSpec["kind"], "waterfall">, string> = {
   bar: ChartTypes.bar,
@@ -11,7 +13,11 @@ const CHART_TYPES: Record<Exclude<ChartSpec["kind"], "waterfall">, string> = {
 };
 
 export class ChartBuilder {
-  public constructor(private readonly config: SlideAgentConfig) {}
+  private readonly tokens: DeckTokens;
+
+  public constructor(private readonly config: SlideAgentConfig, tokens?: DeckTokens) {
+    this.tokens = tokens ?? resolveTokens(config);
+  }
 
   public add(
     writer: ElementWriter,
@@ -37,13 +43,13 @@ export class ChartBuilder {
       chartColors: colors,
       ...(chart.kind === "area" ? { chartColorsOpacity: 58 } : {}),
       catAxisLabelFontFace: this.config.fonts.body,
-      catAxisLabelFontSize: 12,
+      catAxisLabelFontSize: this.tokens.type.caption,
       catAxisLabelColor: this.config.colors.ink,
       valAxisLabelFontFace: this.config.fonts.body,
-      valAxisLabelFontSize: 11,
+      valAxisLabelFontSize: this.tokens.type.micro,
       valAxisLabelColor: this.config.colors.ink,
       legendColor: this.config.colors.ink,
-      valGridLine: { color: this.config.colors.rule, width: 1 },
+      valGridLine: { color: this.config.colors.rule, width: this.tokens.stroke.hairline },
       showPercent: chart.kind === "pie",
       showValue: chart.showValues ?? ["bar", "pie"].includes(chart.kind),
       dataLabelPosition: chart.kind === "bar" ? "outEnd" : chart.kind === "pie" ? "bestFit" : "t",
@@ -67,8 +73,9 @@ export class ChartBuilder {
       totals.push(running);
     });
     const domain = Math.max(...totals.map(Math.abs), ...values.map(Math.abs), 1);
-    const baseline = frame.y + frame.h - 0.58;
-    const plotHeight = frame.h - 1.0;
+    const labelBand = this.tokens.type.caption / 72 * 2.2;
+    const baseline = frame.y + frame.h - labelBand;
+    const plotHeight = frame.h - labelBand - this.tokens.type.caption / 72 * 2.4;
     const slot = frame.w / Math.max(values.length, 1);
 
     values.forEach((value, index) => {
@@ -87,17 +94,28 @@ export class ChartBuilder {
         role: "chart-mark",
       });
       writer.addText(`${name}-value-${index + 1}`, `${!isTotal && value > 0 ? "+" : ""}${value}${chart.unit ?? ""}`, {
-        x: x - 0.08,
-        y: Math.max(frame.y, y - 0.35),
-        w: w + 0.16,
-        h: 0.3,
-      }, { fontSize: 12, bold: true, align: "center", role: "chart-label" });
+        x: x - this.tokens.space.xs,
+        y: Math.max(frame.y, y - this.tokens.type.caption / 72 * 1.8),
+        w: w + this.tokens.space.sm,
+        h: this.tokens.type.caption / 72 * 1.7,
+      }, {
+        fontSize: this.tokens.type.caption,
+        bold: true,
+        align: "center",
+        color: ensureContrast(this.config.colors.ink, this.config.colors.background, requiredContrast(this.tokens.type.caption, true)),
+        role: "chart-label",
+      });
       writer.addText(`${name}-label-${index + 1}`, chart.labels[index] ?? "", {
         x: frame.x + slot * index,
-        y: baseline + 0.08,
+        y: baseline + this.tokens.space.xs,
         w: slot,
-        h: 0.42,
-      }, { fontSize: 11, align: "center", color: this.config.colors.muted, role: "chart-label" });
+        h: labelBand - this.tokens.space.xs,
+      }, {
+        fontSize: this.tokens.type.micro,
+        align: "center",
+        color: ensureContrast(this.config.colors.muted, this.config.colors.background, requiredContrast(this.tokens.type.micro)),
+        role: "chart-label",
+      });
     });
     writer.recordChart(name, chart, frame);
   }

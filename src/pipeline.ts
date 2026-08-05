@@ -8,31 +8,45 @@ import { PptxExporter } from "./export/pptx-exporter.js";
 import { JsonLogger, type Logger } from "./logging/logger.js";
 import { OutlinePlanner } from "./planner/outline-planner.js";
 import { outputLayout } from "./output/output-layout.js";
+import { remoteAssetPolicy } from "./images/image-manager.js";
+import { applyBrandKit, loadBrandKit, type BrandKit } from "./design/brand.js";
 import { RequestAnalyzer } from "./planner/request-analyzer.js";
 import { PresentationRenderer } from "./rendering/renderer.js";
 import { parseSceneNdjson, readSceneNdjson, writeSceneNdjson } from "./serialization/scene-ndjson.js";
+import { reviseScene } from "./serialization/revise-scene.js";
 import type {
   AgentResult,
   CreateRequest,
   EditRequest,
   ExecutionMetadata,
+  DeckProvenance,
   PresentationOutline,
   RenderRequest,
+  ReviseRequest,
   StructuredAgentRequest,
   ValidateRequest,
   ValidationReport,
 } from "./types/index.js";
-import { errorDetails } from "./utils/errors.js";
-import { fileSha256, writeJson } from "./utils/files.js";
-import { AutoFixer } from "./validation/auto-fixer.js";
+import { SlideAgentError, errorDetails } from "./utils/errors.js";
+import { CONTRACT_VERSION } from "./contract/index.js";
+import { exists, fileSha256, readUtf8, writeJson } from "./utils/files.js";
+import { AutoFixer, type UnfixedIssue } from "./validation/auto-fixer.js";
 import { PresentationValidator } from "./validation/validator.js";
 import { VERSION } from "./version.js";
 
-function metadata(command: ExecutionMetadata["command"], requestId: string, startedAt: Date, retries: number): ExecutionMetadata {
+function metadata(
+  command: ExecutionMetadata["command"],
+  requestId: string,
+  startedAt: Date,
+  retries: number,
+  provenance?: ExecutionMetadata["provenance"],
+): ExecutionMetadata {
   const completed = new Date();
   return {
     requestId,
     command,
+    contractVersion: CONTRACT_VERSION,
+    ...(provenance ? { provenance } : {}),
     startedAt: startedAt.toISOString(),
     completedAt: completed.toISOString(),
     durationMs: completed.getTime() - startedAt.getTime(),
@@ -45,6 +59,56 @@ function resultStatus(report: ValidationReport | undefined, warnings: string[]):
   if (report?.status === "fail") return "error";
   if (report?.status === "warning" || warnings.length > 0) return "warning";
   return "success";
+}
+
+function summarize(issues: ValidationReport["issues"]): ValidationReport["summary"] {
+  return {
+    errors: issues.filter((item) => item.severity === "error").length,
+    warnings: issues.filter((item) => item.severity === "warning").length,
+    info: issues.filter((item) => item.severity === "info").length,
+  };
+}
+
+function sameIssue(issue: { code: string; slide?: number; elementIds?: string[] }, unfixed: UnfixedIssue): boolean {
+  if (issue.code !== unfixed.code || issue.slide !== unfixed.slide) return false;
+  if (!unfixed.elementIds?.length || !issue.elementIds?.length) return true;
+  return unfixed.elementIds.some((id) => issue.elementIds!.includes(id));
+}
+
+/**
+ * Annotates the final report with what the repair loop actually achieved. An
+ * error the fixer provably cannot repair becomes a warning carrying the reason
+ * and the remedy, so callers get an actionable deck instead of a hard failure
+ * they cannot act on. An error the fixer could still repair stays an error —
+ * that one is genuinely a budget problem another retry would resolve.
+ */
+function reconcileReport(report: ValidationReport, unfixed: UnfixedIssue[], retriesExhausted: boolean): ValidationReport {
+  const issues = report.issues.map((issue) => {
+    if (!issue.fixable) return issue;
+    const blocked = unfixed.find((candidate) => sameIssue(issue, candidate));
+    if (blocked) {
+      return {
+        ...issue,
+        severity: issue.severity === "error" ? ("warning" as const) : issue.severity,
+        fixed: false,
+        unfixedReason: blocked.reason,
+      };
+    }
+    return {
+      ...issue,
+      fixed: false,
+      unfixedReason: retriesExhausted
+        ? "The repair retry budget was exhausted before this issue was reached. Raise maxRetries and rerun."
+        : "This issue appeared after the final repair pass.",
+    };
+  });
+  const summary = summarize(issues);
+  return {
+    ...report,
+    issues,
+    summary,
+    status: summary.errors > 0 ? "fail" : summary.warnings > 0 ? "warning" : "pass",
+  };
 }
 
 function unique(values: string[]): string[] {
@@ -60,6 +124,62 @@ export class SlideAgent {
       case "edit": return this.edit(request);
       case "render": return this.render(request);
       case "validate": return this.validate(request);
+      case "revise": return this.revise(request);
+    }
+  }
+
+  /**
+   * Replaces one slide by splicing its records into the deck's own scene and
+   * rebuilding. Regenerating a deck to change one slide discards every other
+   * decision the model made; this keeps them because the scene round-trips.
+   */
+  public async revise(request: ReviseRequest): Promise<AgentResult> {
+    const startedAt = new Date();
+    const requestId = randomUUID();
+    try {
+      if (path.resolve(request.input) === path.resolve(request.output)) {
+        throw new SlideAgentError("OUTPUT_MATCHES_INPUT", "Revision must be written to a different file so the original stays intact.");
+      }
+      const scenePath = path.resolve(request.scene ?? outputLayout(request.input).inspect);
+      if (!(await exists(scenePath))) {
+        throw new SlideAgentError(
+          "SCENE_NOT_FOUND",
+          `No scene blueprint was found for this deck at ${scenePath}. Revision needs the artifacts/ directory that was written beside the deck, or an explicit scene path.`,
+          { input: path.resolve(request.input), expected: scenePath },
+        );
+      }
+      const merged = reviseScene(await readUtf8(scenePath), request.slide, request.sceneNdjson);
+      this.logger.info("revise.merged", "Spliced the revised slide into the deck scene", {
+        requestId,
+        slide: request.slide,
+        replaced: merged.replaced,
+        added: merged.added,
+      });
+
+      const result = await this.create({
+        command: "create",
+        sceneNdjson: merged.scene,
+        output: request.output,
+        ...(request.configDir === undefined ? {} : { configDir: request.configDir }),
+        ...(request.render === undefined ? {} : { render: request.render }),
+        ...(request.validate === undefined ? {} : { validate: request.validate }),
+        ...(request.autoFix === undefined ? {} : { autoFix: request.autoFix }),
+        ...(request.maxRetries === undefined ? {} : { maxRetries: request.maxRetries }),
+        ...(request.allowRemoteAssets === undefined ? {} : { allowRemoteAssets: request.allowRemoteAssets }),
+      });
+      return {
+        ...result,
+        metadata: { ...result.metadata, command: "revise", requestId, provenance: "model-authored" },
+      };
+    } catch (error) {
+      return {
+        status: "error",
+        generatedFiles: [],
+        slideCount: 0,
+        warnings: [],
+        errors: [errorDetails(error)],
+        metadata: metadata("revise", requestId, startedAt, 0),
+      };
     }
   }
 
@@ -72,11 +192,33 @@ export class SlideAgent {
     let finalBuilt: BuiltDeck | undefined;
     try {
       const config = await loadConfig(request.configDir);
-      let outline: PresentationOutline = request.outline
+      const authored = request.outline
         ?? (request.sceneNdjson ? parseSceneNdjson(request.sceneNdjson) : undefined)
-        ?? (request.scene ? await readSceneNdjson(request.scene) : undefined)
+        ?? (request.scene ? await readSceneNdjson(request.scene) : undefined);
+      // A deck a model designed and one the planner scaffolded are different
+      // products. Callers must be able to tell them apart without inspecting
+      // the slides for bracketed placeholders.
+      const provenance: DeckProvenance = authored ? "model-authored" : "template-draft";
+      let outline: PresentationOutline = authored
         ?? new OutlinePlanner().plan(new RequestAnalyzer(config).analyze(request.prompt ?? "", request.brief ?? {}));
+      if (provenance === "template-draft") {
+        this.logger.warn(
+          "create.draft",
+          "No model-authored outline or scene was supplied, so Slide Agent produced a structural draft with placeholders. Run `slide-agent contract` for the authoring guide.",
+          { requestId },
+        );
+      }
       if (request.creativeDirection) outline = { ...outline, creativeDirection: request.creativeDirection };
+      let brand: BrandKit | undefined;
+      if (request.brand) {
+        brand = await loadBrandKit(request.brand);
+        outline = applyBrandKit(outline, brand);
+        this.logger.info("create.brand", "Applied brand kit", {
+          requestId,
+          brand: brand.name,
+          locked: brand.locked,
+        });
+      }
       const layout = outputLayout(request.output);
       const output = layout.pptx;
       const manifestPath = layout.manifest;
@@ -90,18 +232,31 @@ export class SlideAgent {
       const shouldFix = request.autoFix ?? true;
       let report: ValidationReport | undefined;
 
+      const appliedFixes: string[] = [];
+      let effectiveConfig = config;
+      let retriesExhausted = false;
+
       for (let attempt = 0; attempt <= maximumRetries; attempt += 1) {
         this.logger.info("create.iteration", "Building presentation", { requestId, attempt: attempt + 1 });
-        const built = await new DeckBuilder(config).build(outline);
+        const built = await new DeckBuilder(config, {
+          remoteAssets: remoteAssetPolicy(request.allowRemoteAssets),
+          ...(brand ? { brand } : {}),
+          ...(request.bilingual ? { bilingual: request.bilingual } : {}),
+        }).build(outline);
         finalBuilt = built;
         outline = built.outline;
+        effectiveConfig = built.config;
+        for (const fallback of built.layoutFallbacks) {
+          const note = `Slide ${fallback.slide} uses kind "${fallback.requested}", which is not a registered layout; rendered with the "${fallback.used}" layout instead. Supply a canvas to control the composition.`;
+          if (!warnings.includes(note)) warnings.push(note);
+        }
         await new PptxExporter().export(built.presentation, output);
+        built.manifest.provenance = provenance;
         built.manifest.packageSha256 = await fileSha256(output);
         await writeJson(manifestPath, built.manifest);
         if (shouldValidate) {
           report = await new PresentationValidator(built.config, this.logger).validate(output, {
             manifest: built.manifest,
-            reportPath,
             render: shouldRender,
             previewsDir,
             pdfPath: layout.pdf,
@@ -115,19 +270,39 @@ export class SlideAgent {
           });
           generatedFiles.push(...rendered.previewFiles, rendered.pdfPath);
         }
-        if (!report || report.status !== "fail" || !shouldFix || attempt >= maximumRetries) break;
-        const fixed = new AutoFixer(config).fix(outline, report);
-        if (fixed.changes.length === 0) break;
+        if (!report || !shouldFix) break;
+        // Repair anything the validator marked fixable, not only hard failures:
+        // duplicate titles and contrast defects are warnings, and leaving them
+        // in a deck the fixer can repair is a worse result than one more pass.
+        if (!report.issues.some((issue) => issue.fixable)) break;
+        if (attempt >= maximumRetries) {
+          retriesExhausted = true;
+          break;
+        }
+        const fixed = new AutoFixer(effectiveConfig).fix(outline, report);
+        // Converged: the fixer has nothing left to change, so another rebuild
+        // would produce an identical deck and an identical report.
+        if (fixed.outcomes.length === 0) {
+          this.logger.info("create.converged", "Repair loop converged", { requestId, unfixed: fixed.unfixed.length });
+          break;
+        }
         outline = fixed.outline;
-        warnings.push(...fixed.changes);
+        appliedFixes.push(...fixed.changes);
         retries += 1;
       }
+
+      if (report && shouldFix) {
+        const classification = new AutoFixer(effectiveConfig).fix(outline, report);
+        report = reconcileReport(report, classification.unfixed, retriesExhausted);
+      }
+      if (report && shouldValidate) await writeJson(reportPath, report);
+      const repairs = [...new Set(appliedFixes)];
 
       generatedFiles.push(output, manifestPath);
       if (shouldValidate) generatedFiles.push(reportPath);
       if (report?.render?.previewFiles) generatedFiles.push(...report.render.previewFiles);
       if (report?.render?.pdfPath) generatedFiles.push(report.render.pdfPath);
-      const execution = metadata("create", requestId, startedAt, retries);
+      const execution = metadata("create", requestId, startedAt, retries, provenance);
       await writeSceneNdjson(inspectPath, outline, finalBuilt?.manifest);
       await writeJson(metadataPath, {
         request: {
@@ -151,6 +326,7 @@ export class SlideAgent {
         generatedFiles: unique(generatedFiles),
         slideCount: outline.slides.length,
         warnings,
+        ...(repairs.length ? { repairs } : {}),
         ...(report ? { validation: report } : {}),
         errors: report?.issues.filter((item) => item.severity === "error").map((item) => ({ code: item.code, message: item.message, ...(item.details ? { details: item.details } : {}) })) ?? [],
         metadata: execution,

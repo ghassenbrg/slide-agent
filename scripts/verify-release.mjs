@@ -63,18 +63,31 @@ export async function verifyRelease() {
   if (JSON.stringify(packageLock.packages?.[""]?.bin) !== JSON.stringify(expectedBins)) {
     problems.push("package-lock root bin entries do not match the publishable package metadata");
   }
-  if (packageJson.scripts?.postinstall !== "node scripts/postinstall.mjs") problems.push("npm package must register skills through scripts/postinstall.mjs");
-  if (packageLock.packages?.[""]?.hasInstallScript !== true) problems.push("package-lock root must record the npm install lifecycle script");
+  // Installing the library must not touch anything outside the project. Skill
+  // registration belongs to the explicit `slide-agent install` command.
+  for (const lifecycle of ["postinstall", "install", "preinstall"]) {
+    if (packageJson.scripts?.[lifecycle]) problems.push(`npm package must not define a ${lifecycle} lifecycle script`);
+  }
+  if (packageLock.packages?.[""]?.hasInstallScript) problems.push("package-lock root must not record an npm install lifecycle script");
   if (packageJson.repository?.url !== "git+https://github.com/ghassenbrg/slide-agent.git") problems.push("npm repository URL is not the canonical public repository");
   if (extensionJson.publisher !== "ghassenbrg") problems.push("VS Code publisher id must be ghassenbrg");
   const requiredCiFragments = [
     "name: Slide Agent CI",
-    "push:\n    branches:\n      - main",
-    "pull_request:\n    branches:\n      - main\n    types:\n      - closed",
-    "if: github.event_name == 'push' || github.event.pull_request.merged == true",
+    // Open pull requests must be verified before they can be merged.
+    "types:\n      - opened\n      - synchronize\n      - reopened",
+    // The optional preview tools must be present so render tests really run.
+    "libreoffice-impress poppler-utils",
+    "node scripts/assert-render-tested.mjs",
+    // Coverage floors and the inert-install proof are release gates.
+    "npm run test:coverage",
+    "npm run docs:check",
+    "node scripts/verify-consumer-install.mjs",
     "actions/checkout@v6",
     "actions/setup-node@v7",
   ];
+  if (hasWorkflowFragment(ciWorkflow, "types:\n      - closed")) {
+    problems.push("CI workflow must not run only on closed pull requests: open pull requests would never be verified");
+  }
   for (const fragment of requiredCiFragments) {
     if (!hasWorkflowFragment(ciWorkflow, fragment)) problems.push(`CI workflow is missing required configuration: ${fragment.split("\n")[0]}`);
   }
@@ -104,7 +117,9 @@ export async function verifyRelease() {
     if (!await exists(required)) problems.push(`missing required public file: ${required}`);
   }
   const changelog = await readFile(path.join(root, "CHANGELOG.md"), "utf8");
-  if (!changelog.includes(`## ${packageJson.version} -`)) problems.push(`CHANGELOG.md has no dated section for ${packageJson.version}`);
+  // Requires a dated heading, tolerating either a hyphen or an em dash.
+  const dated = new RegExp(`^## ${packageJson.version.replace(/\./g, "\\.")}\\s+[-—]\\s+\\d{4}-\\d{2}-\\d{2}\\s*$`, "m");
+  if (!dated.test(changelog)) problems.push(`CHANGELOG.md has no dated section for ${packageJson.version}`);
   const iconFiles = ["images/icon.png", "assets/icon.png", "extensions/vscode/icon.png", "distribution/codex/plugins/slide-agent/assets/icon.png"];
   const iconDigests = [];
   for (const relative of iconFiles) {

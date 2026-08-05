@@ -191,6 +191,11 @@ export class PptxInspector {
       const elements: ElementRecord[] = elementBlocks(xml).map(({ type, block }, elementIndex) => {
         const cNvPr = block.match(/<p:cNvPr\b[^>]*>/)?.[0] ?? "";
         const name = decodeXml(xmlAttribute(cNvPr, "name") ?? `${type}-${elementIndex + 1}`);
+        // OOXML stores alternative text in cNvPr/@descr. Without reading it,
+        // accessibility validation reports every image and chart in an existing
+        // deck as missing alt text.
+        const descr = xmlAttribute(cNvPr, "descr");
+        const altText = descr ? decodeXml(descr) : undefined;
         const text = textOf(block);
         const detectedType: ElementRecord["type"] = type === "text" && !text ? "shape" : type;
         const fontSize = Number(block.match(/<(?:a:rPr|a:defRPr)\b[^>]*\bsz="(\d+)"/)?.[1] ?? 0) / 100 || undefined;
@@ -202,6 +207,7 @@ export class PptxInspector {
         const detectedTextColor = textColor(block);
         const detectedFillColor = shapeFillColor(block);
         return {
+          ...(altText ? { altText } : {}),
           id: `s${index + 1}-e${elementIndex + 1}`,
           name,
           type: detectedType,

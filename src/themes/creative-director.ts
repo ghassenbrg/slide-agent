@@ -4,7 +4,9 @@ import type {
   CreativePalette,
   PresentationOutline,
   SlideAgentConfig,
+  SlideSpec,
 } from "../types/index.js";
+import { ensureContrast, hslToHex, normalizeHex, NORMAL_TEXT_CONTRAST } from "../utils/color.js";
 
 export interface ResolvedDeckDesign {
   direction: CreativeDirection;
@@ -34,25 +36,31 @@ function hashText(value: string): number {
   return hash >>> 0;
 }
 
-function hslToHex(hue: number, saturation: number, lightness: number): string {
-  const h = ((hue % 360) + 360) % 360 / 360;
-  const s = Math.max(0, Math.min(100, saturation)) / 100;
-  const l = Math.max(0, Math.min(100, lightness)) / 100;
-  const channel = (offset: number): number => {
-    const k = (offset + h * 12) % 12;
-    const a = s * Math.min(l, 1 - l);
-    return Math.round(255 * (l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1))));
-  };
-  return [channel(0), channel(8), channel(4)]
-    .map((value) => value.toString(16).padStart(2, "0"))
-    .join("")
-    .toUpperCase();
-}
+const cleanHex = normalizeHex;
 
-function cleanHex(value: string | undefined): string | undefined {
-  if (!value) return undefined;
-  const normalized = value.trim().replace(/^#/, "");
-  return /^[0-9A-Fa-f]{6}$/.test(normalized) ? normalized.toUpperCase() : undefined;
+/**
+ * Colors the fallback layouts place small text in. A generated palette must be
+ * legible by construction; a model-supplied palette is never rewritten here,
+ * because layouts correct at the point of use and the auto-fixer repairs
+ * model-authored canvases from the validation report.
+ */
+const LEGIBLE_ON_BACKGROUND: Array<keyof ColorsConfig> = ["ink", "muted", "accent"];
+
+/**
+ * Makes the *generated* fallback palette legible by construction. It is never
+ * applied to a supplied palette: the model owns its colors, and the built-in
+ * layouts correct at the point of use instead. Without this, a prompt-derived
+ * accent produced `poor-contrast` warnings that no repair pass could resolve.
+ */
+function legiblePalette(palette: ColorsConfig): ColorsConfig {
+  const corrected = { ...palette };
+  const fields = [corrected.background, corrected.surface, corrected.accentSoft];
+  for (const key of LEGIBLE_ON_BACKGROUND) {
+    for (const field of fields) {
+      corrected[key] = ensureContrast(corrected[key], field, NORMAL_TEXT_CONTRAST);
+    }
+  }
+  return corrected;
 }
 
 function algorithmicPalette(seedText: string): ColorsConfig {
@@ -91,6 +99,22 @@ function algorithmicPalette(seedText: string): ColorsConfig {
   };
 }
 
+/** Every typeface a model named anywhere in an outline's slide canvases. */
+function authoredFontFaces(slides: SlideSpec[]): string[] {
+  const faces = new Set<string>();
+  for (const slide of slides) {
+    for (const element of slide.canvas ?? []) {
+      if (element.type !== "text") continue;
+      if (element.style?.fontFace) faces.add(element.style.fontFace);
+      for (const run of element.runs ?? []) {
+        const face = (run.options as { fontFace?: unknown } | undefined)?.fontFace;
+        if (typeof face === "string" && face.trim()) faces.add(face);
+      }
+    }
+  }
+  return [...faces];
+}
+
 function mergePalette(generated: ColorsConfig, supplied: CreativePalette | undefined): ColorsConfig {
   const merged = { ...generated };
   for (const key of COLOR_KEYS) {
@@ -122,7 +146,11 @@ export class CreativeDirector {
       supplied?.visualLanguage,
       supplied?.name,
     ].filter(Boolean).join(" | ");
-    const palette = mergePalette(algorithmicPalette(seedText), supplied?.palette);
+    // Correct the generated fallback before merging, so a supplied palette
+    // passes through untouched and stays the design authority. Built-in layouts
+    // reconcile legibility at the point of use via `ensureContrast`.
+    const palette = mergePalette(legiblePalette(algorithmicPalette(seedText)), supplied?.palette);
+    const authoredPalette = palette;
     const typography = supplied?.typography;
     const heading = typography?.heading ?? typography?.display ?? baseConfig.fonts.heading;
     const body = typography?.body ?? baseConfig.fonts.body;
@@ -133,18 +161,22 @@ export class CreativeDirector {
       body,
       mono,
       ...(typography?.fallbacks ?? []),
+      // A model may pick a typeface per element. Those choices are intentional
+      // authorship, so they join the deck's known-font set instead of being
+      // reported as unsupported.
+      ...authoredFontFaces(outline.slides),
     ])];
     const direction: CreativeDirection = supplied ?? {
       name: "Prompt-derived original direction",
       concept: outline.brief.visualDirection,
       rationale: "No host-model design system was supplied, so the renderer derived a unique palette from the brief instead of applying a fixed house theme.",
-      palette,
+      palette: authoredPalette,
       typography: { heading, body, mono },
     };
     return {
       direction: {
         ...direction,
-        palette: { ...palette, ...(direction.palette ?? {}) },
+        palette: { ...authoredPalette, ...(direction.palette ?? {}) },
         typography: { heading, body, mono, ...(direction.typography ?? {}) },
       },
       config: {

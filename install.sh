@@ -19,23 +19,20 @@ node_supported() {
   need_command node && need_command npm && node -e 'const [major, minor] = process.versions.node.split(".").map(Number); process.exit(major > 22 || (major === 22 && minor >= 12) ? 0 : 1)'
 }
 
-install_node() {
+require_node() {
   node_supported && return
-  os=$(uname -s)
-  if [ "$os" = "Darwin" ] && need_command brew; then
-    brew install node
-  elif need_command apt-get; then
-    sudo apt-get update && sudo apt-get install -y nodejs npm
-  elif need_command dnf; then
-    sudo dnf install -y nodejs npm
-  elif need_command pacman; then
-    sudo pacman -Sy --needed nodejs npm
-  else
-    printf '%s\n' "Node.js 22.12 or newer is required and no supported package manager was found." >&2
-    printf '%s\n' "Install Node.js from https://nodejs.org and rerun ./install.sh." >&2
-    exit 1
-  fi
-  node_supported || { printf '%s\n' "The package manager installed Node.js $(node -p 'process.versions.node' 2>/dev/null || echo unknown); version 22.12 or newer is required." >&2; exit 1; }
+  printf '%s\n' "Slide Agent needs Node.js 22.12 or newer and npm on PATH." >&2
+  printf '%s\n' "Detected: $(node -p 'process.versions.node' 2>/dev/null || echo 'no node on PATH')" >&2
+  printf '%s\n' "" >&2
+  printf '%s\n' "Install one of these, then rerun ./install.sh:" >&2
+  printf '%s\n' "  nvm:    nvm install 22 && nvm use 22" >&2
+  printf '%s\n' "  fnm:    fnm install 22 && fnm use 22" >&2
+  printf '%s\n' "  volta:  volta install node@22" >&2
+  printf '%s\n' "  manual: https://nodejs.org/en/download" >&2
+  printf '%s\n' "" >&2
+  printf '%s\n' "Slide Agent does not install a system runtime for you: that needs" >&2
+  printf '%s\n' "administrator rights and would change software you did not ask about." >&2
+  exit 1
 }
 
 has_soffice() {
@@ -62,7 +59,7 @@ install_render_dependencies() {
   fi
 }
 
-install_node
+require_node
 [ "$with_render" -eq 0 ] || install_render_dependencies
 
 node "$project_root/scripts/setup.mjs" "$@"

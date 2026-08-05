@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "kind": {
+      "type": "string",
+      "enum": [
+        "bar",
+        "line",
+        "pie",
+        "area",
+        "waterfall"
+      ]
+    },
+    "labels": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "series": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "values"
+        ]
+      }
+    },
+    "unit": {
+      "type": "string"
+    },
+    "showLegend": {
+      "type": "boolean"
+    },
+    "showValues": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "kind",
+    "labels",
+    "series"
+  ]
+}

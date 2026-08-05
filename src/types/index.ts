@@ -285,6 +285,14 @@ export interface CanvasNativeChartElement extends CanvasElementBase {
   options?: Record<string, unknown>;
 }
 
+/** A diagram described as a relationship; Slide Agent places the geometry. */
+export interface CanvasDiagramElement extends CanvasElementBase {
+  type: "diagram";
+  grammar: "layered" | "swimlane" | "sequence" | "hierarchy" | "quadrant";
+  spec: Record<string, unknown>;
+  alt?: string;
+}
+
 export type CanvasElementSpec =
   | CanvasTextElement
   | CanvasShapeElement
@@ -292,7 +300,8 @@ export type CanvasElementSpec =
   | CanvasImageElement
   | CanvasTableElement
   | CanvasChartElement
-  | CanvasNativeChartElement;
+  | CanvasNativeChartElement
+  | CanvasDiagramElement;
 
 export interface CustomRegion {
   id: string;
@@ -443,7 +452,12 @@ export interface ElementRecord {
   fontFace?: string;
   textColor?: string;
   fillColor?: string;
+  /** PowerPoint autofit mode; `shrink` lets the viewer reduce text to fit. */
+  fit?: "none" | "shrink" | "resize";
+  bold?: boolean;
   imagePath?: string;
+  /** Alternative text for images and charts; drives accessibility checks. */
+  altText?: string;
   intentionalOverlap?: boolean;
   allowOverlapWith?: string[];
   metadata?: Record<string, unknown>;
@@ -465,6 +479,7 @@ export interface SlideManifest {
 export interface DeckManifest {
   schemaVersion: "1.0";
   presentationTitle: string;
+  provenance?: DeckProvenance;
   width: number;
   height: number;
   createdAt: string;
@@ -478,6 +493,19 @@ export interface DeckManifest {
   slides: SlideManifest[];
 }
 
+export interface QualityDimensionScore {
+  id: "hierarchy" | "contrast" | "density" | "variety" | "evidence" | "accessibility";
+  score: number;
+  summary: string;
+  advice?: string;
+}
+
+export interface QualityScore {
+  overall: number;
+  band: "weak" | "workable" | "strong";
+  dimensions: QualityDimensionScore[];
+}
+
 export type ValidationSeverity = "error" | "warning" | "info";
 
 export interface ValidationIssue {
@@ -489,6 +517,8 @@ export interface ValidationIssue {
   details?: Record<string, unknown>;
   fixable: boolean;
   fixed?: boolean;
+  /** Why a fixable issue could not be repaired automatically. */
+  unfixedReason?: string;
 }
 
 export interface ValidationReport {
@@ -500,6 +530,8 @@ export interface ValidationReport {
   summary: { errors: number; warnings: number; info: number };
   iterations: number;
   issues: ValidationIssue[];
+  /** Advisory read on whether the deck is worth showing, not whether it is valid. */
+  quality?: QualityScore;
   render?: {
     status: "pass" | "fail" | "skipped";
     previewFiles: string[];
@@ -508,9 +540,19 @@ export interface ValidationReport {
   };
 }
 
+/**
+ * Where the deck's design came from. `template-draft` decks contain
+ * placeholders and no art direction; callers must not present them as
+ * finished work.
+ */
+export type DeckProvenance = "model-authored" | "template-draft";
+
 export interface ExecutionMetadata {
   requestId: string;
-  command: "create" | "edit" | "render" | "validate";
+  command: "create" | "edit" | "render" | "validate" | "revise";
+  /** The authoring contract this engine implements. */
+  contractVersion?: string;
+  provenance?: DeckProvenance;
   startedAt: string;
   completedAt: string;
   durationMs: number;
@@ -529,6 +571,8 @@ export interface AgentResult {
   generatedFiles: string[];
   slideCount: number;
   warnings: string[];
+  /** Repairs the auto-fixer applied. Informational: they do not degrade status. */
+  repairs?: string[];
   validation?: ValidationReport;
   errors: Array<{ code: string; message: string; details?: Record<string, unknown> }>;
   metadata: ExecutionMetadata;
@@ -556,6 +600,21 @@ export interface CreateRequest {
   validate?: boolean;
   autoFix?: boolean;
   maxRetries?: number;
+  /**
+   * Permits fetching `http(s)` image URLs. Off by default: a canvas is
+   * model-authored and often derived from untrusted input, so remote fetches
+   * are an explicit choice. Private and link-local addresses stay blocked
+   * even when this is enabled.
+   */
+  allowRemoteAssets?: boolean;
+  /** Path to a brand-kit JSON file constraining palette, type, logo, footer. */
+  brand?: string;
+  /**
+   * Renders `communication.secondaryLanguage` alongside the primary text.
+   * `parallel` and `stacked` place it on the slide; `notes` keeps the slide
+   * monolingual and puts the translation in the speaker notes.
+   */
+  bilingual?: "parallel" | "stacked" | "notes";
 }
 
 export interface ReplaceTextOperation {
@@ -657,7 +716,26 @@ export interface ValidateRequest {
   render?: boolean;
 }
 
-export type StructuredAgentRequest = CreateRequest | EditRequest | RenderRequest | ValidateRequest;
+export interface ReviseRequest {
+  command: "revise";
+  /** The existing deck. Its scene blueprint is discovered beside it. */
+  input: string;
+  output: string;
+  /** 1-based slide number to replace. */
+  slide: number;
+  /** Replacement NDJSON records for that slide only. */
+  sceneNdjson: string;
+  /** Override the scene path when it does not sit beside the deck. */
+  scene?: string;
+  configDir?: string;
+  render?: boolean;
+  validate?: boolean;
+  autoFix?: boolean;
+  maxRetries?: number;
+  allowRemoteAssets?: boolean;
+}
+
+export type StructuredAgentRequest = CreateRequest | EditRequest | RenderRequest | ValidateRequest | ReviseRequest;
 
 export interface LayoutContext {
   slideNumber: number;

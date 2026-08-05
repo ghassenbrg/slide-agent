@@ -17,7 +17,11 @@ function slideNumber(fileName: string): number {
 export class PresentationRenderer {
   public constructor(private readonly logger: Logger = silentLogger) {}
 
-  public async render(inputPath: string, outputDir: string, options: { width?: number; height?: number; pdfPath?: string } = {}): Promise<RenderResult> {
+  public async render(
+    inputPath: string,
+    outputDir: string,
+    options: { width?: number; height?: number; pdfPath?: string; preserveAspect?: boolean } = {},
+  ): Promise<RenderResult> {
     const input = path.resolve(inputPath);
     if (!(await exists(input))) throw new SlideAgentError("INPUT_NOT_FOUND", `Presentation not found: ${input}`);
     const output = await ensureDir(outputDir);
@@ -69,15 +73,13 @@ export class PresentationRenderer {
       const prefix = path.join(output, "slide");
       const width = options.width ?? 1600;
       const height = options.height ?? 900;
-      const raster = await runProcess(pdftoppm, [
-        "-png",
-        "-scale-to-x",
-        String(width),
-        "-scale-to-y",
-        String(height),
-        pdfPath,
-        prefix,
-      ]);
+      // Forcing both axes distorts any deck that is not 16:9 — a portrait deck
+      // came out squashed into a landscape frame. Fit inside the requested box
+      // instead and let Poppler derive the other axis from the page aspect.
+      const scaleArguments = options.preserveAspect === false
+        ? ["-scale-to-x", String(width), "-scale-to-y", String(height)]
+        : ["-scale-to", String(Math.max(width, height))];
+      const raster = await runProcess(pdftoppm, ["-png", ...scaleArguments, pdfPath, prefix]);
       if (raster.exitCode !== 0) {
         throw new SlideAgentError("PDF_RASTER_FAILED", "Poppler could not rasterize the rendered PDF.", {
           stdout: raster.stdout,

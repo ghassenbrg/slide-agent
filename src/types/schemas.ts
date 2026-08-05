@@ -1,5 +1,10 @@
 import { z } from "zod";
 
+import {
+  creativeDirectionSchema,
+  presentationBriefSchema,
+  presentationOutlineSchema,
+} from "../contract/index.js";
 import type { StructuredAgentRequest } from "./index.js";
 
 const chartSeries = z.object({ name: z.string(), values: z.array(z.number()) });
@@ -17,11 +22,16 @@ const editOperation = z.discriminatedUnion("type", [
 const createRequest = z.object({
   command: z.literal("create"),
   prompt: z.string().optional(),
-  brief: z.record(z.string(), z.unknown()).optional(),
-  outline: z.unknown().optional(),
+  // A request-level brief supplies overrides, so every field is optional here.
+  // The outline's own brief is validated in full by the contract.
+  brief: presentationBriefSchema.partial().optional(),
+  // Previously `z.unknown()`, which left the entire high-quality path
+  // unvalidated: a malformed outline crashed deep inside the builder with no
+  // indication of which field was wrong.
+  outline: presentationOutlineSchema.optional(),
   scene: z.string().optional(),
   sceneNdjson: z.string().optional(),
-  creativeDirection: z.record(z.string(), z.unknown()).optional(),
+  creativeDirection: creativeDirectionSchema.optional(),
   output: z.string(),
   previewsDir: z.string().optional(),
   reportPath: z.string().optional(),
@@ -32,6 +42,9 @@ const createRequest = z.object({
   validate: z.boolean().optional(),
   autoFix: z.boolean().optional(),
   maxRetries: z.number().int().nonnegative().optional(),
+  allowRemoteAssets: z.boolean().optional(),
+  brand: z.string().optional(),
+  bilingual: z.enum(["parallel", "stacked", "notes"]).optional(),
 });
 
 const editRequest = z.object({
@@ -66,7 +79,22 @@ const validateRequest = z.object({
   render: z.boolean().optional(),
 });
 
-export const structuredRequestSchema = z.discriminatedUnion("command", [createRequest, editRequest, renderRequest, validateRequest]);
+const reviseRequest = z.object({
+  command: z.literal("revise"),
+  input: z.string(),
+  output: z.string(),
+  slide: z.number().int().positive(),
+  sceneNdjson: z.string().min(1),
+  scene: z.string().optional(),
+  configDir: z.string().optional(),
+  render: z.boolean().optional(),
+  validate: z.boolean().optional(),
+  autoFix: z.boolean().optional(),
+  maxRetries: z.number().int().nonnegative().optional(),
+  allowRemoteAssets: z.boolean().optional(),
+});
+
+export const structuredRequestSchema = z.discriminatedUnion("command", [createRequest, editRequest, renderRequest, validateRequest, reviseRequest]);
 
 export function parseStructuredRequest(value: unknown): StructuredAgentRequest {
   return structuredRequestSchema.parse(value) as StructuredAgentRequest;

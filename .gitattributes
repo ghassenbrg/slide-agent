@@ -1,0 +1,25 @@
+# Text files use LF in the working tree on every platform.
+#
+# Without this, a Windows checkout carries CRLF, and anything that compares
+# generated content against a committed file reports a spurious mismatch —
+# which is exactly what broke `docs:check` on the Windows runners and nowhere
+# else. Shell scripts and the OOXML fixtures are also LF-sensitive.
+* text=auto eol=lf
+
+# Windows batch files genuinely want CRLF.
+*.cmd text eol=crlf
+*.bat text eol=crlf
+
+# Binary: never touch these.
+*.png binary
+*.ico binary
+*.pptx binary
+*.potx binary
+*.pdf binary
+*.vsix binary
+*.tgz binary
+*.zip binary
+
+# Vendored ECMA-376 schemas stay byte-for-byte as published upstream.
+assets/ooxml-schemas/** -text
+distribution/**/assets/ooxml-schemas/** -text

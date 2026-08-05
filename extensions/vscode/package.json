@@ -2,7 +2,7 @@
   "name": "slide-agent-vscode",
   "displayName": "Slide Agent",
   "description": "Create, edit, render, and validate distinctive editable PowerPoint presentations with any AI model.",
-  "version": "0.1.0",
+  "version": "0.9.0",
   "publisher": "ghassenbrg",
   "license": "MIT",
   "icon": "icon.png",
@@ -29,16 +29,16 @@
     "Gemini"
   ],
   "activationEvents": [
-    "onStartupFinished",
-    "onCommand:slideAgent.install",
-    "onCommand:slideAgent.create",
-    "onCommand:slideAgent.createFromCurrentFile",
-    "onCommand:slideAgent.edit",
-    "onCommand:slideAgent.doctor"
+    "onStartupFinished"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
+      {
+        "command": "slideAgent.start",
+        "title": "Slide Agent: Start",
+        "icon": "$(file-media)"
+      },
       {
         "command": "slideAgent.install",
         "title": "Slide Agent: Install or Update"
@@ -58,6 +58,10 @@
       {
         "command": "slideAgent.doctor",
         "title": "Slide Agent: Check Installation"
+      },
+      {
+        "command": "slideAgent.walkthrough",
+        "title": "Slide Agent: Open Getting Started"
       }
     ],
     "configuration": {
@@ -92,18 +96,24 @@
           "when": "resourceExtname == .md || resourceExtname == .txt || resourceExtname == .json || resourceExtname == .ndjson",
           "group": "navigation"
         }
+      ],
+      "commandPalette": [
+        {
+          "command": "slideAgent.walkthrough",
+          "when": "true"
+        }
       ]
     },
     "walkthroughs": [
       {
         "id": "slideAgent.gettingStarted",
         "title": "Get started with Slide Agent",
-        "description": "Create fully editable, AI-directed PowerPoint presentations in minutes.",
+        "description": "Describe a presentation, get an editable PowerPoint file.",
         "steps": [
           {
             "id": "slideAgent.step.install",
-            "title": "Install the engine",
-            "description": "One command sets up the CLI, MCP server, and agent skills in your user directory.\n[Install or Update](command:slideAgent.install)",
+            "title": "Set it up (one minute)",
+            "description": "Everything installs in your own user folder. Node.js 22.12+ is the only prerequisite.\n[Set up Slide Agent](command:slideAgent.install)",
             "media": {
               "markdown": "media/walkthrough/install.md"
             },
@@ -113,8 +123,8 @@
           },
           {
             "id": "slideAgent.step.create",
-            "title": "Create a presentation",
-            "description": "Describe the deck; the AI model you choose directs the design.\n[Create Presentation](command:slideAgent.create)",
+            "title": "Describe your first deck",
+            "description": "Say who it is for and what you want them to do. The AI model handles the design.\n[Create a presentation](command:slideAgent.create)",
             "media": {
               "markdown": "media/walkthrough/create.md"
             },
@@ -125,16 +135,16 @@
           },
           {
             "id": "slideAgent.step.chat",
-            "title": "Use it from AI chats",
-            "description": "Copilot, Claude Code, Codex, and Gemini CLI all get the same skill.",
+            "title": "Use it from your AI chats",
+            "description": "Copilot, Claude Code, and Codex can build decks too, once setup is done.",
             "media": {
               "markdown": "media/walkthrough/chat.md"
             }
           },
           {
             "id": "slideAgent.step.doctor",
-            "title": "Verify the setup",
-            "description": "Diagnose the installation and optional preview tools.\n[Check Installation](command:slideAgent.doctor)",
+            "title": "Confirm it works",
+            "description": "Builds a real test deck, so a broken setup reports itself.\n[Check installation](command:slideAgent.doctor)",
             "media": {
               "markdown": "media/walkthrough/doctor.md"
             },

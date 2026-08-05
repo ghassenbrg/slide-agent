@@ -17,20 +17,27 @@ afterEach(async () => {
   workspace = undefined;
 });
 
+async function connect(): Promise<Client> {
+  const created = new Client({ name: "slide-agent-test", version: "1.0.0" });
+  await created.connect(new StdioClientTransport({
+    command: process.execPath,
+    args: [path.join(root, "node_modules", "tsx", "dist", "cli.mjs"), path.join(root, "src", "mcp-server.ts")],
+    stderr: "pipe",
+  }));
+  return created;
+}
+
 describe("Slide Agent MCP server", () => {
   it("lists the complete tool surface and runs doctor over stdio", async () => {
-    client = new Client({ name: "slide-agent-test", version: "1.0.0" });
-    const transport = new StdioClientTransport({
-      command: process.execPath,
-      args: [path.join(root, "node_modules", "tsx", "dist", "cli.mjs"), path.join(root, "src", "mcp-server.ts")],
-      stderr: "pipe",
-    });
-    await client.connect(transport);
+    client = await connect();
 
     const tools = await client.listTools();
     expect(tools.tools.map((tool) => tool.name)).toEqual(expect.arrayContaining([
       "slide_agent_run",
+      "get_authoring_contract",
+      "plan_presentation",
       "create_presentation",
+      "revise_presentation",
       "edit_presentation",
       "render_presentation",
       "validate_presentation",
@@ -40,6 +47,58 @@ describe("Slide Agent MCP server", () => {
     const result = await client.callTool({ name: "slide_agent_doctor", arguments: {} });
     expect(result.isError).not.toBe(true);
     expect(JSON.stringify(result.content)).toContain("Node.js");
+  });
+
+  it("publishes the authoring contract as resources an MCP-only host can read", async () => {
+    client = await connect();
+    const resources = await client.listResources();
+    const uris = resources.resources.map((resource) => resource.uri);
+    expect(uris).toContain("slide-agent://contract");
+    expect(uris).toContain("slide-agent://contract/guide");
+    expect(uris).toContain("slide-agent://contract/schema/outline");
+    expect(uris).toContain("slide-agent://contract/schema/sceneRecord");
+
+    const guide = await client.readResource({ uri: "slide-agent://contract/guide" });
+    const guideText = (guide.contents[0] as { text: string }).text;
+    expect(guideText).toContain("authoring guide");
+    expect(guideText.length).toBeGreaterThan(3000);
+
+    const schema = await client.readResource({ uri: "slide-agent://contract/schema/outline" });
+    const parsed = JSON.parse((schema.contents[0] as { text: string }).text) as { properties?: Record<string, unknown> };
+    expect(parsed.properties).toHaveProperty("slides");
+  });
+
+  it("publishes prompts that carry the full authoring guide", async () => {
+    client = await connect();
+    const prompts = await client.listPrompts();
+    expect(prompts.prompts.map((prompt) => prompt.name)).toEqual(expect.arrayContaining([
+      "author_presentation_scene",
+      "revise_presentation_scene",
+    ]));
+
+    const authored = await client.getPrompt({ name: "author_presentation_scene", arguments: { brief: "A deck about urban beekeeping" } });
+    const text = (authored.messages[0]!.content as { text: string }).text;
+    expect(text).toContain("slide-agent.scene/1");
+    expect(text).toContain("urban beekeeping");
+    expect(text.length).toBeGreaterThan(3000);
+  });
+
+  it("describes slide_agent_run's payload instead of advertising an opaque object", async () => {
+    client = await connect();
+    const tools = await client.listTools();
+    const run = tools.tools.find((tool) => tool.name === "slide_agent_run")!;
+    const schema = run.inputSchema as { properties?: { request?: { properties?: Record<string, unknown> } } };
+    // The previous schema was `{type: "object"}` with no properties at all, so
+    // a model had nothing to fill in and fell back to the prompt path.
+    expect(schema.properties?.request?.properties).toHaveProperty("command");
+    expect(JSON.stringify(run.description)).toContain("contract");
+  });
+
+  it("returns the guide through a tool for hosts that cannot read resources", async () => {
+    client = await connect();
+    const result = await client.callTool({ name: "get_authoring_contract", arguments: { section: "accessibility" } });
+    expect(result.isError).not.toBe(true);
+    expect(JSON.stringify(result.content)).toContain("contrast");
   });
 
   it("serves stdio when launched through a bin-style symlink", async () => {
@@ -63,5 +122,43 @@ describe("Slide Agent MCP server", () => {
     await client.connect(transport);
     const tools = await client.listTools();
     expect(tools.tools.map((tool) => tool.name)).toContain("slide_agent_run");
+  });
+});
+
+describe("MCP documentation", () => {
+  it("documents every tool, resource, and prompt the server actually exposes", async () => {
+    const { readFile } = await import("node:fs/promises");
+    const doc = await readFile(path.join(root, "docs", "mcp.md"), "utf8");
+    client = await connect();
+
+    // A reference page for a live surface drifts silently unless something
+    // compares it to the surface.
+    for (const tool of (await client.listTools()).tools) {
+      expect(doc, `docs/mcp.md does not mention the ${tool.name} tool`).toContain(tool.name);
+    }
+    for (const prompt of (await client.listPrompts()).prompts) {
+      expect(doc, `docs/mcp.md does not mention the ${prompt.name} prompt`).toContain(prompt.name);
+    }
+
+    const resources = (await client.listResources()).resources;
+    // Guide sections and schemas are documented as lists rather than 21 URIs,
+    // so check each distinct name appears somewhere on the page.
+    for (const resource of resources) {
+      const leaf = resource.uri.split("/").pop()!;
+      expect(doc, `docs/mcp.md does not mention the ${resource.uri} resource`).toContain(leaf);
+    }
+  });
+
+  it("documents the required arguments of each tool", async () => {
+    const { readFile } = await import("node:fs/promises");
+    const doc = await readFile(path.join(root, "docs", "mcp.md"), "utf8");
+    client = await connect();
+
+    for (const tool of (await client.listTools()).tools) {
+      const required = (tool.inputSchema as { required?: string[] }).required ?? [];
+      for (const argument of required) {
+        expect(doc, `docs/mcp.md does not document ${tool.name}'s required "${argument}"`).toContain(argument);
+      }
+    }
   });
 });

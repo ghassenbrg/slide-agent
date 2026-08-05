@@ -8,8 +8,15 @@ import type {
   SourceCitation,
 } from "../types/index.js";
 import { readUtf8, writeUtf8 } from "../utils/files.js";
+import {
+  ContractValidationError,
+  ELEMENT_RECORD_KINDS,
+  SCENE_SCHEMA_ID,
+  parseContract,
+  parseSceneElement,
+} from "../contract/index.js";
 
-const SCHEMA = "slide-agent.scene/1";
+const SCHEMA = SCENE_SCHEMA_ID;
 
 type JsonRecord = Record<string, unknown>;
 
@@ -108,25 +115,17 @@ function slideNumber(record: JsonRecord): number {
   return Number(value);
 }
 
-function canvasElement(record: JsonRecord): CanvasElementSpec {
-  const kind = record.kind === "textbox" ? "text" : record.kind;
-  if (!(["text", "shape", "connector", "image", "table", "chart", "native-chart"] as unknown[]).includes(kind)) {
-    throw new Error(`Unsupported scene element kind: ${String(record.kind)}`);
+function canvasElement(record: JsonRecord, line: number): CanvasElementSpec {
+  try {
+    // Scene elements go through the same contract as an inline canvas, so a
+    // scene file cannot smuggle in geometry an outline would have rejected.
+    return parseSceneElement(record) as CanvasElementSpec;
+  } catch (error) {
+    if (error instanceof ContractValidationError) {
+      throw new Error(`Scene line ${line} (${String(record.kind)} ${String(record.id ?? "?")}): ${error.issues.map((issue) => `${issue.path || "<root>"} ${issue.message}`).join("; ")}`);
+    }
+    throw new Error(`Scene line ${line}: ${error instanceof Error ? error.message : String(error)}`);
   }
-  const bbox = record.bbox;
-  if (!Array.isArray(bbox) || bbox.length !== 4 || bbox.some((value) => typeof value !== "number" || !Number.isFinite(value))) {
-    throw new Error(`${String(record.kind)} record requires bbox: [x, y, w, h] in inches.`);
-  }
-  const { kind: _kind, slide: _slide, bbox: _bbox, ...rest } = record;
-  return {
-    ...rest,
-    id: requiredString(record, "id", `${String(record.kind)} record`),
-    type: kind,
-    x: bbox[0],
-    y: bbox[1],
-    w: bbox[2],
-    h: bbox[3],
-  } as CanvasElementSpec;
 }
 
 function freeformSlide(record: JsonRecord): SlideSpec {
@@ -150,7 +149,9 @@ export function parseSceneNdjson(text: string): PresentationOutline {
   const deck = records.find((record) => record.kind === "deck");
   if (!deck) throw new Error("Scene NDJSON requires one deck record.");
   if (deck.schema !== SCHEMA) throw new Error(`Unsupported scene schema: ${String(deck.schema ?? "missing")}. Expected ${SCHEMA}.`);
-  if (!deck.brief || typeof deck.brief !== "object" || Array.isArray(deck.brief)) throw new Error("Deck record requires a complete brief object.");
+  // The deck record carries the whole brief, so validate it against the
+  // contract rather than spot-checking two fields and trusting the rest.
+  parseContract("brief", deck.brief, "The scene's deck record brief");
   if (typeof deck.narrative !== "string") throw new Error("Deck record requires a narrative string.");
 
   const slideRecords = records.filter((record) => record.kind === "slide")
@@ -169,15 +170,15 @@ export function parseSceneNdjson(text: string): PresentationOutline {
   });
   const byNumber = new Map(slideRecords.map((record, index) => [slideNumber(record), slides[index]!]));
 
-  for (const record of records) {
-    if (record.mode === "inspection") continue;
-    if (!["textbox", "text", "shape", "connector", "image", "table", "chart", "native-chart"].includes(String(record.kind))) continue;
+  records.forEach((record, index) => {
+    if (record.mode === "inspection") return;
+    if (!(ELEMENT_RECORD_KINDS as readonly string[]).includes(String(record.kind))) return;
     const number = slideNumber(record);
     const slide = byNumber.get(number);
     if (!slide) throw new Error(`${String(record.kind)} record references missing slide ${number}.`);
     if (!slide.canvas) throw new Error(`${String(record.kind)} record cannot target fallback slide ${number}.`);
-    slide.canvas.push(canvasElement(record));
-  }
+    slide.canvas.push(canvasElement(record, index + 1));
+  });
 
   for (const record of records.filter((candidate) => candidate.kind === "notes")) {
     const number = slideNumber(record);

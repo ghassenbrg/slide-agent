@@ -1,11 +1,15 @@
-## Use Slide Agent from AI chats
+## Your AI chats can do this too
 
-Installation registers the `slide-agent` skill for every supported agent, so your AI chats can create and edit PowerPoints directly:
+Setup registered Slide Agent with the assistants on your machine, so you do not
+have to come back to this extension:
 
-- **GitHub Copilot** — mention `$slide-agent` in chat, or just ask for a PowerPoint
-- **Claude Code** — the skill activates whenever a `.pptx` deliverable is requested
-- **Codex** and **Gemini CLI** — the same skill is linked into each agent's personal skill directory
+- **GitHub Copilot** — ask for a PowerPoint, or mention `$slide-agent`
+- **Claude Code** — the skill activates whenever you ask for a `.pptx`
+- **Codex** — the same skill, in its own skills folder
+- **Cursor, Zed, and other MCP apps** — point them at the `slide-agent-mcp`
+  command
 
-The agent reads the skill's creative-direction guidance, authors a complete scene, and calls the `slide-agent` CLI or MCP server to build, validate, and repair the deck.
+The assistant reads the same design guidance, writes the deck, and Slide Agent
+builds and checks it.
 
-If a chat that was already open does not show the skill, start a new chat or reload the window.
+If a chat you already had open does not know about it yet, start a new one.

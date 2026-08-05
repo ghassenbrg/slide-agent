@@ -3,7 +3,7 @@ import { access, lstat, mkdir, mkdtemp, readdir, rm, writeFile } from "node:fs/p
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { spawn } from "node:child_process";
-import { fileURLToPath, pathToFileURL } from "node:url";
+import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const workspace = await mkdtemp(path.join(tmpdir(), "slide-agent-install-test-"));
@@ -79,18 +79,18 @@ try {
     name: "slide-agent-install-verifier",
     version: "0.0.0",
     private: true,
-    allowScripts: {
-      [pathToFileURL(archive).href]: true,
-    },
   }, null, 2)}\n`);
   await runNpm([
     "install", "--omit=dev", "--no-audit", "--no-fund", archive,
   ], { cwd: consumer, env: automaticEnv });
+  // Adding the library as a dependency must be inert. Registering a global
+  // skill that points inside one project's node_modules breaks the moment that
+  // project is removed or the dependency is upgraded.
   for (const agent of ["codex", "copilot", "claude", "gemini"]) {
     const skill = path.join(automaticSkillRoot, agent, "slide-agent", "SKILL.md");
-    if (!await exists(skill)) throw new Error(`npm package install did not register ${agent}: ${skill}`);
+    if (await exists(skill)) throw new Error(`npm package install must not register ${agent}: ${skill}`);
   }
-  process.stdout.write("Approved npm package install skill registration verified.\n");
+  process.stdout.write("Library install verified inert: no skills registered.\n");
 
   await runNpm([
     "exec",

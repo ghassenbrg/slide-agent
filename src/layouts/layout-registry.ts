@@ -2,459 +2,722 @@ import { ChartBuilder } from "../charts/chart-builder.js";
 import { ElementWriter } from "../components/element-writer.js";
 import { Shapes } from "../components/pptx-values.js";
 import { DiagramBuilder } from "../diagrams/diagram-builder.js";
+import { Grid, type Rect } from "../design/grid.js";
+import { densityBudget, resolveTokens, type DeckTokens } from "../design/tokens.js";
 import type { LayoutContext, SlideAgentConfig, SlideSpec } from "../types/index.js";
-import { accentForegroundOn, emphasisField, foregroundOn, secondaryForegroundOn } from "../utils/color.js";
+import { accentForegroundOn, emphasisField, ensureContrast, foregroundOn, requiredContrast, secondaryForegroundOn } from "../utils/color.js";
+import { estimatedLineCount } from "../validation/manifest-validator.js";
 
 export type LayoutRenderer = (writer: ElementWriter, spec: SlideSpec, context: LayoutContext) => void;
 
-function addHeader(writer: ElementWriter, spec: SlideSpec, context: LayoutContext): void {
-  const { config } = context;
-  writer.addText("slide-title", spec.title, {
-    x: config.dimensions.margin,
-    y: 0.42,
-    w: config.dimensions.width - config.dimensions.margin * 2,
-    h: 0.72,
-  }, {
-    fontSize: config.fonts.minimums.slideTitle,
-    fontFace: config.fonts.heading,
+export interface LayoutFallback {
+  slide: number;
+  requested: string;
+  used: string;
+}
+
+/** Everything a built-in layout needs, derived once per deck. */
+interface LayoutSystem {
+  grid: Grid;
+  tokens: DeckTokens;
+  config: SlideAgentConfig;
+}
+
+/** Two lines of title still clear the content band on every supported format. */
+const MAXIMUM_TITLE_LINES = 2;
+
+function readable(color: string, field: string, fontSize: number, bold = false): string {
+  return ensureContrast(color, field, requiredContrast(fontSize, bold));
+}
+
+/**
+ * Sizes the title band to the title. A fixed box held exactly one line at the
+ * legibility minimum, so any longer title reported an overflow that no repair
+ * pass could resolve and collided with the rule beneath it.
+ */
+function addHeader(writer: ElementWriter, spec: SlideSpec, system: LayoutSystem): Rect {
+  const { grid, tokens } = system;
+  const fontSize = tokens.type.title;
+  const lines = Math.min(MAXIMUM_TITLE_LINES, estimatedLineCount(spec.title, grid.safe.w, fontSize));
+  const band = grid.titleBand(lines, fontSize);
+  writer.addText("slide-title", spec.title, band, {
+    fontSize,
+    fontFace: tokens.fonts.heading,
     bold: true,
+    color: readable(tokens.palette.ink, tokens.palette.background, fontSize, true),
     role: "title",
     fit: "shrink",
   });
   writer.addShape("title-rule", Shapes.line, {
-    x: config.dimensions.margin,
-    y: 1.27,
-    w: 0.7,
+    x: band.x,
+    y: band.y + band.h + tokens.space.xs,
+    w: grid.columnWidth * 0.6,
     h: 0,
-  }, { fill: config.colors.accent, lineColor: config.colors.accent, lineWidth: 3, role: "rule" });
+  }, {
+    fill: readable(tokens.palette.accent, tokens.palette.background, tokens.type.body),
+    lineColor: readable(tokens.palette.accent, tokens.palette.background, tokens.type.body),
+    lineWidth: tokens.stroke.bold,
+    role: "rule",
+  });
+  return grid.contentBelow({ ...band, h: band.h + tokens.space.xs });
 }
 
-function addFooter(writer: ElementWriter, context: LayoutContext): void {
-  const { config } = context;
+function addFooter(writer: ElementWriter, context: LayoutContext, system: LayoutSystem): void {
+  const { grid, tokens, config } = system;
   if (!config.generation.includeSlideNumbers) return;
+  const footer = grid.footer;
   writer.addText("slide-number", String(context.slideNumber).padStart(2, "0"), {
-    x: config.dimensions.width - config.dimensions.margin - 0.45,
-    y: config.dimensions.height - 0.45,
-    w: 0.45,
-    h: 0.2,
-  }, { fontSize: 11, color: config.colors.muted, align: "right", role: "footer" });
+    x: footer.x + footer.w - grid.columnWidth * 0.5,
+    y: footer.y,
+    w: grid.columnWidth * 0.5,
+    h: footer.h,
+  }, {
+    fontSize: tokens.type.caption,
+    color: readable(tokens.palette.muted, tokens.palette.background, tokens.type.caption),
+    align: "right",
+    role: "footer",
+  });
 }
 
-function addAbstractVisual(writer: ElementWriter, frame: { x: number; y: number; w: number; h: number }, config: SlideAgentConfig): void {
-  const field = emphasisField(config);
-  const foreground = foregroundOn(field, config);
-  writer.addShape("visual-field", Shapes.roundRect, frame, {
+/**
+ * A generated stand-in when a slide wants a visual and none was supplied. It
+ * follows the deck's geometry token so a sharp deck does not get soft circles.
+ */
+function addAbstractVisual(writer: ElementWriter, frame: Rect, system: LayoutSystem): void {
+  const { tokens } = system;
+  const field = emphasisField(system.config);
+  const foreground = foregroundOn(field, system.config);
+  writer.addShape("visual-field", tokens.geometry === "sharp" ? Shapes.rect : Shapes.roundRect, frame, {
     fill: field,
     lineWidth: 0,
-    radius: 0.08,
+    radius: tokens.radius.soft,
     role: "visual-background",
     intentionalOverlap: true,
   });
-  writer.addShape("visual-orbit-large", Shapes.ellipse, {
+  const motif = tokens.geometry === "sharp" ? Shapes.rect : Shapes.ellipse;
+  const size = Math.min(frame.w, frame.h) * 0.62;
+  writer.addShape("visual-motif-large", motif, {
     x: frame.x + frame.w * 0.12,
-    y: frame.y + frame.h * 0.08,
-    w: frame.w * 0.72,
-    h: frame.w * 0.72,
-  }, { fill: config.colors.accentAlt, transparency: 20, lineWidth: 0, role: "decorative", intentionalOverlap: true });
-  writer.addShape("visual-orbit-small", Shapes.ellipse, {
-    x: frame.x + frame.w * 0.47,
-    y: frame.y + frame.h * 0.42,
-    w: frame.w * 0.38,
-    h: frame.w * 0.38,
-  }, { fill: config.colors.accent, transparency: 8, lineWidth: 0, role: "decorative", intentionalOverlap: true });
-  writer.addShape("visual-axis", Shapes.line, {
+    y: frame.y + frame.h * 0.1,
+    w: size,
+    h: size,
+  }, { fill: tokens.palette.accentAlt, transparency: 20, lineWidth: 0, role: "decorative", intentionalOverlap: true });
+  writer.addShape("visual-motif-small", motif, {
+    x: frame.x + frame.w * 0.46,
+    y: frame.y + frame.h * 0.44,
+    w: size * 0.55,
+    h: size * 0.55,
+  }, { fill: tokens.palette.accent, transparency: 8, lineWidth: 0, role: "decorative", intentionalOverlap: true });
+  writer.addConnector("visual-axis", {
     x: frame.x + frame.w * 0.15,
-    y: frame.y + frame.h * 0.78,
-    w: frame.w * 0.7,
-    h: -frame.h * 0.55,
-  }, { fill: foreground, lineColor: foreground, lineWidth: 2, role: "decorative", intentionalOverlap: true });
+    y: frame.y + frame.h * 0.8,
+  }, {
+    x: frame.x + frame.w * 0.85,
+    y: frame.y + frame.h * 0.24,
+  }, { color: foreground, width: tokens.stroke.regular, arrow: false, role: "decorative" });
 }
 
-function renderTitle(writer: ElementWriter, spec: SlideSpec, context: LayoutContext): void {
-  const { config } = context;
+function renderTitle(writer: ElementWriter, spec: SlideSpec, _context: LayoutContext, system: LayoutSystem): void {
+  const { grid, tokens } = system;
+  const safe = grid.safe;
   writer.addShape("title-accent", Shapes.rect, {
     x: 0,
     y: 0,
-    w: 0.22,
-    h: config.dimensions.height,
-  }, { fill: config.colors.accent, lineWidth: 0, role: "accent" });
+    w: tokens.space.md,
+    h: grid.height,
+  }, { fill: tokens.palette.accent, lineWidth: 0, role: "accent" });
+
+  const { primary, secondary } = grid.split(safe, grid.columns >= 12 ? 0.66 : 0.72, "left");
+  let cursor = primary.y + tokens.space.md;
+
   writer.addText("deck-label", spec.sectionLabel ?? "PRESENTATION", {
-    x: 0.74,
-    y: 0.65,
-    w: 4.5,
-    h: 0.32,
-  }, { fontSize: 12, bold: true, color: config.colors.accent, role: "eyebrow" });
-  writer.addText("deck-title", spec.title, {
-    x: 0.72,
-    y: 1.38,
-    w: 8.7,
-    h: 2.25,
-  }, { fontSize: Math.max(config.fonts.minimums.deckTitle, 54), fontFace: config.fonts.heading, bold: true, valign: "bottom", role: "title" });
-  writer.addText("deck-subtitle", spec.subtitle ?? "", {
-    x: 0.76,
-    y: 4.08,
-    w: 6.7,
-    h: 1.1,
-  }, { fontSize: 22, color: config.colors.muted, role: "subtitle" });
-  writer.addShape("title-motif-one", Shapes.ellipse, {
-    x: 10.0,
-    y: 0.8,
-    w: 2.55,
-    h: 2.55,
-  }, { fill: config.colors.accentAlt, transparency: 10, lineWidth: 0, role: "decorative" });
-  writer.addShape("title-motif-two", Shapes.ellipse, {
-    x: 9.1,
-    y: 3.0,
-    w: 3.1,
-    h: 3.1,
-  }, { fill: config.colors.accentSoft, lineWidth: 0, role: "decorative", intentionalOverlap: true });
-}
-
-function renderSection(writer: ElementWriter, spec: SlideSpec, context: LayoutContext): void {
-  const { config } = context;
-  const field = emphasisField(config);
-  const foreground = foregroundOn(field, config);
-  const secondary = secondaryForegroundOn(field, config);
-  const accent = accentForegroundOn(field, config);
-  writer.slide.background = { color: field };
-  writer.addText("section-label", spec.sectionLabel ?? "SECTION", {
-    x: 0.72,
-    y: 0.76,
-    w: 3,
-    h: 0.32,
-  }, { fontSize: 12, bold: true, color: accent, role: "eyebrow", fill: field });
-  writer.addText("section-title", spec.title, {
-    x: 0.72,
-    y: 2.2,
-    w: 10.8,
-    h: 1.8,
-  }, { fontSize: 48, fontFace: config.fonts.heading, bold: true, color: foreground, role: "title", fill: field });
-  writer.addText("section-subtitle", spec.subtitle ?? spec.body ?? "", {
-    x: 0.76,
-    y: 4.35,
-    w: 7.4,
-    h: 0.8,
-  }, { fontSize: 20, color: secondary, role: "subtitle", fill: field });
-}
-
-function renderSummary(writer: ElementWriter, spec: SlideSpec, context: LayoutContext): void {
-  const { config } = context;
-  addHeader(writer, spec, context);
-  writer.addText("summary-lead", spec.body ?? "", { x: 0.6, y: 1.65, w: 4.25, h: 1.5 }, {
-    fontSize: 26,
-    fontFace: config.fonts.heading,
+    x: primary.x,
+    y: cursor,
+    w: primary.w,
+    h: tokens.type.caption / 72 * 1.6,
+  }, {
+    fontSize: tokens.type.caption,
     bold: true,
-    role: "lead",
-  });
-  const bullets = spec.bullets ?? [];
-  bullets.slice(0, 4).forEach((bullet, index) => {
-    const y = 1.56 + index * 1.25;
-    writer.addText(`summary-index-${index + 1}`, String(index + 1).padStart(2, "0"), {
-      x: 5.45,
-      y: y + 0.08,
-      w: 0.48,
-      h: 0.3,
-    }, { fontSize: 12, bold: true, color: config.colors.accent, role: "index" });
-    writer.addText(`summary-point-${index + 1}`, bullet, {
-      x: 6.05,
-      y,
-      w: 6.4,
-      h: 0.7,
-    }, { fontSize: 19, bold: true, role: "body" });
-    writer.addShape(`summary-rule-${index + 1}`, Shapes.line, {
-      x: 5.45,
-      y: y + 0.86,
-      w: 7.0,
-      h: 0,
-    }, { fill: config.colors.rule, lineColor: config.colors.rule, lineWidth: 1, role: "rule" });
-  });
-  addFooter(writer, context);
-}
-
-function renderTextImage(writer: ElementWriter, spec: SlideSpec, context: LayoutContext): void {
-  const { config } = context;
-  addHeader(writer, spec, context);
-  const textOnLeft = spec.visual?.position !== "left";
-  const textX = textOnLeft ? 0.62 : 7.15;
-  const visualX = textOnLeft ? 7.05 : 0.6;
-  writer.addText("body-copy", spec.body ?? "", { x: textX, y: 1.65, w: 5.45, h: 1.0 }, {
-    fontSize: 20,
-    color: config.colors.muted,
-    role: "body",
-  });
-  writer.addBullets("body-bullet", (spec.bullets ?? []).slice(0, 5), { x: textX, y: 2.82, w: 5.35, h: 3.65 }, 17);
-  const visualFrame = { x: visualX, y: 1.56, w: 5.65, h: 4.95 };
-  if (spec.visual?.path) writer.addImage("hero-image", spec.visual.path, spec.visual.alt, visualFrame);
-  else addAbstractVisual(writer, visualFrame, config);
-  if (spec.visual?.caption) {
-    writer.addText("image-caption", spec.visual.caption, { x: visualX, y: 6.58, w: 5.65, h: 0.26 }, {
-      fontSize: 11,
-      color: config.colors.muted,
-      role: "caption",
-    });
-  }
-  addFooter(writer, context);
-}
-
-function renderComparison(writer: ElementWriter, spec: SlideSpec, context: LayoutContext): void {
-  const { config } = context;
-  addHeader(writer, spec, context);
-  const columns = (spec.comparison ?? []).slice(0, 3);
-  const gap = 0.28;
-  const frame = { x: 0.62, y: 1.62, w: 12.1, h: 4.95 };
-  const width = (frame.w - gap * Math.max(0, columns.length - 1)) / Math.max(1, columns.length);
-  columns.forEach((column, index) => {
-    const x = frame.x + index * (width + gap);
-    const emphasized = column.emphasis === true;
-    const field = emphasisField(config);
-    const emphasizedText = foregroundOn(field, config);
-    const emphasizedSecondary = secondaryForegroundOn(field, config);
-    writer.addShape(`comparison-panel-${index + 1}`, Shapes.roundRect, { x, y: frame.y, w: width, h: frame.h }, {
-      fill: emphasized ? field : config.colors.surface,
-      lineColor: emphasized ? field : config.colors.rule,
-      lineWidth: 1,
-      radius: 0.06,
-      role: "panel",
-      intentionalOverlap: true,
-    });
-    writer.addText(`comparison-heading-${index + 1}`, column.heading, { x: x + 0.3, y: 1.95, w: width - 0.6, h: 0.55 }, {
-      fontSize: 23,
-      bold: true,
-      color: emphasized ? emphasizedText : config.colors.ink,
-      fill: emphasized ? field : config.colors.surface,
-      role: "subheading",
-    });
-    column.points.slice(0, 5).forEach((point, pointIndex) => {
-      writer.addText(`comparison-point-${index + 1}-${pointIndex + 1}`, point, {
-        x: x + 0.3,
-        y: 2.78 + pointIndex * 0.7,
-        w: width - 0.6,
-        h: 0.48,
-      }, { fontSize: 16, color: emphasized ? emphasizedSecondary : config.colors.muted, fill: emphasized ? field : config.colors.surface, role: "body" });
-    });
-  });
-  addFooter(writer, context);
-}
-
-function renderTimeline(writer: ElementWriter, spec: SlideSpec, context: LayoutContext, diagrams: DiagramBuilder): void {
-  addHeader(writer, spec, context);
-  diagrams.addTimeline(writer, spec.timeline ?? [], { x: 0.7, y: 1.55, w: 11.95, h: 4.85 });
-  addFooter(writer, context);
-}
-
-function renderProcess(writer: ElementWriter, spec: SlideSpec, context: LayoutContext, diagrams: DiagramBuilder): void {
-  addHeader(writer, spec, context);
-  if (spec.body) writer.addText("process-lead", spec.body, { x: 0.62, y: 1.55, w: 11.8, h: 0.65 }, {
-    fontSize: 22,
-    color: context.config.colors.muted,
-    role: "lead",
-  });
-  diagrams.addProcess(writer, (spec.process ?? []).slice(0, 5), { x: 0.62, y: 2.25, w: 12.1, h: 3.75 });
-  addFooter(writer, context);
-}
-
-function renderArchitecture(writer: ElementWriter, spec: SlideSpec, context: LayoutContext, diagrams: DiagramBuilder): void {
-  addHeader(writer, spec, context);
-  if (spec.body) writer.addText("architecture-lead", spec.body, { x: 0.62, y: 1.52, w: 11.8, h: 0.62 }, {
-    fontSize: 18,
-    color: context.config.colors.muted,
-    role: "body",
-  });
-  diagrams.addArchitecture(writer, spec.architecture ?? { nodes: [], edges: [] }, { x: 0.72, y: 2.22, w: 11.85, h: 3.8 });
-  addFooter(writer, context);
-}
-
-function renderTable(writer: ElementWriter, spec: SlideSpec, context: LayoutContext): void {
-  addHeader(writer, spec, context);
-  if (spec.body) writer.addText("table-lead", spec.body, { x: 0.62, y: 1.45, w: 12.0, h: 0.52 }, {
-    fontSize: 17,
-    color: context.config.colors.muted,
-    role: "body",
-  });
-  if (spec.table) writer.addTable("data-table", spec.table, { x: 0.62, y: 2.08, w: 12.1, h: 4.45 });
-  addFooter(writer, context);
-}
-
-function renderChart(writer: ElementWriter, spec: SlideSpec, context: LayoutContext, charts: ChartBuilder): void {
-  addHeader(writer, spec, context);
-  if (spec.body) writer.addText("chart-insight", spec.body, { x: 8.85, y: 1.65, w: 3.75, h: 1.35 }, {
-    fontSize: 22,
-    bold: true,
-    role: "insight",
-  });
-  if (spec.bullets?.length) writer.addBullets("chart-bullet", spec.bullets.slice(0, 3), { x: 8.85, y: 3.25, w: 3.7, h: 2.5 }, 16);
-  if (spec.chart) charts.add(writer, "data-chart", spec.chart, { x: 0.62, y: 1.55, w: 7.8, h: 4.95 });
-  addFooter(writer, context);
-}
-
-function renderKpi(writer: ElementWriter, spec: SlideSpec, context: LayoutContext): void {
-  const { config } = context;
-  addHeader(writer, spec, context);
-  const kpis = (spec.kpis ?? []).slice(0, 4);
-  const gap = 0.25;
-  const width = (12.1 - gap * Math.max(0, kpis.length - 1)) / Math.max(1, kpis.length);
-  kpis.forEach((kpi, index) => {
-    const x = 0.62 + index * (width + gap);
-    writer.addShape(`kpi-panel-${index + 1}`, Shapes.roundRect, { x, y: 1.65, w: width, h: 4.6 }, {
-      fill: index === 0 ? config.colors.accentSoft : config.colors.surface,
-      lineColor: index === 0 ? config.colors.accent : config.colors.rule,
-      lineWidth: 1,
-      radius: 0.06,
-      role: "panel",
-      intentionalOverlap: true,
-    });
-    writer.addText(`kpi-label-${index + 1}`, kpi.label.toUpperCase(), { x: x + 0.28, y: 2.05, w: width - 0.56, h: 0.35 }, {
-      fontSize: 11,
-      bold: true,
-      color: index === 0 ? config.colors.ink : config.colors.muted,
-      fill: index === 0 ? config.colors.accentSoft : config.colors.surface,
-      role: "eyebrow",
-    });
-    writer.addText(`kpi-value-${index + 1}`, kpi.value, { x: x + 0.28, y: 2.6, w: width - 0.56, h: 1.1 }, {
-      fontSize: 40,
-      fontFace: config.fonts.heading,
-      bold: true,
-      fill: index === 0 ? config.colors.accentSoft : config.colors.surface,
-      role: "kpi-value",
-    });
-    writer.addText(`kpi-detail-${index + 1}`, kpi.detail ?? "", { x: x + 0.28, y: 4.3, w: width - 0.56, h: 0.9 }, {
-      fontSize: 16,
-      color: index === 0 ? config.colors.ink : config.colors.muted,
-      fill: index === 0 ? config.colors.accentSoft : config.colors.surface,
-      role: "body",
-    });
-  });
-  addFooter(writer, context);
-}
-
-function renderQuote(writer: ElementWriter, spec: SlideSpec, context: LayoutContext): void {
-  const { config } = context;
-  writer.addText("quote-mark", "“", { x: 0.65, y: 0.65, w: 1.0, h: 1.0 }, {
-    fontSize: 72,
-    color: config.colors.accent,
-    fontFace: config.fonts.heading,
-    role: "decorative",
-  });
-  writer.addText("quote-text", spec.quote?.text ?? spec.title, { x: 1.2, y: 1.7, w: 10.9, h: 2.9 }, {
-    fontSize: 34,
-    fontFace: config.fonts.heading,
-    bold: true,
-    valign: "middle",
-    align: "center",
-    role: "quote",
-  });
-  writer.addText("quote-attribution", spec.quote?.attribution ?? "", { x: 3.3, y: 5.12, w: 6.7, h: 0.38 }, {
-    fontSize: 14,
-    color: config.colors.muted,
-    align: "center",
-    role: "attribution",
-  });
-  addFooter(writer, context);
-}
-
-function renderRoadmap(writer: ElementWriter, spec: SlideSpec, context: LayoutContext): void {
-  const { config } = context;
-  addHeader(writer, spec, context);
-  const lanes = (spec.roadmap ?? []).slice(0, 5);
-  const rowHeight = 4.65 / Math.max(1, lanes.length);
-  lanes.forEach((lane, laneIndex) => {
-    const y = 1.65 + laneIndex * rowHeight;
-    writer.addText(`roadmap-label-${laneIndex + 1}`, lane.label, { x: 0.62, y: y + 0.18, w: 1.35, h: 0.38 }, {
-      fontSize: 14,
-      bold: true,
-      color: config.colors.muted,
-      role: "lane-label",
-    });
-    const itemWidth = 10.4 / Math.max(1, lane.items.length);
-    lane.items.forEach((item, itemIndex) => {
-      const x = 2.15 + itemIndex * itemWidth;
-      writer.addShape(`roadmap-item-${laneIndex + 1}-${itemIndex + 1}`, Shapes.roundRect, {
-        x,
-        y,
-        w: itemWidth - 0.18,
-        h: rowHeight - 0.18,
-      }, {
-        fill: laneIndex === 0 ? config.colors.accentSoft : config.colors.surface,
-        lineColor: laneIndex === 0 ? config.colors.accent : config.colors.rule,
-        lineWidth: 1,
-        radius: 0.04,
-        role: "roadmap-item",
-        intentionalOverlap: true,
-      });
-      writer.addText(`roadmap-text-${laneIndex + 1}-${itemIndex + 1}`, item, {
-        x: x + 0.15,
-        y: y + 0.13,
-        w: itemWidth - 0.48,
-        h: rowHeight - 0.44,
-      }, { fontSize: 16, bold: true, valign: "middle", role: "roadmap-label" });
-    });
-  });
-  addFooter(writer, context);
-}
-
-function renderClosing(writer: ElementWriter, spec: SlideSpec, context: LayoutContext): void {
-  const { config } = context;
-  const field = emphasisField(config);
-  const foreground = foregroundOn(field, config);
-  const secondary = secondaryForegroundOn(field, config);
-  const accent = accentForegroundOn(field, config);
-  writer.slide.background = { color: field };
-  writer.addText("closing-label", "NEXT MOVE", { x: 0.72, y: 0.72, w: 2.2, h: 0.3 }, {
-    fontSize: 12,
-    bold: true,
-    color: accent,
-    fill: field,
+    color: readable(tokens.palette.accent, tokens.palette.background, tokens.type.caption, true),
     role: "eyebrow",
   });
-  writer.addText("closing-title", spec.title, { x: 0.72, y: 1.7, w: 10.8, h: 1.75 }, {
-    fontSize: 44,
-    fontFace: config.fonts.heading,
+  cursor += tokens.type.caption / 72 * 1.6 + tokens.space.lg;
+
+  const titleLines = Math.min(4, estimatedLineCount(spec.title, primary.w, tokens.type.display));
+  const titleHeight = titleLines * (tokens.type.display / 72) * 1.15;
+  writer.addText("deck-title", spec.title, { x: primary.x, y: cursor, w: primary.w, h: titleHeight }, {
+    fontSize: tokens.type.display,
+    fontFace: tokens.fonts.heading,
     bold: true,
-    color: foreground,
+    color: readable(tokens.palette.ink, tokens.palette.background, tokens.type.display, true),
+    valign: "top",
+    role: "title",
+  });
+  cursor += titleHeight + tokens.space.lg;
+
+  if (spec.subtitle) {
+    writer.addText("deck-subtitle", spec.subtitle, {
+      x: primary.x,
+      y: cursor,
+      w: primary.w * 0.86,
+      h: Math.min(safe.y + safe.h - cursor, tokens.type.lead / 72 * 3),
+    }, {
+      fontSize: tokens.type.lead,
+      color: readable(tokens.palette.muted, tokens.palette.background, tokens.type.lead),
+      role: "subtitle",
+    });
+  }
+
+  // Motifs live in the secondary column so they can never sit under the title.
+  const motif = tokens.geometry === "sharp" ? Shapes.rect : Shapes.ellipse;
+  const motifSize = Math.min(secondary.w, safe.h * 0.34);
+  writer.addShape("title-motif-one", motif, {
+    x: secondary.x + secondary.w - motifSize,
+    y: safe.y + safe.h * 0.08,
+    w: motifSize,
+    h: motifSize,
+  }, { fill: tokens.palette.accentAlt, transparency: 10, lineWidth: 0, role: "decorative" });
+  writer.addShape("title-motif-two", motif, {
+    x: secondary.x + secondary.w - motifSize * 1.25,
+    y: safe.y + safe.h * 0.34,
+    w: motifSize * 1.2,
+    h: motifSize * 1.2,
+  }, { fill: tokens.palette.accentSoft, lineWidth: 0, role: "decorative", intentionalOverlap: true });
+}
+
+function renderSection(writer: ElementWriter, spec: SlideSpec, _context: LayoutContext, system: LayoutSystem): void {
+  const { grid, tokens, config } = system;
+  const field = emphasisField(config);
+  const foreground = foregroundOn(field, config);
+  const secondary = secondaryForegroundOn(field, config);
+  const accent = accentForegroundOn(field, config);
+  writer.slide.background = { color: field };
+  const safe = grid.safe;
+
+  writer.addText("section-label", spec.sectionLabel ?? "SECTION", {
+    x: safe.x,
+    y: safe.y + tokens.space.md,
+    w: safe.w * 0.4,
+    h: tokens.type.caption / 72 * 1.6,
+  }, { fontSize: tokens.type.caption, bold: true, color: readable(accent, field, tokens.type.caption, true), fill: field, role: "eyebrow" });
+
+  const titleHeight = Math.min(3, estimatedLineCount(spec.title, safe.w * 0.86, tokens.type.display)) * (tokens.type.display / 72) * 1.15;
+  writer.addText("section-title", spec.title, {
+    x: safe.x,
+    y: safe.y + safe.h * 0.32,
+    w: safe.w * 0.86,
+    h: titleHeight,
+  }, {
+    fontSize: tokens.type.display,
+    fontFace: tokens.fonts.heading,
+    bold: true,
+    color: readable(foreground, field, tokens.type.display, true),
     fill: field,
     role: "title",
   });
-  writer.addText("closing-subtitle", spec.subtitle ?? "", { x: 0.75, y: 3.72, w: 7.4, h: 0.75 }, {
-    fontSize: 20,
-    color: secondary,
-    fill: field,
-    role: "subtitle",
+
+  const supporting = spec.subtitle ?? spec.body;
+  if (supporting) {
+    writer.addText("section-subtitle", supporting, {
+      x: safe.x,
+      y: safe.y + safe.h * 0.32 + titleHeight + tokens.space.md,
+      w: safe.w * 0.62,
+      h: tokens.type.lead / 72 * 2.4,
+    }, { fontSize: tokens.type.lead, color: readable(secondary, field, tokens.type.lead), fill: field, role: "subtitle" });
+  }
+}
+
+function renderSummary(writer: ElementWriter, spec: SlideSpec, context: LayoutContext, system: LayoutSystem): void {
+  const { grid, tokens } = system;
+  const content = addHeader(writer, spec, system);
+  const { primary, secondary } = grid.split(content, 0.34, "left");
+
+  if (spec.body) {
+    writer.addText("summary-lead", spec.body, { ...primary, h: Math.min(primary.h, tokens.type.subheading / 72 * 6) }, {
+      fontSize: tokens.type.subheading,
+      fontFace: tokens.fonts.heading,
+      bold: true,
+      color: readable(tokens.palette.ink, tokens.palette.background, tokens.type.subheading, true),
+      role: "lead",
+    });
+  }
+
+  const bullets = (spec.bullets ?? []).slice(0, densityBudget(tokens).bullets);
+  const indexWidth = grid.columnWidth * 0.4;
+  const rows = grid.packRows(
+    secondary,
+    bullets.map((bullet) => {
+      const lines = estimatedLineCount(bullet, secondary.w - indexWidth - tokens.space.sm, tokens.type.body);
+      return lines * (tokens.type.body / 72) * 1.35 + tokens.space.md;
+    }),
+    tokens.space.md,
+  );
+  bullets.forEach((bullet, index) => {
+    const row = rows[index]!;
+    writer.addText(`summary-index-${index + 1}`, String(index + 1).padStart(2, "0"), {
+      x: row.x,
+      y: row.y,
+      w: indexWidth,
+      h: tokens.type.caption / 72 * 1.6,
+    }, {
+      fontSize: tokens.type.caption,
+      bold: true,
+      color: readable(tokens.palette.accent, tokens.palette.background, tokens.type.caption, true),
+      role: "index",
+    });
+    writer.addText(`summary-point-${index + 1}`, bullet, {
+      x: row.x + indexWidth + tokens.space.sm,
+      y: row.y,
+      w: row.w - indexWidth - tokens.space.sm,
+      h: row.h - tokens.space.sm,
+    }, {
+      fontSize: tokens.type.body,
+      bold: true,
+      color: readable(tokens.palette.ink, tokens.palette.background, tokens.type.body, true),
+      role: "body",
+    });
+    writer.addShape(`summary-rule-${index + 1}`, Shapes.line, {
+      x: row.x,
+      y: row.y + row.h - tokens.space.xs,
+      w: row.w,
+      h: 0,
+    }, { fill: tokens.palette.rule, lineColor: tokens.palette.rule, lineWidth: tokens.stroke.hairline, role: "rule" });
   });
-  const bullets = spec.bullets ?? [];
-  bullets.slice(0, 3).forEach((bullet, index) => {
-    writer.addText(`closing-action-${index + 1}`, `${String(index + 1).padStart(2, "0")}  ${bullet}`, {
-      x: 8.8,
-      y: 3.45 + index * 0.78,
-      w: 3.7,
-      h: 0.48,
-    }, { fontSize: 16, bold: true, color: foreground, fill: field, role: "action" });
+  addFooter(writer, context, system);
+}
+
+function renderTextImage(writer: ElementWriter, spec: SlideSpec, context: LayoutContext, system: LayoutSystem): void {
+  const { grid, tokens } = system;
+  const content = addHeader(writer, spec, system);
+  const textOnLeft = spec.visual?.position !== "left";
+  const { primary: textRegion, secondary: visualRegion } = grid.split(content, 0.48, textOnLeft ? "left" : "right");
+
+  let cursor = textRegion.y;
+  if (spec.body) {
+    const height = Math.min(textRegion.h * 0.4, tokens.type.lead / 72 * 4);
+    writer.addText("body-copy", spec.body, { x: textRegion.x, y: cursor, w: textRegion.w, h: height }, {
+      fontSize: tokens.type.lead,
+      color: readable(tokens.palette.muted, tokens.palette.background, tokens.type.lead),
+      role: "body",
+    });
+    cursor += height + tokens.space.md;
+  }
+  const bullets = (spec.bullets ?? []).slice(0, densityBudget(tokens).bullets);
+  if (bullets.length > 0) {
+    writer.addBullets("body-bullet", bullets, {
+      x: textRegion.x,
+      y: cursor,
+      w: textRegion.w,
+      h: Math.max(tokens.space.xl, textRegion.y + textRegion.h - cursor),
+    }, tokens.type.body);
+  }
+
+  const captionHeight = spec.visual?.caption ? tokens.type.caption / 72 * 1.8 : 0;
+  const visualFrame = { ...visualRegion, h: visualRegion.h - captionHeight };
+  if (spec.visual?.path) writer.addImage("hero-image", spec.visual.path, spec.visual.alt, visualFrame);
+  else addAbstractVisual(writer, visualFrame, system);
+  if (spec.visual?.caption) {
+    writer.addText("image-caption", spec.visual.caption, {
+      x: visualRegion.x,
+      y: visualFrame.y + visualFrame.h + tokens.space.xs,
+      w: visualRegion.w,
+      h: captionHeight,
+    }, {
+      fontSize: tokens.type.caption,
+      color: readable(tokens.palette.muted, tokens.palette.background, tokens.type.caption),
+      role: "caption",
+    });
+  }
+  addFooter(writer, context, system);
+}
+
+function renderComparison(writer: ElementWriter, spec: SlideSpec, context: LayoutContext, system: LayoutSystem): void {
+  const { grid, tokens, config } = system;
+  const content = addHeader(writer, spec, system);
+  const columns = (spec.comparison ?? []).slice(0, densityBudget(tokens).columns);
+  const cells = grid.flow(content, Math.max(1, columns.length));
+
+  columns.forEach((column, index) => {
+    const cell = cells[index]!;
+    const emphasized = column.emphasis === true;
+    const field = emphasisField(config);
+    const panel = emphasized ? field : tokens.palette.surface;
+    writer.addShape(`comparison-panel-${index + 1}`, tokens.radius.soft > 0 ? Shapes.roundRect : Shapes.rect, cell, {
+      fill: panel,
+      lineColor: emphasized ? field : tokens.palette.rule,
+      lineWidth: tokens.stroke.regular,
+      radius: tokens.radius.soft,
+      role: "panel",
+      intentionalOverlap: true,
+    });
+    const inner = grid.inset(cell, tokens.space.md);
+    writer.addText(`comparison-heading-${index + 1}`, column.heading, {
+      x: inner.x,
+      y: inner.y,
+      w: inner.w,
+      h: tokens.type.subheading / 72 * 1.6,
+    }, {
+      fontSize: tokens.type.subheading,
+      bold: true,
+      color: readable(emphasized ? foregroundOn(field, config) : tokens.palette.ink, panel, tokens.type.subheading, true),
+      fill: panel,
+      role: "subheading",
+    });
+
+    const points = column.points.slice(0, densityBudget(tokens).bullets);
+    const listTop = inner.y + tokens.type.subheading / 72 * 1.6 + tokens.space.md;
+    const rows = grid.stack({ ...inner, y: listTop, h: Math.max(tokens.space.md, inner.y + inner.h - listTop) }, Math.max(1, points.length), tokens.space.xs);
+    points.forEach((point, pointIndex) => {
+      const row = rows[pointIndex]!;
+      writer.addText(`comparison-point-${index + 1}-${pointIndex + 1}`, point, row, {
+        fontSize: tokens.type.body,
+        color: readable(emphasized ? secondaryForegroundOn(field, config) : tokens.palette.muted, panel, tokens.type.body),
+        fill: panel,
+        role: "body",
+      });
+    });
+  });
+  addFooter(writer, context, system);
+}
+
+function renderTimeline(writer: ElementWriter, spec: SlideSpec, context: LayoutContext, system: LayoutSystem, diagrams: DiagramBuilder): void {
+  const content = addHeader(writer, spec, system);
+  diagrams.addTimeline(writer, spec.timeline ?? [], content);
+  addFooter(writer, context, system);
+}
+
+function renderProcess(writer: ElementWriter, spec: SlideSpec, context: LayoutContext, system: LayoutSystem, diagrams: DiagramBuilder): void {
+  const { tokens } = system;
+  let content = addHeader(writer, spec, system);
+  if (spec.body) {
+    const height = tokens.type.lead / 72 * 1.8;
+    writer.addText("process-lead", spec.body, { ...content, h: height }, {
+      fontSize: tokens.type.lead,
+      color: readable(tokens.palette.muted, tokens.palette.background, tokens.type.lead),
+      role: "lead",
+    });
+    content = { ...content, y: content.y + height + tokens.space.md, h: content.h - height - tokens.space.md };
+  }
+  diagrams.addProcess(writer, (spec.process ?? []).slice(0, densityBudget(tokens).columns + 1), content);
+  addFooter(writer, context, system);
+}
+
+function renderArchitecture(writer: ElementWriter, spec: SlideSpec, context: LayoutContext, system: LayoutSystem, diagrams: DiagramBuilder): void {
+  const { tokens } = system;
+  let content = addHeader(writer, spec, system);
+  if (spec.body) {
+    const height = tokens.type.body / 72 * 1.8;
+    writer.addText("architecture-lead", spec.body, { ...content, h: height }, {
+      fontSize: tokens.type.body,
+      color: readable(tokens.palette.muted, tokens.palette.background, tokens.type.body),
+      role: "body",
+    });
+    content = { ...content, y: content.y + height + tokens.space.md, h: content.h - height - tokens.space.md };
+  }
+  diagrams.addArchitecture(writer, spec.architecture ?? { nodes: [], edges: [] }, content);
+  addFooter(writer, context, system);
+}
+
+function renderTable(writer: ElementWriter, spec: SlideSpec, context: LayoutContext, system: LayoutSystem): void {
+  const { tokens } = system;
+  let content = addHeader(writer, spec, system);
+  if (spec.body) {
+    const height = tokens.type.body / 72 * 1.8;
+    writer.addText("table-lead", spec.body, { ...content, h: height }, {
+      fontSize: tokens.type.body,
+      color: readable(tokens.palette.muted, tokens.palette.background, tokens.type.body),
+      role: "body",
+    });
+    content = { ...content, y: content.y + height + tokens.space.md, h: content.h - height - tokens.space.md };
+  }
+  if (spec.table) writer.addTable("data-table", spec.table, content);
+  addFooter(writer, context, system);
+}
+
+function renderChart(writer: ElementWriter, spec: SlideSpec, context: LayoutContext, system: LayoutSystem, charts: ChartBuilder): void {
+  const { grid, tokens } = system;
+  const content = addHeader(writer, spec, system);
+  const hasCommentary = Boolean(spec.body || spec.bullets?.length);
+  const region = hasCommentary ? grid.split(content, 0.64, "left") : undefined;
+  const chartFrame = region?.primary ?? content;
+
+  if (spec.chart) charts.add(writer, "data-chart", spec.chart, chartFrame);
+
+  if (region) {
+    let cursor = region.secondary.y;
+    if (spec.body) {
+      const height = tokens.type.subheading / 72 * 3;
+      writer.addText("chart-insight", spec.body, { ...region.secondary, y: cursor, h: height }, {
+        fontSize: tokens.type.subheading,
+        bold: true,
+        color: readable(tokens.palette.ink, tokens.palette.background, tokens.type.subheading, true),
+        role: "insight",
+      });
+      cursor += height + tokens.space.md;
+    }
+    const bullets = (spec.bullets ?? []).slice(0, 3);
+    if (bullets.length > 0) {
+      writer.addBullets("chart-bullet", bullets, {
+        x: region.secondary.x,
+        y: cursor,
+        w: region.secondary.w,
+        h: Math.max(tokens.space.lg, region.secondary.y + region.secondary.h - cursor),
+      }, tokens.type.body);
+    }
+  }
+  addFooter(writer, context, system);
+}
+
+function renderKpi(writer: ElementWriter, spec: SlideSpec, context: LayoutContext, system: LayoutSystem): void {
+  const { grid, tokens } = system;
+  const content = addHeader(writer, spec, system);
+  const kpis = (spec.kpis ?? []).slice(0, densityBudget(tokens).columns + 1);
+  const cells = grid.flow(content, Math.max(1, kpis.length));
+
+  kpis.forEach((kpi, index) => {
+    const cell = cells[index]!;
+    const panel = index === 0 ? tokens.palette.accentSoft : tokens.palette.surface;
+    writer.addShape(`kpi-panel-${index + 1}`, tokens.radius.soft > 0 ? Shapes.roundRect : Shapes.rect, cell, {
+      fill: panel,
+      lineColor: index === 0 ? tokens.palette.accent : tokens.palette.rule,
+      lineWidth: tokens.stroke.regular,
+      radius: tokens.radius.soft,
+      role: "panel",
+      intentionalOverlap: true,
+    });
+    const inner = grid.inset(cell, tokens.space.md);
+    const labelHeight = tokens.type.caption / 72 * 1.7;
+    writer.addText(`kpi-label-${index + 1}`, kpi.label.toUpperCase(), { ...inner, h: labelHeight }, {
+      fontSize: tokens.type.caption,
+      bold: true,
+      color: readable(tokens.palette.muted, panel, tokens.type.caption, true),
+      fill: panel,
+      role: "eyebrow",
+    });
+    const valueHeight = tokens.type.display / 72 * 1.2;
+    writer.addText(`kpi-value-${index + 1}`, kpi.value, {
+      ...inner,
+      y: inner.y + labelHeight + tokens.space.sm,
+      h: Math.min(valueHeight, inner.h - labelHeight - tokens.space.sm),
+    }, {
+      fontSize: tokens.type.display,
+      fontFace: tokens.fonts.heading,
+      bold: true,
+      color: readable(tokens.palette.ink, panel, tokens.type.display, true),
+      fill: panel,
+      fit: "shrink",
+      role: "kpi-value",
+    });
+    if (kpi.detail) {
+      const detailHeight = Math.min(tokens.type.body / 72 * 3, inner.h * 0.3);
+      writer.addText(`kpi-detail-${index + 1}`, kpi.detail, {
+        ...inner,
+        y: inner.y + inner.h - detailHeight,
+        h: detailHeight,
+      }, {
+        fontSize: tokens.type.body,
+        color: readable(tokens.palette.muted, panel, tokens.type.body),
+        fill: panel,
+        role: "body",
+      });
+    }
+  });
+  addFooter(writer, context, system);
+}
+
+function renderQuote(writer: ElementWriter, spec: SlideSpec, context: LayoutContext, system: LayoutSystem): void {
+  const { grid, tokens } = system;
+  const safe = grid.safe;
+  writer.addText("quote-mark", "“", {
+    x: safe.x,
+    y: safe.y,
+    w: tokens.type.display / 72 * 1.6,
+    h: tokens.type.display / 72 * 1.6,
+  }, {
+    fontSize: Math.round(tokens.type.display * 1.4),
+    color: tokens.palette.accent,
+    fontFace: tokens.fonts.heading,
+    role: "decorative",
+  });
+
+  const quoteText = spec.quote?.text ?? spec.title;
+  const quoteWidth = safe.w * 0.84;
+  const quoteHeight = Math.min(safe.h * 0.5, estimatedLineCount(quoteText, quoteWidth, tokens.type.subheading) * (tokens.type.subheading / 72) * 1.35);
+  writer.addText("quote-text", quoteText, {
+    x: safe.x + safe.w * 0.08,
+    y: safe.y + safe.h * 0.28,
+    w: quoteWidth,
+    h: quoteHeight,
+  }, {
+    fontSize: Math.round(tokens.type.subheading * 1.25),
+    fontFace: tokens.fonts.heading,
+    bold: true,
+    color: readable(tokens.palette.ink, tokens.palette.background, tokens.type.subheading, true),
+    valign: "middle",
+    align: "center",
+    fit: "shrink",
+    role: "quote",
+  });
+  if (spec.quote?.attribution) {
+    writer.addText("quote-attribution", spec.quote.attribution, {
+      x: safe.x + safe.w * 0.2,
+      y: safe.y + safe.h * 0.28 + quoteHeight + tokens.space.md,
+      w: safe.w * 0.6,
+      h: tokens.type.caption / 72 * 1.8,
+    }, {
+      fontSize: tokens.type.caption,
+      color: readable(tokens.palette.muted, tokens.palette.background, tokens.type.caption),
+      align: "center",
+      role: "attribution",
+    });
+  }
+  addFooter(writer, context, system);
+}
+
+function renderRoadmap(writer: ElementWriter, spec: SlideSpec, context: LayoutContext, system: LayoutSystem): void {
+  const { grid, tokens } = system;
+  const content = addHeader(writer, spec, system);
+  const lanes = (spec.roadmap ?? []).slice(0, densityBudget(tokens).columns + 2);
+  const rows = grid.stack(content, Math.max(1, lanes.length), tokens.space.sm);
+  const labelWidth = grid.columnWidth * 1.2;
+
+  lanes.forEach((lane, laneIndex) => {
+    const row = rows[laneIndex]!;
+    const panel = laneIndex === 0 ? tokens.palette.accentSoft : tokens.palette.surface;
+    writer.addText(`roadmap-label-${laneIndex + 1}`, lane.label, {
+      x: row.x,
+      y: row.y + row.h / 2 - tokens.type.body / 72,
+      w: labelWidth - tokens.space.sm,
+      h: tokens.type.body / 72 * 1.8,
+    }, {
+      fontSize: tokens.type.body,
+      bold: true,
+      color: readable(tokens.palette.muted, tokens.palette.background, tokens.type.body, true),
+      role: "lane-label",
+    });
+
+    const track = { x: row.x + labelWidth, y: row.y, w: row.w - labelWidth, h: row.h };
+    const items = grid.divide(track, Math.max(1, lane.items.length), tokens.space.xs);
+    lane.items.forEach((item, itemIndex) => {
+      const cell = items[itemIndex]!;
+      writer.addShape(`roadmap-item-${laneIndex + 1}-${itemIndex + 1}`, tokens.radius.soft > 0 ? Shapes.roundRect : Shapes.rect, cell, {
+        fill: panel,
+        lineColor: laneIndex === 0 ? tokens.palette.accent : tokens.palette.rule,
+        lineWidth: tokens.stroke.regular,
+        radius: tokens.radius.soft,
+        role: "roadmap-item",
+        intentionalOverlap: true,
+      });
+      writer.addText(`roadmap-text-${laneIndex + 1}-${itemIndex + 1}`, item, grid.inset(cell, tokens.space.xs), {
+        fontSize: tokens.type.body,
+        bold: true,
+        valign: "middle",
+        color: readable(tokens.palette.ink, panel, tokens.type.body, true),
+        fill: panel,
+        fit: "shrink",
+        role: "roadmap-label",
+      });
+    });
+  });
+  addFooter(writer, context, system);
+}
+
+function renderClosing(writer: ElementWriter, spec: SlideSpec, _context: LayoutContext, system: LayoutSystem): void {
+  const { grid, tokens, config } = system;
+  const field = emphasisField(config);
+  const foreground = foregroundOn(field, config);
+  const secondary = secondaryForegroundOn(field, config);
+  const accent = accentForegroundOn(field, config);
+  writer.slide.background = { color: field };
+  const safe = grid.safe;
+  const { primary, secondary: sidebar } = grid.split(safe, 0.6, "left");
+
+  writer.addText("closing-label", "NEXT MOVE", {
+    x: primary.x,
+    y: safe.y + tokens.space.md,
+    w: primary.w * 0.5,
+    h: tokens.type.caption / 72 * 1.6,
+  }, { fontSize: tokens.type.caption, bold: true, color: readable(accent, field, tokens.type.caption, true), fill: field, role: "eyebrow" });
+
+  const titleHeight = Math.min(3, estimatedLineCount(spec.title, primary.w, tokens.type.title)) * (tokens.type.title / 72) * 1.2;
+  writer.addText("closing-title", spec.title, {
+    x: primary.x,
+    y: safe.y + safe.h * 0.28,
+    w: primary.w,
+    h: titleHeight,
+  }, {
+    fontSize: tokens.type.title,
+    fontFace: tokens.fonts.heading,
+    bold: true,
+    color: readable(foreground, field, tokens.type.title, true),
+    fill: field,
+    role: "title",
+  });
+
+  if (spec.subtitle) {
+    writer.addText("closing-subtitle", spec.subtitle, {
+      x: primary.x,
+      y: safe.y + safe.h * 0.28 + titleHeight + tokens.space.md,
+      w: primary.w * 0.9,
+      h: tokens.type.lead / 72 * 2.2,
+    }, { fontSize: tokens.type.lead, color: readable(secondary, field, tokens.type.lead), fill: field, role: "subtitle" });
+  }
+
+  const bullets = (spec.bullets ?? []).slice(0, 3);
+  const rows = grid.stack({ ...sidebar, y: safe.y + safe.h * 0.32, h: safe.h * 0.5 }, Math.max(1, bullets.length), tokens.space.sm);
+  bullets.forEach((bullet, index) => {
+    writer.addText(`closing-action-${index + 1}`, `${String(index + 1).padStart(2, "0")}  ${bullet}`, rows[index]!, {
+      fontSize: tokens.type.body,
+      bold: true,
+      color: readable(foreground, field, tokens.type.body, true),
+      fill: field,
+      role: "action",
+    });
   });
 }
 
-function renderCustom(writer: ElementWriter, spec: SlideSpec, context: LayoutContext): void {
-  addHeader(writer, spec, context);
+function renderCustom(writer: ElementWriter, spec: SlideSpec, context: LayoutContext, system: LayoutSystem): void {
+  const { grid, tokens } = system;
+  addHeader(writer, spec, system);
   for (const region of spec.custom ?? []) {
-    const frame = { x: region.x, y: region.y, w: region.w, h: region.h };
+    const frame = grid.clamp({ x: region.x, y: region.y, w: region.w, h: region.h });
     if (region.type === "text") {
-      writer.addText(region.id, region.text ?? "", frame, { fontSize: region.fontSize ?? 18, fill: region.fill, role: "custom" });
+      writer.addText(region.id, region.text ?? "", frame, {
+        fontSize: region.fontSize ?? tokens.type.body,
+        ...(region.fill ? { fill: region.fill } : {}),
+        role: "custom",
+      });
     } else if (region.type === "shape") {
-      writer.addShape(region.id, Shapes.roundRect, frame, { fill: region.fill, role: "custom" });
+      writer.addShape(region.id, tokens.radius.soft > 0 ? Shapes.roundRect : Shapes.rect, frame, {
+        ...(region.fill ? { fill: region.fill } : {}),
+        radius: tokens.radius.soft,
+        role: "custom",
+      });
     } else if (region.imagePath) {
       writer.addImage(region.id, region.imagePath, region.text ?? region.id, frame);
     }
   }
-  addFooter(writer, context);
+  addFooter(writer, context, system);
 }
 
 export class LayoutRegistry {
   private readonly layouts = new Map<string, LayoutRenderer>();
   private diagrams: DiagramBuilder;
   private charts: ChartBuilder;
+  private system: LayoutSystem;
+  /** When true, an unregistered layout id throws instead of falling back. */
+  public strict = false;
 
-  public constructor(private config: SlideAgentConfig) {
-    this.diagrams = new DiagramBuilder(config);
-    this.charts = new ChartBuilder(config);
+  public constructor(config: SlideAgentConfig) {
+    this.system = LayoutRegistry.systemFor(config);
+    this.diagrams = new DiagramBuilder(config, this.system.tokens, this.system.grid);
+    this.charts = new ChartBuilder(config, this.system.tokens);
     this.registerDefaults();
+  }
+
+  private static systemFor(config: SlideAgentConfig, direction?: SlideSpec extends never ? never : Parameters<typeof resolveTokens>[1]): LayoutSystem {
+    const tokens = resolveTokens(config, direction);
+    return { tokens, grid: new Grid(config.dimensions, tokens), config };
   }
 
   public register(id: string, renderer: LayoutRenderer): this {
@@ -463,19 +726,54 @@ export class LayoutRegistry {
     return this;
   }
 
-  /** Refresh primitive defaults while retaining every registered custom renderer. */
-  public configure(config: SlideAgentConfig): this {
-    this.config = config;
-    this.diagrams = new DiagramBuilder(config);
-    this.charts = new ChartBuilder(config);
+  /** Refreshes the design system while retaining every registered renderer. */
+  public configure(config: SlideAgentConfig, direction?: Parameters<typeof resolveTokens>[1]): this {
+    this.system = LayoutRegistry.systemFor(config, direction);
+    this.diagrams = new DiagramBuilder(config, this.system.tokens, this.system.grid);
+    this.charts = new ChartBuilder(config, this.system.tokens);
     return this;
   }
 
-  public render(writer: ElementWriter, spec: SlideSpec, context: LayoutContext): void {
+  public get tokens(): DeckTokens {
+    return this.system.tokens;
+  }
+
+  public get grid(): Grid {
+    return this.system.grid;
+  }
+
+  /**
+   * Picks the closest built-in renderer for an unregistered kind. The docs tell
+   * models that `kind` is free-form metadata, which is only true when a canvas
+   * is present; without this, an invented kind with no canvas threw
+   * `Unknown layout` and failed the whole build.
+   */
+  private fallbackId(spec: SlideSpec): string {
+    if (spec.chart) return "chart";
+    if (spec.table) return "table";
+    if (spec.kpis?.length) return "kpi";
+    if (spec.comparison?.length) return "comparison";
+    if (spec.timeline?.length) return "timeline";
+    if (spec.process?.length) return "process";
+    if (spec.architecture?.nodes.length) return "architecture";
+    if (spec.roadmap?.length) return "roadmap";
+    if (spec.quote) return "quote";
+    if (spec.custom?.length) return "custom";
+    if (spec.bullets?.length || spec.body || spec.visual) return "text-image";
+    return "section";
+  }
+
+  public render(writer: ElementWriter, spec: SlideSpec, context: LayoutContext): LayoutFallback | undefined {
     const id = spec.layout ?? spec.kind;
     const renderer = this.layouts.get(id);
-    if (!renderer) throw new Error(`Unknown layout: ${id}`);
-    renderer(writer, spec, context);
+    if (renderer) {
+      renderer(writer, spec, context);
+      return undefined;
+    }
+    if (this.strict) throw new Error(`Unknown layout: ${id}`);
+    const used = this.fallbackId(spec);
+    this.layouts.get(used)!(writer, spec, context);
+    return { slide: context.slideNumber, requested: id, used };
   }
 
   public ids(): string[] {
@@ -483,20 +781,23 @@ export class LayoutRegistry {
   }
 
   private registerDefaults(): void {
-    this.register("title", renderTitle)
-      .register("section", renderSection)
-      .register("executive-summary", renderSummary)
-      .register("text-image", renderTextImage)
-      .register("comparison", renderComparison)
-      .register("timeline", (writer, spec, context) => renderTimeline(writer, spec, context, this.diagrams))
-      .register("process", (writer, spec, context) => renderProcess(writer, spec, context, this.diagrams))
-      .register("architecture", (writer, spec, context) => renderArchitecture(writer, spec, context, this.diagrams))
-      .register("table", renderTable)
-      .register("chart", (writer, spec, context) => renderChart(writer, spec, context, this.charts))
-      .register("kpi", renderKpi)
-      .register("quote", renderQuote)
-      .register("roadmap", renderRoadmap)
-      .register("closing", renderClosing)
-      .register("custom", renderCustom);
+    const withSystem = (renderer: (writer: ElementWriter, spec: SlideSpec, context: LayoutContext, system: LayoutSystem) => void): LayoutRenderer =>
+      (writer, spec, context) => renderer(writer, spec, context, this.system);
+
+    this.register("title", withSystem(renderTitle))
+      .register("section", withSystem(renderSection))
+      .register("executive-summary", withSystem(renderSummary))
+      .register("text-image", withSystem(renderTextImage))
+      .register("comparison", withSystem(renderComparison))
+      .register("timeline", (writer, spec, context) => renderTimeline(writer, spec, context, this.system, this.diagrams))
+      .register("process", (writer, spec, context) => renderProcess(writer, spec, context, this.system, this.diagrams))
+      .register("architecture", (writer, spec, context) => renderArchitecture(writer, spec, context, this.system, this.diagrams))
+      .register("table", withSystem(renderTable))
+      .register("chart", (writer, spec, context) => renderChart(writer, spec, context, this.system, this.charts))
+      .register("kpi", withSystem(renderKpi))
+      .register("quote", withSystem(renderQuote))
+      .register("roadmap", withSystem(renderRoadmap))
+      .register("closing", withSystem(renderClosing))
+      .register("custom", withSystem(renderCustom));
   }
 }

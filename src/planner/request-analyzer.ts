@@ -37,10 +37,14 @@ function inferTopics(prompt: string, title: string): string[] {
   const bullets = [...prompt.matchAll(/^\s*[-*]\s+(.+)$/gm)]
     .map((match) => match[1]!.trim())
     .filter((item) => item.length >= 3 && item.length <= 80);
-  const candidates = [...headings, ...listed, ...bullets, title]
+  // The deck title is not a topic. Including it produced a content slide that
+  // restated the cover, in every generated deck.
+  const normalizedTitle = title.trim().toLowerCase();
+  const candidates = [...headings, ...listed, ...bullets]
     .map((item) => item.replace(/[:.]+$/, "").trim())
-    .filter(Boolean);
-  return [...new Set(candidates)].slice(0, 10);
+    .filter((item) => item && item.toLowerCase() !== normalizedTitle);
+  const unique = [...new Set(candidates)].slice(0, 12);
+  return unique.length > 0 ? unique : [title];
 }
 
 export class RequestAnalyzer {
