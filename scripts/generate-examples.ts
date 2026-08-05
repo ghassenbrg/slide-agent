@@ -1,4 +1,4 @@
-import { rm } from "node:fs/promises";
+import { readdir, rm } from "node:fs/promises";
 import path from "node:path";
 
 import { SlideAgent } from "../src/pipeline.js";
@@ -327,3 +327,30 @@ for (const example of examples) {
     process.exitCode = 1;
   }
 }
+
+// Scene-based examples are contract artifacts rather than TypeScript fixtures:
+// they are exactly what a model is asked to produce, so they can be read as
+// worked examples and rebuilt by anyone with the CLI.
+async function generateSceneExamples(): Promise<void> {
+  const scenesDir = path.join(root, "examples", "scenes");
+  const scenes = (await readdir(scenesDir).catch(() => [])).filter((name) => name.endsWith(".ndjson"));
+  for (const scene of scenes) {
+    const name = scene.replace(/\.ndjson$/, "");
+    const output = path.join(root, "examples", "output", name, `${name}.pptx`);
+    await rm(path.join(root, "examples", "output", name), { recursive: true, force: true });
+    const result = await new SlideAgent(silentLogger).create({
+      command: "create",
+      scene: path.join(scenesDir, scene),
+      output,
+      validate: true,
+      render: process.env.SLIDE_AGENT_EXAMPLE_RENDER === "1",
+    });
+    const quality = result.validation?.quality;
+    process.stdout.write(`${name}: ${result.status}, validation ${result.validation?.status ?? "skipped"}, quality ${quality?.overall ?? "n/a"} (${quality?.band ?? "n/a"})\n`);
+    if (result.status === "error") {
+      throw new Error(`Example ${name} failed: ${result.errors.map((error) => error.message).join("; ")}`);
+    }
+  }
+}
+
+await generateSceneExamples();

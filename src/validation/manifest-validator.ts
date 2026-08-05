@@ -91,7 +91,14 @@ function validateChart(chart: ChartSpec): string[] {
 }
 
 function minimumFont(element: ElementRecord, config: SlideAgentConfig): number {
-  if (["footer", "caption", "chart-label", "eyebrow", "index", "lane-label", "attribution"].includes(element.role)) return config.fonts.minimums.caption;
+  // Labels attached to a mark — a diagram node, an axis, a lane — are read at
+  // the distance of the thing they label, not as body copy, so they carry the
+  // caption minimum. Holding them to the body minimum forced diagrams to use
+  // type large enough to crowd out the diagram.
+  if ([
+    "footer", "caption", "chart-label", "eyebrow", "index", "lane-label", "attribution",
+    "diagram-label", "axis-label", "roadmap-label",
+  ].includes(element.role)) return config.fonts.minimums.caption;
   if (["title"].includes(element.role)) return element.name.includes("deck") ? config.fonts.minimums.deckTitle : config.fonts.minimums.slideTitle;
   if (["subheading", "kpi-value", "quote", "lead", "insight"].includes(element.role)) return config.fonts.minimums.subheading;
   return config.fonts.minimums.body;

@@ -59,6 +59,7 @@
     "docs",
     "examples/prompts",
     "examples/requests",
+    "examples/scenes",
     "images/icon.png",
     "install.cmd",
     "install.ps1",

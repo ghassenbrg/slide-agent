@@ -30,6 +30,22 @@ export interface ValidationOptions {
 
 
 
+/** Adds the typefaces the deck's own creative direction chose to the known set. */
+function withDeckFonts(config: SlideAgentConfig, manifest: DeckManifest): SlideAgentConfig {
+  const typography = manifest.creativeDirection?.typography;
+  const authored = manifest.slides.flatMap((slide) =>
+    slide.elements.map((element) => element.fontFace).filter((face): face is string => Boolean(face)),
+  );
+  const named = [typography?.display, typography?.heading, typography?.body, typography?.mono, typography?.numeric]
+    .filter((face): face is string => Boolean(face));
+  const extra = [...named, ...(typography?.fallbacks ?? []), ...authored];
+  if (extra.length === 0) return config;
+  return {
+    ...config,
+    fonts: { ...config.fonts, supported: [...new Set([...config.fonts.supported, ...extra])] },
+  };
+}
+
 function summary(issues: ValidationIssue[]): ValidationReport["summary"] {
   return {
     errors: issues.filter((item) => item.severity === "error").length,
@@ -90,11 +106,15 @@ export class PresentationValidator {
         }));
       }
     }
-    issues.push(...new ManifestValidator(this.config).validate(manifest));
-    issues.push(...new AccessibilityValidator(this.config, options.accessibility ?? {}).validate(manifest));
+    // A standalone `validate` run knows only the base config, so every font the
+    // deck's own creative direction chose would report as unsupported. The
+    // manifest records that direction; honour it.
+    const deckConfig = withDeckFonts(this.config, manifest);
+    issues.push(...new ManifestValidator(deckConfig).validate(manifest));
+    issues.push(...new AccessibilityValidator(deckConfig, options.accessibility ?? {}).validate(manifest));
     for (const check of options.checks ?? []) {
       try {
-        issues.push(...await check.run(manifest, this.config));
+        issues.push(...await check.run(manifest, deckConfig));
       } catch (error) {
         issues.push({
           code: "custom-check-failed",
@@ -139,7 +159,7 @@ export class PresentationValidator {
       summary: counts,
       iterations: options.iterations ?? 1,
       issues,
-      quality: scoreDeck(manifest, this.config, issues),
+      quality: scoreDeck(manifest, deckConfig, issues),
       render,
     };
     if (options.reportPath) await writeJson(options.reportPath, report);
