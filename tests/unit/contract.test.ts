@@ -52,7 +52,12 @@ describe("contract descriptor", () => {
 
   it("publishes a discriminated canvas-element schema rather than an opaque object", () => {
     const schema = contractJsonSchema("canvasElement") as { oneOf?: unknown[]; anyOf?: unknown[] };
-    expect((schema.oneOf ?? schema.anyOf ?? []).length).toBe(7);
+    const variants = (schema.oneOf ?? schema.anyOf ?? []) as Array<{ properties?: { type?: { const?: string } } }>;
+    // Assert the element types by name; a bare count silently drifts whenever a
+    // new element type is added, which is the change most worth noticing.
+    expect(variants.map((variant) => variant.properties?.type?.const).sort()).toEqual([
+      "chart", "connector", "diagram", "image", "native-chart", "shape", "table", "text",
+    ]);
   });
 });
 

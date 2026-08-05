@@ -162,6 +162,15 @@ export const canvasNativeChartSchema = z.object({
   options: nativeOptions.optional(),
 }).describe("Escape hatch for any chart type or data shape PptxGenJS supports.");
 
+export const canvasDiagramSchema = z.object({
+  ...canvasBase,
+  type: z.literal("diagram"),
+  grammar: z.enum(["layered", "swimlane", "sequence", "hierarchy", "quadrant"])
+    .describe("A named diagram form. Slide Agent handles routing, spacing, and label placement."),
+  spec: z.record(z.string(), z.unknown()).describe("The grammar's own payload. Fetch its schema from the contract."),
+  alt: z.string().optional(),
+}).describe("A diagram expressed as a relationship rather than as hand-placed shapes.");
+
 export const canvasElementSchema = z.discriminatedUnion("type", [
   canvasTextSchema,
   canvasShapeSchema,
@@ -170,6 +179,7 @@ export const canvasElementSchema = z.discriminatedUnion("type", [
   canvasTableSchema,
   canvasChartSchema,
   canvasNativeChartSchema,
+  canvasDiagramSchema,
 ]);
 
 export const creativePaletteSchema = z.looseObject({

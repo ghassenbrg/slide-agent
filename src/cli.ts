@@ -8,6 +8,9 @@ import type { CreateRequest, StructuredAgentRequest } from "./types/index.js";
 import { parseStructuredRequest } from "./types/schemas.js";
 import { formatDoctorReport, runDeepCheck, runDoctorReport } from "./doctor.js";
 import { installManaged } from "./installer.js";
+import { PptxInspector } from "./editing/pptx-inspector.js";
+import { diffDecks, formatDiff } from "./serialization/diff.js";
+import { chartFromData, loadDataTable, provenanceNote, tableFromData } from "./data/connectors.js";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { spawn } from "node:child_process";
@@ -95,6 +98,7 @@ program.command("create")
   .option("--inspect <file>", "Round-trippable NDJSON blueprint output path")
   .option("--config <directory>", "Configuration directory")
   .option("--brand <file>", "Brand kit JSON constraining palette, typography, logo, and footer")
+  .option("--bilingual <mode>", "Render secondaryLanguage as parallel, stacked, or notes")
   .option("--max-retries <count>", "Maximum automatic repair retries", Number)
   .option("--render", "Also generate PDF and PNG previews (requires LibreOffice and Poppler)")
   .option("--no-validate", "Skip validation")
@@ -127,6 +131,7 @@ program.command("create")
       inspectPath: options.inspect ?? base.inspectPath,
       configDir: options.config ?? base.configDir,
       brand: options.brand ?? base.brand,
+      bilingual: options.bilingual ?? base.bilingual,
       render: options.render ?? base.render,
       // Commander defaults `--no-*` options to true, so only an explicit
       // negation should override the file.
@@ -227,6 +232,47 @@ program.command("contract")
       ...contractDescriptor(),
       guide: authoringGuide(options.section as GuideSectionId | undefined),
       jsonSchemas: allContractJsonSchemas(),
+    }, null, 2)}\n`);
+  });
+
+program.command("diff")
+  .description("Compare two decks semantically: which slides and elements changed")
+  .requiredOption("--before <file>", "Baseline .pptx")
+  .requiredOption("--after <file>", "Revised .pptx")
+  .option("--json", "Print machine-readable JSON")
+  .action(async (options) => {
+    const [before, after] = await Promise.all([
+      new PptxInspector().inspect(options.before),
+      new PptxInspector().inspect(options.after),
+    ]);
+    const result = diffDecks(before.manifest, after.manifest);
+    process.stdout.write(options.json ? `${JSON.stringify(result, null, 2)}\n` : `${formatDiff(result)}\n`);
+  });
+
+program.command("data")
+  .description("Inspect a CSV, TSV, or JSON file and emit a chart or table spec for a slide canvas")
+  .requiredOption("--input <file>", "CSV, TSV, or JSON data file")
+  .option("--as <shape>", "chart or table", "chart")
+  .option("--kind <kind>", "bar, line, pie, area, or waterfall", "bar")
+  .option("--label-column <name>", "Column holding the category labels")
+  .option("--value-columns <names>", "Comma-separated columns to plot")
+  .action(async (options) => {
+    const table = await loadDataTable(options.input);
+    const payload = options.as === "table"
+      ? { type: "table", table: tableFromData(table) }
+      : {
+        type: "chart",
+        chart: chartFromData(table, {
+          kind: options.kind,
+          ...(options.labelColumn ? { labelColumn: options.labelColumn } : {}),
+          ...(options.valueColumns ? { valueColumns: String(options.valueColumns).split(",").map((name: string) => name.trim()) } : {}),
+        }),
+      };
+    process.stdout.write(`${JSON.stringify({
+      ...payload,
+      source: table.source,
+      speakerNote: provenanceNote(table),
+      rows: table.rows.length,
     }, null, 2)}\n`);
   });
 

@@ -6,6 +6,7 @@ import { ImageManager, remoteAssetPolicy, type ImageResolver, type RemoteAssetPo
 import { FreeformComposer } from "../layouts/freeform-composer.js";
 import { LayoutRegistry, type LayoutFallback } from "../layouts/layout-registry.js";
 import { footerAppliesTo, logoAppliesTo, type BrandKit } from "../design/brand.js";
+import { withSecondaryLanguage, type BilingualMode } from "../design/bilingual.js";
 import { resolveTokens } from "../design/tokens.js";
 import { Grid } from "../design/grid.js";
 import { CreativeDirector } from "../themes/creative-director.js";
@@ -40,7 +41,7 @@ export class DeckBuilder {
 
   public constructor(
     private readonly config: SlideAgentConfig,
-    private readonly options: { layouts?: LayoutRegistry; imageResolver?: ImageResolver; remoteAssets?: RemoteAssetPolicy; brand?: BrandKit } = {},
+    private readonly options: { layouts?: LayoutRegistry; imageResolver?: ImageResolver; remoteAssets?: RemoteAssetPolicy; brand?: BrandKit; bilingual?: BilingualMode } = {},
   ) {
     this.layouts = options.layouts ?? new LayoutRegistry(config);
     // Per-user cache: a shared, world-readable directory under the system temp
@@ -70,14 +71,21 @@ export class DeckBuilder {
 
     const layoutFallbacks: LayoutFallback[] = [];
     for (let index = 0; index < resolvedOutline.slides.length; index += 1) {
-      const rawSpec = resolvedOutline.slides[index]!;
+      const rawSpec = this.options.bilingual
+        ? withSecondaryLanguage(
+          resolvedOutline.slides[index]!,
+          this.options.bilingual,
+          resolveTokens(effectiveConfig, design.direction),
+          new Grid(effectiveConfig.dimensions, resolveTokens(effectiveConfig, design.direction)),
+        )
+        : resolvedOutline.slides[index]!;
       const spec = await this.resolveAssets(rawSpec);
       const slide = presentation.addSlide();
       slide.background = { color: spec.background?.replace(/^#/, "") ?? effectiveConfig.colors.background };
       const records: ElementRecord[] = [];
       const writer = new ElementWriter(slide, records, effectiveConfig);
       if (spec.canvas) {
-        new FreeformComposer(effectiveConfig).render(writer, spec);
+        new FreeformComposer(effectiveConfig, design.direction).render(writer, spec);
       } else {
         const fallback = this.layouts.render(writer, spec, {
           slideNumber: index + 1,

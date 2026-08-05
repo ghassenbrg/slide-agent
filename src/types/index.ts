@@ -285,6 +285,14 @@ export interface CanvasNativeChartElement extends CanvasElementBase {
   options?: Record<string, unknown>;
 }
 
+/** A diagram described as a relationship; Slide Agent places the geometry. */
+export interface CanvasDiagramElement extends CanvasElementBase {
+  type: "diagram";
+  grammar: "layered" | "swimlane" | "sequence" | "hierarchy" | "quadrant";
+  spec: Record<string, unknown>;
+  alt?: string;
+}
+
 export type CanvasElementSpec =
   | CanvasTextElement
   | CanvasShapeElement
@@ -292,7 +300,8 @@ export type CanvasElementSpec =
   | CanvasImageElement
   | CanvasTableElement
   | CanvasChartElement
-  | CanvasNativeChartElement;
+  | CanvasNativeChartElement
+  | CanvasDiagramElement;
 
 export interface CustomRegion {
   id: string;
@@ -600,6 +609,12 @@ export interface CreateRequest {
   allowRemoteAssets?: boolean;
   /** Path to a brand-kit JSON file constraining palette, type, logo, footer. */
   brand?: string;
+  /**
+   * Renders `communication.secondaryLanguage` alongside the primary text.
+   * `parallel` and `stacked` place it on the slide; `notes` keeps the slide
+   * monolingual and puts the translation in the speaker notes.
+   */
+  bilingual?: "parallel" | "stacked" | "notes";
 }
 
 export interface ReplaceTextOperation {

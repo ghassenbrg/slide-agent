@@ -44,6 +44,7 @@ const createRequest = z.object({
   maxRetries: z.number().int().nonnegative().optional(),
   allowRemoteAssets: z.boolean().optional(),
   brand: z.string().optional(),
+  bilingual: z.enum(["parallel", "stacked", "notes"]).optional(),
 });
 
 const editRequest = z.object({

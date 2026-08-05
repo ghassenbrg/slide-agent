@@ -1,7 +1,10 @@
 import { ChartBuilder } from "../charts/chart-builder.js";
 import { ElementWriter } from "../components/element-writer.js";
 import { Shapes } from "../components/pptx-values.js";
-import type { CanvasElementSpec, SlideAgentConfig, SlideSpec } from "../types/index.js";
+import { renderGrammar } from "../diagrams/grammars.js";
+import { Grid } from "../design/grid.js";
+import { resolveTokens, type DeckTokens } from "../design/tokens.js";
+import type { CanvasElementSpec, CreativeDirection, SlideAgentConfig, SlideSpec } from "../types/index.js";
 
 function setOverlapMetadata(writer: ElementWriter, id: string, element: CanvasElementSpec): void {
   const record = writer.records.find((candidate) => candidate.id === id);
@@ -13,9 +16,16 @@ function setOverlapMetadata(writer: ElementWriter, id: string, element: CanvasEl
 /** Renders a host-model-authored scene without consulting the layout registry. */
 export class FreeformComposer {
   private readonly charts: ChartBuilder;
+  private readonly tokens: DeckTokens;
+  private readonly grid: Grid;
 
-  public constructor(private readonly config: SlideAgentConfig) {
-    this.charts = new ChartBuilder(config);
+  public constructor(
+    private readonly config: SlideAgentConfig,
+    private readonly direction?: CreativeDirection,
+  ) {
+    this.tokens = resolveTokens(config, direction);
+    this.grid = new Grid(config.dimensions, this.tokens);
+    this.charts = new ChartBuilder(config, this.tokens);
   }
 
   public render(writer: ElementWriter, spec: SlideSpec): void {
@@ -78,6 +88,21 @@ export class FreeformComposer {
         case "native-chart":
           id = writer.addNativeChart(element.id, element.nativeType, element.data, frame, element.options, element.alt);
           break;
+        case "diagram": {
+          // A grammar emits many elements, so the overlap metadata below cannot
+          // attach to one id; the grammar marks its own nodes instead.
+          const before = writer.records.length;
+          renderGrammar(element.grammar, writer, element.spec, frame, {
+            tokens: this.tokens,
+            grid: this.grid,
+            config: this.config,
+            ...(this.direction ? { direction: this.direction } : {}),
+          });
+          for (const record of writer.records.slice(before)) {
+            record.intentionalOverlap = record.intentionalOverlap || (element.intentionalOverlap ?? false);
+          }
+          break;
+        }
       }
       if (id) setOverlapMetadata(writer, id, element);
     }

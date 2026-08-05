@@ -241,6 +241,7 @@ export class SlideAgent {
         const built = await new DeckBuilder(config, {
           remoteAssets: remoteAssetPolicy(request.allowRemoteAssets),
           ...(brand ? { brand } : {}),
+          ...(request.bilingual ? { bilingual: request.bilingual } : {}),
         }).build(outline);
         finalBuilt = built;
         outline = built.outline;

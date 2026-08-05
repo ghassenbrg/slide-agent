@@ -22,6 +22,7 @@ export { parseSceneNdjson, readSceneNdjson, serializeSceneNdjson, writeSceneNdjs
 export * from "./types/index.js";
 export * from "./contract/index.js";
 export * from "./extensions.js";
+export { fallbackFontFor, isRightToLeft, secondaryTextFor, withSecondaryLanguage, type BilingualMode } from "./design/bilingual.js";
 export { applyBrandKit, brandKitSchema, footerAppliesTo, loadBrandKit, logoAppliesTo, type BrandKit } from "./design/brand.js";
 export { AccessibilityValidator, type AccessibilityOptions } from "./validation/accessibility.js";
 export { scoreDeck } from "./validation/quality.js";
@@ -31,11 +32,24 @@ export { SchemaValidator } from "./validation/schema-validator.js";
 export { AutoFixer } from "./validation/auto-fixer.js";
 export { ChartBuilder } from "./charts/chart-builder.js";
 export { DiagramBuilder } from "./diagrams/diagram-builder.js";
+export { BUILT_IN_GRAMMARS, GRAMMAR_SCHEMAS, renderGrammar, type GrammarId } from "./diagrams/grammars.js";
 export { ImageManager, remoteAssetPolicy, type ImageResolver, type RemoteAssetPolicy } from "./images/image-manager.js";
 export { ThemeManager } from "./themes/theme-manager.js";
 export { ElementWriter, type Frame } from "./components/element-writer.js";
 export { planOutline } from "./planner/index.js";
 export { reviseScene, type ReviseSceneResult } from "./serialization/revise-scene.js";
+export { diffDecks, formatDiff, type DeckDiff, type ElementChange, type SlideDiff } from "./serialization/diff.js";
+export {
+  chartFromData,
+  loadDataTable,
+  parseDelimited,
+  parseDelimitedLine,
+  parseJsonRows,
+  provenanceNote,
+  tableFromData,
+  type ChartFromDataOptions,
+  type DataTable,
+} from "./data/connectors.js";
 export { Grid, SLIDE_FORMATS, slideFormat, type Rect, type SlideFormat } from "./design/grid.js";
 export { densityBudget, resolveTokens, type DeckTokens, type Density, type Geometry } from "./design/tokens.js";
 

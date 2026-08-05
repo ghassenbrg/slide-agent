@@ -78,6 +78,7 @@ export const imageRecordSchema = z.looseObject({ ...elementRecordBase, kind: z.l
 export const tableRecordSchema = z.looseObject({ ...elementRecordBase, kind: z.literal("table"), table: tableSpecSchema.optional() });
 export const chartRecordSchema = z.looseObject({ ...elementRecordBase, kind: z.literal("chart"), chart: chartSpecSchema.optional() });
 export const nativeChartRecordSchema = z.looseObject({ ...elementRecordBase, kind: z.literal("native-chart") });
+export const diagramRecordSchema = z.looseObject({ ...elementRecordBase, kind: z.literal("diagram"), grammar: z.string(), spec: z.record(z.string(), z.unknown()) });
 
 export const notesRecordSchema = z.looseObject({
   kind: z.literal("notes"),
@@ -97,10 +98,11 @@ export const sceneRecordSchema = z.discriminatedUnion("kind", [
   tableRecordSchema,
   chartRecordSchema,
   nativeChartRecordSchema,
+  diagramRecordSchema,
   notesRecordSchema,
 ]);
 
-export const ELEMENT_RECORD_KINDS = ["textbox", "shape", "connector", "image", "table", "chart", "native-chart"] as const;
+export const ELEMENT_RECORD_KINDS = ["textbox", "shape", "connector", "image", "table", "chart", "native-chart", "diagram"] as const;
 
 /** Maps a scene record kind onto the canvas element type it becomes. */
 export function canvasTypeForRecordKind(kind: string): string | undefined {
