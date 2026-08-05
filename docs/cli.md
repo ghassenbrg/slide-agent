@@ -110,3 +110,8 @@ slide-agent doctor [--json] [--deep]
 slide-agent install [--target codex|claude|copilot|gemini|all] [--with-render-deps]
 slide-agent uninstall
 ```
+
+## Related
+
+- [MCP server](mcp.md) — the same operations over MCP, for Cursor, Zed, Claude Desktop, and other clients
+- [Authoring contract](../references/README.md) — what `contract` publishes

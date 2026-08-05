@@ -33,22 +33,13 @@ here is wrong in either direction, please open an issue.
 }
 ```
 
-The server publishes the contract as resources, so a client that has never
-seen Slide Agent can learn it:
+The server publishes the entire authoring contract as resources, so a client
+that has never heard of Slide Agent can learn it at runtime: 9 tools, 21
+resources, and 2 prompts.
 
-- `slide-agent://contract` — version and available schemas
-- `slide-agent://contract/guide` — the full authoring guide
-- `slide-agent://contract/guide/<section>` — one section
-- `slide-agent://contract/schema/<name>` — JSON Schema
-
-Prompts: `author_presentation_scene`, `revise_presentation_scene`.
-
-Tools: `slide_agent_run`, `get_authoring_contract`, `plan_presentation`,
-`create_presentation`, `revise_presentation`, `edit_presentation`,
-`render_presentation`, `validate_presentation`, `slide_agent_doctor`.
-
-Use `slide_agent_run` for anything you designed. `create_presentation` takes
-only a prompt and returns a labelled draft.
+**[Full MCP reference →](mcp.md)** — per-client configuration, the call
+sequence that produces good decks, every tool's arguments, the resource URI
+scheme, and error codes.
 
 ## Any CLI-capable agent
 

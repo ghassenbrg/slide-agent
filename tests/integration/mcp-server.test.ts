@@ -124,3 +124,41 @@ describe("Slide Agent MCP server", () => {
     expect(tools.tools.map((tool) => tool.name)).toContain("slide_agent_run");
   });
 });
+
+describe("MCP documentation", () => {
+  it("documents every tool, resource, and prompt the server actually exposes", async () => {
+    const { readFile } = await import("node:fs/promises");
+    const doc = await readFile(path.join(root, "docs", "mcp.md"), "utf8");
+    client = await connect();
+
+    // A reference page for a live surface drifts silently unless something
+    // compares it to the surface.
+    for (const tool of (await client.listTools()).tools) {
+      expect(doc, `docs/mcp.md does not mention the ${tool.name} tool`).toContain(tool.name);
+    }
+    for (const prompt of (await client.listPrompts()).prompts) {
+      expect(doc, `docs/mcp.md does not mention the ${prompt.name} prompt`).toContain(prompt.name);
+    }
+
+    const resources = (await client.listResources()).resources;
+    // Guide sections and schemas are documented as lists rather than 21 URIs,
+    // so check each distinct name appears somewhere on the page.
+    for (const resource of resources) {
+      const leaf = resource.uri.split("/").pop()!;
+      expect(doc, `docs/mcp.md does not mention the ${resource.uri} resource`).toContain(leaf);
+    }
+  });
+
+  it("documents the required arguments of each tool", async () => {
+    const { readFile } = await import("node:fs/promises");
+    const doc = await readFile(path.join(root, "docs", "mcp.md"), "utf8");
+    client = await connect();
+
+    for (const tool of (await client.listTools()).tools) {
+      const required = (tool.inputSchema as { required?: string[] }).required ?? [];
+      for (const argument of required) {
+        expect(doc, `docs/mcp.md does not document ${tool.name}'s required "${argument}"`).toContain(argument);
+      }
+    }
+  });
+});

@@ -16,8 +16,7 @@ A getting-started guide opens by itself.
 3. Describe the deck in plain language and pick which AI model designs it.
 
 That is the whole thing. You need Node.js 22.12 or newer — the extension checks
-and links you to the download if it is missing — and an AI model in VS Code,
-usually GitHub Copilot.
+and links you to the download if it is missing — and an AI model in VS Code.
 
 ---
 
@@ -37,7 +36,7 @@ just ask for a presentation:
 
 The assistant reads the design guidance, writes the deck, and Slide Agent
 builds and checks it. Works with Claude Code, Codex, GitHub Copilot, and any
-MCP app such as Cursor or Zed.
+MCP app such as Cursor or Zed — see the [MCP reference](mcp.md) for those.
 
 Start a new chat if one was already open — most assistants read their skills at
 startup.

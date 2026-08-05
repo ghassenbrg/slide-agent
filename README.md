@@ -78,6 +78,7 @@ Every command returns one JSON object on stdout and JSON-lines logs on stderr.
 | [Authoring contract](references/README.md) | What a model authors — generated from the schemas |
 | [Agent integrations](docs/agents.md) | Codex, Claude Code, Copilot, Gemini, Cursor, MCP, CLI |
 | [CLI reference](docs/cli.md) | Every command and flag |
+| [MCP server](docs/mcp.md) | Connect Cursor, Zed, Claude Desktop, or any MCP client |
 | [API and extensions](docs/api.md) | TypeScript API and extension points |
 | [Editing existing decks](docs/editing.md) | Operations and their limits |
 | [Validation and quality](docs/validation.md) | What is checked, and what is only advice |
