@@ -484,6 +484,19 @@ export interface DeckManifest {
   slides: SlideManifest[];
 }
 
+export interface QualityDimensionScore {
+  id: "hierarchy" | "contrast" | "density" | "variety" | "evidence" | "accessibility";
+  score: number;
+  summary: string;
+  advice?: string;
+}
+
+export interface QualityScore {
+  overall: number;
+  band: "weak" | "workable" | "strong";
+  dimensions: QualityDimensionScore[];
+}
+
 export type ValidationSeverity = "error" | "warning" | "info";
 
 export interface ValidationIssue {
@@ -508,6 +521,8 @@ export interface ValidationReport {
   summary: { errors: number; warnings: number; info: number };
   iterations: number;
   issues: ValidationIssue[];
+  /** Advisory read on whether the deck is worth showing, not whether it is valid. */
+  quality?: QualityScore;
   render?: {
     status: "pass" | "fail" | "skipped";
     previewFiles: string[];

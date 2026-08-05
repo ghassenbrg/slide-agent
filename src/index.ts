@@ -21,6 +21,20 @@ export { parseStructuredRequest, structuredRequestSchema } from "./types/schemas
 export { parseSceneNdjson, readSceneNdjson, serializeSceneNdjson, writeSceneNdjson } from "./serialization/scene-ndjson.js";
 export * from "./types/index.js";
 export * from "./contract/index.js";
+export * from "./extensions.js";
+export { AccessibilityValidator, type AccessibilityOptions } from "./validation/accessibility.js";
+export { scoreDeck } from "./validation/quality.js";
+export { ManifestValidator } from "./validation/manifest-validator.js";
+export { PackageValidator } from "./validation/package-validator.js";
+export { SchemaValidator } from "./validation/schema-validator.js";
+export { AutoFixer } from "./validation/auto-fixer.js";
+export { ChartBuilder } from "./charts/chart-builder.js";
+export { DiagramBuilder } from "./diagrams/diagram-builder.js";
+export { ImageManager, remoteAssetPolicy, type ImageResolver, type RemoteAssetPolicy } from "./images/image-manager.js";
+export { ThemeManager } from "./themes/theme-manager.js";
+export { ElementWriter, type Frame } from "./components/element-writer.js";
+export { planOutline } from "./planner/index.js";
+export { reviseScene, type ReviseSceneResult } from "./serialization/revise-scene.js";
 export { Grid, SLIDE_FORMATS, slideFormat, type Rect, type SlideFormat } from "./design/grid.js";
 export { densityBudget, resolveTokens, type DeckTokens, type Density, type Geometry } from "./design/tokens.js";
 

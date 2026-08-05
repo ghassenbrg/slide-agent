@@ -8,7 +8,10 @@ import { outputLayout } from "../output/output-layout.js";
 import { PresentationRenderer } from "../rendering/renderer.js";
 import type { DeckManifest, SlideAgentConfig, ValidationIssue, ValidationReport } from "../types/index.js";
 import { exists, fileSha256, writeJson } from "../utils/files.js";
+import type { QualityCheck } from "../extensions.js";
+import { AccessibilityValidator, type AccessibilityOptions } from "./accessibility.js";
 import { ManifestValidator } from "./manifest-validator.js";
+import { scoreDeck } from "./quality.js";
 import { PackageValidator } from "./package-validator.js";
 import { SchemaValidator } from "./schema-validator.js";
 
@@ -19,7 +22,13 @@ export interface ValidationOptions {
   previewsDir?: string;
   pdfPath?: string;
   iterations?: number;
+  /** Contrast level for accessibility checks. Defaults to AA. */
+  accessibility?: AccessibilityOptions;
+  /** Extra checks contributed by a host. */
+  checks?: QualityCheck[];
 }
+
+
 
 function summary(issues: ValidationIssue[]): ValidationReport["summary"] {
   return {
@@ -82,6 +91,19 @@ export class PresentationValidator {
       }
     }
     issues.push(...new ManifestValidator(this.config).validate(manifest));
+    issues.push(...new AccessibilityValidator(this.config, options.accessibility ?? {}).validate(manifest));
+    for (const check of options.checks ?? []) {
+      try {
+        issues.push(...await check.run(manifest, this.config));
+      } catch (error) {
+        issues.push({
+          code: "custom-check-failed",
+          severity: "warning",
+          message: `Custom check "${check.id}" threw: ${error instanceof Error ? error.message : String(error)}`,
+          fixable: false,
+        });
+      }
+    }
 
     let render: ValidationReport["render"] = { status: "skipped", previewFiles: [] };
     if (options.render) {
@@ -117,6 +139,7 @@ export class PresentationValidator {
       summary: counts,
       iterations: options.iterations ?? 1,
       issues,
+      quality: scoreDeck(manifest, this.config, issues),
       render,
     };
     if (options.reportPath) await writeJson(options.reportPath, report);

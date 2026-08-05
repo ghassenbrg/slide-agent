@@ -5,6 +5,7 @@ import type {
   DeckManifest,
   ElementRecord,
   SlideAgentConfig,
+  SlideManifest,
   ValidationIssue,
 } from "../types/index.js";
 import { words } from "../utils/text.js";
@@ -111,6 +112,16 @@ function visibleBackground(
     return candidate.fillColor ?? slideBackground;
   }
   return slideBackground;
+}
+
+/**
+ * The colour a reader actually sees behind `element`: its own fill, the fill of
+ * the nearest shape painted under it, or the slide background.
+ */
+export function visibleBackgroundFor(element: ElementRecord, slide: SlideManifest, config: SlideAgentConfig): string {
+  const index = slide.elements.indexOf(element);
+  return visibleBackground(element, index, slide.elements, slide.backgroundColor ?? config.colors.background)
+    ?? slide.backgroundColor ?? config.colors.background;
 }
 
 function dominantAlignment(values: Array<{ id: string; value: number }>, tolerance = 0.08): { expected: number; outliers: string[] } | undefined {

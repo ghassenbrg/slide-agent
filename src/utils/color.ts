@@ -98,9 +98,19 @@ export function ensureContrast(foreground: string, background: string, minimumRa
   return colorContrast("000000", field) >= colorContrast("FFFFFF", field) ? "000000" : "FFFFFF";
 }
 
-/** Minimum contrast ratio required for text at a given point size. */
-export function requiredContrast(fontSize: number, bold = false): number {
-  return fontSize >= 18 || (bold && fontSize >= 14) ? LARGE_TEXT_CONTRAST : NORMAL_TEXT_CONTRAST;
+/** WCAG counts 18pt, or 14pt bold, as large text. */
+export function isLargeText(fontSize: number, bold = false): boolean {
+  return fontSize >= 18 || (bold && fontSize >= 14);
+}
+
+/**
+ * Minimum contrast ratio for text at a given size. AA is 4.5:1 for normal text
+ * and 3:1 for large; AAA raises those to 7:1 and 4.5:1.
+ */
+export function requiredContrast(fontSize: number, bold = false, level: "AA" | "AAA" = "AA"): number {
+  const large = isLargeText(fontSize, bold);
+  if (level === "AAA") return large ? NORMAL_TEXT_CONTRAST : ENHANCED_TEXT_CONTRAST;
+  return large ? LARGE_TEXT_CONTRAST : NORMAL_TEXT_CONTRAST;
 }
 
 export function emphasisField(config: SlideAgentConfig): string {
