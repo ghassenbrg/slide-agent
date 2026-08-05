@@ -104,12 +104,12 @@
     "release:artifacts": "node scripts/package-release.mjs",
     "verify:install": "node scripts/verify-managed-install.mjs",
     "fixture:invalid": "tsx scripts/generate-invalid-deck.ts",
-    "verify": "npm run typecheck && npm test && npm run build",
+    "verify": "npm run typecheck && npm run docs:check && npm test && npm run build",
     "prepack": "npm run build",
     "test:coverage": "vitest run --coverage",
     "verify:consumer": "npm run build && npm pack --pack-destination .tmp && node scripts/verify-consumer-install.mjs .tmp",
-    "docs": "npm run build && node scripts/generate-docs.mjs",
-    "docs:check": "node scripts/generate-docs.mjs --check"
+    "docs": "tsx scripts/generate-docs.ts",
+    "docs:check": "tsx scripts/generate-docs.ts --check"
   },
   "dependencies": {
     "@modelcontextprotocol/server": "^2.0.0",
