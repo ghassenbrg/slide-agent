@@ -61,6 +61,7 @@ jobs:
       - run: npm audit --omit=dev --audit-level=high
       - run: npm audit --audit-level=high
         working-directory: extensions/vscode
+      - run: npm run docs:check
       - run: npm run audit:public
       - run: npm run test:coverage
       - run: npm run build

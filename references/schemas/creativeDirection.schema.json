@@ -1,0 +1,182 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "concept": {
+      "type": "string"
+    },
+    "rationale": {
+      "type": "string"
+    },
+    "mood": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "palette": {
+      "type": "object",
+      "properties": {
+        "background": {
+          "type": "string",
+          "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+          "description": "Hex color, with or without a leading #."
+        },
+        "surface": {
+          "type": "string",
+          "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+          "description": "Hex color, with or without a leading #."
+        },
+        "ink": {
+          "type": "string",
+          "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+          "description": "Hex color, with or without a leading #."
+        },
+        "muted": {
+          "type": "string",
+          "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+          "description": "Hex color, with or without a leading #."
+        },
+        "accent": {
+          "type": "string",
+          "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+          "description": "Hex color, with or without a leading #."
+        },
+        "accentAlt": {
+          "type": "string",
+          "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+          "description": "Hex color, with or without a leading #."
+        },
+        "accentSoft": {
+          "type": "string",
+          "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+          "description": "Hex color, with or without a leading #."
+        },
+        "rule": {
+          "type": "string",
+          "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+          "description": "Hex color, with or without a leading #."
+        },
+        "positive": {
+          "type": "string",
+          "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+          "description": "Hex color, with or without a leading #."
+        },
+        "negative": {
+          "type": "string",
+          "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+          "description": "Hex color, with or without a leading #."
+        },
+        "warning": {
+          "type": "string",
+          "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+          "description": "Hex color, with or without a leading #."
+        },
+        "colors": {
+          "description": "Additional unnamed colors, in priority order.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+            "description": "Hex color, with or without a leading #."
+          }
+        },
+        "custom": {
+          "description": "Named colors specific to this deck.",
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "string",
+            "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+            "description": "Hex color, with or without a leading #."
+          }
+        }
+      },
+      "additionalProperties": {}
+    },
+    "typography": {
+      "type": "object",
+      "properties": {
+        "display": {
+          "type": "string"
+        },
+        "heading": {
+          "type": "string"
+        },
+        "body": {
+          "type": "string"
+        },
+        "mono": {
+          "type": "string"
+        },
+        "numeric": {
+          "type": "string"
+        },
+        "fallbacks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": {}
+    },
+    "compositionPrinciples": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "visualLanguage": {
+      "type": "string"
+    },
+    "imageLanguage": {
+      "type": "string"
+    },
+    "diagramLanguage": {
+      "type": "string"
+    },
+    "chartLanguage": {
+      "type": "string"
+    },
+    "shapeLanguage": {
+      "type": "string"
+    },
+    "textureLanguage": {
+      "type": "string"
+    },
+    "motionOrPacing": {
+      "type": "string"
+    },
+    "density": {
+      "type": "string",
+      "enum": [
+        "sparse",
+        "balanced",
+        "dense"
+      ]
+    },
+    "geometry": {
+      "type": "string",
+      "enum": [
+        "sharp",
+        "soft",
+        "organic"
+      ]
+    },
+    "avoid": {
+      "description": "Deliberate exclusions. The renderer honours these.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": {},
+  "description": "The deck's visual thesis. Open-ended: add fields that help the model reason."
+}

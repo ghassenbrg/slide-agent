@@ -1,0 +1,1414 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "kind": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Any semantic label. Metadata, not a whitelist."
+    },
+    "layout": {
+      "description": "A registered fallback layout. Ignored when canvas is present.",
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "subtitle": {
+      "type": "string"
+    },
+    "sectionLabel": {
+      "type": "string"
+    },
+    "body": {
+      "type": "string"
+    },
+    "bullets": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "visual": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "alt": {
+          "type": "string",
+          "minLength": 1
+        },
+        "caption": {
+          "type": "string"
+        },
+        "position": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right",
+            "full"
+          ]
+        }
+      },
+      "required": [
+        "alt"
+      ]
+    },
+    "comparison": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "heading": {
+            "type": "string"
+          },
+          "points": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "emphasis": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "heading",
+          "points"
+        ]
+      }
+    },
+    "timeline": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "label",
+          "title"
+        ]
+      }
+    },
+    "process": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "title"
+        ]
+      }
+    },
+    "architecture": {
+      "type": "object",
+      "properties": {
+        "nodes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              },
+              "group": {
+                "type": "string"
+              },
+              "emphasis": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "id",
+              "label"
+            ]
+          }
+        },
+        "edges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "from": {
+                "type": "string"
+              },
+              "to": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "from",
+              "to"
+            ]
+          }
+        },
+        "direction": {
+          "type": "string",
+          "enum": [
+            "horizontal",
+            "vertical"
+          ]
+        }
+      },
+      "required": [
+        "nodes",
+        "edges"
+      ]
+    },
+    "table": {
+      "type": "object",
+      "properties": {
+        "headers": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                }
+              ]
+            }
+          }
+        },
+        "columnWidths": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          }
+        },
+        "highlightRows": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        }
+      },
+      "required": [
+        "headers",
+        "rows"
+      ]
+    },
+    "chart": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "bar",
+            "line",
+            "pie",
+            "area",
+            "waterfall"
+          ]
+        },
+        "labels": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "series": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "values": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                }
+              }
+            },
+            "required": [
+              "name",
+              "values"
+            ]
+          }
+        },
+        "unit": {
+          "type": "string"
+        },
+        "showLegend": {
+          "type": "boolean"
+        },
+        "showValues": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "kind",
+        "labels",
+        "series"
+      ]
+    },
+    "kpis": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "string"
+          },
+          "trend": {
+            "type": "string",
+            "enum": [
+              "up",
+              "down",
+              "flat"
+            ]
+          }
+        },
+        "required": [
+          "label",
+          "value"
+        ]
+      }
+    },
+    "quote": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "attribution": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "text"
+      ]
+    },
+    "roadmap": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "label",
+          "items"
+        ]
+      }
+    },
+    "custom": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "x": {
+            "type": "number",
+            "description": "Inches on the slide canvas."
+          },
+          "y": {
+            "type": "number",
+            "description": "Inches on the slide canvas."
+          },
+          "w": {
+            "type": "number",
+            "description": "Inches on the slide canvas."
+          },
+          "h": {
+            "type": "number",
+            "description": "Inches on the slide canvas."
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "text",
+              "shape",
+              "image"
+            ]
+          },
+          "text": {
+            "type": "string"
+          },
+          "imagePath": {
+            "type": "string"
+          },
+          "fill": {
+            "type": "string",
+            "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+            "description": "Hex color, with or without a leading #."
+          },
+          "fontSize": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          }
+        },
+        "required": [
+          "id",
+          "x",
+          "y",
+          "w",
+          "h",
+          "type"
+        ]
+      }
+    },
+    "communication": {
+      "type": "object",
+      "properties": {
+        "audienceQuestion": {
+          "type": "string"
+        },
+        "claim": {
+          "type": "string"
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "artifact": {
+          "type": "string"
+        },
+        "explanation": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "implication": {
+          "type": "string"
+        },
+        "action": {
+          "type": "string"
+        },
+        "secondaryLanguage": {
+          "type": "object",
+          "properties": {
+            "language": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "subtitle": {
+              "type": "string"
+            },
+            "labels": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "language"
+          ],
+          "additionalProperties": {}
+        }
+      },
+      "additionalProperties": {},
+      "description": "Planning metadata. Never rendered automatically and never a layout schema."
+    },
+    "designIntent": {
+      "description": "Why this composition communicates the claim. Never rendered.",
+      "type": "string"
+    },
+    "composition": {
+      "description": "Intended hierarchy, balance, rhythm, and reading path.",
+      "type": "string"
+    },
+    "background": {
+      "type": "string",
+      "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+      "description": "Hex color, with or without a leading #."
+    },
+    "canvas": {
+      "description": "The model's own scene. When present it *is* the layout and the registry is bypassed.",
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Unique within the slide; used by validation and revision."
+              },
+              "x": {
+                "type": "number",
+                "description": "Inches on the slide canvas."
+              },
+              "y": {
+                "type": "number",
+                "description": "Inches on the slide canvas."
+              },
+              "w": {
+                "type": "number",
+                "description": "Inches on the slide canvas."
+              },
+              "h": {
+                "type": "number",
+                "description": "Inches on the slide canvas."
+              },
+              "zIndex": {
+                "description": "Paint order. Lower values sit behind.",
+                "type": "number"
+              },
+              "role": {
+                "description": "Semantic role, e.g. title, body, caption, decorative.",
+                "type": "string"
+              },
+              "intentionalOverlap": {
+                "description": "Marks a deliberate collision so QA does not report it.",
+                "type": "boolean"
+              },
+              "allowOverlapWith": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "type": {
+                "type": "string",
+                "const": "text"
+              },
+              "text": {
+                "type": "string"
+              },
+              "runs": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "text": {
+                      "type": "string"
+                    },
+                    "options": {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {},
+                      "description": "Advanced PptxGenJS options passed through unchanged. Verify the render."
+                    }
+                  },
+                  "required": [
+                    "text"
+                  ]
+                }
+              },
+              "style": {
+                "type": "object",
+                "properties": {
+                  "fontSize": {
+                    "type": "number",
+                    "exclusiveMinimum": 0
+                  },
+                  "fontFace": {
+                    "type": "string"
+                  },
+                  "color": {
+                    "type": "string",
+                    "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+                    "description": "Hex color, with or without a leading #."
+                  },
+                  "bold": {
+                    "type": "boolean"
+                  },
+                  "italic": {
+                    "type": "boolean"
+                  },
+                  "align": {
+                    "type": "string",
+                    "enum": [
+                      "left",
+                      "center",
+                      "right",
+                      "justify"
+                    ]
+                  },
+                  "valign": {
+                    "type": "string",
+                    "enum": [
+                      "top",
+                      "middle",
+                      "bottom"
+                    ]
+                  },
+                  "margin": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "array",
+                        "prefixItems": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "number"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  "fit": {
+                    "type": "string",
+                    "enum": [
+                      "none",
+                      "shrink",
+                      "resize"
+                    ]
+                  },
+                  "fill": {
+                    "type": "string",
+                    "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+                    "description": "Hex color, with or without a leading #."
+                  },
+                  "transparency": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100
+                  },
+                  "lineColor": {
+                    "type": "string",
+                    "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+                    "description": "Hex color, with or without a leading #."
+                  },
+                  "lineWidth": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "rotate": {
+                    "type": "number"
+                  },
+                  "options": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {},
+                    "description": "Advanced PptxGenJS options passed through unchanged. Verify the render."
+                  }
+                },
+                "additionalProperties": {}
+              }
+            },
+            "required": [
+              "id",
+              "x",
+              "y",
+              "w",
+              "h",
+              "type"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Unique within the slide; used by validation and revision."
+              },
+              "x": {
+                "type": "number",
+                "description": "Inches on the slide canvas."
+              },
+              "y": {
+                "type": "number",
+                "description": "Inches on the slide canvas."
+              },
+              "w": {
+                "type": "number",
+                "description": "Inches on the slide canvas."
+              },
+              "h": {
+                "type": "number",
+                "description": "Inches on the slide canvas."
+              },
+              "zIndex": {
+                "description": "Paint order. Lower values sit behind.",
+                "type": "number"
+              },
+              "role": {
+                "description": "Semantic role, e.g. title, body, caption, decorative.",
+                "type": "string"
+              },
+              "intentionalOverlap": {
+                "description": "Marks a deliberate collision so QA does not report it.",
+                "type": "boolean"
+              },
+              "allowOverlapWith": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "type": {
+                "type": "string",
+                "const": "shape"
+              },
+              "shape": {
+                "description": "Any PptxGenJS shape name. Not a whitelist.",
+                "type": "string"
+              },
+              "style": {
+                "type": "object",
+                "properties": {
+                  "fill": {
+                    "type": "string",
+                    "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+                    "description": "Hex color, with or without a leading #."
+                  },
+                  "transparency": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100
+                  },
+                  "lineColor": {
+                    "type": "string",
+                    "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+                    "description": "Hex color, with or without a leading #."
+                  },
+                  "lineWidth": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "rotate": {
+                    "type": "number"
+                  },
+                  "options": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {},
+                    "description": "Advanced PptxGenJS options passed through unchanged. Verify the render."
+                  }
+                },
+                "additionalProperties": {}
+              }
+            },
+            "required": [
+              "id",
+              "x",
+              "y",
+              "w",
+              "h",
+              "type"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Unique within the slide; used by validation and revision."
+              },
+              "x": {
+                "type": "number",
+                "description": "Inches on the slide canvas."
+              },
+              "y": {
+                "type": "number",
+                "description": "Inches on the slide canvas."
+              },
+              "w": {
+                "type": "number",
+                "description": "Inches on the slide canvas."
+              },
+              "h": {
+                "type": "number",
+                "description": "Inches on the slide canvas."
+              },
+              "zIndex": {
+                "description": "Paint order. Lower values sit behind.",
+                "type": "number"
+              },
+              "role": {
+                "description": "Semantic role, e.g. title, body, caption, decorative.",
+                "type": "string"
+              },
+              "intentionalOverlap": {
+                "description": "Marks a deliberate collision so QA does not report it.",
+                "type": "boolean"
+              },
+              "allowOverlapWith": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "type": {
+                "type": "string",
+                "const": "connector"
+              },
+              "style": {
+                "type": "object",
+                "properties": {
+                  "color": {
+                    "type": "string",
+                    "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+                    "description": "Hex color, with or without a leading #."
+                  },
+                  "width": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "arrow": {
+                    "type": "boolean"
+                  },
+                  "beginArrow": {
+                    "type": "boolean"
+                  },
+                  "dashed": {
+                    "type": "boolean"
+                  },
+                  "options": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {},
+                    "description": "Advanced PptxGenJS options passed through unchanged. Verify the render."
+                  }
+                },
+                "additionalProperties": {}
+              }
+            },
+            "required": [
+              "id",
+              "x",
+              "y",
+              "w",
+              "h",
+              "type"
+            ],
+            "description": "x/y is the start point; w/h is the delta to the end point and may be negative."
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Unique within the slide; used by validation and revision."
+              },
+              "x": {
+                "type": "number",
+                "description": "Inches on the slide canvas."
+              },
+              "y": {
+                "type": "number",
+                "description": "Inches on the slide canvas."
+              },
+              "w": {
+                "type": "number",
+                "description": "Inches on the slide canvas."
+              },
+              "h": {
+                "type": "number",
+                "description": "Inches on the slide canvas."
+              },
+              "zIndex": {
+                "description": "Paint order. Lower values sit behind.",
+                "type": "number"
+              },
+              "role": {
+                "description": "Semantic role, e.g. title, body, caption, decorative.",
+                "type": "string"
+              },
+              "intentionalOverlap": {
+                "description": "Marks a deliberate collision so QA does not report it.",
+                "type": "boolean"
+              },
+              "allowOverlapWith": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "type": {
+                "type": "string",
+                "const": "image"
+              },
+              "path": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Local path, or an http(s) URL when remote assets are explicitly enabled."
+              },
+              "alt": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Required for accessibility. Describe the content, not the file."
+              },
+              "fit": {
+                "type": "string",
+                "enum": [
+                  "cover",
+                  "contain",
+                  "stretch"
+                ]
+              },
+              "style": {
+                "type": "object",
+                "properties": {
+                  "rotate": {
+                    "type": "number"
+                  },
+                  "transparency": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100
+                  },
+                  "options": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {},
+                    "description": "Advanced PptxGenJS options passed through unchanged. Verify the render."
+                  }
+                },
+                "additionalProperties": {}
+              }
+            },
+            "required": [
+              "id",
+              "x",
+              "y",
+              "w",
+              "h",
+              "type",
+              "path",
+              "alt"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Unique within the slide; used by validation and revision."
+              },
+              "x": {
+                "type": "number",
+                "description": "Inches on the slide canvas."
+              },
+              "y": {
+                "type": "number",
+                "description": "Inches on the slide canvas."
+              },
+              "w": {
+                "type": "number",
+                "description": "Inches on the slide canvas."
+              },
+              "h": {
+                "type": "number",
+                "description": "Inches on the slide canvas."
+              },
+              "zIndex": {
+                "description": "Paint order. Lower values sit behind.",
+                "type": "number"
+              },
+              "role": {
+                "description": "Semantic role, e.g. title, body, caption, decorative.",
+                "type": "string"
+              },
+              "intentionalOverlap": {
+                "description": "Marks a deliberate collision so QA does not report it.",
+                "type": "boolean"
+              },
+              "allowOverlapWith": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "type": {
+                "type": "string",
+                "const": "table"
+              },
+              "table": {
+                "type": "object",
+                "properties": {
+                  "headers": {
+                    "minItems": 1,
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "number"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "columnWidths": {
+                    "type": "array",
+                    "items": {
+                      "type": "number",
+                      "exclusiveMinimum": 0
+                    }
+                  },
+                  "highlightRows": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    }
+                  }
+                },
+                "required": [
+                  "headers",
+                  "rows"
+                ]
+              },
+              "options": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {},
+                "description": "Advanced PptxGenJS options passed through unchanged. Verify the render."
+              }
+            },
+            "required": [
+              "id",
+              "x",
+              "y",
+              "w",
+              "h",
+              "type",
+              "table"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Unique within the slide; used by validation and revision."
+              },
+              "x": {
+                "type": "number",
+                "description": "Inches on the slide canvas."
+              },
+              "y": {
+                "type": "number",
+                "description": "Inches on the slide canvas."
+              },
+              "w": {
+                "type": "number",
+                "description": "Inches on the slide canvas."
+              },
+              "h": {
+                "type": "number",
+                "description": "Inches on the slide canvas."
+              },
+              "zIndex": {
+                "description": "Paint order. Lower values sit behind.",
+                "type": "number"
+              },
+              "role": {
+                "description": "Semantic role, e.g. title, body, caption, decorative.",
+                "type": "string"
+              },
+              "intentionalOverlap": {
+                "description": "Marks a deliberate collision so QA does not report it.",
+                "type": "boolean"
+              },
+              "allowOverlapWith": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "type": {
+                "type": "string",
+                "const": "chart"
+              },
+              "chart": {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "bar",
+                      "line",
+                      "pie",
+                      "area",
+                      "waterfall"
+                    ]
+                  },
+                  "labels": {
+                    "minItems": 1,
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "series": {
+                    "minItems": 1,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "values": {
+                          "type": "array",
+                          "items": {
+                            "type": "number"
+                          }
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "values"
+                      ]
+                    }
+                  },
+                  "unit": {
+                    "type": "string"
+                  },
+                  "showLegend": {
+                    "type": "boolean"
+                  },
+                  "showValues": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "kind",
+                  "labels",
+                  "series"
+                ]
+              },
+              "alt": {
+                "type": "string"
+              },
+              "style": {
+                "type": "object",
+                "properties": {
+                  "colors": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+                      "description": "Hex color, with or without a leading #."
+                    }
+                  },
+                  "options": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {},
+                    "description": "Advanced PptxGenJS options passed through unchanged. Verify the render."
+                  }
+                },
+                "additionalProperties": {}
+              }
+            },
+            "required": [
+              "id",
+              "x",
+              "y",
+              "w",
+              "h",
+              "type",
+              "chart"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Unique within the slide; used by validation and revision."
+              },
+              "x": {
+                "type": "number",
+                "description": "Inches on the slide canvas."
+              },
+              "y": {
+                "type": "number",
+                "description": "Inches on the slide canvas."
+              },
+              "w": {
+                "type": "number",
+                "description": "Inches on the slide canvas."
+              },
+              "h": {
+                "type": "number",
+                "description": "Inches on the slide canvas."
+              },
+              "zIndex": {
+                "description": "Paint order. Lower values sit behind.",
+                "type": "number"
+              },
+              "role": {
+                "description": "Semantic role, e.g. title, body, caption, decorative.",
+                "type": "string"
+              },
+              "intentionalOverlap": {
+                "description": "Marks a deliberate collision so QA does not report it.",
+                "type": "boolean"
+              },
+              "allowOverlapWith": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "type": {
+                "type": "string",
+                "const": "native-chart"
+              },
+              "nativeType": {
+                "type": "string",
+                "minLength": 1
+              },
+              "data": {
+                "minItems": 1,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                }
+              },
+              "alt": {
+                "type": "string"
+              },
+              "options": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {},
+                "description": "Advanced PptxGenJS options passed through unchanged. Verify the render."
+              }
+            },
+            "required": [
+              "id",
+              "x",
+              "y",
+              "w",
+              "h",
+              "type",
+              "nativeType",
+              "data"
+            ],
+            "description": "Escape hatch for any chart type or data shape PptxGenJS supports."
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Unique within the slide; used by validation and revision."
+              },
+              "x": {
+                "type": "number",
+                "description": "Inches on the slide canvas."
+              },
+              "y": {
+                "type": "number",
+                "description": "Inches on the slide canvas."
+              },
+              "w": {
+                "type": "number",
+                "description": "Inches on the slide canvas."
+              },
+              "h": {
+                "type": "number",
+                "description": "Inches on the slide canvas."
+              },
+              "zIndex": {
+                "description": "Paint order. Lower values sit behind.",
+                "type": "number"
+              },
+              "role": {
+                "description": "Semantic role, e.g. title, body, caption, decorative.",
+                "type": "string"
+              },
+              "intentionalOverlap": {
+                "description": "Marks a deliberate collision so QA does not report it.",
+                "type": "boolean"
+              },
+              "allowOverlapWith": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "type": {
+                "type": "string",
+                "const": "diagram"
+              },
+              "grammar": {
+                "type": "string",
+                "enum": [
+                  "layered",
+                  "swimlane",
+                  "sequence",
+                  "hierarchy",
+                  "quadrant"
+                ],
+                "description": "A named diagram form. Slide Agent handles routing, spacing, and label placement."
+              },
+              "spec": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {},
+                "description": "The grammar's own payload. Fetch its schema from the contract."
+              },
+              "alt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "x",
+              "y",
+              "w",
+              "h",
+              "type",
+              "grammar",
+              "spec"
+            ],
+            "description": "A diagram expressed as a relationship rather than as hand-placed shapes."
+          }
+        ]
+      }
+    },
+    "speakerNotes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "note": {
+            "type": "string"
+          }
+        },
+        "description": "A cited source. Never invent one."
+      }
+    }
+  },
+  "required": [
+    "id",
+    "kind",
+    "title"
+  ],
+  "additionalProperties": {}
+}

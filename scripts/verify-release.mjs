@@ -80,6 +80,7 @@ export async function verifyRelease() {
     "node scripts/assert-render-tested.mjs",
     // Coverage floors and the inert-install proof are release gates.
     "npm run test:coverage",
+    "npm run docs:check",
     "node scripts/verify-consumer-install.mjs",
     "actions/checkout@v6",
     "actions/setup-node@v7",
@@ -116,7 +117,9 @@ export async function verifyRelease() {
     if (!await exists(required)) problems.push(`missing required public file: ${required}`);
   }
   const changelog = await readFile(path.join(root, "CHANGELOG.md"), "utf8");
-  if (!changelog.includes(`## ${packageJson.version} -`)) problems.push(`CHANGELOG.md has no dated section for ${packageJson.version}`);
+  // Requires a dated heading, tolerating either a hyphen or an em dash.
+  const dated = new RegExp(`^## ${packageJson.version.replace(/\./g, "\\.")}\\s+[-—]\\s+\\d{4}-\\d{2}-\\d{2}\\s*$`, "m");
+  if (!dated.test(changelog)) problems.push(`CHANGELOG.md has no dated section for ${packageJson.version}`);
   const iconFiles = ["images/icon.png", "assets/icon.png", "extensions/vscode/icon.png", "distribution/codex/plugins/slide-agent/assets/icon.png"];
   const iconDigests = [];
   for (const relative of iconFiles) {
