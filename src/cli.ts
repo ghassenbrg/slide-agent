@@ -94,6 +94,7 @@ program.command("create")
   .option("--metadata <file>", "Generation metadata JSON path")
   .option("--inspect <file>", "Round-trippable NDJSON blueprint output path")
   .option("--config <directory>", "Configuration directory")
+  .option("--brand <file>", "Brand kit JSON constraining palette, typography, logo, and footer")
   .option("--max-retries <count>", "Maximum automatic repair retries", Number)
   .option("--render", "Also generate PDF and PNG previews (requires LibreOffice and Poppler)")
   .option("--no-validate", "Skip validation")
@@ -125,6 +126,7 @@ program.command("create")
       metadataPath: options.metadata ?? base.metadataPath,
       inspectPath: options.inspect ?? base.inspectPath,
       configDir: options.config ?? base.configDir,
+      brand: options.brand ?? base.brand,
       render: options.render ?? base.render,
       // Commander defaults `--no-*` options to true, so only an explicit
       // negation should override the file.

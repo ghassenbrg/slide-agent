@@ -5,9 +5,13 @@ import { PptxGenJS, type NativePresentation } from "../components/pptx-values.js
 import { ImageManager, remoteAssetPolicy, type ImageResolver, type RemoteAssetPolicy } from "../images/image-manager.js";
 import { FreeformComposer } from "../layouts/freeform-composer.js";
 import { LayoutRegistry, type LayoutFallback } from "../layouts/layout-registry.js";
+import { footerAppliesTo, logoAppliesTo, type BrandKit } from "../design/brand.js";
+import { resolveTokens } from "../design/tokens.js";
+import { Grid } from "../design/grid.js";
 import { CreativeDirector } from "../themes/creative-director.js";
 import { ThemeManager } from "../themes/theme-manager.js";
 import type { DeckManifest, ElementRecord, PresentationOutline, SlideAgentConfig, SlideSpec } from "../types/index.js";
+import { ensureContrast, requiredContrast } from "../utils/color.js";
 
 export interface BuiltDeck {
   presentation: NativePresentation;
@@ -36,7 +40,7 @@ export class DeckBuilder {
 
   public constructor(
     private readonly config: SlideAgentConfig,
-    options: { layouts?: LayoutRegistry; imageResolver?: ImageResolver; remoteAssets?: RemoteAssetPolicy } = {},
+    private readonly options: { layouts?: LayoutRegistry; imageResolver?: ImageResolver; remoteAssets?: RemoteAssetPolicy; brand?: BrandKit } = {},
   ) {
     this.layouts = options.layouts ?? new LayoutRegistry(config);
     // Per-user cache: a shared, world-readable directory under the system temp
@@ -82,6 +86,7 @@ export class DeckBuilder {
         });
         if (fallback) layoutFallbacks.push(fallback);
       }
+      await this.stampBrand(writer, index + 1, resolvedOutline.slides.length, effectiveConfig, design.direction);
       const notes = notesFor(spec);
       if (effectiveConfig.generation.includeSpeakerNotes && notes) slide.addNotes(notes);
       manifest.slides.push({
@@ -97,6 +102,51 @@ export class DeckBuilder {
       });
     }
     return { presentation, manifest, outline: resolvedOutline, config: effectiveConfig, layoutFallbacks };
+  }
+
+  /**
+   * Adds the brand mark and legal line last, so they sit above the slide's own
+   * content and are never covered by it.
+   */
+  private async stampBrand(
+    writer: ElementWriter,
+    slideNumber: number,
+    totalSlides: number,
+    config: SlideAgentConfig,
+    direction: ReturnType<CreativeDirector["resolve"]>["direction"],
+  ): Promise<void> {
+    const brand = this.options.brand;
+    if (!brand) return;
+    const tokens = resolveTokens(config, direction);
+    const grid = new Grid(config.dimensions, tokens);
+    const safe = grid.safe;
+
+    if (brand.logo && logoAppliesTo(brand, slideNumber, totalSlides)) {
+      const width = Math.min(brand.logo.widthInches, safe.w * 0.25);
+      const height = width * 0.32;
+      const right = brand.logo.placement.endsWith("right");
+      const bottom = brand.logo.placement.startsWith("bottom");
+      writer.addImage("brand-logo", await this.imageResolver.resolve(brand.logo.path), `${brand.name} logo`, {
+        x: right ? safe.x + safe.w - width : safe.x,
+        y: bottom ? grid.height - grid.margin - height : safe.y,
+        w: width,
+        h: height,
+      }, { fit: "contain", role: "decorative", intentionalOverlap: true });
+    }
+
+    if (brand.footer && footerAppliesTo(brand, slideNumber)) {
+      const footer = grid.footer;
+      writer.addText("brand-footer", brand.footer.text, {
+        x: footer.x,
+        y: footer.y,
+        w: footer.w * 0.6,
+        h: footer.h,
+      }, {
+        fontSize: tokens.type.micro,
+        color: ensureContrast(config.colors.muted, config.colors.background, requiredContrast(tokens.type.micro)),
+        role: "footer",
+      });
+    }
   }
 
   private async resolveAssets(spec: SlideSpec): Promise<SlideSpec> {

@@ -9,6 +9,7 @@ import { JsonLogger, type Logger } from "./logging/logger.js";
 import { OutlinePlanner } from "./planner/outline-planner.js";
 import { outputLayout } from "./output/output-layout.js";
 import { remoteAssetPolicy } from "./images/image-manager.js";
+import { applyBrandKit, loadBrandKit, type BrandKit } from "./design/brand.js";
 import { RequestAnalyzer } from "./planner/request-analyzer.js";
 import { PresentationRenderer } from "./rendering/renderer.js";
 import { parseSceneNdjson, readSceneNdjson, writeSceneNdjson } from "./serialization/scene-ndjson.js";
@@ -208,6 +209,16 @@ export class SlideAgent {
         );
       }
       if (request.creativeDirection) outline = { ...outline, creativeDirection: request.creativeDirection };
+      let brand: BrandKit | undefined;
+      if (request.brand) {
+        brand = await loadBrandKit(request.brand);
+        outline = applyBrandKit(outline, brand);
+        this.logger.info("create.brand", "Applied brand kit", {
+          requestId,
+          brand: brand.name,
+          locked: brand.locked,
+        });
+      }
       const layout = outputLayout(request.output);
       const output = layout.pptx;
       const manifestPath = layout.manifest;
@@ -227,7 +238,10 @@ export class SlideAgent {
 
       for (let attempt = 0; attempt <= maximumRetries; attempt += 1) {
         this.logger.info("create.iteration", "Building presentation", { requestId, attempt: attempt + 1 });
-        const built = await new DeckBuilder(config, { remoteAssets: remoteAssetPolicy(request.allowRemoteAssets) }).build(outline);
+        const built = await new DeckBuilder(config, {
+          remoteAssets: remoteAssetPolicy(request.allowRemoteAssets),
+          ...(brand ? { brand } : {}),
+        }).build(outline);
         finalBuilt = built;
         outline = built.outline;
         effectiveConfig = built.config;

@@ -22,6 +22,7 @@ export { parseSceneNdjson, readSceneNdjson, serializeSceneNdjson, writeSceneNdjs
 export * from "./types/index.js";
 export * from "./contract/index.js";
 export * from "./extensions.js";
+export { applyBrandKit, brandKitSchema, footerAppliesTo, loadBrandKit, logoAppliesTo, type BrandKit } from "./design/brand.js";
 export { AccessibilityValidator, type AccessibilityOptions } from "./validation/accessibility.js";
 export { scoreDeck } from "./validation/quality.js";
 export { ManifestValidator } from "./validation/manifest-validator.js";

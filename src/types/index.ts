@@ -598,6 +598,8 @@ export interface CreateRequest {
    * even when this is enabled.
    */
   allowRemoteAssets?: boolean;
+  /** Path to a brand-kit JSON file constraining palette, type, logo, footer. */
+  brand?: string;
 }
 
 export interface ReplaceTextOperation {
