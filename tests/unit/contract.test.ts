@@ -35,8 +35,11 @@ describe("contract descriptor", () => {
   it("publishes a version independent of the engine version", () => {
     expect(CONTRACT_VERSION).toMatch(/^\d+\.\d+$/);
     expect(supportsContractVersion(CONTRACT_VERSION)).toBe(true);
-    expect(supportsContractVersion("1.9")).toBe(true);
-    expect(supportsContractVersion("2.0")).toBe(false);
+    // A 0.x contract makes no compatibility promise across minor versions —
+    // that is what 0.x means — so a minor bump must read as incompatible.
+    const [major = 0, minor = 0] = CONTRACT_VERSION.split(".").map(Number);
+    expect(supportsContractVersion(`${major}.${minor + 1}`)).toBe(major !== 0);
+    expect(supportsContractVersion(`${major + 1}.0`)).toBe(false);
   });
 
   it("names every schema a host can request", () => {

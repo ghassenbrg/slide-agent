@@ -84,7 +84,7 @@ Every command returns one JSON object on stdout and JSON-lines logs on stderr.
 | [Validation and quality](docs/validation.md) | What is checked, and what is only advice |
 | [Troubleshooting](docs/troubleshooting.md) | When something does not work |
 | [Architecture](docs/architecture.md) | How the pieces fit together |
-| [Migrating to 1.0](MIGRATION-1.0.md) | Breaking changes from 0.x |
+| [Migrating to 0.9](MIGRATION-0.9.md) | Breaking changes from earlier versions |
 
 ## Contributing, security, licence
 

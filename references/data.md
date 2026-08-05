@@ -2,7 +2,7 @@
 
 # Slide Agent authoring guide
 
-Contract version 1.0 · scene schema `slide-agent.scene/1`
+Contract version 0.9 · scene schema `slide-agent.scene/1`
 
 ## Charts, tables, and data
 

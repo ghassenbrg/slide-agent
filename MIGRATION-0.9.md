@@ -1,6 +1,6 @@
-# Migrating to Slide Agent 1.0
+# Migrating to Slide Agent 0.9
 
-Most 0.x usage keeps working. Five changes need attention.
+Most earlier usage keeps working. Five changes need attention.
 
 ## 1. Skills are no longer registered by `npm install`
 
@@ -75,7 +75,7 @@ overrides. It now merges correctly and warns on stderr.
 slide-agent run --request request.json
 ```
 
-`--prompt` with a `.json` file will be removed in 2.0.
+`--prompt` with a `.json` file will be removed in the next major version.
 
 ## 5. Prompt-only decks are labelled drafts
 
@@ -105,7 +105,7 @@ evidence and presenting it as researched is not something the tool should do.
 | `validation.quality` added | New advisory field; no existing field changed |
 | Accessibility issues added | `missing-alt-text` is an **error**. Add `alt` to images and charts, or `role: "decorative"`. |
 | Previews preserve aspect ratio | Non-16:9 previews change dimensions. Pass `preserveAspect: false` for the old behaviour. |
-| `metadata.contractVersion` added | Pin against it if you generate outlines programmatically |
+| `metadata.contractVersion` added | Pin against it if you generate outlines programmatically. It is `0.9` while the contract is still settling. |
 
 ## Checking your migration
 

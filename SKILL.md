@@ -7,7 +7,7 @@ description: Invent, create, edit, revise, render, validate, and export distinct
 
 # Slide Agent
 
-Contract version 1.0 · scene schema `slide-agent.scene/1`
+Contract version 0.9 · scene schema `slide-agent.scene/1`
 
 ## Your role
 

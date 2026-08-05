@@ -3,12 +3,17 @@
 All notable public changes are recorded here, newest first. Versions follow
 semantic versioning.
 
-## 1.0.0 — 2026-08-04
+## 0.9.0 — 2026-08-05
 
-The first release where the headline command works, the authoring contract is
+The release where the headline command works, the authoring contract is
 published, and every claim in the documentation is backed by a test.
 
-See [MIGRATION-1.0.md](MIGRATION-1.0.md) for the breaking changes.
+Still `0.x` deliberately: the contract and the extension points are new enough
+that they have not been used in anger by anyone outside this repository, and
+`1.0.0` should mean the public interfaces have survived contact with real
+integrations. Expect `0.9.x` to fix what that contact turns up.
+
+See [MIGRATION-0.9.md](MIGRATION-0.9.md) for the breaking changes.
 
 ### Fixed
 
@@ -123,7 +128,7 @@ See [MIGRATION-1.0.md](MIGRATION-1.0.md) for the breaking changes.
 ## 0.0.2 — 2026-08-02
 
 - Register bundled skills automatically after an npm install, with a CI opt-out.
-  *(Removed in 1.0.0 — see the migration guide.)*
+  *(Removed in 0.9.0 — see the migration guide.)*
 - Automatically install the matching core engine on first VS Code activation.
 - Make executable discovery, install/uninstall PATH handling, and their tests
   portable across Windows, macOS, and Linux.

@@ -2,7 +2,7 @@
 
 # Reference
 
-Authoring contract 1.0 · scene schema `slide-agent.scene/1`
+Authoring contract 0.9 · scene schema `slide-agent.scene/1`
 
 Every page here is generated from `src/contract`. Change the contract, run
 `npm run docs`, and the prose, the schemas, and the engine stay in step.

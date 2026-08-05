@@ -59,7 +59,7 @@ on each launch:
   "mcpServers": {
     "slide-agent": {
       "command": "npx",
-      "args": ["--yes", "-p", "@slide-agent/core@1.0.0", "slide-agent-mcp"]
+      "args": ["--yes", "-p", "@slide-agent/core@0.9.0", "slide-agent-mcp"]
     }
   }
 }
