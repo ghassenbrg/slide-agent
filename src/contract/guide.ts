@@ -265,3 +265,34 @@ export function guideAsPrompt(): string {
   }
   return `${lines.join("\n").trimEnd()}\n`;
 }
+
+/**
+ * The instruction set for translating a natural-language edit request into
+ * Slide Agent edit operations. Kept here so a host driving a model directly
+ * does not have to restate the operation list and drift from the schema the
+ * engine actually accepts.
+ */
+export function editPrompt(): string {
+  return [
+    "Translate the user's PowerPoint edit request into safe Slide Agent edit operations.",
+    "",
+    'Return ONLY one JSON object shaped as {"operations":[...]}. No Markdown fences, no commentary.',
+    "",
+    "Supported operations:",
+    '- {"type":"replace-text","find":"old","replace":"new","slide":1?,"replaceAll":true?}',
+    '- {"type":"remove-slide","slide":3}',
+    '- {"type":"duplicate-slide"|"add-slide","slide":2,"insertAt":5?,"replacements":[{"find":"…","replace":"…"}]?}',
+    '- {"type":"reorder-slides","order":[1,3,2]}',
+    '- {"type":"apply-theme","colors":{"background":"RRGGBB","surface":"RRGGBB","ink":"RRGGBB","muted":"RRGGBB","accent":"RRGGBB","accentAlt":"RRGGBB","accentSoft":"RRGGBB","rule":"RRGGBB","positive":"RRGGBB","negative":"RRGGBB","warning":"RRGGBB"},"headingFont":"…","bodyFont":"…"}',
+    '- {"type":"replace-image","slide":1,"imagePath":"absolute path","name":"optional"}',
+    '- {"type":"update-table","slide":1,"rows":[["…",1]],"tableIndex":0?}',
+    '- {"type":"update-chart","slide":1,"chartIndex":0?,"labels":["…"],"series":[{"name":"…","values":[1]}]}',
+    "",
+    "Rules:",
+    "- Never invent an operation type that is not listed above.",
+    "- If part of the request cannot be expressed, perform only the unambiguous supported portion and say nothing about the rest.",
+    "- Text replacement works within individual text runs, so text split across differently formatted runs may need several targeted replacements.",
+    "- Adding a slide clones an existing one; there is no cross-deck import.",
+    "- Table edits cannot add rows or columns beyond the existing grid, and chart updates cannot change the series count.",
+  ].join("\n");
+}

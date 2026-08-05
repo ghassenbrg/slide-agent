@@ -1,15 +1,12 @@
-## Install the Slide Agent engine
+## One-time setup
 
-The extension installs the matching `@slide-agent/core` engine automatically the first time each version starts. Everything lands in your user directory — no administrator rights, no repository clone.
+Slide Agent needs a small engine on your machine. Everything lands in your own
+user folder — no administrator rights, nothing outside your account.
 
-If automatic setup was disabled or interrupted, run it now:
+Click **Set up Slide Agent** and wait about a minute.
 
-**Slide Agent: Install or Update**
+**The only prerequisite is Node.js 22.12 or newer.** If it is missing, the
+extension will say so and link you straight to the download.
 
-The installer:
-
-- places the `slide-agent` CLI and MCP server under `~/.local/bin`
-- registers the same skill for GitHub Copilot, Codex, Claude Code, and Gemini CLI
-- verifies the setup with `slide-agent doctor`
-
-Node.js 22.12 or newer must be on your PATH. PowerPoint generation needs nothing else; PDF/PNG previews are optional and use LibreOffice + Poppler when present.
+Setup also teaches your AI chats — GitHub Copilot, Claude Code, Codex — how to
+build presentations. After this, you can just ask any of them for a PowerPoint.

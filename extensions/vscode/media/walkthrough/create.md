@@ -1,9 +1,19 @@
-## Create your first presentation
+## Describe the deck, not the slides
 
-Run **Slide Agent: Create Presentation** and describe the deck: audience, objective, content, tone, and any real constraints.
+Say what you actually need, the way you would tell a colleague:
 
-You pick which VS Code language model directs the deck — Copilot, Claude, or any model exposed through VS Code's Language Model API. That model invents the art direction (palette, typography, composition, diagram language) and authors every editable element. Slide Agent builds, validates, and repairs the result into a native `.pptx`.
+> A 12-slide deck for our school board on why we should fund fresh-cooked
+> lunches. Warm and hopeful, not corporate. Parents will be in the room.
 
-Already have a brief? Open the Markdown, text, or JSON file and run **Slide Agent: Create from Current Brief** — or click the Slide Agent icon in the editor title bar.
+> Sev-1 database failover runbook for on-call engineers. Dense and technical.
+> The commands have to be readable at 3am.
 
-Everything in the generated file stays editable in PowerPoint: text boxes, shapes, tables, charts, connectors, and speaker notes. No flattened screenshots.
+Mention the audience, what you want them to do, and the tone. Skip anything
+about colours or layout unless you have a real constraint — that is the part
+the model is meant to decide.
+
+You will be asked which AI model should design it. Then Slide Agent builds a
+real `.pptx` and opens it.
+
+**Already have a brief written?** Open that Markdown or text file and run
+**Slide Agent: Create from Current Brief** instead.

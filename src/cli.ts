@@ -22,6 +22,7 @@ import {
   contractJsonSchema,
   guideAsMarkdown,
   guideAsPrompt,
+  editPrompt,
   type ContractSchemaName,
   type GuideSectionId,
 } from "./contract/index.js";
@@ -208,6 +209,7 @@ program.command("validate")
 program.command("contract")
   .description("Print the authoring contract: schemas, the guide, or a ready-to-use system prompt")
   .option("--format <format>", "json, prompt, or markdown", "json")
+  .option("--for <task>", "Which prompt to emit with --format prompt: author (default) or edit", "author")
   .option("--schema <name>", "outline, brief, slide, canvasElement, creativeDirection, chart, table, or sceneRecord")
   .option("--section <id>", "Limit the guide to one section")
   .action((options) => {
@@ -220,6 +222,8 @@ program.command("contract")
       return;
     }
     if (options.format === "prompt") {
+      if (options.for === "edit") { process.stdout.write(editPrompt()); return; }
+      if (options.for !== "author") throw new Error(`Unsupported prompt task: ${options.for}. Use author or edit.`);
       process.stdout.write(guideAsPrompt());
       return;
     }

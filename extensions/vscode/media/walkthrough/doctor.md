@@ -1,12 +1,15 @@
-## Verify the installation
+## Make sure it works
 
-**Slide Agent: Check Installation** runs `slide-agent doctor` and reports:
+**Check Installation** does more than look for files — it builds a small test
+deck end to end, so a broken setup reports itself instead of showing green
+ticks.
 
-- Node.js version compatibility
-- CLI and MCP server registration
-- skill links for each supported agent
-- optional preview tools (LibreOffice, Poppler)
+It tells you:
 
-Missing preview tools only produce warnings — PowerPoint creation, editing, and validation work with Node.js alone.
+- whether your Node.js version is supported
+- which AI assistants picked up the skill, and which could not be confirmed
+- whether the optional preview tools are present
 
-Generated decks are validated against the official ECMA-376 schemas before they are handed back, so they open in Microsoft PowerPoint without repair prompts.
+Missing preview tools are only a warning. Creating, editing, and checking
+presentations need nothing but Node.js — previews (PDF and PNG images) are the
+only thing that needs LibreOffice.

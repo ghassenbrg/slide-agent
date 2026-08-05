@@ -16,39 +16,28 @@ interface AgentResult {
 }
 
 let output: vscode.OutputChannel;
+let statusItem: vscode.StatusBarItem;
 const INSTALLED_VERSION_KEY = "slideAgent.installedCoreVersion";
+const WELCOMED_KEY = "slideAgent.welcomed";
 
-const SCENE_AUTHORING_PROMPT = `You are the creative director, information architect, and PowerPoint craftsperson for Slide Agent.
+/**
+ * The authoring instructions come from the installed engine, not from this
+ * extension. They used to be a 4 KB string literal here, which meant the
+ * guidance a VS Code user got drifted away from the contract every other host
+ * reads. `slide-agent contract` is the single source of truth.
+ */
+const promptCache = new Map<string, string>();
 
-Return ONLY newline-delimited JSON (NDJSON), with one valid JSON object per line. Do not use Markdown fences or commentary. The output must implement schema slide-agent.scene/1 for a 13.333 x 7.5 inch widescreen deck.
-
-You own the artistic direction. Invent a visual thesis that is specific to this brief: palette, typography, spatial grammar, imagery/texture language, diagram language, chart language, pacing, and one memorable visual move. Do not choose from presets. Do not default to generic blue gradients, repeated cards, identical title positions, or a corporate template unless the subject genuinely requires that choice. Slides should have family resemblance but varied silhouettes. Prioritize truthful communication and editable native PowerPoint objects.
-
-Record format:
-1. First line: {"kind":"deck","schema":"slide-agent.scene/1","unit":"in","brief":{...},"narrative":"...","completeness":{...},"creativeDirection":{...}}. The complete brief needs title, optional subtitle, audience, objective, presentationType, tone, visualDirection, slideCount, language, outputRequirements, keyTopics, and sourcePrompt. creativeDirection is open-ended; include concrete palette hex values without # and font names, plus the reasoning and visual languages.
-2. One line per slide: {"kind":"slide","slide":1,"freeform":true,"id":"...","semanticKind":"...","title":"...","background":"RRGGBB","communication":{"audienceQuestion":"...","claim":"...","evidence":[...],"artifact":"...","implication":"..."},"designIntent":"...","composition":"..."}.
-3. Then any number of editable element records. Each needs kind, slide, id, and bbox:[x,y,w,h] in inches. Supported kinds:
-- textbox: text or runs, role, and style such as fontFace, fontSize, color, bold, italic, align, valign, margin, fit, fill, transparency, lineColor, lineWidth, rotate, or advanced options.
-- shape: shape name, role, style with fill, transparency, lineColor, lineWidth, rotate, or options.
-- connector: bbox describes start plus delta; style may contain color, width, arrow, dashed, and options. Use negative w/h when needed and layer behind nodes with zIndex.
-- table: table:{headers,rows,columnWidths?,highlightRows?}, plus native options.
-- chart: chart:{kind,labels,series:[{name,values}],unit?,showLegend?,showValues?}, style:{colors?,options?}.
-- native-chart: nativeType, data, options.
-- image: path, alt, fit, style. Only use images when the brief supplies resolvable local assets; never invent a path.
-4. Optional notes line per slide: {"kind":"notes","slide":1,"notes":[...],"sources":[{"label":"...","url":"..."}]}.
-
-Geometry must stay legible and inside the slide. Add visible titles explicitly as textbox elements. Keep body text concise, use strong hierarchy, and give diagrams meaningful nodes, routing, labels, and visual semantics. Use charts only with real or explicitly illustrative data and label illustrative data honestly. Do not flatten a slide into an image. Every slide must be complete enough to stand on its own and must advance the narrative.`;
-
-const EDIT_AUTHORING_PROMPT = `Translate the user's PowerPoint edit request into safe Slide Agent edit operations. Return ONLY one JSON object shaped as {"operations":[...]}. Supported operations are:
-- {"type":"replace-text","find":"old","replace":"new","slide":1?,"replaceAll":true?}
-- {"type":"remove-slide","slide":3}
-- {"type":"duplicate-slide"|"add-slide","slide":2,"insertAt":5?,"replacements":[{"find":"...","replace":"..."}]?}
-- {"type":"reorder-slides","order":[1,3,2]}
-- {"type":"apply-theme","colors":{"background":"RRGGBB","surface":"RRGGBB","ink":"RRGGBB","muted":"RRGGBB","accent":"RRGGBB","accentAlt":"RRGGBB","accentSoft":"RRGGBB","rule":"RRGGBB","positive":"RRGGBB","negative":"RRGGBB","warning":"RRGGBB"},"headingFont":"...","bodyFont":"..."}
-- {"type":"replace-image","slide":1,"imagePath":"absolute path","name":"optional"}
-- {"type":"update-table","slide":1,"rows":[["...",1]],"tableIndex":0?}
-- {"type":"update-chart","slide":1,"chartIndex":0?,"labels":["..."],"series":[{"name":"...","values":[1]}]}
-Never invent unsupported operations. If part of the request cannot be expressed, perform only the unambiguous supported portion.`;
+async function contractPrompt(task: "author" | "edit"): Promise<string> {
+  const cached = promptCache.get(task);
+  if (cached) return cached;
+  const result = await run(cliPath(), ["contract", "--format", "prompt", "--for", task]);
+  if (result.exitCode !== 0 || !result.stdout.trim()) {
+    throw new Error("Could not read the authoring contract from the Slide Agent engine. Run “Slide Agent: Install or Update”.");
+  }
+  promptCache.set(task, result.stdout);
+  return result.stdout;
+}
 
 function configuration(): vscode.WorkspaceConfiguration {
   return vscode.workspace.getConfiguration("slideAgent");
@@ -173,7 +162,8 @@ function validateSceneText(scene: string): void {
 }
 
 async function authorScene(brief: string): Promise<string | undefined> {
-  const first = await askModel(SCENE_AUTHORING_PROMPT, brief, "Designing the presentation…");
+  const instructions = await contractPrompt("author");
+  const first = await askModel(instructions, brief, "Designing the presentation…");
   if (!first) return undefined;
   try {
     validateSceneText(first);
@@ -181,7 +171,7 @@ async function authorScene(brief: string): Promise<string | undefined> {
   } catch (error) {
     output.appendLine(`Scene validation requested one repair: ${error instanceof Error ? error.message : String(error)}`);
     const repaired = await askModel(
-      SCENE_AUTHORING_PROMPT,
+      instructions,
       `Repair the NDJSON below. Preserve its creative direction and content while fixing this exact structural error: ${error instanceof Error ? error.message : String(error)}\n\n${first}`,
       "Repairing the model-authored scene…",
     );
@@ -252,7 +242,7 @@ async function edit(): Promise<void> {
   const base = path.basename(input[0].fsPath, ".pptx");
   const destination = await chooseOutput(`${base}-updated.pptx`);
   if (!destination) return;
-  const structured = await askModel(EDIT_AUTHORING_PROMPT, prompt.trim(), "Planning the presentation edit…");
+  const structured = await askModel(await contractPrompt("edit"), prompt.trim(), "Planning the presentation edit…");
   if (!structured) return;
   try { JSON.parse(structured); } catch { return void vscode.window.showErrorMessage("The selected model did not return valid edit-operation JSON."); }
   await withTemporaryPrompt(structured, async (promptPath) => {
@@ -261,14 +251,43 @@ async function edit(): Promise<void> {
   });
 }
 
+/**
+ * Checks the one prerequisite before doing anything that needs it, so a user
+ * without Node.js gets a link instead of a failed npx and a stack trace.
+ */
+async function nodeIsAvailable(): Promise<boolean> {
+  try {
+    const result = await run("node", ["--version"]);
+    if (result.exitCode !== 0) return false;
+    const [major = 0, minor = 0] = result.stdout.trim().replace(/^v/, "").split(".").map(Number);
+    return major > 22 || (major === 22 && minor >= 12);
+  } catch {
+    return false;
+  }
+}
+
+async function requireNode(): Promise<boolean> {
+  if (await nodeIsAvailable()) return true;
+  const download = "Download Node.js";
+  const choice = await vscode.window.showErrorMessage(
+    "Slide Agent needs Node.js 22.12 or newer. It is a one-time install, and nothing else is required.",
+    download,
+  );
+  if (choice === download) await vscode.env.openExternal(vscode.Uri.parse("https://nodejs.org/en/download"));
+  return false;
+}
+
 async function install(context: vscode.ExtensionContext, automatic = false): Promise<void> {
+  if (!(await requireNode())) return;
   const version = String(context.extension.packageJSON.version);
   const packageSpecifier = `@slide-agent/core@${version}`;
   try {
     const result = await vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
-        title: automatic ? "Setting up Slide Agent…" : "Installing or updating Slide Agent…",
+        title: automatic
+          ? "Setting up Slide Agent — one time, about a minute…"
+          : "Installing or updating Slide Agent…",
         cancellable: false,
       },
       () => run("npx", ["--yes", "--package", packageSpecifier, "--", "slide-agent", "install", "--package", packageSpecifier]),
@@ -277,12 +296,15 @@ async function install(context: vscode.ExtensionContext, automatic = false): Pro
     const verification = await run(cliPath(), ["--version"]);
     if (verification.exitCode !== 0) throw new Error(`installed CLI exited with code ${verification.exitCode}`);
     await context.globalState.update(INSTALLED_VERSION_KEY, version);
-    const reload = "Reload Window";
+    promptCache.clear();
+    updateStatus("ready");
+    if (automatic) return;
+    const createNow = "Create a presentation";
     const choice = await vscode.window.showInformationMessage(
-      "Slide Agent is installed. Reload VS Code if the new skill is not visible in an existing chat.",
-      reload,
+      "Slide Agent is ready. Your AI chats can build PowerPoint decks too — start a new chat if one is already open.",
+      createNow,
     );
-    if (choice === reload) await vscode.commands.executeCommand("workbench.action.reloadWindow");
+    if (choice === createNow) await vscode.commands.executeCommand("slideAgent.create");
   } catch (error) {
     output.show(true);
     const message = `Slide Agent setup failed: ${error instanceof Error ? error.message : String(error)}. Node.js 22.12 or newer and npm/npx must be available on PATH.`;
@@ -291,10 +313,63 @@ async function install(context: vscode.ExtensionContext, automatic = false): Pro
   }
 }
 
+/** A persistent, clickable entry point. Without one the extension is invisible. */
+function updateStatus(state: "ready" | "setup"): void {
+  statusItem.text = state === "ready" ? "$(file-media) Slide Agent" : "$(file-media) Slide Agent — set up";
+  statusItem.tooltip = state === "ready"
+    ? "Create or edit a PowerPoint presentation"
+    : "Finish setting up Slide Agent";
+  statusItem.command = "slideAgent.start";
+}
+
+/** The single entry point a first-time user is expected to find. */
+async function start(context: vscode.ExtensionContext): Promise<void> {
+  const installed = context.globalState.get<string>(INSTALLED_VERSION_KEY) === String(context.extension.packageJSON.version);
+  const actions: Array<{ label: string; detail: string; command: string }> = installed
+    ? [
+      { label: "$(add) Create a presentation", detail: "Describe the deck; the AI model you choose designs it", command: "slideAgent.create" },
+      { label: "$(edit) Edit an existing presentation", detail: "Describe the changes in plain language", command: "slideAgent.edit" },
+      { label: "$(book) Open the getting-started guide", detail: "Four short steps", command: "slideAgent.walkthrough" },
+      { label: "$(pulse) Check the installation", detail: "Diagnose the engine, agent skills, and preview tools", command: "slideAgent.doctor" },
+    ]
+    : [
+      { label: "$(cloud-download) Set up Slide Agent", detail: "One-time, about a minute. Needs Node.js 22.12 or newer.", command: "slideAgent.install" },
+      { label: "$(book) Open the getting-started guide", detail: "See what it does first", command: "slideAgent.walkthrough" },
+    ];
+  const choice = await vscode.window.showQuickPick(actions, {
+    title: "Slide Agent",
+    placeHolder: installed ? "What would you like to do?" : "Slide Agent needs a one-time setup",
+  });
+  if (choice) await vscode.commands.executeCommand(choice.command);
+}
+
 export function activate(context: vscode.ExtensionContext): void {
   output = vscode.window.createOutputChannel("Slide Agent");
+  statusItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
+  const installed = context.globalState.get<string>(INSTALLED_VERSION_KEY) === String(context.extension.packageJSON.version);
+  updateStatus(installed ? "ready" : "setup");
+  statusItem.show();
+
+  // Activation stays local: no network, no output panel stealing focus. The
+  // walkthrough is how a first-time user learns this exists, so it opens once.
+  if (!context.globalState.get<boolean>(WELCOMED_KEY)) {
+    void context.globalState.update(WELCOMED_KEY, true);
+    void vscode.commands.executeCommand(
+      "workbench.action.openWalkthrough",
+      `${context.extension.id}#slideAgent.gettingStarted`,
+      false,
+    );
+  }
+
   context.subscriptions.push(
     output,
+    statusItem,
+    vscode.commands.registerCommand("slideAgent.start", () => start(context)),
+    vscode.commands.registerCommand("slideAgent.walkthrough", () => vscode.commands.executeCommand(
+      "workbench.action.openWalkthrough",
+      `${context.extension.id}#slideAgent.gettingStarted`,
+      false,
+    )),
     vscode.commands.registerCommand("slideAgent.install", () => install(context, false)),
     vscode.commands.registerCommand("slideAgent.create", async () => { await ensureInstalled(context); await create(); }),
     vscode.commands.registerCommand("slideAgent.createFromCurrentFile", async () => { await ensureInstalled(context); await createFromCurrentFile(); }),
