@@ -120,14 +120,21 @@ describe.runIf(rendererAvailable)("preview rendering", () => {
 });
 
 describe.runIf(!rendererAvailable)("preview rendering without the optional tools", () => {
-  it("fails with an actionable dependency error instead of crashing", async () => {
+  it("draws schematic previews and says they are not a render", async () => {
     const result = await new SlideAgent(silentLogger).render({
       command: "render",
       input: deck(),
       output: path.join(workspace, "previews"),
     });
-    expect(result.status).toBe("error");
-    expect(result.errors[0]!.code).toBe("RENDER_DEPENDENCY_MISSING");
+    expect(result.status).toBe("success");
+    expect(result.warnings.join(" ")).toMatch(/schematic/i);
+    expect(result.generatedFiles).toHaveLength(outline.slides.length);
+    expect(result.generatedFiles.every((file) => file.endsWith(".svg"))).toBe(true);
+  });
+
+  it("still fails with an actionable dependency error when a true render is demanded", async () => {
+    await expect(new PresentationRenderer(silentLogger).render(deck(), path.join(workspace, "strict"), { fallback: "none" }))
+      .rejects.toMatchObject({ code: "RENDER_DEPENDENCY_MISSING" });
   });
 
   it("still creates and validates a deck", async () => {
