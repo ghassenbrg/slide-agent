@@ -82,8 +82,6 @@ export async function verifyRelease() {
     "npm run test:coverage",
     "npm run docs:check",
     "node scripts/verify-consumer-install.mjs",
-    "actions/checkout@v6",
-    "actions/setup-node@v7",
   ];
   if (hasWorkflowFragment(ciWorkflow, "types:\n      - closed")) {
     problems.push("CI workflow must not run only on closed pull requests: open pull requests would never be verified");
@@ -97,10 +95,6 @@ export async function verifyRelease() {
     "name: Publish npm Package",
     "name: Publish VS Code Extension",
     "name: Create GitHub Release",
-    "actions/checkout@v6",
-    "actions/setup-node@v7",
-    "actions/upload-artifact@v7",
-    "actions/download-artifact@v7",
     "npm publish \"./release/slide-agent-core-${GITHUB_REF_NAME#v}.tgz\" --access public",
     "VSCE_PAT",
     "skipping VS Code extension publish.",
@@ -108,8 +102,28 @@ export async function verifyRelease() {
   for (const fragment of requiredReleaseFragments) {
     if (!hasWorkflowFragment(releaseWorkflow, fragment)) problems.push(`release workflow is missing required configuration: ${fragment.split("\n")[0]}`);
   }
-  if (/actions\/(?:checkout|setup-node|upload-artifact|download-artifact)@v(?:1|2|3|4|5)(?:\D|$)/.test(`${ciWorkflow}\n${releaseWorkflow}`)) {
-    problems.push("GitHub workflows contain an outdated JavaScript action generation");
+  // Action pins move forward on their own (Dependabot), so these are floors
+  // rather than exact versions: an older generation fails the gate, a newer one
+  // passes without another edit here.
+  const minimumActionGenerations = {
+    "actions/checkout": 6,
+    "actions/setup-node": 7,
+    "actions/upload-artifact": 7,
+    "actions/download-artifact": 7,
+  };
+  const workflows = [
+    { label: "CI", content: ciWorkflow, required: ["actions/checkout", "actions/setup-node", "actions/upload-artifact"] },
+    { label: "release", content: releaseWorkflow, required: Object.keys(minimumActionGenerations) },
+  ];
+  for (const { label, content, required } of workflows) {
+    for (const [action, minimum] of Object.entries(minimumActionGenerations)) {
+      const generations = [...content.matchAll(new RegExp(`${action}@v(\\d+)`, "g"))].map(([, generation]) => Number(generation));
+      if (!generations.length) {
+        if (required.includes(action)) problems.push(`${label} workflow is missing required configuration: ${action}`);
+      } else if (generations.some((generation) => generation < minimum)) {
+        problems.push(`${label} workflow pins an outdated ${action} generation: v${Math.min(...generations)} is older than v${minimum}`);
+      }
+    }
   }
   const trackedPrivateArtifacts = (await execute("git", ["ls-files", "examples/output", "reference-material"], { cwd: root })).stdout.trim();
   if (trackedPrivateArtifacts) problems.push(`generated or private reference artifacts are tracked:\n${trackedPrivateArtifacts}`);
