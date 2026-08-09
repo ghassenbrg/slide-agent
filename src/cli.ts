@@ -11,6 +11,10 @@ import { installManaged } from "./installer.js";
 import { PptxInspector } from "./editing/pptx-inspector.js";
 import { diffDecks, formatDiff } from "./serialization/diff.js";
 import { chartFromData, loadDataTable, provenanceNote, tableFromData } from "./data/connectors.js";
+import { brandKitFromTemplate, normalizeKitColors } from "./design/template.js";
+import { checkFontAvailability, fontAvailabilityAdvice } from "./design/font-availability.js";
+import { planOutline } from "./planner/index.js";
+import { writeUtf8 } from "./utils/files.js";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { spawn } from "node:child_process";
@@ -23,6 +27,7 @@ import {
   guideAsMarkdown,
   guideAsPrompt,
   editPrompt,
+  CONTRACT_VERSION,
   type ContractSchemaName,
   type GuideSectionId,
 } from "./contract/index.js";
@@ -98,7 +103,7 @@ program.command("create")
   .option("--metadata <file>", "Generation metadata JSON path")
   .option("--inspect <file>", "Round-trippable NDJSON blueprint output path")
   .option("--config <directory>", "Configuration directory")
-  .option("--brand <file>", "Brand kit JSON constraining palette, typography, logo, and footer")
+  .option("--brand <file>", "Brand kit JSON, or a .potx/.pptx template whose theme becomes the kit")
   .option("--bilingual <mode>", "Render secondaryLanguage as parallel, stacked, or notes")
   .option("--max-retries <count>", "Maximum automatic repair retries", Number)
   .option("--render", "Also generate PDF and PNG previews (requires LibreOffice and Poppler)")
@@ -106,6 +111,13 @@ program.command("create")
   .option("--no-auto-fix", "Disable automatic repair")
   .action(async (options) => {
     if (!options.prompt && !options.scene) throw new Error("create requires --prompt or --scene.");
+    if (options.prompt && !options.scene && !options.prompt.endsWith(".json")) {
+      process.stderr.write(
+        "slide-agent create --prompt builds a structural draft: bracketed placeholders and no art direction. "
+        + "There is no model in this process to design a deck. Use `slide-agent draft --prompt <file> --output request.json`, "
+        + "have a model fill it in, then `slide-agent run --request request.json`.\n",
+      );
+    }
     const prompt = options.prompt ? await text(options.prompt) : "";
     const parsed = options.prompt?.endsWith(".json")
       ? JSON.parse(prompt) as Partial<CreateRequest>
@@ -278,6 +290,95 @@ program.command("data")
       speakerNote: provenanceNote(table),
       rows: table.rows.length,
     }, null, 2)}\n`);
+  });
+
+program.command("capabilities")
+  .description("What this installation can actually do — including whether it can source images at all")
+  .action(() => {
+    process.stdout.write(`${JSON.stringify({
+      contractVersion: CONTRACT_VERSION,
+      version: VERSION,
+      ...new SlideAgent().capabilities(),
+    }, null, 2)}\n`);
+  });
+
+program.command("draft")
+  .description("Turn a brief into a request skeleton for a model to finish — the honest alternative to building a placeholder deck")
+  .requiredOption("--prompt <file>", "Markdown or text brief")
+  .option("--output <file>", "Write the request JSON here instead of stdout")
+  .option("--deck <file>", "The .pptx the finished request should build", "deck.pptx")
+  .option("--slides <count>", "Target slide count", Number)
+  .action(async (options) => {
+    const outline = await planOutline(await text(options.prompt), options.slides ? { slideCount: options.slides } : {});
+    const request = {
+      command: "create" as const,
+      output: options.deck,
+      outline,
+      render: true,
+      validate: true,
+    };
+    const json = `${JSON.stringify(request, null, 2)}\n`;
+    if (!options.output) {
+      process.stdout.write(json);
+      return;
+    }
+    await writeUtf8(options.output, json);
+    process.stdout.write(`${JSON.stringify({
+      request: path.resolve(options.output),
+      contractVersion: CONTRACT_VERSION,
+      slideCount: outline.slides.length,
+      nextStep: "Replace every [bracketed placeholder] with real content, add creativeDirection and per-slide canvases, then run `slide-agent run --request " + `${options.output}\`.`,
+      guide: "slide-agent contract --format prompt",
+    }, null, 2)}\n`);
+  });
+
+program.command("fonts")
+  .description("Report which of a deck's typefaces this machine can display")
+  .option("--input <file>", "Read the typefaces from an existing .pptx")
+  .option("--family <names>", "Comma-separated family names to check instead")
+  .option("--json", "Print machine-readable JSON")
+  .action(async (options) => {
+    if (!options.input && !options.family) throw new Error("fonts requires --input or --family.");
+    const families = options.family
+      ? String(options.family).split(",").map((name: string) => name.trim()).filter(Boolean)
+      : [...new Set((await new PptxInspector().inspect(options.input)).manifest.slides
+        .flatMap((slide) => slide.elements.map((element) => element.fontFace))
+        .filter((face): face is string => Boolean(face)))];
+    const results = await checkFontAvailability(families);
+    const advice = fontAvailabilityAdvice(results);
+    if (options.json) {
+      process.stdout.write(`${JSON.stringify({ fonts: results, ...(advice ? { advice } : {}) }, null, 2)}\n`);
+      return;
+    }
+    for (const result of results) {
+      process.stdout.write(`${result.available ? "ok  " : "MISS"}  ${result.family}${result.file ? `  ${result.file}` : ""}\n`);
+    }
+    if (advice) process.stdout.write(`\n${advice}\n`);
+  });
+
+program.command("template")
+  .description("Read an organisation's .potx or .pptx and emit the brand kit its theme implies")
+  .requiredOption("--input <file>", "Template .potx or .pptx")
+  .option("--output <file>", "Write the kit to this path instead of stdout")
+  .option("--name <name>", "Override the theme's own name")
+  .option("--unlock <aspects>", "Comma-separated aspects the model may still override: palette, typography")
+  .action(async (options) => {
+    const unlocked = new Set(String(options.unlock ?? "").split(",").map((value: string) => value.trim()).filter(Boolean));
+    for (const aspect of unlocked) {
+      if (aspect !== "palette" && aspect !== "typography") throw new Error(`Unknown aspect: ${aspect}. Use palette or typography.`);
+    }
+    const locked = (["palette", "typography"] as const).filter((aspect) => !unlocked.has(aspect));
+    const kit = normalizeKitColors(await brandKitFromTemplate(options.input, {
+      ...(options.name ? { name: options.name } : {}),
+      locked: [...locked],
+    }));
+    const json = `${JSON.stringify(kit, null, 2)}\n`;
+    if (options.output) {
+      await writeUtf8(options.output, json);
+      process.stdout.write(`${JSON.stringify({ output: path.resolve(options.output), brand: kit.name, locked: kit.locked }, null, 2)}\n`);
+      return;
+    }
+    process.stdout.write(json);
   });
 
 program.command("run")

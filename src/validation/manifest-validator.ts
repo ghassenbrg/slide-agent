@@ -8,6 +8,7 @@ import type {
   SlideManifest,
   ValidationIssue,
 } from "../types/index.js";
+import { resolveFont, wrapLineCount, wrappedTextHeight, type ResolvedFont } from "../design/font-metrics.js";
 import { words } from "../utils/text.js";
 import { colorContrast as contrastRatio, requiredContrast } from "../utils/color.js";
 import { area, contains, intersectionArea, normalizedBox } from "./geometry.js";
@@ -16,31 +17,36 @@ function issue(code: string, severity: ValidationIssue["severity"], message: str
   return { code, severity, message, fixable, ...options };
 }
 
-/** Estimated wrapped-line count for a text run at a given point size. */
-export function estimatedLineCount(text: string, widthInches: number, fontSize: number): number {
-  const averageCharacterWidthInches = fontSize * 0.33 / 72;
-  const charactersPerLine = Math.max(1, Math.floor(widthInches / averageCharacterWidthInches));
-  return text.split(/\r?\n/).reduce((total, line) => {
-    const lineWords = line.split(/\s+/).filter(Boolean);
-    let lines = 1;
-    let used = 0;
-    for (const word of lineWords) {
-      const next = used === 0 ? word.length : used + 1 + word.length;
-      if (next > charactersPerLine && used > 0) {
-        lines += 1;
-        used = word.length;
-      } else {
-        used = next;
-      }
-    }
-    return total + lines;
-  }, 0);
+/** The face a measurement is taken in. Omitted means "the default sans". */
+export interface TextFace {
+  fontFace?: string;
+  bold?: boolean;
 }
 
-/** Estimated height in inches that `text` needs at `fontSize`. */
-export function estimatedTextHeight(text: string, widthInches: number, fontSize: number): number {
-  return estimatedLineCount(text, widthInches, fontSize) * fontSize / 72;
+function face(font?: TextFace | ResolvedFont): ResolvedFont {
+  if (font && "scale" in font) return font;
+  return resolveFont(font?.fontFace, font?.bold ?? false);
 }
+
+/** Wrapped-line count for a text run at a given point size. */
+export function estimatedLineCount(text: string, widthInches: number, fontSize: number, font?: TextFace | ResolvedFont): number {
+  return wrapLineCount(text, widthInches, fontSize, face(font));
+}
+
+/** Height in inches that `text` needs at `fontSize`, including line spacing. */
+export function estimatedTextHeight(text: string, widthInches: number, fontSize: number, font?: TextFace | ResolvedFont): number {
+  return wrappedTextHeight(text, widthInches, fontSize, face(font));
+}
+
+/**
+ * Slack allowed on a text box before its content counts as overflowing.
+ * Measurement is per-family but still an approximation — an unknown face is
+ * measured against its class — so a hair of tolerance keeps the validator from
+ * reporting defects that no viewer would ever show. It used to be 8%, which
+ * was compensating for a line height of 1.0; now that line spacing is measured,
+ * that much slack would hide real overflow.
+ */
+export const FIT_TOLERANCE = 1.04;
 
 export interface TextFitResult {
   /** The size the text will actually render at once autofit is applied. */
@@ -57,7 +63,8 @@ export interface TextFitResult {
  */
 export function measureTextFit(element: ElementRecord, minimumFontSize: number): TextFitResult | undefined {
   if (!element.text || !element.fontSize || element.w <= 0 || element.h <= 0) return undefined;
-  const fits = (size: number): boolean => estimatedTextHeight(element.text!, element.w, size) <= element.h * 1.08;
+  const font = resolveFont(element.fontFace, element.bold ?? false);
+  const fits = (size: number): boolean => estimatedTextHeight(element.text!, element.w, size, font) <= element.h * FIT_TOLERANCE;
   if (fits(element.fontSize)) return { effectiveFontSize: element.fontSize, clipped: false };
   if (element.fit !== "shrink") return { effectiveFontSize: element.fontSize, clipped: true };
   // PowerPoint's autofit reduces in roughly 1pt steps down to about 25% scale.
@@ -86,7 +93,10 @@ function validateChart(chart: ChartSpec): string[] {
     if (series.values.length !== chart.labels.length) errors.push(`${series.name} has ${series.values.length} values for ${chart.labels.length} labels`);
     if (series.values.some((value) => !Number.isFinite(value))) errors.push(`${series.name} contains a non-finite value`);
   }
-  if (chart.kind === "pie" && chart.series.length !== 1) errors.push("pie charts require exactly one data series");
+  if (["pie", "doughnut"].includes(chart.kind) && chart.series.length !== 1) errors.push(`${chart.kind} charts require exactly one data series`);
+  if (chart.kind === "scatter" && chart.labels.some((label) => !Number.isFinite(Number(label)))) {
+    errors.push("a scatter chart reads its labels as x values, so every label must be a number");
+  }
   return errors;
 }
 
@@ -247,7 +257,13 @@ export class ManifestValidator {
           if (overlapAllowed(left, right)) continue;
           const overlap = intersectionArea(left, right);
           if (overlap > Math.min(area(left), area(right)) * 0.08 && overlap > 0.025) {
-            issues.push(issue("overlapping-elements", "error", `${left.name} overlaps ${right.name} on slide ${slide.number}.`, true, {
+            // A package carries no channel for "this overlap is deliberate":
+            // `intentionalOverlap` lives in the build manifest. Validating a
+            // deck recovered from OOXML alone — an edited deck, or one someone
+            // handed us — must not fail it for an intent it had no way to
+            // record. Report it, and let a human look.
+            const severity = manifest.source === "inspected" ? "warning" : "error";
+            issues.push(issue("overlapping-elements", severity, `${left.name} overlaps ${right.name} on slide ${slide.number}.`, true, {
               slide: slide.number,
               elementIds: [left.id, right.id],
               details: { overlapArea: overlap },

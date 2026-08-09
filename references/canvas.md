@@ -13,7 +13,7 @@ Element types are `text`, `shape`, `connector`, `image`, `table`, `chart`, and `
 - Add every visible word as a text element. Nothing renders implicitly.
 - Build diagrams from shapes and connectors. Create edges before nodes, or place them on a lower `zIndex`.
 - Use images for photography, artwork, screenshots, and supplied evidence — never as a flattened substitute for a slide.
-- Give every image an `alt` that describes the content.
+- Give every image an `alt` that describes the content, and a `provenance` when it is not your own. See the imagery section for where pictures may come from.
 
 A text element and a rotated shape:
 

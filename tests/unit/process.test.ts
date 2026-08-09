@@ -37,3 +37,20 @@ describe("executable discovery", () => {
     await expect(findExecutable(["deck-renderer"], undefined, [directory])).resolves.toBe(executable);
   });
 });
+
+describe("pinning an executable", () => {
+  it("uses an explicit path when it is executable", async () => {
+    const directory = await mkdtemp(path.join(tmpdir(), "slide-agent-pin-"));
+    const pinned = path.join(directory, "tool");
+    await writeFile(pinned, "#!/bin/sh\nexit 0\n", { mode: 0o755 });
+    expect(await findExecutable(["tool"], pinned)).toBe(pinned);
+    await rm(directory, { recursive: true, force: true });
+  });
+
+  it("does not search past a pin that does not resolve", async () => {
+    // Falling through to PATH would silently run a different binary than the
+    // one SLIDE_AGENT_SOFFICE named, which is what pinning is meant to prevent.
+    const missing = path.join(tmpdir(), "slide-agent-no-such-executable");
+    expect(await findExecutable(["sh", "cmd"], missing)).toBeUndefined();
+  });
+});

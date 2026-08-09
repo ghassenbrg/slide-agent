@@ -15,7 +15,36 @@ be perfectly valid and still not worth presenting.
 3. Every XML part against the bundled official ECMA-376 schemas, offline.
 4. OOXML inspection when no manifest is available.
 5. Accessibility: alt text, reading order, contrast, type size.
-6. Optional rendering, then preview count and file checks.
+6. Optional rendering, then preview count and file checks. Without LibreOffice
+   this falls back to schematic drawings, reported as `render.mode:
+   "schematic"` — they check geometry, not fidelity.
+
+## How text is measured
+
+Overflow, autofit, and layout box sizing all come from one measurement: per
+character, per family, and per script. A word set in Arial Black is measured
+wider than the same word in Arial Narrow; a paragraph of Japanese breaks
+between characters rather than counting as one unbreakable word; line spacing
+comes from the face rather than from a constant.
+
+The tables are embedded rather than read from the machine's installed fonts, so
+a deck reaches the same verdict on a laptop and in CI. Whether a font is
+actually installed is a separate, advisory question — `slide-agent fonts`.
+
+An unknown family still measures: it is classified by name and priced against
+its class, because the project asks models to choose fonts freely and refusing
+to measure one would silently switch off overflow detection for that slide.
+
+## What a manifest cannot tell you
+
+Validation is strongest when the build manifest is available, because that is
+where the author's intent lives — deliberate overlap, element roles, alt text.
+A deck recovered from OOXML alone (an edited deck, or one someone handed you)
+has none of that, so checks that depend on intent soften: two overlapping
+shapes become a warning rather than an error, since the package has no channel
+in which the author could have declared the overlap deliberate.
+
+Reports say which kind of manifest they used.
 
 ## The repair loop
 

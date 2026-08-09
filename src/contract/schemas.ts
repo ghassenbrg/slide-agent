@@ -37,8 +37,9 @@ export const chartSeriesSchema = z.object({
 });
 
 export const chartSpecSchema = z.object({
-  kind: z.enum(["bar", "line", "pie", "area", "waterfall"]),
-  labels: z.array(z.string()).min(1),
+  kind: z.enum(["bar", "bar-stacked", "bar-horizontal", "line", "pie", "doughnut", "area", "scatter", "radar", "waterfall"])
+    .describe("A native, editable chart. `scatter` reads its labels as x values. For anything else PptxGenJS can draw, use a native-chart element."),
+  labels: z.array(z.string()).min(1).describe("Category labels, one per value in every series. For a scatter chart these are the x values and must be numbers."),
   series: z.array(chartSeriesSchema).min(1),
   unit: z.string().optional(),
   showLegend: z.boolean().optional(),
@@ -47,12 +48,27 @@ export const chartSpecSchema = z.object({
   (chart) => chart.series.every((series) => series.values.length === chart.labels.length),
   { message: "every series must have exactly one value per category label" },
 ).refine(
-  (chart) => chart.kind !== "pie" || chart.series.length === 1,
-  { message: "a pie chart takes exactly one series" },
+  (chart) => !["pie", "doughnut"].includes(chart.kind) || chart.series.length === 1,
+  { message: "a pie or doughnut chart takes exactly one series" },
+).refine(
+  (chart) => chart.kind !== "scatter" || chart.labels.every((label) => Number.isFinite(Number(label))),
+  { message: "a scatter chart reads its labels as x values, so every label must be a number" },
 );
 
 const nativeOptions = z.record(z.string(), z.unknown())
-  .describe("Advanced PptxGenJS options passed through unchanged. Verify the render.");
+  .describe("Advanced PptxGenJS options passed through unchanged. Verify the render. A `hyperlink` here is held to the same scheme allowlist as `link`.");
+
+export const linkSchema = z.union([
+  z.string().min(1).describe("An http(s) or mailto URL. A bare host is read as https."),
+  z.object({
+    url: z.string().min(1),
+    tooltip: z.string().optional().describe("What the link does. Screen readers announce it."),
+  }),
+  z.object({
+    slide: z.number().int().positive().describe("A 1-based slide in this deck."),
+    tooltip: z.string().optional(),
+  }),
+]).describe("A hyperlink. Only http, https, and mailto are accepted; anything else is refused and reported.");
 
 const canvasBase = {
   id: z.string().min(1).describe("Unique within the slide; used by validation and revision."),
@@ -89,6 +105,7 @@ export const canvasTextSchema = z.object({
   type: z.literal("text"),
   text: z.string().optional(),
   runs: z.array(z.object({ text: z.string(), options: nativeOptions.optional() })).optional(),
+  link: linkSchema.optional(),
   style: textStyleSchema.optional(),
 }).refine(
   (element) => element.text !== undefined || (element.runs?.length ?? 0) > 0,
@@ -99,6 +116,7 @@ export const canvasShapeSchema = z.object({
   ...canvasBase,
   type: z.literal("shape"),
   shape: z.string().optional().describe("Any PptxGenJS shape name. Not a whitelist."),
+  link: linkSchema.optional(),
   style: z.looseObject({
     fill: hex.optional(),
     transparency: z.number().min(0).max(100).optional(),
@@ -122,11 +140,31 @@ export const canvasConnectorSchema = z.object({
   }).optional(),
 }).describe("x/y is the start point; w/h is the delta to the end point and may be negative.");
 
+/**
+ * Where a picture came from, and whether a person made it.
+ *
+ * The honesty section already forbids inventing sources, data, and
+ * quotations. A photograph is the same claim in visual form: an image
+ * generated from a prompt and captioned as a site photo is a fabrication, and
+ * a stock image used without its credit line is somebody else's licence
+ * breached by a deck that will be presented to a room. Neither is something
+ * Slide Agent can detect from the pixels, so the author records it.
+ */
+export const imageProvenanceSchema = z.looseObject({
+  source: z.string().optional().describe("Where it came from: a URL, a library reference, or the prompt that produced it."),
+  credit: z.string().optional().describe("The attribution line the licence requires, e.g. \"Photo by A. Name on Unsplash\"."),
+  license: z.string().optional().describe("The licence you are relying on, e.g. \"CC BY 4.0\", \"Unsplash License\", \"© Acme, used with permission\"."),
+  generated: z.boolean().optional().describe("True when a model produced this image rather than a camera or a person."),
+  generator: z.string().optional().describe("What generated it, when `generated` is true."),
+}).describe("Attribution and origin. Written into the speaker notes under [Credits].");
+
 export const canvasImageSchema = z.object({
   ...canvasBase,
   type: z.literal("image"),
   path: z.string().min(1).describe("Local path, or an http(s) URL when remote assets are explicitly enabled."),
   alt: z.string().min(1).describe("Required for accessibility. Describe the content, not the file."),
+  provenance: imageProvenanceSchema.optional(),
+  link: linkSchema.optional(),
   fit: z.enum(["cover", "contain", "stretch"]).optional(),
   style: z.looseObject({
     rotate: z.number().optional(),
@@ -165,8 +203,8 @@ export const canvasNativeChartSchema = z.object({
 export const canvasDiagramSchema = z.object({
   ...canvasBase,
   type: z.literal("diagram"),
-  grammar: z.enum(["layered", "swimlane", "sequence", "hierarchy", "quadrant"])
-    .describe("A named diagram form. Slide Agent handles routing, spacing, and label placement."),
+  grammar: z.string().min(1)
+    .describe("A named diagram form; Slide Agent handles routing, spacing, and label placement. Built in: layered, swimlane, sequence, hierarchy, quadrant. A host can register more — ask for capabilities. An unknown name fails the build with the list of what is available."),
   spec: z.record(z.string(), z.unknown()).describe("The grammar's own payload. Fetch its schema from the contract."),
   alt: z.string().optional(),
 }).describe("A diagram expressed as a relationship rather than as hand-placed shapes.");

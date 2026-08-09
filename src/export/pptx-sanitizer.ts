@@ -4,6 +4,7 @@ import { DOMParser, XMLSerializer, type Document, type Element } from "@xmldom/x
 import JSZip from "jszip";
 
 import { ALL_SERIES_ELEMENTS, CHART_TYPE_SCHEMAS } from "../utils/chart-schema.js";
+import { buildTimestamp } from "../utils/reproducible.js";
 
 const CONTENT_TYPES = "[Content_Types].xml";
 const NOTES_MASTER = "ppt/notesMasters/notesMaster1.xml";
@@ -216,6 +217,9 @@ function repairChartSequences(document: Document): void {
   }
 }
 
+/** Children CT_CatAx and CT_DateAx allow that CT_ValAx does not. */
+const VALUE_AXIS_ONLY_INVALID = new Set(["c:auto", "c:lblAlgn", "c:lblOffset", "c:tickLblSkip", "c:tickMarkSkip", "c:noMultiLvlLbl"]);
+
 function repairChartAxes(xml: string, partName: string): string {
   const document = parseXml(xml, partName);
   const axisContainerNames = new Set(["c:catAx", "c:dateAx", "c:serAx", "c:valAx"]);
@@ -251,9 +255,47 @@ function repairChartAxes(xml: string, partName: string): string {
     stringRef.appendChild(stringCache);
     multiLevelRef.parentNode.replaceChild(stringRef, multiLevelRef);
   }
+  // `c:auto` belongs to a category or date axis, not a value axis. A scatter
+  // chart has value axes on both sides, and PptxGenJS writes the x axis with
+  // the category-axis children anyway, which PowerPoint repairs on open.
+  for (const axis of Array.from(document.getElementsByTagName("c:valAx"))) {
+    for (const child of directChildren(axis)) {
+      if (VALUE_AXIS_ONLY_INVALID.has(child.nodeName)) axis.removeChild(child);
+    }
+  }
+
   repairChartSequences(document);
   repairParagraphOrder(document);
   return serializeXml(document);
+}
+
+/**
+ * Give every entry and every recorded date in the package the run's single
+ * build timestamp. Two things vary otherwise: the per-entry modification time
+ * each file happened to be compressed at, and the `dcterms` dates PptxGenJS
+ * writes into `docProps/core.xml`. Both make otherwise identical builds differ
+ * byte for byte. Under `SOURCE_DATE_EPOCH` this makes the package reproducible;
+ * without it, it at least makes every part of one deck agree on when it was
+ * built.
+ */
+async function normalizePackageTimestamps(zip: JSZip): Promise<void> {
+  const stamp = buildTimestamp();
+  const iso = `${stamp.toISOString().slice(0, 19)}Z`;
+
+  const core = zip.files["docProps/core.xml"];
+  if (core) {
+    // Rewritten as text: the dates are leaf values, and reparsing the part
+    // through the DOM only to change two strings would risk reordering it.
+    const xml = await core.async("string");
+    // `createFolders` would reinstate the `docProps/` directory record the
+    // sanitizer has just removed; an OPC package does not carry those.
+    zip.file("docProps/core.xml", xml
+      .replace(/(<dcterms:created[^>]*>)[^<]*(<\/dcterms:created>)/, `$1${iso}$2`)
+      .replace(/(<dcterms:modified[^>]*>)[^<]*(<\/dcterms:modified>)/, `$1${iso}$2`),
+    { createFolders: false });
+  }
+
+  for (const entry of Object.values(zip.files)) entry.date = stamp;
 }
 
 /**
@@ -283,6 +325,8 @@ export class PptxSanitizer {
         delete zip.files[name];
       }
     }
+
+    await normalizePackageTimestamps(zip);
 
     const output = await zip.generateAsync({
       type: "nodebuffer",

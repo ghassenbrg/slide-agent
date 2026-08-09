@@ -1,8 +1,9 @@
 import type { ElementWriter, Frame } from "./components/element-writer.js";
 import type { Grid } from "./design/grid.js";
 import type { DeckTokens } from "./design/tokens.js";
-import type { ImageResolver } from "./images/image-manager.js";
-import type { LayoutRenderer } from "./layouts/layout-registry.js";
+import { remoteAssetPolicy, SUPPORTED_IMAGE_EXTENSIONS, type ImageResolver } from "./images/image-manager.js";
+import { BUILT_IN_LAYOUTS, type LayoutRenderer } from "./layouts/layout-registry.js";
+import { BUILT_IN_GRAMMARS } from "./diagrams/grammars.js";
 import type {
   ChartSpec,
   CreativeDirection,
@@ -23,6 +24,30 @@ import type {
  * one takes the resolved design system and returns work through `ElementWriter`
  * so extensions get the same manifest tracking and validation as built-ins.
  */
+
+/** Chart kinds the built-in renderer draws natively. */
+export const BUILT_IN_CHART_KINDS = [
+  "bar", "bar-stacked", "bar-horizontal", "line", "area",
+  "pie", "doughnut", "scatter", "radar", "waterfall",
+] as const;
+
+export interface Capabilities {
+  diagrams: Array<{ id: string; description: string }>;
+  charts: Array<{ id: string; kinds: string[] }>;
+  checks: Array<{ id: string; description?: string }>;
+  layouts: string[];
+  /** How, and whether, this installation can put a picture on a slide. */
+  images: {
+    localPaths: boolean;
+    /** `allowRemoteAssets` or SLIDE_AGENT_ALLOW_REMOTE_IMAGES. */
+    remoteUrls: boolean;
+    /** A host-installed resolver — stock search, an image generator. */
+    provider: string | null;
+    formats: string[];
+  };
+  renderBackend?: string;
+  tokenizer?: string;
+}
 
 /** Context handed to every visual extension. */
 export interface RenderContext {
@@ -130,19 +155,30 @@ export class ExtensionRegistry {
    * capabilities that are present rather than guessing, so this is published
    * through the CLI and MCP.
    */
-  public capabilities(): {
-    diagrams: Array<{ id: string; description: string }>;
-    charts: Array<{ id: string; kinds: string[] }>;
-    checks: Array<{ id: string; description?: string }>;
-    layouts: string[];
-    renderBackend?: string;
-    tokenizer?: string;
-  } {
+  public capabilities(): Capabilities {
+    // Built-ins are listed alongside host contributions. A model asking what
+    // this installation can do wants the whole answer, not the extensions.
+    const diagrams = new Map(BUILT_IN_GRAMMARS.map(({ id, description }) => [id, { id, description }]));
+    for (const { id, description } of this.diagramGrammars.values()) diagrams.set(id, { id, description });
+    const layouts = new Set<string>([...BUILT_IN_LAYOUTS, ...this.layoutRenderers.keys()]);
+
     return {
-      diagrams: [...this.diagramGrammars.values()].map(({ id, description }) => ({ id, description })),
-      charts: [...this.chartRenderers.values()].map(({ id, kinds }) => ({ id, kinds })),
+      diagrams: [...diagrams.values()],
+      charts: [
+        { id: "built-in", kinds: [...BUILT_IN_CHART_KINDS] },
+        ...[...this.chartRenderers.values()].map(({ id, kinds }) => ({ id, kinds })),
+      ],
       checks: [...this.qualityChecks.values()].map(({ id, description }) => ({ id, ...(description ? { description } : {}) })),
-      layouts: [...this.layoutRenderers.keys()],
+      layouts: [...layouts],
+      images: {
+        // The three ways a picture can reach a slide, stated plainly so a
+        // model plans within them instead of designing a photo-led deck it
+        // then cannot source a single image for.
+        localPaths: true,
+        remoteUrls: remoteAssetPolicy().allow,
+        provider: this.assets?.id ?? null,
+        formats: [...SUPPORTED_IMAGE_EXTENSIONS],
+      },
       ...(this.renderBackend ? { renderBackend: this.renderBackend.id } : {}),
       ...(this.tokenizer ? { tokenizer: this.tokenizer.id } : {}),
     };

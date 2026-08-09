@@ -106,6 +106,48 @@ export class AccessibilityValidator {
           }
         }
 
+        // A picture fetched from the web carries someone else's terms. The
+        // deck will be presented in a room and often circulated afterwards,
+        // so an uncredited stock image is a licence breach this tool helped
+        // commit. It cannot be detected from the pixels — only from whether
+        // the author recorded anything.
+        if (element.type === "image" && /^https?:/i.test(element.imageSource ?? "")
+          && !element.provenance?.credit && !element.provenance?.license) {
+          issues.push(issue(
+            "image-missing-credit",
+            "warning",
+            `${element.name} on slide ${slide.number} came from ${element.imageSource} with no credit or licence recorded. Add provenance.credit or provenance.license, or use an image you can attribute.`,
+            false,
+            { slide: slide.number, elementIds: [element.id], details: { source: element.imageSource } },
+          ));
+        }
+
+        // Not a defect: a note, so a reviewer can see at a glance which
+        // pictures nobody photographed. The credit block already discloses it
+        // in the deck itself.
+        if (element.provenance?.generated) {
+          issues.push(issue(
+            "generated-image",
+            "info",
+            `${element.name} on slide ${slide.number} is a generated image${element.provenance.generator ? ` (${element.provenance.generator})` : ""}. Make sure the slide does not present it as a photograph of something real.`,
+            false,
+            { slide: slide.number, elementIds: [element.id] },
+          ));
+        }
+
+        // A link a screen reader announces as "link, blank" is unusable. Text
+        // links carry their own label; a shape or image link needs alt text or
+        // a tooltip to say where it goes.
+        if (element.link && !element.text?.trim() && !element.altText?.trim()) {
+          issues.push(issue(
+            "unlabelled-link",
+            "warning",
+            `${element.name} on slide ${slide.number} links to ${element.link} with nothing to announce it. Add alt text or a link tooltip.`,
+            false,
+            { slide: slide.number, elementIds: [element.id], details: { link: element.link } },
+          ));
+        }
+
         if (enhanced && element.text?.trim() && element.textColor && !isDecorative(element)) {
           const background = visibleBackgroundFor(element, slide, this.config);
           const ratio = colorContrast(element.textColor, background);

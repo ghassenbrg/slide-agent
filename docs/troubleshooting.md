@@ -25,9 +25,13 @@ Restart the chat or host after installing; most hosts scan skills at startup.
 ## The deck is generic and full of `[placeholders]`
 
 You used the prompt path. `metadata.provenance` will read `template-draft`.
-That path deliberately produces scaffolding rather than inventing content. For
-a designed deck, give a model `slide-agent contract --format prompt` and build
-what it authors. See [quickstart](quickstart.md).
+That path deliberately produces scaffolding rather than inventing content:
+there is no model inside Slide Agent to design a deck.
+
+Use `slide-agent draft --prompt brief.md --output request.json` instead. It
+emits the same scaffolding as a request a model can fill in, and
+`slide-agent run --request request.json` builds what the model authored. See
+[quickstart](quickstart.md).
 
 ## PowerPoint asks to repair the file
 
@@ -35,15 +39,44 @@ Run `slide-agent validate --input deck.pptx`. `schema-violation` entries name
 the offending XML part and line. Decks from current versions validate cleanly
 against the official ECMA-376 schemas; please file an issue with the report.
 
+## The previews are SVGs, not rendered slides
+
+LibreOffice and Poppler are not installed, so Slide Agent drew the deck's own
+geometry instead of rendering it. A schematic shows position, size, colour, and
+where text wraps — enough to catch a collision, an overflow, or an empty
+slide — and nothing about typography, chart drawing, or anything else
+PowerPoint does. The result says `render.mode: "schematic"` and carries a
+warning; every slide is labelled.
+
+For a true render:
+
+```bash
+slide-agent install --with-render-deps
+```
+
+Pass `fallback: "none"` to the renderer if you would rather fail than receive a
+schematic.
+
 ## `RENDER_DEPENDENCY_MISSING`
 
-Previews need LibreOffice and Poppler:
+You asked for a true render — `fallback: "none"` — without LibreOffice and
+Poppler:
 
 ```bash
 slide-agent install --with-render-deps
 ```
 
 Creation, editing, and validation all work without them.
+
+If you set `SLIDE_AGENT_SOFFICE` or `SLIDE_AGENT_PDFTOPPM`, check the path: an
+explicit pin is used or nothing is, so a typo there reports the tool as
+missing rather than quietly running a different binary.
+
+## The typography looks wrong in the preview
+
+Run `slide-agent fonts --input deck.pptx`. A face the deck asks for that this
+machine does not have is substituted in the preview only; the deck itself is
+unaffected, and whoever opens it sees what they have installed.
 
 ## `REMOTE_ASSETS_DISABLED`
 

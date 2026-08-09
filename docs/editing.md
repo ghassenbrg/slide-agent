@@ -36,6 +36,7 @@ layer with targeted mutations and validates the result.
 | `replace-text` | Operates within individual text runs |
 | `remove-slide` | |
 | `duplicate-slide` / `add-slide` | Clones a source slide to preserve its master and layout |
+| `import-slide` | Copies a slide out of another `.pptx`, with its images, charts, and notes |
 | `reorder-slides` | |
 | `apply-theme` | Updates theme parts |
 | `replace-image` | |
@@ -46,7 +47,11 @@ layer with targeted mutations and validates the result.
 
 - Text split across differently formatted runs may need several targeted
   replacements.
-- Adding a slide clones an existing one. Cross-deck import is not implemented.
+- Adding a slide clones an existing one; `import-slide` copies one out of
+  another presentation. An imported slide brings its own shapes, images,
+  charts, embedded workbooks, and speaker notes, and is remapped onto a layout
+  in the destination deck so the result carries one theme rather than two. The
+  substitution is reported when the layouts do not correspond.
 - A duplicated slide can share chart parts with its source. Do not update one
   copy's chart data without checking the other in PowerPoint.
 - Direct per-shape formatting overrides a newly applied theme.

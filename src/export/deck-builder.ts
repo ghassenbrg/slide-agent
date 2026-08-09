@@ -13,6 +13,8 @@ import { CreativeDirector } from "../themes/creative-director.js";
 import { ThemeManager } from "../themes/theme-manager.js";
 import type { DeckManifest, ElementRecord, PresentationOutline, SlideAgentConfig, SlideSpec } from "../types/index.js";
 import { ensureContrast, requiredContrast } from "../utils/color.js";
+import { buildTimestamp } from "../utils/reproducible.js";
+import type { ExtensionRegistry } from "../extensions.js";
 
 export interface BuiltDeck {
   presentation: NativePresentation;
@@ -21,6 +23,36 @@ export interface BuiltDeck {
   config: SlideAgentConfig;
   /** Slides whose `kind` matched no registered layout and used a substitute. */
   layoutFallbacks: LayoutFallback[];
+  /**
+   * Hyperlinks refused by the scheme allowlist, with the slide they were on.
+   * Refusals are reported rather than silently dropped: a model that authored
+   * a `file://` link needs to know the deck shipped without it.
+   */
+  rejectedLinks: Array<{ slide: number; reason: string }>;
+}
+
+/**
+ * Attribution lines for the pictures on one slide.
+ *
+ * A licence that requires a credit is not satisfied by the credit sitting in
+ * a JSON file on the author's laptop; it has to travel with the deck. Speaker
+ * notes are where it can travel without the model having to find room for it
+ * in a composition it already balanced.
+ */
+function creditsFor(spec: SlideSpec): string[] {
+  const lines: string[] = [];
+  for (const element of spec.canvas ?? []) {
+    if (element.type !== "image") continue;
+    const { credit, license, generated, generator, source } = element.provenance ?? {};
+    if (generated) {
+      lines.push(`- ${element.alt} — generated image${generator ? ` (${String(generator)})` : ""}${credit ? `, ${String(credit)}` : ""}`);
+      continue;
+    }
+    if (!credit && !license) continue;
+    const origin = typeof source === "string" && /^https?:/i.test(source) ? ` — ${source}` : "";
+    lines.push(`- ${element.alt} — ${[credit, license].filter(Boolean).join(", ")}${origin}`);
+  }
+  return lines;
 }
 
 function notesFor(spec: SlideSpec): string {
@@ -32,24 +64,45 @@ function notesFor(spec: SlideSpec): string {
     }
     body.push("[/Sources]");
   }
+  const credits = creditsFor(spec);
+  if (credits.length > 0) {
+    body.push("", "[Credits]", ...credits, "[/Credits]");
+  }
   return body.join("\n");
 }
 
 export class DeckBuilder {
   public readonly layouts: LayoutRegistry;
   private readonly imageResolver: ImageResolver;
+  private readonly builtInImages: ImageManager;
 
   public constructor(
     private readonly config: SlideAgentConfig,
-    private readonly options: { layouts?: LayoutRegistry; imageResolver?: ImageResolver; remoteAssets?: RemoteAssetPolicy; brand?: BrandKit; bilingual?: BilingualMode } = {},
+    private readonly options: {
+      layouts?: LayoutRegistry;
+      imageResolver?: ImageResolver;
+      remoteAssets?: RemoteAssetPolicy;
+      brand?: BrandKit;
+      bilingual?: BilingualMode;
+      extensions?: ExtensionRegistry;
+    } = {},
   ) {
-    this.layouts = options.layouts ?? new LayoutRegistry(config);
+    this.layouts = options.layouts ?? new LayoutRegistry(config, options.extensions);
     // Per-user cache: a shared, world-readable directory under the system temp
     // path is writable by every account on the host.
-    this.imageResolver = options.imageResolver ?? new ImageManager(
+    this.builtInImages = new ImageManager(
       path.join(tmpdir(), `slide-agent-image-cache-${userInfo().username}`),
       options.remoteAssets ?? remoteAssetPolicy(),
     );
+    // A host resolver is the image-sourcing seam: stock search, a generation
+    // service, an internal asset library. It replaces the built-in entirely,
+    // so whatever it returns is what gets embedded.
+    this.imageResolver = options.extensions?.assets ?? options.imageResolver ?? this.builtInImages;
+  }
+
+  /** Format and compatibility notes raised while resolving images. */
+  public get imageWarnings(): string[] {
+    return this.builtInImages.warnings;
   }
 
   public async build(outline: PresentationOutline): Promise<BuiltDeck> {
@@ -64,12 +117,13 @@ export class DeckBuilder {
       presentationTitle: outline.brief.title,
       width: effectiveConfig.dimensions.width,
       height: effectiveConfig.dimensions.height,
-      createdAt: new Date().toISOString(),
+      createdAt: buildTimestamp().toISOString(),
       creativeDirection: design.direction,
       slides: [],
     };
 
     const layoutFallbacks: LayoutFallback[] = [];
+    const rejectedLinks: Array<{ slide: number; reason: string }> = [];
     for (let index = 0; index < resolvedOutline.slides.length; index += 1) {
       const rawSpec = this.options.bilingual
         ? withSecondaryLanguage(
@@ -85,7 +139,7 @@ export class DeckBuilder {
       const records: ElementRecord[] = [];
       const writer = new ElementWriter(slide, records, effectiveConfig);
       if (spec.canvas) {
-        new FreeformComposer(effectiveConfig, design.direction).render(writer, spec);
+        new FreeformComposer(effectiveConfig, design.direction, this.options.extensions).render(writer, spec);
       } else {
         const fallback = this.layouts.render(writer, spec, {
           slideNumber: index + 1,
@@ -95,6 +149,7 @@ export class DeckBuilder {
         if (fallback) layoutFallbacks.push(fallback);
       }
       await this.stampBrand(writer, index + 1, resolvedOutline.slides.length, effectiveConfig, design.direction);
+      for (const reason of writer.rejectedLinks) rejectedLinks.push({ slide: index + 1, reason });
       const notes = notesFor(spec);
       if (effectiveConfig.generation.includeSpeakerNotes && notes) slide.addNotes(notes);
       manifest.slides.push({
@@ -109,7 +164,7 @@ export class DeckBuilder {
         notes: spec.speakerNotes ?? [],
       });
     }
-    return { presentation, manifest, outline: resolvedOutline, config: effectiveConfig, layoutFallbacks };
+    return { presentation, manifest, outline: resolvedOutline, config: effectiveConfig, layoutFallbacks, rejectedLinks };
   }
 
   /**
@@ -162,8 +217,12 @@ export class DeckBuilder {
       ...spec.visual,
       path: await this.imageResolver.resolve(spec.visual.path),
     } : spec.visual;
+    // Resolution replaces the authored path with a local file, so the origin
+    // has to be preserved first or the manifest ends up recording a cache
+    // path and nothing about where the picture came from.
     const canvas = spec.canvas ? await Promise.all(spec.canvas.map(async (element) => element.type === "image" ? {
       ...element,
+      provenance: { ...element.provenance, source: element.provenance?.source ?? element.path },
       path: await this.imageResolver.resolve(element.path),
     } : element)) : undefined;
     return {

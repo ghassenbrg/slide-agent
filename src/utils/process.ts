@@ -65,15 +65,22 @@ export async function findExecutable(
   explicit?: string,
   directories: string[] = executableSearchDirectories(),
 ): Promise<string | undefined> {
+  const usable = async (candidate: string): Promise<boolean> =>
+    access(candidate, constants.X_OK).then(() => true).catch(() => false);
+
+  // An explicit path is a pin, not a hint. Searching on past a pin that does
+  // not resolve would silently run a different binary than the one the caller
+  // named — which is the opposite of what pinning it is for.
+  if (explicit) return await usable(explicit) ? explicit : undefined;
+
   const candidates = [
-    explicit,
     ...names.flatMap((name) => directories.flatMap((directory) => process.platform === "win32"
       ? [path.join(directory, `${name}.exe`), path.join(directory, `${name}.cmd`), path.join(directory, name)]
       : [path.join(directory, name)])),
     ...platformExecutableCandidates(names),
-  ].filter((candidate): candidate is string => Boolean(candidate));
+  ];
   for (const candidate of candidates) {
-    if (await access(candidate, constants.X_OK).then(() => true).catch(() => false)) return candidate;
+    if (await usable(candidate)) return candidate;
   }
   return undefined;
 }

@@ -69,7 +69,8 @@ describe.runIf(rendererAvailable)("preview rendering", () => {
     for (const preview of result.previewFiles) {
       expect((await stat(preview)).size).toBeGreaterThan(1_000);
     }
-    expect((await stat(result.pdfPath)).size).toBeGreaterThan(1_000);
+    expect(result.mode).toBe("render");
+    expect((await stat(result.pdfPath!)).size).toBeGreaterThan(1_000);
   });
 
   it("orders previews by slide number rather than lexically", async () => {

@@ -6,9 +6,22 @@ import { Grid, type Rect } from "../design/grid.js";
 import { densityBudget, resolveTokens, type DeckTokens } from "../design/tokens.js";
 import type { LayoutContext, SlideAgentConfig, SlideSpec } from "../types/index.js";
 import { accentForegroundOn, emphasisField, ensureContrast, foregroundOn, requiredContrast, secondaryForegroundOn } from "../utils/color.js";
+import { resolveFont, textBlockHeight } from "../design/font-metrics.js";
 import { estimatedLineCount } from "../validation/manifest-validator.js";
+import type { ExtensionRegistry } from "../extensions.js";
 
 export type LayoutRenderer = (writer: ElementWriter, spec: SlideSpec, context: LayoutContext) => void;
+
+/**
+ * The fallback layouts every installation has. Published through
+ * `capabilities()` so a model can see them without constructing a registry,
+ * and kept beside `registerDefaults` so the two cannot drift.
+ */
+export const BUILT_IN_LAYOUTS = [
+  "title", "section", "executive-summary", "text-image", "comparison",
+  "timeline", "process", "architecture", "table", "chart",
+  "kpi", "quote", "roadmap", "closing", "custom",
+] as const;
 
 export interface LayoutFallback {
   slide: number;
@@ -38,8 +51,9 @@ function readable(color: string, field: string, fontSize: number, bold = false):
 function addHeader(writer: ElementWriter, spec: SlideSpec, system: LayoutSystem): Rect {
   const { grid, tokens } = system;
   const fontSize = tokens.type.title;
-  const lines = Math.min(MAXIMUM_TITLE_LINES, estimatedLineCount(spec.title, grid.safe.w, fontSize));
-  const band = grid.titleBand(lines, fontSize);
+  const font = resolveFont(tokens.fonts.heading, true);
+  const lines = Math.min(MAXIMUM_TITLE_LINES, estimatedLineCount(spec.title, grid.safe.w, fontSize, font));
+  const band = grid.titleBand(lines, fontSize, font.lineHeight);
   writer.addText("slide-title", spec.title, band, {
     fontSize,
     fontFace: tokens.fonts.heading,
@@ -143,8 +157,7 @@ function renderTitle(writer: ElementWriter, spec: SlideSpec, _context: LayoutCon
   });
   cursor += tokens.type.caption / 72 * 1.6 + tokens.space.lg;
 
-  const titleLines = Math.min(4, estimatedLineCount(spec.title, primary.w, tokens.type.display));
-  const titleHeight = titleLines * (tokens.type.display / 72) * 1.15;
+  const titleHeight = textBlockHeight(spec.title, primary.w, tokens.type.display, resolveFont(tokens.fonts.heading, true), 4);
   writer.addText("deck-title", spec.title, { x: primary.x, y: cursor, w: primary.w, h: titleHeight }, {
     fontSize: tokens.type.display,
     fontFace: tokens.fonts.heading,
@@ -201,7 +214,7 @@ function renderSection(writer: ElementWriter, spec: SlideSpec, _context: LayoutC
     h: tokens.type.caption / 72 * 1.6,
   }, { fontSize: tokens.type.caption, bold: true, color: readable(accent, field, tokens.type.caption, true), fill: field, role: "eyebrow" });
 
-  const titleHeight = Math.min(3, estimatedLineCount(spec.title, safe.w * 0.86, tokens.type.display)) * (tokens.type.display / 72) * 1.15;
+  const titleHeight = textBlockHeight(spec.title, safe.w * 0.86, tokens.type.display, resolveFont(tokens.fonts.heading, true), 3);
   writer.addText("section-title", spec.title, {
     x: safe.x,
     y: safe.y + safe.h * 0.32,
@@ -247,8 +260,8 @@ function renderSummary(writer: ElementWriter, spec: SlideSpec, context: LayoutCo
   const rows = grid.packRows(
     secondary,
     bullets.map((bullet) => {
-      const lines = estimatedLineCount(bullet, secondary.w - indexWidth - tokens.space.sm, tokens.type.body);
-      return lines * (tokens.type.body / 72) * 1.35 + tokens.space.md;
+      const height = textBlockHeight(bullet, secondary.w - indexWidth - tokens.space.sm, tokens.type.body, resolveFont(tokens.fonts.body));
+      return height + tokens.space.md;
     }),
     tokens.space.md,
   );
@@ -542,14 +555,15 @@ function renderQuote(writer: ElementWriter, spec: SlideSpec, context: LayoutCont
 
   const quoteText = spec.quote?.text ?? spec.title;
   const quoteWidth = safe.w * 0.84;
-  const quoteHeight = Math.min(safe.h * 0.5, estimatedLineCount(quoteText, quoteWidth, tokens.type.subheading) * (tokens.type.subheading / 72) * 1.35);
+  const quoteSize = Math.round(tokens.type.subheading * 1.25);
+  const quoteHeight = Math.min(safe.h * 0.5, textBlockHeight(quoteText, quoteWidth, quoteSize, resolveFont(tokens.fonts.heading, true)));
   writer.addText("quote-text", quoteText, {
     x: safe.x + safe.w * 0.08,
     y: safe.y + safe.h * 0.28,
     w: quoteWidth,
     h: quoteHeight,
   }, {
-    fontSize: Math.round(tokens.type.subheading * 1.25),
+    fontSize: quoteSize,
     fontFace: tokens.fonts.heading,
     bold: true,
     color: readable(tokens.palette.ink, tokens.palette.background, tokens.type.subheading, true),
@@ -639,7 +653,7 @@ function renderClosing(writer: ElementWriter, spec: SlideSpec, _context: LayoutC
     h: tokens.type.caption / 72 * 1.6,
   }, { fontSize: tokens.type.caption, bold: true, color: readable(accent, field, tokens.type.caption, true), fill: field, role: "eyebrow" });
 
-  const titleHeight = Math.min(3, estimatedLineCount(spec.title, primary.w, tokens.type.title)) * (tokens.type.title / 72) * 1.2;
+  const titleHeight = textBlockHeight(spec.title, primary.w, tokens.type.title, resolveFont(tokens.fonts.heading, true), 3);
   writer.addText("closing-title", spec.title, {
     x: primary.x,
     y: safe.y + safe.h * 0.28,
@@ -708,15 +722,22 @@ export class LayoutRegistry {
   /** When true, an unregistered layout id throws instead of falling back. */
   public strict = false;
 
-  public constructor(config: SlideAgentConfig) {
-    this.system = LayoutRegistry.systemFor(config);
+  public constructor(config: SlideAgentConfig, private readonly extensions?: ExtensionRegistry) {
+    this.system = LayoutRegistry.systemFor(config, undefined, extensions);
     this.diagrams = new DiagramBuilder(config, this.system.tokens, this.system.grid);
-    this.charts = new ChartBuilder(config, this.system.tokens);
+    this.charts = new ChartBuilder(config, this.system.tokens, extensions);
     this.registerDefaults();
+    // Host layouts register last so an organisation can replace a built-in of
+    // the same name rather than only add beside it.
+    for (const [id, renderer] of Object.entries(extensions?.layouts ?? {})) this.register(id, renderer);
   }
 
-  private static systemFor(config: SlideAgentConfig, direction?: SlideSpec extends never ? never : Parameters<typeof resolveTokens>[1]): LayoutSystem {
-    const tokens = resolveTokens(config, direction);
+  private static systemFor(
+    config: SlideAgentConfig,
+    direction?: SlideSpec extends never ? never : Parameters<typeof resolveTokens>[1],
+    extensions?: ExtensionRegistry,
+  ): LayoutSystem {
+    const tokens = extensions?.tokenizer?.derive(config, direction, config.dimensions) ?? resolveTokens(config, direction);
     return { tokens, grid: new Grid(config.dimensions, tokens), config };
   }
 
@@ -728,9 +749,9 @@ export class LayoutRegistry {
 
   /** Refreshes the design system while retaining every registered renderer. */
   public configure(config: SlideAgentConfig, direction?: Parameters<typeof resolveTokens>[1]): this {
-    this.system = LayoutRegistry.systemFor(config, direction);
+    this.system = LayoutRegistry.systemFor(config, direction, this.extensions);
     this.diagrams = new DiagramBuilder(config, this.system.tokens, this.system.grid);
-    this.charts = new ChartBuilder(config, this.system.tokens);
+    this.charts = new ChartBuilder(config, this.system.tokens, this.extensions);
     return this;
   }
 

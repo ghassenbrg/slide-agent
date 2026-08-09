@@ -1,5 +1,5 @@
 import { createServer, type Server } from "node:http";
-import { mkdtemp, rm, stat } from "node:fs/promises";
+import { mkdir, mkdtemp, rm, stat, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
@@ -7,6 +7,12 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { ImageManager, detectImageExtension, isPrivateAddress, readCappedStream, remoteAssetPolicy } from "../../src/images/image-manager.js";
 
 const PNG_HEADER = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
+const PNG_BYTES = Buffer.concat([PNG_HEADER, Buffer.alloc(64)]);
+
+/** RIFF....WEBP — the magic bytes, which is all the detector reads. */
+const WEBP_BYTES = Buffer.concat([
+  Buffer.from("RIFF"), Buffer.alloc(4), Buffer.from("WEBP"), Buffer.alloc(32),
+]);
 
 let cacheDir: string;
 let server: Server;
@@ -114,10 +120,38 @@ describe("ImageManager remote policy", () => {
     await expect(manager.resolve("data:image/png;base64,AAAA")).rejects.toMatchObject({ code: "UNSUPPORTED_ASSET_SCHEME" });
   });
 
-  it("still resolves ordinary local files", async () => {
+  it("still resolves ordinary local image files", async () => {
     const manager = new ImageManager(cacheDir);
-    const resolved = await manager.resolve(path.resolve("package.json"));
+    const file = path.join(cacheDir, "local.png");
+    await mkdir(cacheDir, { recursive: true });
+    await writeFile(file, PNG_BYTES);
+    const resolved = await manager.resolve(file);
     expect((await stat(resolved)).isFile()).toBe(true);
+  });
+
+  it("refuses a local file that is not an image PowerPoint can embed", async () => {
+    // Local files used to skip every check the download path applies, which
+    // is the route generated images and logos take.
+    const manager = new ImageManager(cacheDir);
+    await expect(manager.resolve(path.resolve("package.json")))
+      .rejects.toMatchObject({ code: "IMAGE_FORMAT_UNSUPPORTED" });
+  });
+
+  it("names the reason an SVG cannot be embedded", async () => {
+    const manager = new ImageManager(cacheDir);
+    const file = path.join(cacheDir, "logo.svg");
+    await mkdir(cacheDir, { recursive: true });
+    await writeFile(file, '<svg xmlns="http://www.w3.org/2000/svg"><rect width="1" height="1"/></svg>');
+    await expect(manager.resolve(file)).rejects.toThrow(/enhancement to a raster image/);
+  });
+
+  it("warns that WebP does not render in older PowerPoint", async () => {
+    const manager = new ImageManager(cacheDir);
+    const file = path.join(cacheDir, "shot.webp");
+    await mkdir(cacheDir, { recursive: true });
+    await writeFile(file, WEBP_BYTES);
+    await manager.resolve(file);
+    expect(manager.warnings.join(" ")).toMatch(/PowerPoint 2019/);
   });
 
   it("reads the policy from the environment", () => {

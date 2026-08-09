@@ -54,4 +54,7 @@ export const ChartTypes = {
   line: "line",
   pie: "pie",
   area: "area",
+  doughnut: "doughnut",
+  scatter: "scatter",
+  radar: "radar",
 } as const;

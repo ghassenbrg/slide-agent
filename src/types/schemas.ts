@@ -12,6 +12,7 @@ const editOperation = z.discriminatedUnion("type", [
   z.object({ type: z.literal("replace-text"), find: z.string(), replace: z.string(), slide: z.number().int().positive().optional(), replaceAll: z.boolean().optional() }),
   z.object({ type: z.literal("remove-slide"), slide: z.number().int().positive() }),
   z.object({ type: z.enum(["duplicate-slide", "add-slide"]), slide: z.number().int().positive(), insertAt: z.number().int().positive().optional(), replacements: z.array(z.object({ find: z.string(), replace: z.string() })).optional() }),
+  z.object({ type: z.literal("import-slide"), source: z.string().min(1), slide: z.number().int().positive(), insertAt: z.number().int().positive().optional(), replacements: z.array(z.object({ find: z.string(), replace: z.string() })).optional() }),
   z.object({ type: z.literal("reorder-slides"), order: z.array(z.number().int().positive()) }),
   z.object({ type: z.literal("apply-theme"), colors: z.record(z.string(), z.string()).optional(), headingFont: z.string().optional(), bodyFont: z.string().optional() }),
   z.object({ type: z.literal("replace-image"), slide: z.number().int().positive(), imagePath: z.string(), name: z.string().optional(), relationshipId: z.string().optional() }),

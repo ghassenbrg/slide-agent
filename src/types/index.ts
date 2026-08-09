@@ -16,7 +16,17 @@ export type SlideKind =
   | "custom"
   | (string & {});
 
-export type ChartKind = "bar" | "line" | "pie" | "area" | "waterfall";
+export type ChartKind =
+  | "bar"
+  | "bar-stacked"
+  | "bar-horizontal"
+  | "line"
+  | "pie"
+  | "doughnut"
+  | "area"
+  | "scatter"
+  | "radar"
+  | "waterfall";
 export type PresentationType =
   | "business"
   | "sales"
@@ -200,10 +210,17 @@ export interface CanvasElementBase {
   allowOverlapWith?: string[];
 }
 
+/**
+ * A hyperlink target. Only http, https, and mailto survive validation; a
+ * `slide` link points inside the same deck.
+ */
+export type CanvasLink = string | { url: string; tooltip?: string } | { slide: number; tooltip?: string };
+
 export interface CanvasTextElement extends CanvasElementBase {
   type: "text";
   text?: string;
   runs?: CanvasTextRun[];
+  link?: CanvasLink;
   style?: {
     fontSize?: number;
     fontFace?: string;
@@ -227,6 +244,7 @@ export interface CanvasShapeElement extends CanvasElementBase {
   type: "shape";
   /** Any PptxGenJS shape name, not a Slide Agent whitelist. */
   shape?: string;
+  link?: CanvasLink;
   style?: {
     fill?: string;
     transparency?: number;
@@ -249,10 +267,22 @@ export interface CanvasConnectorElement extends CanvasElementBase {
   };
 }
 
+/** Attribution and origin for one image. See `imageProvenanceSchema`. */
+export interface ImageProvenance {
+  source?: string;
+  credit?: string;
+  license?: string;
+  generated?: boolean;
+  generator?: string;
+  [key: string]: unknown;
+}
+
 export interface CanvasImageElement extends CanvasElementBase {
   type: "image";
   path: string;
   alt: string;
+  provenance?: ImageProvenance;
+  link?: CanvasLink;
   fit?: "cover" | "contain" | "stretch";
   style?: {
     rotate?: number;
@@ -288,7 +318,8 @@ export interface CanvasNativeChartElement extends CanvasElementBase {
 /** A diagram described as a relationship; Slide Agent places the geometry. */
 export interface CanvasDiagramElement extends CanvasElementBase {
   type: "diagram";
-  grammar: "layered" | "swimlane" | "sequence" | "hierarchy" | "quadrant";
+  /** A built-in grammar or one a host registered. Checked when the slide is built. */
+  grammar: string;
   spec: Record<string, unknown>;
   alt?: string;
 }
@@ -458,6 +489,15 @@ export interface ElementRecord {
   imagePath?: string;
   /** Alternative text for images and charts; drives accessibility checks. */
   altText?: string;
+  /** A checked hyperlink target: an absolute URL, or `slide:N` within the deck. */
+  link?: string;
+  /**
+   * What the author wrote in `path`, before the resolver turned it into a
+   * local file. Without it the manifest records only a cache path, so a deck
+   * built from a URL could not say where its pictures came from.
+   */
+  imageSource?: string;
+  provenance?: ImageProvenance;
   intentionalOverlap?: boolean;
   allowOverlapWith?: string[];
   metadata?: Record<string, unknown>;
@@ -490,6 +530,13 @@ export interface DeckManifest {
    * before trusting its authoring metadata (for example intentional overlap).
    */
   packageSha256?: string;
+  /**
+   * Where this manifest came from. `authored` was written by a build and
+   * carries the author's intent — deliberate overlap, roles, alt text.
+   * `inspected` was recovered from the package alone, where none of that
+   * intent survives, so checks that depend on it soften rather than fail.
+   */
+  source?: "authored" | "inspected";
   slides: SlideManifest[];
 }
 
@@ -536,6 +583,8 @@ export interface ValidationReport {
     status: "pass" | "fail" | "skipped";
     previewFiles: string[];
     pdfPath?: string;
+    /** `schematic` previews are drawings of the geometry, not rendered slides. */
+    mode?: "render" | "schematic";
     error?: string;
   };
 }
@@ -637,6 +686,22 @@ export interface DuplicateSlideOperation {
   replacements?: Array<{ find: string; replace: string }>;
 }
 
+/**
+ * Copy one slide out of another presentation. The slide arrives with its own
+ * shapes, images, charts, and speaker notes, remapped onto a layout in the
+ * destination deck so the result carries one theme rather than two.
+ */
+export interface ImportSlideOperation {
+  type: "import-slide";
+  /** Path to the source .pptx. */
+  source: string;
+  /** 1-based slide number in the source deck. */
+  slide: number;
+  /** 1-based position in the destination deck. Appends when omitted. */
+  insertAt?: number;
+  replacements?: Array<{ find: string; replace: string }>;
+}
+
 export interface ReorderSlidesOperation {
   type: "reorder-slides";
   order: number[];
@@ -677,6 +742,7 @@ export type EditOperation =
   | ReplaceTextOperation
   | RemoveSlideOperation
   | DuplicateSlideOperation
+  | ImportSlideOperation
   | ReorderSlidesOperation
   | ApplyThemeOperation
   | ReplaceImageOperation
@@ -745,9 +811,17 @@ export interface LayoutContext {
 
 export interface RenderResult {
   previewFiles: string[];
-  pdfPath: string;
+  /** Absent for a schematic preview, which produces no PDF. */
+  pdfPath?: string;
   width: number;
   height: number;
+  /**
+   * `render` is LibreOffice's true render. `schematic` is Slide Agent's own
+   * drawing of the deck's geometry, used when the preview tools are absent —
+   * accurate about position, size, colour, and wrapping, and about nothing
+   * else. Callers that need a faithful image must check this.
+   */
+  mode?: "render" | "schematic";
 }
 
 export interface PptxInspection {

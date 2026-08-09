@@ -18,6 +18,7 @@ Every page here is generated from `src/contract`. Change the contract, run
 - [Diagrams and systems](diagrams.md) — A diagram earns its place when the relationship between things is the point. Give nodes meaning, route edges deliberately, and label both. A box-and-arrow row that restates a bulleted list is worse than the list.
 - [Charts, tables, and data](data.md) — Use a native chart when the data relationship is the argument, a native table when precise lookup is the argument, and editable shapes when the honest visual form is not a standard chart.
 - [Accessibility](accessibility.md) — Slide Agent checks contrast, alt text, reading order, and type size, and reports what it cannot repair. Meeting the floor is the minimum, not the design goal.
+- [Where pictures come from](imagery.md) — A slide can only show a picture that already exists as a file this machine can read. Slide Agent does not search for images and does not generate them: choosing imagery is your judgement, not the renderer's, and a stock API or a generation service inside the build tool would mean credentials and licence terms in a package whose whole posture is that it does not fetch things.
 - [Honesty](honesty.md) — The deck will be presented by a person who has to stand behind it.
 - [Build, inspect, and revise](workflow.md) — Supply a complete outline or scene. Prompt-only mode produces a structural draft with placeholders; it is a starting point, not a substitute for your judgement, and it labels itself as such.
 

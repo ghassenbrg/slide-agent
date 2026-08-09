@@ -3,6 +3,8 @@ import { homedir, tmpdir } from "node:os";
 import path from "node:path";
 
 import { CONTRACT_VERSION } from "./contract/index.js";
+import { loadConfig } from "./config/load-config.js";
+import { checkFontAvailability } from "./design/font-availability.js";
 import { findExecutable } from "./utils/process.js";
 import { VERSION } from "./version.js";
 
@@ -178,6 +180,28 @@ export async function runDoctorReport(): Promise<DoctorReport> {
     detail: pdftoppm ?? "not found",
     ...(pdftoppm ? {} : { remedy: renderRemedy }),
   });
+
+  // Advisory, never an error: the default faces are what a deck falls back to
+  // when a model does not choose, and a machine without them still builds a
+  // correct deck — it just previews it in something else.
+  const defaults = await loadConfig().then(
+    (config) => [config.fonts.heading, config.fonts.body, config.fonts.mono],
+    () => [],
+  );
+  if (defaults.length > 0) {
+    const availability = await checkFontAvailability(defaults);
+    const missing = availability.filter((entry) => !entry.available);
+    checks.push({
+      name: "Default fonts (optional)",
+      status: missing.length === 0 ? "ok" : "warning",
+      detail: missing.length === 0
+        ? `${availability.map((entry) => entry.family).join(", ")} all resolve on this machine`
+        : `${missing.map((entry) => entry.family).join(", ")} not installed here`,
+      ...(missing.length === 0 ? {} : {
+        remedy: "Previews on this machine substitute another face. The decks you produce are unaffected; install the fonts if you need the previews to be faithful.",
+      }),
+    });
+  }
 
   const mcpLauncher = await findExecutable(["slide-agent-mcp"]);
   const mcpHosts = await mcpEvidence(home);

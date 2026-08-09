@@ -24,6 +24,16 @@ export * from "./contract/index.js";
 export * from "./extensions.js";
 export { fallbackFontFor, isRightToLeft, secondaryTextFor, withSecondaryLanguage, type BilingualMode } from "./design/bilingual.js";
 export { applyBrandKit, brandKitSchema, footerAppliesTo, loadBrandKit, logoAppliesTo, type BrandKit } from "./design/brand.js";
+export {
+  brandKitFromTemplate,
+  footerTextIn,
+  isTemplateFile,
+  normalizeKitColors,
+  paletteFromTheme,
+  parseTheme,
+  type TemplateImportOptions,
+  type TemplateTheme,
+} from "./design/template.js";
 export { AccessibilityValidator, type AccessibilityOptions } from "./validation/accessibility.js";
 export { scoreDeck } from "./validation/quality.js";
 export { ManifestValidator } from "./validation/manifest-validator.js";
@@ -38,6 +48,23 @@ export { ThemeManager } from "./themes/theme-manager.js";
 export { ElementWriter, type Frame } from "./components/element-writer.js";
 export { planOutline } from "./planner/index.js";
 export { reviseScene, type ReviseSceneResult } from "./serialization/revise-scene.js";
+export { buildTimestamp, isReproducibleBuild, setBuildTimestamp } from "./utils/reproducible.js";
+export {
+  checkFontAvailability,
+  fontAvailabilityAdvice,
+  installedFontFiles,
+  type FontAvailability,
+} from "./design/font-availability.js";
+export { renderSchematic, slideToSvg, type SchematicResult } from "./rendering/schematic.js";
+export {
+  measureTextWidth,
+  resolveFont,
+  textBlockHeight,
+  wrapLineCount,
+  wrappedTextHeight,
+  type FontClass,
+  type ResolvedFont,
+} from "./design/font-metrics.js";
 export { diffDecks, formatDiff, type DeckDiff, type ElementChange, type SlideDiff } from "./serialization/diff.js";
 export {
   chartFromData,
