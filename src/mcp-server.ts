@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 import { realpathSync } from "node:fs";
+import { readFile, stat } from "node:fs/promises";
+import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { McpServer } from "@modelcontextprotocol/server";
@@ -32,6 +34,85 @@ function toolResult(result: AgentResult | unknown, isError = false) {
   };
 }
 
+/**
+ * A model that cannot see what it built can only revise from its own
+ * assumptions. Slide previews already exist on disk after a render; returning
+ * them as MCP image content is what closes render → look → revise for a host
+ * that has no filesystem access of its own.
+ */
+export const PREVIEW_IMAGE_LIMITS = {
+  /** Beyond this a long deck costs more context than the look is worth. */
+  maximumImages: 20,
+  /** Total decoded bytes across all returned previews. */
+  maximumTotalBytes: 12 * 1024 * 1024,
+};
+
+function slideOrdinal(file: string): number {
+  return Number(path.basename(file).match(/(\d+)\.png$/i)?.[1] ?? Number.MAX_SAFE_INTEGER);
+}
+
+/**
+ * The slide previews a render wrote, in slide order. `render` and `validate`
+ * report previews only under `generatedFiles`, while `create` splits them out
+ * into `artifacts`, so both lists are consulted.
+ */
+export function previewImagePaths(result: AgentResult): string[] {
+  const candidates = new Set([...(result.artifacts ?? []), ...(result.generatedFiles ?? [])]);
+  return [...candidates]
+    .filter((file) => /^slide-\d+\.png$/i.test(path.basename(file)))
+    .sort((left, right) => slideOrdinal(left) - slideOrdinal(right));
+}
+
+type ImageContent = { type: "image"; data: string; mimeType: string };
+
+export async function previewImageContent(
+  result: AgentResult,
+  limits = PREVIEW_IMAGE_LIMITS,
+): Promise<{ images: ImageContent[]; omitted: number }> {
+  const paths = previewImagePaths(result);
+  const images: ImageContent[] = [];
+  let budget = limits.maximumTotalBytes;
+
+  for (const file of paths.slice(0, limits.maximumImages)) {
+    // A preview is written by this process into its own artifacts directory,
+    // but a caller can point `previewsDir` anywhere, so size is checked before
+    // the bytes are read rather than after.
+    const size = await stat(file).then((entry) => entry.size).catch(() => undefined);
+    if (size === undefined || size > budget) break;
+    const bytes = await readFile(file).catch(() => undefined);
+    if (!bytes) break;
+    budget -= bytes.byteLength;
+    images.push({ type: "image", data: bytes.toString("base64"), mimeType: "image/png" });
+  }
+
+  return { images, omitted: paths.length - images.length };
+}
+
+/**
+ * The JSON result plus every slide preview the run produced. `includeImages`
+ * defaults to true: a host that cannot display images ignores the blocks, and
+ * one that can no longer has to guess what the deck looks like.
+ */
+async function toolResultWithPreviews(result: AgentResult, includeImages = true) {
+  const isError = result.status === "error";
+  if (!includeImages) return toolResult(result, isError);
+
+  const { images, omitted } = await previewImageContent(result);
+  if (images.length === 0) return toolResult(result, isError);
+
+  const note = omitted > 0
+    ? `\n\n${images.length} of ${images.length + omitted} slide previews follow. The rest are on disk under the artifacts directory.`
+    : `\n\n${images.length} slide preview${images.length === 1 ? "" : "s"} follow, in slide order.`;
+
+  return {
+    content: [
+      { type: "text" as const, text: `${JSON.stringify(result, null, 2)}${note}` },
+      ...images,
+    ],
+    isError,
+  };
+}
+
 const INSTRUCTIONS = `Slide Agent builds editable PowerPoint decks from a design you author.
 
 Read slide-agent://contract/guide first — it is the complete authoring guide.
@@ -42,7 +123,11 @@ Call slide_agent_run with that outline or scene.
 
 create_presentation takes only a prompt and returns a structural draft full of
 bracketed placeholders. Use it to start, never to finish. Always read the
-validation report before reporting success.`;
+validation report before reporting success.
+
+Ask for render when you build. Every build, edit, and render tool returns the
+slide previews as images: look at them, and revise what reads badly with
+revise_presentation rather than reporting a deck you have never seen.`;
 
 export function buildMcpServer(): McpServer {
   const server = new McpServer(
@@ -165,11 +250,12 @@ export function buildMcpServer(): McpServer {
       request: z.looseObject({
         command: z.enum(["create", "edit", "render", "validate", "revise"]),
       }).describe("A structured request. slide-agent://contract carries the full schema for each command."),
+      includeImages: z.boolean().optional().describe("Return the rendered slide previews as images. Default true. Requires render."),
     }),
     annotations: { destructiveHint: false, idempotentHint: false },
-  }, async ({ request }: { request: Record<string, unknown> }) => {
+  }, async ({ request, includeImages }: { request: Record<string, unknown>; includeImages?: boolean }) => {
     const result = await new SlideAgent().execute(parseStructuredRequest(request));
-    return toolResult(result, result.status === "error");
+    return toolResultWithPreviews(result, includeImages);
   });
 
   server.registerTool("get_authoring_contract", {
@@ -224,11 +310,12 @@ export function buildMcpServer(): McpServer {
       validate: z.boolean().optional(),
       autoFix: z.boolean().optional(),
       maxRetries: z.number().int().min(0).max(10).optional(),
+      includeImages: z.boolean().optional().describe("Return the rendered slide previews as images. Default true. Requires render."),
     }),
     annotations: { destructiveHint: false, idempotentHint: false },
-  }, async (input: { prompt: string; output: string; render?: boolean; validate?: boolean; autoFix?: boolean; maxRetries?: number }) => {
+  }, async ({ includeImages, ...input }: { prompt: string; output: string; render?: boolean; validate?: boolean; autoFix?: boolean; maxRetries?: number; includeImages?: boolean }) => {
     const result = await new SlideAgent().create({ command: "create", ...input });
-    return toolResult(result, result.status === "error");
+    return toolResultWithPreviews(result, includeImages);
   });
 
   server.registerTool("revise_presentation", {
@@ -242,11 +329,12 @@ export function buildMcpServer(): McpServer {
       scene: z.string().optional().describe("Override the scene path when it is not beside the deck."),
       validate: z.boolean().optional(),
       render: z.boolean().optional(),
+      includeImages: z.boolean().optional().describe("Return the rendered slide previews as images. Default true. Requires render."),
     }),
     annotations: { destructiveHint: false, idempotentHint: false },
-  }, async (input: { input: string; output: string; slide: number; sceneNdjson: string; scene?: string; validate?: boolean; render?: boolean }) => {
+  }, async ({ includeImages, ...input }: { input: string; output: string; slide: number; sceneNdjson: string; scene?: string; validate?: boolean; render?: boolean; includeImages?: boolean }) => {
     const result = await new SlideAgent().revise({ command: "revise", ...input });
-    return toolResult(result, result.status === "error");
+    return toolResultWithPreviews(result, includeImages);
   });
 
   server.registerTool("edit_presentation", {
@@ -256,30 +344,32 @@ export function buildMcpServer(): McpServer {
       input: z.string().min(1),
       output: z.string().min(1),
       operations: z.array(z.looseObject({ type: z.string() })).min(1)
-        .describe("replace-text, remove-slide, duplicate-slide, add-slide, reorder-slides, apply-theme, replace-image, update-table, or update-chart."),
+        .describe("replace-text, remove-slide, duplicate-slide, add-slide, import-slide, reorder-slides, apply-theme, replace-image, update-table, or update-chart."),
       render: z.boolean().optional(),
       validate: z.boolean().optional(),
+      includeImages: z.boolean().optional().describe("Return the rendered slide previews as images. Default true. Requires render."),
     }),
     annotations: { destructiveHint: false, idempotentHint: false },
-  }, async (input: Record<string, unknown>) => {
+  }, async ({ includeImages, ...input }: Record<string, unknown> & { includeImages?: boolean }) => {
     const request = parseStructuredRequest({ command: "edit", ...input });
     const result = await new SlideAgent().execute(request);
-    return toolResult(result, result.status === "error");
+    return toolResultWithPreviews(result, includeImages);
   });
 
   server.registerTool("render_presentation", {
     title: "Render PowerPoint presentation",
-    description: "Render every slide to PNG previews and a PDF using LibreOffice and Poppler.",
+    description: "Render every slide to PNG previews and a PDF, and return those previews as images so you can see what you built. Look at them before reporting success.",
     inputSchema: z.object({
       input: z.string().min(1),
       output: z.string().min(1),
       width: z.number().int().positive().optional(),
       height: z.number().int().positive().optional(),
+      includeImages: z.boolean().optional().describe("Return the slide previews as images. Default true."),
     }),
     annotations: { destructiveHint: false, idempotentHint: true },
-  }, async (input: { input: string; output: string; width?: number; height?: number }) => {
+  }, async ({ includeImages, ...input }: { input: string; output: string; width?: number; height?: number; includeImages?: boolean }) => {
     const result = await new SlideAgent().render({ command: "render", ...input });
-    return toolResult(result, result.status === "error");
+    return toolResultWithPreviews(result, includeImages);
   });
 
   server.registerTool("validate_presentation", {
@@ -291,11 +381,12 @@ export function buildMcpServer(): McpServer {
       manifest: z.string().optional(),
       previewsDir: z.string().optional(),
       render: z.boolean().optional(),
+      includeImages: z.boolean().optional().describe("Return the rendered slide previews as images. Default true. Requires render."),
     }),
     annotations: { destructiveHint: false, idempotentHint: true },
-  }, async (input: { input: string; report?: string; manifest?: string; previewsDir?: string; render?: boolean }) => {
+  }, async ({ includeImages, ...input }: { input: string; report?: string; manifest?: string; previewsDir?: string; render?: boolean; includeImages?: boolean }) => {
     const result = await new SlideAgent().validate({ command: "validate", ...input });
-    return toolResult(result, result.status === "error");
+    return toolResultWithPreviews(result, includeImages);
   });
 
   server.registerTool("slide_agent_doctor", {

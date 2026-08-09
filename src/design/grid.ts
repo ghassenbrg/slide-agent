@@ -100,8 +100,14 @@ export class Grid {
   }
 
   /** The title band, sized to the number of lines the title actually needs. */
-  public titleBand(lines: number, fontSize: number): Rect {
-    const height = Math.max(fontSize / 72 * 1.18, lines * (fontSize / 72) * 1.18);
+  /**
+   * `lineHeight` is the single line spacing of the face the title is set in,
+   * not a constant: Segoe UI leads at 1.33 and Times at 1.15, and a band built
+   * for the wrong one is either short enough to clip or tall enough to push the
+   * content band off the stage.
+   */
+  public titleBand(lines: number, fontSize: number, lineHeight = 1.18): Rect {
+    const height = Math.max(1, lines) * (fontSize / 72) * lineHeight;
     return { x: this.safe.x, y: this.safe.y, w: this.safe.w, h: height };
   }
 

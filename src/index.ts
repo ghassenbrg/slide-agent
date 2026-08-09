@@ -38,6 +38,16 @@ export { ThemeManager } from "./themes/theme-manager.js";
 export { ElementWriter, type Frame } from "./components/element-writer.js";
 export { planOutline } from "./planner/index.js";
 export { reviseScene, type ReviseSceneResult } from "./serialization/revise-scene.js";
+export { buildTimestamp, isReproducibleBuild, setBuildTimestamp } from "./utils/reproducible.js";
+export {
+  measureTextWidth,
+  resolveFont,
+  textBlockHeight,
+  wrapLineCount,
+  wrappedTextHeight,
+  type FontClass,
+  type ResolvedFont,
+} from "./design/font-metrics.js";
 export { diffDecks, formatDiff, type DeckDiff, type ElementChange, type SlideDiff } from "./serialization/diff.js";
 export {
   chartFromData,

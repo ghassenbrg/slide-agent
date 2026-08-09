@@ -1,6 +1,7 @@
 import path from "node:path";
 import type { CanvasTextRun, ChartSpec, ElementRecord, SlideAgentConfig, TableSpec } from "../types/index.js";
 import { emphasisField, foregroundOn } from "../utils/color.js";
+import { checkLink, sanitizeNativeOptions, toNativeHyperlink, type DeckLink } from "../utils/links.js";
 import { Shapes, type NativeSlide } from "./pptx-values.js";
 
 export interface Frame {
@@ -39,6 +40,8 @@ export interface TextStyle {
   role?: string;
   intentionalOverlap?: boolean;
   rotate?: number;
+  /** A URL, `{url}`, or `{slide}`. Checked against the scheme allowlist. */
+  link?: unknown;
   options?: Record<string, unknown>;
 }
 
@@ -51,6 +54,7 @@ export interface ShapeStyle {
   role?: string;
   intentionalOverlap?: boolean;
   rotate?: number;
+  link?: unknown;
   options?: Record<string, unknown>;
 }
 
@@ -60,11 +64,15 @@ export interface ImageStyle {
   transparency?: number;
   role?: string;
   intentionalOverlap?: boolean;
+  link?: unknown;
   options?: Record<string, unknown>;
 }
 
 export class ElementWriter {
   private sequence = 0;
+
+  /** Links refused by the scheme allowlist, surfaced as build warnings. */
+  public readonly rejectedLinks: string[] = [];
 
   public constructor(
     public readonly slide: NativeSlide,
@@ -72,17 +80,31 @@ export class ElementWriter {
     private readonly config: SlideAgentConfig,
   ) {}
 
+  /** A checked link, or nothing, recording any refusal for the caller. */
+  private link(value: unknown): DeckLink | undefined {
+    const { link, rejected } = checkLink(value);
+    if (rejected) this.rejectedLinks.push(rejected);
+    return link;
+  }
+
+  /** Passthrough options with any smuggled hyperlink checked or removed. */
+  private native(options: Record<string, unknown> | undefined): Record<string, unknown> {
+    return sanitizeNativeOptions(options, (reason) => this.rejectedLinks.push(reason)) ?? {};
+  }
+
   public addText(name: string, text: string | CanvasTextRun[], rawFrame: Frame, style: TextStyle = {}): string {
     const id = this.nextId(name);
     const frame = normalizeFrame(rawFrame);
     const fontSize = style.fontSize ?? this.config.fonts.minimums.body;
     const fontFace = style.fontFace ?? this.config.fonts.body;
     const color = style.color ?? this.config.colors.ink;
-    const nativeText = typeof text === "string" ? text : text.map((run) => ({ text: run.text, options: run.options ?? {} }));
+    const nativeText = typeof text === "string" ? text : text.map((run) => ({ text: run.text, options: this.native(run.options) }));
+    const link = this.link(style.link);
     const recordText = typeof text === "string" ? text : text.map((run) => run.text).join("");
     const fit = style.fit ?? "shrink";
     this.slide.addText(nativeText, {
-      ...(style.options ?? {}),
+      ...this.native(style.options),
+      ...(link ? { hyperlink: toNativeHyperlink(link) } : {}),
       ...frame,
       objectName: name,
       fontFace,
@@ -113,6 +135,7 @@ export class ElementWriter {
       fit,
       ...(style.bold === undefined ? {} : { bold: style.bold }),
       ...(style.fill ? { fillColor: style.fill } : {}),
+      ...(link ? { link: link.url ?? `slide:${link.slide}` } : {}),
       intentionalOverlap: style.intentionalOverlap ?? false,
     });
     return id;
@@ -133,8 +156,10 @@ export class ElementWriter {
       ...(rawFrame.w < 0 ? { flipH: true } : {}),
       ...(rawFrame.h < 0 ? { flipV: true } : {}),
     };
+    const link = this.link(style.link);
     this.slide.addShape(shape, {
-      ...(style.options ?? {}),
+      ...this.native(style.options),
+      ...(link ? { hyperlink: toNativeHyperlink(link) } : {}),
       ...frame,
       ...flip,
       objectName: name,
@@ -150,6 +175,7 @@ export class ElementWriter {
       role: style.role ?? "shape",
       ...frame,
       fillColor: style.fill ?? this.config.colors.surface,
+      ...(link ? { link: link.url ?? `slide:${link.slide}` } : {}),
       intentionalOverlap: style.intentionalOverlap ?? false,
     });
     return id;
@@ -174,7 +200,7 @@ export class ElementWriter {
     const dy = to.y - from.y;
     const frame = { x: Math.min(from.x, to.x), y: Math.min(from.y, to.y), w: Math.abs(dx), h: Math.abs(dy) };
     this.slide.addShape(Shapes.line, {
-      ...(options.native ?? {}),
+      ...this.native(options.native),
       ...frame,
       flipH: dx < 0,
       flipV: dy < 0,
@@ -201,8 +227,10 @@ export class ElementWriter {
   public addImage(name: string, imagePath: string, alt: string, rawFrame: Frame, style: ImageStyle = {}): string {
     const id = this.nextId(name);
     const frame = normalizeFrame(rawFrame);
+    const link = this.link(style.link);
     this.slide.addImage({
-      ...(style.options ?? {}),
+      ...this.native(style.options),
+      ...(link ? { hyperlink: toNativeHyperlink(link) } : {}),
       path: imagePath,
       ...frame,
       sizing: { type: style.fit ?? "cover", ...frame },
@@ -219,6 +247,7 @@ export class ElementWriter {
       ...frame,
       imagePath: path.resolve(imagePath),
       altText: alt,
+      ...(link ? { link: link.url ?? `slide:${link.slide}` } : {}),
       intentionalOverlap: style.intentionalOverlap ?? false,
     });
     return id;

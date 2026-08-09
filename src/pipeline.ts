@@ -250,6 +250,10 @@ export class SlideAgent {
           const note = `Slide ${fallback.slide} uses kind "${fallback.requested}", which is not a registered layout; rendered with the "${fallback.used}" layout instead. Supply a canvas to control the composition.`;
           if (!warnings.includes(note)) warnings.push(note);
         }
+        for (const { slide, reason } of built.rejectedLinks) {
+          const note = `Slide ${slide}: ${reason}`;
+          if (!warnings.includes(note)) warnings.push(note);
+        }
         await new PptxExporter().export(built.presentation, output);
         built.manifest.provenance = provenance;
         built.manifest.packageSha256 = await fileSha256(output);

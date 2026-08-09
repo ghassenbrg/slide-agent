@@ -13,6 +13,7 @@ import { CreativeDirector } from "../themes/creative-director.js";
 import { ThemeManager } from "../themes/theme-manager.js";
 import type { DeckManifest, ElementRecord, PresentationOutline, SlideAgentConfig, SlideSpec } from "../types/index.js";
 import { ensureContrast, requiredContrast } from "../utils/color.js";
+import { buildTimestamp } from "../utils/reproducible.js";
 
 export interface BuiltDeck {
   presentation: NativePresentation;
@@ -21,6 +22,12 @@ export interface BuiltDeck {
   config: SlideAgentConfig;
   /** Slides whose `kind` matched no registered layout and used a substitute. */
   layoutFallbacks: LayoutFallback[];
+  /**
+   * Hyperlinks refused by the scheme allowlist, with the slide they were on.
+   * Refusals are reported rather than silently dropped: a model that authored
+   * a `file://` link needs to know the deck shipped without it.
+   */
+  rejectedLinks: Array<{ slide: number; reason: string }>;
 }
 
 function notesFor(spec: SlideSpec): string {
@@ -64,12 +71,13 @@ export class DeckBuilder {
       presentationTitle: outline.brief.title,
       width: effectiveConfig.dimensions.width,
       height: effectiveConfig.dimensions.height,
-      createdAt: new Date().toISOString(),
+      createdAt: buildTimestamp().toISOString(),
       creativeDirection: design.direction,
       slides: [],
     };
 
     const layoutFallbacks: LayoutFallback[] = [];
+    const rejectedLinks: Array<{ slide: number; reason: string }> = [];
     for (let index = 0; index < resolvedOutline.slides.length; index += 1) {
       const rawSpec = this.options.bilingual
         ? withSecondaryLanguage(
@@ -95,6 +103,7 @@ export class DeckBuilder {
         if (fallback) layoutFallbacks.push(fallback);
       }
       await this.stampBrand(writer, index + 1, resolvedOutline.slides.length, effectiveConfig, design.direction);
+      for (const reason of writer.rejectedLinks) rejectedLinks.push({ slide: index + 1, reason });
       const notes = notesFor(spec);
       if (effectiveConfig.generation.includeSpeakerNotes && notes) slide.addNotes(notes);
       manifest.slides.push({
@@ -109,7 +118,7 @@ export class DeckBuilder {
         notes: spec.speakerNotes ?? [],
       });
     }
-    return { presentation, manifest, outline: resolvedOutline, config: effectiveConfig, layoutFallbacks };
+    return { presentation, manifest, outline: resolvedOutline, config: effectiveConfig, layoutFallbacks, rejectedLinks };
   }
 
   /**

@@ -200,10 +200,17 @@ export interface CanvasElementBase {
   allowOverlapWith?: string[];
 }
 
+/**
+ * A hyperlink target. Only http, https, and mailto survive validation; a
+ * `slide` link points inside the same deck.
+ */
+export type CanvasLink = string | { url: string; tooltip?: string } | { slide: number; tooltip?: string };
+
 export interface CanvasTextElement extends CanvasElementBase {
   type: "text";
   text?: string;
   runs?: CanvasTextRun[];
+  link?: CanvasLink;
   style?: {
     fontSize?: number;
     fontFace?: string;
@@ -227,6 +234,7 @@ export interface CanvasShapeElement extends CanvasElementBase {
   type: "shape";
   /** Any PptxGenJS shape name, not a Slide Agent whitelist. */
   shape?: string;
+  link?: CanvasLink;
   style?: {
     fill?: string;
     transparency?: number;
@@ -253,6 +261,7 @@ export interface CanvasImageElement extends CanvasElementBase {
   type: "image";
   path: string;
   alt: string;
+  link?: CanvasLink;
   fit?: "cover" | "contain" | "stretch";
   style?: {
     rotate?: number;
@@ -458,6 +467,8 @@ export interface ElementRecord {
   imagePath?: string;
   /** Alternative text for images and charts; drives accessibility checks. */
   altText?: string;
+  /** A checked hyperlink target: an absolute URL, or `slide:N` within the deck. */
+  link?: string;
   intentionalOverlap?: boolean;
   allowOverlapWith?: string[];
   metadata?: Record<string, unknown>;

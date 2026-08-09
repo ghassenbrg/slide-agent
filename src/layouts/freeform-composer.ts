@@ -43,6 +43,7 @@ export class FreeformComposer {
         case "text":
           id = writer.addText(element.id, element.runs ?? element.text ?? "", frame, {
             ...(element.style ?? {}),
+            ...(element.link === undefined ? {} : { link: element.link }),
             role: element.role ?? "body",
             intentionalOverlap: element.intentionalOverlap,
           });
@@ -50,6 +51,7 @@ export class FreeformComposer {
         case "shape":
           id = writer.addShape(element.id, element.shape ?? Shapes.rect, frame, {
             ...(element.style ?? {}),
+            ...(element.link === undefined ? {} : { link: element.link }),
             role: element.role ?? "shape",
             intentionalOverlap: element.intentionalOverlap,
           });
@@ -74,6 +76,7 @@ export class FreeformComposer {
             rotate: element.style?.rotate,
             transparency: element.style?.transparency,
             options: element.style?.options,
+            ...(element.link === undefined ? {} : { link: element.link }),
             role: element.role,
             intentionalOverlap: element.intentionalOverlap,
           });

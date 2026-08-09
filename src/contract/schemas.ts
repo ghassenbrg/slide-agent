@@ -52,7 +52,19 @@ export const chartSpecSchema = z.object({
 );
 
 const nativeOptions = z.record(z.string(), z.unknown())
-  .describe("Advanced PptxGenJS options passed through unchanged. Verify the render.");
+  .describe("Advanced PptxGenJS options passed through unchanged. Verify the render. A `hyperlink` here is held to the same scheme allowlist as `link`.");
+
+export const linkSchema = z.union([
+  z.string().min(1).describe("An http(s) or mailto URL. A bare host is read as https."),
+  z.object({
+    url: z.string().min(1),
+    tooltip: z.string().optional().describe("What the link does. Screen readers announce it."),
+  }),
+  z.object({
+    slide: z.number().int().positive().describe("A 1-based slide in this deck."),
+    tooltip: z.string().optional(),
+  }),
+]).describe("A hyperlink. Only http, https, and mailto are accepted; anything else is refused and reported.");
 
 const canvasBase = {
   id: z.string().min(1).describe("Unique within the slide; used by validation and revision."),
@@ -89,6 +101,7 @@ export const canvasTextSchema = z.object({
   type: z.literal("text"),
   text: z.string().optional(),
   runs: z.array(z.object({ text: z.string(), options: nativeOptions.optional() })).optional(),
+  link: linkSchema.optional(),
   style: textStyleSchema.optional(),
 }).refine(
   (element) => element.text !== undefined || (element.runs?.length ?? 0) > 0,
@@ -99,6 +112,7 @@ export const canvasShapeSchema = z.object({
   ...canvasBase,
   type: z.literal("shape"),
   shape: z.string().optional().describe("Any PptxGenJS shape name. Not a whitelist."),
+  link: linkSchema.optional(),
   style: z.looseObject({
     fill: hex.optional(),
     transparency: z.number().min(0).max(100).optional(),
@@ -127,6 +141,7 @@ export const canvasImageSchema = z.object({
   type: z.literal("image"),
   path: z.string().min(1).describe("Local path, or an http(s) URL when remote assets are explicitly enabled."),
   alt: z.string().min(1).describe("Required for accessibility. Describe the content, not the file."),
+  link: linkSchema.optional(),
   fit: z.enum(["cover", "contain", "stretch"]).optional(),
   style: z.looseObject({
     rotate: z.number().optional(),

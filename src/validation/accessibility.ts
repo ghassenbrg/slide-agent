@@ -106,6 +106,19 @@ export class AccessibilityValidator {
           }
         }
 
+        // A link a screen reader announces as "link, blank" is unusable. Text
+        // links carry their own label; a shape or image link needs alt text or
+        // a tooltip to say where it goes.
+        if (element.link && !element.text?.trim() && !element.altText?.trim()) {
+          issues.push(issue(
+            "unlabelled-link",
+            "warning",
+            `${element.name} on slide ${slide.number} links to ${element.link} with nothing to announce it. Add alt text or a link tooltip.`,
+            false,
+            { slide: slide.number, elementIds: [element.id], details: { link: element.link } },
+          ));
+        }
+
         if (enhanced && element.text?.trim() && element.textColor && !isDecorative(element)) {
           const background = visibleBackgroundFor(element, slide, this.config);
           const ratio = colorContrast(element.textColor, background);

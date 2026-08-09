@@ -29,8 +29,14 @@ Slide Agent therefore treats every path and URL in a request as untrusted:
   `Content-Type` header is not trusted.
 - **The asset cache is private.** It is per-user, mode `0700`, and
   content-addressed rather than named after the source URL.
-- **Only local paths and `http(s)` URLs are accepted.** Other URL schemes are
-  rejected.
+- **Only local paths and `http(s)` URLs are accepted** for images. Other URL
+  schemes are rejected.
+- **Hyperlinks are held to an allowlist.** A deck may link to `http`, `https`,
+  or `mailto`, or to another slide in the same deck. `file:`, `smb:`,
+  `javascript:`, `data:`, and application-registered schemes are refused, and
+  the refusal is reported as a build warning rather than dropped in silence.
+  This applies to the contract's `link` field and to a `hyperlink` passed
+  through `options` — the PptxGenJS passthrough is not a way around the check.
 
 Installing the library runs no lifecycle scripts and writes nothing outside the
 project. Agent-skill registration happens only when you explicitly run

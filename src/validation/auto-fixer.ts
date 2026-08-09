@@ -9,7 +9,7 @@ import type {
 } from "../types/index.js";
 import { truncateWords, words } from "../utils/text.js";
 import { ensureContrast, requiredContrast } from "../utils/color.js";
-import { estimatedTextHeight } from "./manifest-validator.js";
+import { FIT_TOLERANCE, estimatedTextHeight, type TextFace } from "./manifest-validator.js";
 
 export interface FixOutcome {
   /** The issue code that prompted the change. */
@@ -35,13 +35,23 @@ export interface FixResult {
 }
 
 /** Longest prefix of `text` that fits the box at `fontSize`, on a word boundary. */
-function shortenToFit(text: string, widthInches: number, heightInches: number, fontSize: number): string | undefined {
+function shortenToFit(text: string, widthInches: number, heightInches: number, fontSize: number, font?: TextFace): string | undefined {
   const tokens = words(text);
   for (let count = tokens.length - 1; count >= 3; count -= 1) {
     const candidate = tokens.slice(0, count).join(" ");
-    if (estimatedTextHeight(candidate, widthInches, fontSize) <= heightInches * 1.08) return candidate;
+    if (estimatedTextHeight(candidate, widthInches, fontSize, font) <= heightInches * FIT_TOLERANCE) return candidate;
   }
   return undefined;
+}
+
+/**
+ * The face the validator measured this element in. The repair loop has to
+ * measure the same way it does: if the validator prices a title in Arial Black
+ * and the fixer prices it in the default sans, the fixer "repairs" a box that
+ * was never too small, rebuilds an identical deck, and the loop stalls.
+ */
+function faceOf(element: CanvasTextElement): TextFace {
+  return { fontFace: element.style?.fontFace, bold: element.style?.bold };
 }
 
 function canvasTextElements(slide: SlideSpec): CanvasTextElement[] {
@@ -171,13 +181,13 @@ export class AutoFixer {
       const current = element.style?.fontSize ?? this.config.fonts.minimums.body;
       const text = elementText(element);
       for (let size = current - 1; size >= minimum; size -= 1) {
-        if (estimatedTextHeight(text, element.w, size) <= element.h * 1.08) {
+        if (estimatedTextHeight(text, element.w, size, faceOf(element)) <= element.h * FIT_TOLERANCE) {
           element.style = { ...element.style, fontSize: size };
           outcomes.push({ code: "text-overflow", slide: number, elementIds: item.elementIds, change: `Reduced ${element.id} on slide ${number} to ${size}pt so its text fits.` });
           return;
         }
       }
-      const shortened = element.text ? shortenToFit(text, element.w, element.h, minimum) : undefined;
+      const shortened = element.text ? shortenToFit(text, element.w, element.h, minimum, faceOf(element)) : undefined;
       if (shortened) {
         element.text = shortened;
         element.style = { ...element.style, fontSize: minimum };
@@ -197,7 +207,7 @@ export class AutoFixer {
     const box = details?.box;
     if (elementId?.includes("title") && box) {
       const fontSize = details?.minimum ?? this.config.fonts.minimums.slideTitle;
-      const shortened = shortenToFit(slide.title, box.w, box.h, fontSize);
+      const shortened = shortenToFit(slide.title, box.w, box.h, fontSize, { fontFace: this.config.fonts.heading, bold: true });
       if (shortened && shortened !== slide.title) {
         slide.title = shortened;
         outcomes.push({ code: "text-overflow", slide: number, change: `Shortened the slide ${number} title to fit its fixed layout header.` });
@@ -273,7 +283,7 @@ export class AutoFixer {
       return;
     }
     const text = elementText(element);
-    if (text && estimatedTextHeight(text, element.w, minimum) > element.h * 1.08) {
+    if (text && estimatedTextHeight(text, element.w, minimum, faceOf(element)) > element.h * FIT_TOLERANCE) {
       unfixed.push({ code: "font-too-small", slide: number, elementIds: item.elementIds, reason: `${element.id} cannot reach ${minimum}pt without overflowing. Enlarge the element instead.` });
       return;
     }
