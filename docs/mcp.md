@@ -132,12 +132,25 @@ Then read `validation` in the result before telling the user it worked.
 | `slide_agent_run` | `request` | — |
 | `get_authoring_contract` | — | `section`, `schema` |
 | `plan_presentation` | `prompt` | `slideCount` |
-| `create_presentation` | `prompt`, `output` | `render`, `validate`, `autoFix`, `maxRetries` |
-| `revise_presentation` | `input`, `output`, `slide`, `sceneNdjson` | `scene`, `validate`, `render` |
-| `edit_presentation` | `input`, `output`, `operations` | `render`, `validate` |
-| `render_presentation` | `input`, `output` | `width`, `height` |
-| `validate_presentation` | `input` | `report`, `manifest`, `previewsDir`, `render` |
+| `create_presentation` | `prompt`, `output` | `render`, `validate`, `autoFix`, `maxRetries`, `includeImages` |
+| `revise_presentation` | `input`, `output`, `slide`, `sceneNdjson` | `scene`, `validate`, `render`, `includeImages` |
+| `edit_presentation` | `input`, `output`, `operations` | `render`, `validate`, `includeImages` |
+| `render_presentation` | `input`, `output` | `width`, `height`, `includeImages` |
+| `validate_presentation` | `input` | `report`, `manifest`, `previewsDir`, `render`, `includeImages` |
 | `slide_agent_doctor` | — | — |
+
+### Seeing what you built
+
+Every tool that can render returns the slide previews as image content
+alongside its JSON result, so a host with no filesystem access of its own can
+still look at the deck. Ask for `render`, look at the images, and fix what
+reads badly with `revise_presentation` — a model that cannot see its output can
+only revise from its own assumptions.
+
+Up to 20 previews and 12 MB are returned; the text block says how many were
+withheld. Pass `includeImages: false` to turn them off. Where LibreOffice is
+not installed the previews are schematic SVGs of the deck's geometry rather
+than rendered slides, and the result says so.
 
 **`slide_agent_run`** is the one that matters. `request.command` is `create`,
 `edit`, `render`, `validate`, or `revise`; the rest of the object follows the
@@ -254,7 +267,7 @@ Two things worth checking before reporting success:
 | `REMOTE_ASSETS_DISABLED` | An image URL was used without `allowRemoteAssets`. |
 | `REMOTE_ASSET_BLOCKED` | The URL resolves to a private or link-local address. |
 | `SCENE_NOT_FOUND` | `revise_presentation` could not find the deck's blueprint. Pass `scene` explicitly. |
-| `RENDER_DEPENDENCY_MISSING` | Previews need LibreOffice and Poppler; everything else works without them. |
+| `RENDER_DEPENDENCY_MISSING` | A true render was demanded without LibreOffice and Poppler. By default the server falls back to schematic previews instead. |
 | `INPUT_NOT_FOUND` | A path does not exist on the server's machine. |
 
 ---

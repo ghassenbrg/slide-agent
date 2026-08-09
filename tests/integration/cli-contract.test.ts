@@ -63,7 +63,7 @@ describe("CLI contract", () => {
 
     const help = await run(["--help"]);
     expect(help.code).toBe(0);
-    for (const command of ["create", "edit", "revise", "render", "validate", "diff", "data", "contract", "run", "doctor"]) {
+    for (const command of ["create", "draft", "edit", "revise", "render", "validate", "diff", "data", "template", "fonts", "contract", "run", "doctor"]) {
       expect(help.stdout, command).toContain(command);
     }
   });
@@ -73,7 +73,11 @@ describe("CLI contract", () => {
     const result = await run(["create", "--prompt", path.join(workspace, "brief.md"), "--output", output]);
 
     const parsed = singleJson(result.stdout);
-    expect(parsed.status).toBe("success");
+    // A draft reports `warning`, not `success`: an agent reads the JSON and
+    // never sees stderr, so "success" in the machine-readable channel is the
+    // deck passing as finished when it is scaffolding.
+    expect(parsed.status).toBe("warning");
+    expect(parsed.warnings).toContainEqual(expect.stringContaining("structural draft"));
     expect(parsed).toHaveProperty("primaryOutput");
     expect(parsed).toHaveProperty("validation");
     expect((parsed.metadata as Record<string, unknown>).contractVersion).toBeTruthy();
@@ -86,6 +90,30 @@ describe("CLI contract", () => {
     }
     // A draft must announce itself rather than passing as a finished deck.
     expect(result.stderr).toContain("structural draft");
+  });
+
+  it("emits a runnable request skeleton instead of a placeholder deck", async () => {
+    // The honest answer to "build me a deck from this brief" is a request a
+    // model can finish, not a deck full of brackets that no model designed.
+    const request = path.join(workspace, "request.json");
+    const result = await run(["draft", "--prompt", path.join(workspace, "brief.md"), "--output", request, "--deck", path.join(workspace, "from-draft.pptx")]);
+    expect(result.code).toBe(0);
+
+    const summary = singleJson(result.stdout) as { request: string; nextStep: string; slideCount: number };
+    expect(summary.request).toBe(request);
+    expect(summary.nextStep).toContain("slide-agent run --request");
+    expect(summary.slideCount).toBeGreaterThanOrEqual(3);
+
+    // The skeleton has to be a valid request, or "fill this in and run it" is
+    // advice that does not work.
+    const built = await run(["run", "--request", request]);
+    expect(built.code).toBe(0);
+    expect(singleJson(built.stdout).slideCount).toBe(summary.slideCount);
+  });
+
+  it("says plainly that create --prompt builds a draft, and points at draft", async () => {
+    const result = await run(["create", "--prompt", path.join(workspace, "brief.md"), "--output", path.join(workspace, "notice.pptx")]);
+    expect(result.stderr).toContain("slide-agent draft --prompt");
   });
 
   it("exits non-zero with a structured error when a required input is missing", async () => {

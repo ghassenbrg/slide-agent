@@ -47,19 +47,26 @@ export const PREVIEW_IMAGE_LIMITS = {
   maximumTotalBytes: 12 * 1024 * 1024,
 };
 
+const PREVIEW_PATTERN = /^slide-(\d+)\.(png|svg)$/i;
+
 function slideOrdinal(file: string): number {
-  return Number(path.basename(file).match(/(\d+)\.png$/i)?.[1] ?? Number.MAX_SAFE_INTEGER);
+  return Number(PREVIEW_PATTERN.exec(path.basename(file))?.[1] ?? Number.MAX_SAFE_INTEGER);
+}
+
+function previewMimeType(file: string): string {
+  return file.toLowerCase().endsWith(".svg") ? "image/svg+xml" : "image/png";
 }
 
 /**
  * The slide previews a render wrote, in slide order. `render` and `validate`
  * report previews only under `generatedFiles`, while `create` splits them out
- * into `artifacts`, so both lists are consulted.
+ * into `artifacts`, so both lists are consulted. SVG previews are the
+ * schematic fallback drawn when LibreOffice is not installed.
  */
 export function previewImagePaths(result: AgentResult): string[] {
   const candidates = new Set([...(result.artifacts ?? []), ...(result.generatedFiles ?? [])]);
   return [...candidates]
-    .filter((file) => /^slide-\d+\.png$/i.test(path.basename(file)))
+    .filter((file) => PREVIEW_PATTERN.test(path.basename(file)))
     .sort((left, right) => slideOrdinal(left) - slideOrdinal(right));
 }
 
@@ -82,7 +89,7 @@ export async function previewImageContent(
     const bytes = await readFile(file).catch(() => undefined);
     if (!bytes) break;
     budget -= bytes.byteLength;
-    images.push({ type: "image", data: bytes.toString("base64"), mimeType: "image/png" });
+    images.push({ type: "image", data: bytes.toString("base64"), mimeType: previewMimeType(file) });
   }
 
   return { images, omitted: paths.length - images.length };

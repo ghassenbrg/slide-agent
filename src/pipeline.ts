@@ -111,6 +111,20 @@ function reconcileReport(report: ValidationReport, unfixed: UnfixedIssue[], retr
   };
 }
 
+/**
+ * Said in the result, not only in the log: a caller that asked for previews
+ * and got drawings has to be told, or it will report a deck as looked-at when
+ * nothing rendered it.
+ */
+/**
+ * A prompt alone cannot produce a designed deck — there is no model in this
+ * process to design one. What comes out is scaffolding, and the result has to
+ * say so where a caller will actually read it.
+ */
+const DRAFT_NOTE = "No model-authored outline or scene was supplied, so this deck is a structural draft: bracketed placeholders, no art direction. Run `slide-agent draft --prompt <file>` to get a request skeleton to fill in, or `slide-agent contract` for the authoring guide.";
+
+const SCHEMATIC_NOTE ="LibreOffice and Poppler are not installed, so the previews are schematic drawings of the deck's geometry rather than rendered slides. They show position, size, colour, and text wrapping; they do not show typography or chart drawing. Install the preview tools for a true render.";
+
 function unique(values: string[]): string[] {
   return [...new Set(values.map((value) => path.resolve(value)))];
 }
@@ -202,9 +216,13 @@ export class SlideAgent {
       let outline: PresentationOutline = authored
         ?? new OutlinePlanner().plan(new RequestAnalyzer(config).analyze(request.prompt ?? "", request.brief ?? {}));
       if (provenance === "template-draft") {
+        // Said in the result as well as the log. A caller that reads only the
+        // JSON — which is every agent — would otherwise have no signal that
+        // the deck it just received is scaffolding.
+        warnings.push(DRAFT_NOTE);
         this.logger.warn(
           "create.draft",
-          "No model-authored outline or scene was supplied, so Slide Agent produced a structural draft with placeholders. Run `slide-agent contract` for the authoring guide.",
+          DRAFT_NOTE,
           { requestId },
         );
       }
@@ -271,8 +289,10 @@ export class SlideAgent {
             width: config.generation.renderWidth,
             height: config.generation.renderHeight,
             pdfPath: layout.pdf,
+            manifest: built.manifest,
           });
-          generatedFiles.push(...rendered.previewFiles, rendered.pdfPath);
+          generatedFiles.push(...rendered.previewFiles, ...(rendered.pdfPath ? [rendered.pdfPath] : []));
+          if (rendered.mode === "schematic") warnings.push(SCHEMATIC_NOTE);
         }
         if (!report || !shouldFix) break;
         // Repair anything the validator marked fixable, not only hard failures:
@@ -357,7 +377,7 @@ export class SlideAgent {
           request.beforePreviewsDir ?? layout.beforeImages,
           { width: config.generation.renderWidth, height: config.generation.renderHeight, pdfPath: layout.beforePdf },
         );
-        generatedFiles.push(...before.previewFiles, before.pdfPath);
+        generatedFiles.push(...before.previewFiles, ...(before.pdfPath ? [before.pdfPath] : []));
       }
       const edited = await new PptxEditor().edit(request.input, request.output, request.operations);
       warnings.push(...edited.warnings);
@@ -402,9 +422,9 @@ export class SlideAgent {
       const rendered = await new PresentationRenderer(this.logger).render(request.input, request.output, { width: request.width, height: request.height });
       return {
         status: "success",
-        generatedFiles: [...rendered.previewFiles, rendered.pdfPath],
+        generatedFiles: [...rendered.previewFiles, ...(rendered.pdfPath ? [rendered.pdfPath] : [])],
         slideCount: rendered.previewFiles.length,
-        warnings: [],
+        warnings: rendered.mode === "schematic" ? [SCHEMATIC_NOTE] : [],
         errors: [],
         metadata: metadata("render", requestId, startedAt, 0),
       };

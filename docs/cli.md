@@ -23,6 +23,21 @@ slide-agent create --prompt brief.md --output draft.pptx
 | `--max-retries <n>` | Bound the automatic repair loop |
 | `--no-validate` / `--no-auto-fix` | Skip validation / repair |
 
+## `draft`
+
+```bash
+slide-agent draft --prompt brief.md --output request.json
+```
+
+Turns a brief into a structured request a model can finish: the outline, its
+slide kinds, and bracketed placeholders where the content belongs. Fill in the
+content, add `creativeDirection` and per-slide canvases, then
+`slide-agent run --request request.json`.
+
+This is the honest form of "build me a deck from this brief". There is no model
+inside Slide Agent, so `create --prompt` can only scaffold; `draft` hands the
+scaffolding to something that can design.
+
 ## `revise`
 
 ```bash
@@ -43,6 +58,17 @@ OOXML-level operations on an existing deck: `replace-text`, `remove-slide`,
 `duplicate-slide`, `add-slide`, `import-slide`, `reorder-slides`,
 `apply-theme`, `replace-image`, `update-table`, `update-chart`. See
 [editing](editing.md) for the limits.
+
+## `fonts`
+
+```bash
+slide-agent fonts --input deck.pptx
+```
+
+Reports which of a deck's typefaces this machine can display. Advisory only: it
+never fails a build and never changes a validation verdict, because the machine
+that matters is the one your audience opens the deck on. Use `--family` to
+check names before you commit to them.
 
 ## `template`
 

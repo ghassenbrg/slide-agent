@@ -50,6 +50,13 @@ export { planOutline } from "./planner/index.js";
 export { reviseScene, type ReviseSceneResult } from "./serialization/revise-scene.js";
 export { buildTimestamp, isReproducibleBuild, setBuildTimestamp } from "./utils/reproducible.js";
 export {
+  checkFontAvailability,
+  fontAvailabilityAdvice,
+  installedFontFiles,
+  type FontAvailability,
+} from "./design/font-availability.js";
+export { renderSchematic, slideToSvg, type SchematicResult } from "./rendering/schematic.js";
+export {
   measureTextWidth,
   resolveFont,
   textBlockHeight,

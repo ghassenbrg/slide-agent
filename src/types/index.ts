@@ -564,6 +564,8 @@ export interface ValidationReport {
     status: "pass" | "fail" | "skipped";
     previewFiles: string[];
     pdfPath?: string;
+    /** `schematic` previews are drawings of the geometry, not rendered slides. */
+    mode?: "render" | "schematic";
     error?: string;
   };
 }
@@ -790,9 +792,17 @@ export interface LayoutContext {
 
 export interface RenderResult {
   previewFiles: string[];
-  pdfPath: string;
+  /** Absent for a schematic preview, which produces no PDF. */
+  pdfPath?: string;
   width: number;
   height: number;
+  /**
+   * `render` is LibreOffice's true render. `schematic` is Slide Agent's own
+   * drawing of the deck's geometry, used when the preview tools are absent —
+   * accurate about position, size, colour, and wrapping, and about nothing
+   * else. Callers that need a faithful image must check this.
+   */
+  mode?: "render" | "schematic";
 }
 
 export interface PptxInspection {

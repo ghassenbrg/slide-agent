@@ -5,10 +5,12 @@ import { pathToFileURL } from "node:url";
 
 import type { Logger } from "../logging/logger.js";
 import { silentLogger } from "../logging/logger.js";
-import type { RenderResult } from "../types/index.js";
+import type { DeckManifest, RenderResult } from "../types/index.js";
 import { SlideAgentError } from "../utils/errors.js";
 import { ensureDir, exists } from "../utils/files.js";
 import { findExecutable, runProcess } from "../utils/process.js";
+import { PptxInspector } from "../editing/pptx-inspector.js";
+import { renderSchematic } from "./schematic.js";
 
 function slideNumber(fileName: string): number {
   return Number(fileName.match(/-(\d+)\.png$/)?.[1] ?? Number.MAX_SAFE_INTEGER);
@@ -17,25 +19,53 @@ function slideNumber(fileName: string): number {
 export class PresentationRenderer {
   public constructor(private readonly logger: Logger = silentLogger) {}
 
+  /**
+   * `fallback` decides what happens when LibreOffice and Poppler are not
+   * installed, which on a fresh machine is the normal case. `schematic` — the
+   * default — draws the deck's own geometry instead, so the render → look →
+   * revise loop still closes; the result says `mode: "schematic"` and a
+   * caller that needs a faithful image must check it. `none` restores the old
+   * behaviour of failing outright.
+   */
   public async render(
     inputPath: string,
     outputDir: string,
-    options: { width?: number; height?: number; pdfPath?: string; preserveAspect?: boolean } = {},
+    options: {
+      width?: number;
+      height?: number;
+      pdfPath?: string;
+      preserveAspect?: boolean;
+      manifest?: DeckManifest;
+      fallback?: "schematic" | "none";
+    } = {},
   ): Promise<RenderResult> {
     const input = path.resolve(inputPath);
     if (!(await exists(input))) throw new SlideAgentError("INPUT_NOT_FOUND", `Presentation not found: ${input}`);
     const output = await ensureDir(outputDir);
     for (const fileName of await readdir(output)) {
-      if (/^slide-\d+\.png$/.test(fileName)) await unlink(path.join(output, fileName));
+      if (/^slide-\d+\.(png|svg)$/.test(fileName)) await unlink(path.join(output, fileName));
     }
     const soffice = await findExecutable(["soffice", "libreoffice"], process.env.SLIDE_AGENT_SOFFICE);
     const pdftoppm = await findExecutable(["pdftoppm"], process.env.SLIDE_AGENT_PDFTOPPM);
     if (!soffice || !pdftoppm) {
-      throw new SlideAgentError(
-        "RENDER_DEPENDENCY_MISSING",
-        "Rendering requires LibreOffice (soffice) and Poppler (pdftoppm).",
-        { soffice: soffice ?? null, pdftoppm: pdftoppm ?? null },
+      if (options.fallback === "none") {
+        throw new SlideAgentError(
+          "RENDER_DEPENDENCY_MISSING",
+          "Rendering requires LibreOffice (soffice) and Poppler (pdftoppm).",
+          { soffice: soffice ?? null, pdftoppm: pdftoppm ?? null },
+        );
+      }
+      // The manifest describes the deck the caller just built; without one,
+      // the package itself is inspected, so a deck from anywhere can still be
+      // drawn.
+      const manifest = options.manifest ?? (await new PptxInspector().inspect(input)).manifest;
+      const schematic = await renderSchematic(manifest, output);
+      this.logger.warn(
+        "render.schematic",
+        "LibreOffice and Poppler are not installed, so Slide Agent drew schematic previews instead. They show position, size, colour, and wrapping — not typography, charts, or anything PowerPoint draws. Install the preview tools for a true render.",
+        { input, output, slides: schematic.previewFiles.length },
       );
+      return { ...schematic, mode: "schematic" };
     }
 
     const temporary = await mkdtemp(path.join(tmpdir(), "slide-agent-render-"));
@@ -98,7 +128,7 @@ export class PresentationRenderer {
         }
       }
       this.logger.info("render.complete", "Rendered presentation", { slides: previewFiles.length, output });
-      return { previewFiles, pdfPath, width, height };
+      return { previewFiles, pdfPath, width, height, mode: "render" };
     } finally {
       await rm(temporary, { recursive: true, force: true });
     }

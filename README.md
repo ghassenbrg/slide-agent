@@ -40,9 +40,11 @@ slide-agent contract --format prompt > guide.txt   # hand this to any model
 slide-agent run --request deck.json                # build what it authored
 ```
 
-`slide-agent create --prompt brief.md --output deck.pptx` also works, but it
-produces a **structural draft** with visible `[placeholders]` and no art
-direction. It is a starting point, and it says so on stderr.
+`slide-agent draft --prompt brief.md --output request.json` turns a brief into
+a request skeleton for a model to finish. `create --prompt` still builds
+directly from a brief, but there is no model in the process to design a deck,
+so what comes out is a **structural draft** with visible `[placeholders]` — it
+reports `status: "warning"` and says so.
 
 ## What you get
 
@@ -68,7 +70,9 @@ Every command returns one JSON object on stdout and JSON-lines logs on stderr.
 | **Brand** | `--brand kit.json` — or point it straight at your `.potx` — locks only what your organisation cannot bend on |
 | **Languages** | `--bilingual` renders a second language as its own editable text, with RTL and script-aware fonts |
 | **Editing** | Slide-level `revise`, OOXML-level `edit`, and a semantic `diff` between two decks |
-| **QA** | ECMA-376 schema validation, geometry, contrast, accessibility, and a quality score with advice |
+| **QA** | ECMA-376 schema validation, geometry, per-font and per-script text measurement, contrast, accessibility, and a quality score with advice |
+| **Previews** | LibreOffice renders; without it, Slide Agent draws the deck's own geometry so the look-and-revise loop still closes |
+| **Reproducible** | `SOURCE_DATE_EPOCH` makes the same scene produce byte-identical packages |
 
 ## Documentation
 
@@ -85,6 +89,7 @@ Every command returns one JSON object on stdout and JSON-lines logs on stderr.
 | [Troubleshooting](docs/troubleshooting.md) | When something does not work |
 | [Architecture](docs/architecture.md) | How the pieces fit together |
 | [Migrating to 0.9](MIGRATION-0.9.md) | Breaking changes from earlier versions |
+| [Changelog](CHANGELOG.md) | What changed, and why |
 
 ## Contributing, security, licence
 

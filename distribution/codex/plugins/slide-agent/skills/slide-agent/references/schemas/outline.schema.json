@@ -535,18 +535,25 @@
                 "type": "string",
                 "enum": [
                   "bar",
+                  "bar-stacked",
+                  "bar-horizontal",
                   "line",
                   "pie",
+                  "doughnut",
                   "area",
+                  "scatter",
+                  "radar",
                   "waterfall"
-                ]
+                ],
+                "description": "A native, editable chart. `scatter` reads its labels as x values. For anything else PptxGenJS can draw, use a native-chart element."
               },
               "labels": {
                 "minItems": 1,
                 "type": "array",
                 "items": {
                   "type": "string"
-                }
+                },
+                "description": "Category labels, one per value in every series. For a scatter chart these are the x values and must be numbers."
               },
               "series": {
                 "minItems": 1,
@@ -850,13 +857,56 @@
                               "type": "string"
                             },
                             "additionalProperties": {},
-                            "description": "Advanced PptxGenJS options passed through unchanged. Verify the render."
+                            "description": "Advanced PptxGenJS options passed through unchanged. Verify the render. A `hyperlink` here is held to the same scheme allowlist as `link`."
                           }
                         },
                         "required": [
                           "text"
                         ]
                       }
+                    },
+                    "link": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "minLength": 1,
+                          "description": "An http(s) or mailto URL. A bare host is read as https."
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "url": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "tooltip": {
+                              "description": "What the link does. Screen readers announce it.",
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "url"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "slide": {
+                              "type": "integer",
+                              "exclusiveMinimum": 0,
+                              "maximum": 9007199254740991,
+                              "description": "A 1-based slide in this deck."
+                            },
+                            "tooltip": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "slide"
+                          ]
+                        }
+                      ],
+                      "description": "A hyperlink. Only http, https, and mailto are accepted; anything else is refused and reported."
                     },
                     "style": {
                       "type": "object",
@@ -956,7 +1006,7 @@
                             "type": "string"
                           },
                           "additionalProperties": {},
-                          "description": "Advanced PptxGenJS options passed through unchanged. Verify the render."
+                          "description": "Advanced PptxGenJS options passed through unchanged. Verify the render. A `hyperlink` here is held to the same scheme allowlist as `link`."
                         }
                       },
                       "additionalProperties": {}
@@ -1021,6 +1071,49 @@
                       "description": "Any PptxGenJS shape name. Not a whitelist.",
                       "type": "string"
                     },
+                    "link": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "minLength": 1,
+                          "description": "An http(s) or mailto URL. A bare host is read as https."
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "url": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "tooltip": {
+                              "description": "What the link does. Screen readers announce it.",
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "url"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "slide": {
+                              "type": "integer",
+                              "exclusiveMinimum": 0,
+                              "maximum": 9007199254740991,
+                              "description": "A 1-based slide in this deck."
+                            },
+                            "tooltip": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "slide"
+                          ]
+                        }
+                      ],
+                      "description": "A hyperlink. Only http, https, and mailto are accepted; anything else is refused and reported."
+                    },
                     "style": {
                       "type": "object",
                       "properties": {
@@ -1052,7 +1145,7 @@
                             "type": "string"
                           },
                           "additionalProperties": {},
-                          "description": "Advanced PptxGenJS options passed through unchanged. Verify the render."
+                          "description": "Advanced PptxGenJS options passed through unchanged. Verify the render. A `hyperlink` here is held to the same scheme allowlist as `link`."
                         }
                       },
                       "additionalProperties": {}
@@ -1140,7 +1233,7 @@
                             "type": "string"
                           },
                           "additionalProperties": {},
-                          "description": "Advanced PptxGenJS options passed through unchanged. Verify the render."
+                          "description": "Advanced PptxGenJS options passed through unchanged. Verify the render. A `hyperlink` here is held to the same scheme allowlist as `link`."
                         }
                       },
                       "additionalProperties": {}
@@ -1212,6 +1305,49 @@
                       "minLength": 1,
                       "description": "Required for accessibility. Describe the content, not the file."
                     },
+                    "link": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "minLength": 1,
+                          "description": "An http(s) or mailto URL. A bare host is read as https."
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "url": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "tooltip": {
+                              "description": "What the link does. Screen readers announce it.",
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "url"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "slide": {
+                              "type": "integer",
+                              "exclusiveMinimum": 0,
+                              "maximum": 9007199254740991,
+                              "description": "A 1-based slide in this deck."
+                            },
+                            "tooltip": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "slide"
+                          ]
+                        }
+                      ],
+                      "description": "A hyperlink. Only http, https, and mailto are accepted; anything else is refused and reported."
+                    },
                     "fit": {
                       "type": "string",
                       "enum": [
@@ -1237,7 +1373,7 @@
                             "type": "string"
                           },
                           "additionalProperties": {},
-                          "description": "Advanced PptxGenJS options passed through unchanged. Verify the render."
+                          "description": "Advanced PptxGenJS options passed through unchanged. Verify the render. A `hyperlink` here is held to the same scheme allowlist as `link`."
                         }
                       },
                       "additionalProperties": {}
@@ -1353,7 +1489,7 @@
                         "type": "string"
                       },
                       "additionalProperties": {},
-                      "description": "Advanced PptxGenJS options passed through unchanged. Verify the render."
+                      "description": "Advanced PptxGenJS options passed through unchanged. Verify the render. A `hyperlink` here is held to the same scheme allowlist as `link`."
                     }
                   },
                   "required": [
@@ -1419,18 +1555,25 @@
                           "type": "string",
                           "enum": [
                             "bar",
+                            "bar-stacked",
+                            "bar-horizontal",
                             "line",
                             "pie",
+                            "doughnut",
                             "area",
+                            "scatter",
+                            "radar",
                             "waterfall"
-                          ]
+                          ],
+                          "description": "A native, editable chart. `scatter` reads its labels as x values. For anything else PptxGenJS can draw, use a native-chart element."
                         },
                         "labels": {
                           "minItems": 1,
                           "type": "array",
                           "items": {
                             "type": "string"
-                          }
+                          },
+                          "description": "Category labels, one per value in every series. For a scatter chart these are the x values and must be numbers."
                         },
                         "series": {
                           "minItems": 1,
@@ -1490,7 +1633,7 @@
                             "type": "string"
                           },
                           "additionalProperties": {},
-                          "description": "Advanced PptxGenJS options passed through unchanged. Verify the render."
+                          "description": "Advanced PptxGenJS options passed through unchanged. Verify the render. A `hyperlink` here is held to the same scheme allowlist as `link`."
                         }
                       },
                       "additionalProperties": {}
@@ -1576,7 +1719,7 @@
                         "type": "string"
                       },
                       "additionalProperties": {},
-                      "description": "Advanced PptxGenJS options passed through unchanged. Verify the render."
+                      "description": "Advanced PptxGenJS options passed through unchanged. Verify the render. A `hyperlink` here is held to the same scheme allowlist as `link`."
                     }
                   },
                   "required": [

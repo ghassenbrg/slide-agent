@@ -131,9 +131,14 @@ export class PresentationValidator {
         const result = await new PresentationRenderer(this.logger).render(
           input,
           options.previewsDir ?? path.join(path.dirname(input), `${path.basename(input, ".pptx")}-previews`),
-          { width: this.config.generation.renderWidth, height: this.config.generation.renderHeight, pdfPath: options.pdfPath },
+          { width: this.config.generation.renderWidth, height: this.config.generation.renderHeight, pdfPath: options.pdfPath, manifest },
         );
-        render = { status: "pass", previewFiles: result.previewFiles, pdfPath: result.pdfPath };
+        render = {
+          status: "pass",
+          previewFiles: result.previewFiles,
+          ...(result.pdfPath ? { pdfPath: result.pdfPath } : {}),
+          ...(result.mode ? { mode: result.mode } : {}),
+        };
         if (result.previewFiles.length !== manifest.slides.length) {
           issues.push({
             code: "render-slide-count-mismatch",
