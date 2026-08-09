@@ -1009,6 +1009,33 @@
                 "minLength": 1,
                 "description": "Required for accessibility. Describe the content, not the file."
               },
+              "provenance": {
+                "type": "object",
+                "properties": {
+                  "source": {
+                    "description": "Where it came from: a URL, a library reference, or the prompt that produced it.",
+                    "type": "string"
+                  },
+                  "credit": {
+                    "description": "The attribution line the licence requires, e.g. \"Photo by A. Name on Unsplash\".",
+                    "type": "string"
+                  },
+                  "license": {
+                    "description": "The licence you are relying on, e.g. \"CC BY 4.0\", \"Unsplash License\", \"© Acme, used with permission\".",
+                    "type": "string"
+                  },
+                  "generated": {
+                    "description": "True when a model produced this image rather than a camera or a person.",
+                    "type": "boolean"
+                  },
+                  "generator": {
+                    "description": "What generated it, when `generated` is true.",
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": {},
+                "description": "Attribution and origin. Written into the speaker notes under [Credits]."
+              },
               "link": {
                 "anyOf": [
                   {
@@ -1486,14 +1513,8 @@
               },
               "grammar": {
                 "type": "string",
-                "enum": [
-                  "layered",
-                  "swimlane",
-                  "sequence",
-                  "hierarchy",
-                  "quadrant"
-                ],
-                "description": "A named diagram form. Slide Agent handles routing, spacing, and label placement."
+                "minLength": 1,
+                "description": "A named diagram form; Slide Agent handles routing, spacing, and label placement. Built in: layered, swimlane, sequence, hierarchy, quadrant. A host can register more — ask for capabilities. An unknown name fails the build with the list of what is available."
               },
               "spec": {
                 "type": "object",

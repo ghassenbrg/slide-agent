@@ -140,11 +140,30 @@ export const canvasConnectorSchema = z.object({
   }).optional(),
 }).describe("x/y is the start point; w/h is the delta to the end point and may be negative.");
 
+/**
+ * Where a picture came from, and whether a person made it.
+ *
+ * The honesty section already forbids inventing sources, data, and
+ * quotations. A photograph is the same claim in visual form: an image
+ * generated from a prompt and captioned as a site photo is a fabrication, and
+ * a stock image used without its credit line is somebody else's licence
+ * breached by a deck that will be presented to a room. Neither is something
+ * Slide Agent can detect from the pixels, so the author records it.
+ */
+export const imageProvenanceSchema = z.looseObject({
+  source: z.string().optional().describe("Where it came from: a URL, a library reference, or the prompt that produced it."),
+  credit: z.string().optional().describe("The attribution line the licence requires, e.g. \"Photo by A. Name on Unsplash\"."),
+  license: z.string().optional().describe("The licence you are relying on, e.g. \"CC BY 4.0\", \"Unsplash License\", \"© Acme, used with permission\"."),
+  generated: z.boolean().optional().describe("True when a model produced this image rather than a camera or a person."),
+  generator: z.string().optional().describe("What generated it, when `generated` is true."),
+}).describe("Attribution and origin. Written into the speaker notes under [Credits].");
+
 export const canvasImageSchema = z.object({
   ...canvasBase,
   type: z.literal("image"),
   path: z.string().min(1).describe("Local path, or an http(s) URL when remote assets are explicitly enabled."),
   alt: z.string().min(1).describe("Required for accessibility. Describe the content, not the file."),
+  provenance: imageProvenanceSchema.optional(),
   link: linkSchema.optional(),
   fit: z.enum(["cover", "contain", "stretch"]).optional(),
   style: z.looseObject({
@@ -184,8 +203,8 @@ export const canvasNativeChartSchema = z.object({
 export const canvasDiagramSchema = z.object({
   ...canvasBase,
   type: z.literal("diagram"),
-  grammar: z.enum(["layered", "swimlane", "sequence", "hierarchy", "quadrant"])
-    .describe("A named diagram form. Slide Agent handles routing, spacing, and label placement."),
+  grammar: z.string().min(1)
+    .describe("A named diagram form; Slide Agent handles routing, spacing, and label placement. Built in: layered, swimlane, sequence, hierarchy, quadrant. A host can register more — ask for capabilities. An unknown name fails the build with the list of what is available."),
   spec: z.record(z.string(), z.unknown()).describe("The grammar's own payload. Fetch its schema from the contract."),
   alt: z.string().optional(),
 }).describe("A diagram expressed as a relationship rather than as hand-placed shapes.");

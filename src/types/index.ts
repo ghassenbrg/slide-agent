@@ -267,10 +267,21 @@ export interface CanvasConnectorElement extends CanvasElementBase {
   };
 }
 
+/** Attribution and origin for one image. See `imageProvenanceSchema`. */
+export interface ImageProvenance {
+  source?: string;
+  credit?: string;
+  license?: string;
+  generated?: boolean;
+  generator?: string;
+  [key: string]: unknown;
+}
+
 export interface CanvasImageElement extends CanvasElementBase {
   type: "image";
   path: string;
   alt: string;
+  provenance?: ImageProvenance;
   link?: CanvasLink;
   fit?: "cover" | "contain" | "stretch";
   style?: {
@@ -307,7 +318,8 @@ export interface CanvasNativeChartElement extends CanvasElementBase {
 /** A diagram described as a relationship; Slide Agent places the geometry. */
 export interface CanvasDiagramElement extends CanvasElementBase {
   type: "diagram";
-  grammar: "layered" | "swimlane" | "sequence" | "hierarchy" | "quadrant";
+  /** A built-in grammar or one a host registered. Checked when the slide is built. */
+  grammar: string;
   spec: Record<string, unknown>;
   alt?: string;
 }
@@ -479,6 +491,13 @@ export interface ElementRecord {
   altText?: string;
   /** A checked hyperlink target: an absolute URL, or `slide:N` within the deck. */
   link?: string;
+  /**
+   * What the author wrote in `path`, before the resolver turned it into a
+   * local file. Without it the manifest records only a cache path, so a deck
+   * built from a URL could not say where its pictures came from.
+   */
+  imageSource?: string;
+  provenance?: ImageProvenance;
   intentionalOverlap?: boolean;
   allowOverlapWith?: string[];
   metadata?: Record<string, unknown>;

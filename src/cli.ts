@@ -292,6 +292,16 @@ program.command("data")
     }, null, 2)}\n`);
   });
 
+program.command("capabilities")
+  .description("What this installation can actually do — including whether it can source images at all")
+  .action(() => {
+    process.stdout.write(`${JSON.stringify({
+      contractVersion: CONTRACT_VERSION,
+      version: VERSION,
+      ...new SlideAgent().capabilities(),
+    }, null, 2)}\n`);
+  });
+
 program.command("draft")
   .description("Turn a brief into a request skeleton for a model to finish — the honest alternative to building a placeholder deck")
   .requiredOption("--prompt <file>", "Markdown or text brief")

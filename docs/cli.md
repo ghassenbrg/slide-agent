@@ -23,6 +23,17 @@ slide-agent create --prompt brief.md --output draft.pptx
 | `--max-retries <n>` | Bound the automatic repair loop |
 | `--no-validate` / `--no-auto-fix` | Skip validation / repair |
 
+## `capabilities`
+
+```bash
+slide-agent capabilities
+```
+
+What this installation can actually do: diagram grammars, chart kinds,
+layouts, quality checks, and how images can reach a slide. Read the `images`
+block before designing a photo-led deck — `remoteUrls: false` with
+`provider: null` means this installation can embed only files already on disk.
+
 ## `draft`
 
 ```bash

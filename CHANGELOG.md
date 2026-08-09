@@ -46,9 +46,41 @@ being a guess.
   that screen readers announce.
 - **Reproducible builds.** `SOURCE_DATE_EPOCH` pins the build timestamp, and
   the same scene then produces byte-identical packages.
+- **Image provenance**: `provenance.source`, `credit`, `license`, `generated`,
+  and `generator` on any image element. Credits travel into the deck's speaker
+  notes under `[Credits]`, because a licence that requires attribution is not
+  satisfied by a credit sitting in a JSON file on the author's laptop. The
+  manifest now also records the authored path, so a deck built from a URL can
+  say where its pictures came from.
+- **An `imagery` section in the authoring contract**, saying plainly where
+  pictures may come from, which formats survive, and that a generated image is
+  a claim like any other.
+- **`slide-agent capabilities`**, plus `get_capabilities` and
+  `slide-agent://capabilities` over MCP. A model that designs a photo-led deck
+  and only then discovers this installation cannot obtain a single image has
+  wasted the whole design.
 
 ### Fixed
 
+- **Every documented extension point was inert.** `ExtensionRegistry` and its
+  seven interfaces were published, exported, and demonstrated in
+  `docs/api.md`, but nothing in the pipeline ever instantiated or read a
+  registry — a host could follow the documentation exactly and have none of it
+  take effect. `SlideAgent` now accepts extensions and threads them through:
+  diagram grammars, chart renderers, layouts, quality checks, the preview
+  backend, the design tokenizer, and the image resolver. `capabilities()` also
+  reports the built-ins rather than only host contributions, which is what
+  makes it answerable to "what can this installation do".
+- **Local images bypassed every check the download path applies.** Format was
+  never verified, so a mislabelled file or an SVG logo produced a package that
+  failed silently in PowerPoint instead of an error anyone could act on —
+  and local is the route every generated image and every logo takes. WebP now
+  warns that it renders only in PowerPoint 2019 and later, and an SVG is
+  refused with the reason and the remedy.
+- **A canvas diagram could only use a built-in grammar.** `grammar` was an
+  enum, so a registered `DiagramGrammar` was unreachable through the contract.
+  It is now free-form and checked when the slide is built, against built-ins
+  and host grammars together.
 - **Text was measured by a single constant** — `fontSize * 0.33` for every
   glyph in every font. It over-measured `Iil.`, under-measured `MWm@`, could
   not tell Arial Black from Arial Narrow, and counted a space-free CJK

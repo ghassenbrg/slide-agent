@@ -1,5 +1,5 @@
 import path from "node:path";
-import type { CanvasTextRun, ChartSpec, ElementRecord, SlideAgentConfig, TableSpec } from "../types/index.js";
+import type { CanvasTextRun, ChartSpec, ElementRecord, ImageProvenance, SlideAgentConfig, TableSpec } from "../types/index.js";
 import { emphasisField, foregroundOn } from "../utils/color.js";
 import { checkLink, sanitizeNativeOptions, toNativeHyperlink, type DeckLink } from "../utils/links.js";
 import { Shapes, type NativeSlide } from "./pptx-values.js";
@@ -60,6 +60,9 @@ export interface ShapeStyle {
 
 export interface ImageStyle {
   fit?: "cover" | "contain" | "stretch";
+  /** What the author wrote before the resolver turned it into a local file. */
+  source?: string;
+  provenance?: ImageProvenance;
   rotate?: number;
   transparency?: number;
   role?: string;
@@ -246,6 +249,8 @@ export class ElementWriter {
       role: style.role ?? "image",
       ...frame,
       imagePath: path.resolve(imagePath),
+      ...(style.source ? { imageSource: style.source } : {}),
+      ...(style.provenance ? { provenance: style.provenance } : {}),
       altText: alt,
       ...(link ? { link: link.url ?? `slide:${link.slide}` } : {}),
       intentionalOverlap: style.intentionalOverlap ?? false,

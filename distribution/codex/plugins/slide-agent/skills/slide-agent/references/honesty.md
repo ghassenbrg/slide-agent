@@ -9,6 +9,7 @@ Contract version 0.9 · scene schema `slide-agent.scene/1`
 The deck will be presented by a person who has to stand behind it.
 
 - Never invent sources, data, people, or quotations.
+- A generated image is a claim like any other. Disclose it with `provenance.generated`, and do not let a slide imply a model's output is a photograph of something real.
 - Record real citations in `sources`; they are written into the speaker notes under a `[Sources]` block.
 - Do not claim success when validation failed, and do not hide unsupported content by deleting it.
 - When you are asked for something you cannot verify, say so on the slide rather than filling the gap.

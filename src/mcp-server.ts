@@ -122,7 +122,11 @@ async function toolResultWithPreviews(result: AgentResult, includeImages = true)
 
 const INSTRUCTIONS = `Slide Agent builds editable PowerPoint decks from a design you author.
 
-Read slide-agent://contract/guide first — it is the complete authoring guide.
+Read slide-agent://contract/guide first — it is the complete authoring guide —
+and slide-agent://capabilities for what this installation can do. Check its
+images block before planning a photo-led deck: some installations can only
+read local files, and cannot fetch or generate a picture at all.
+
 Then fetch slide-agent://contract/schema/outline (or .../sceneRecord for the
 line-oriented format) and design the deck yourself: palette, typography,
 composition, diagrams, and every element's coordinates are your decisions.
@@ -264,6 +268,33 @@ export function buildMcpServer(): McpServer {
     const result = await new SlideAgent().execute(parseStructuredRequest(request));
     return toolResultWithPreviews(result, includeImages);
   });
+
+  // A model that designs a photo-led deck and only then discovers this
+  // installation cannot fetch or generate a single image has wasted the whole
+  // design. Publish what is possible before it plans.
+  server.registerResource(
+    "capabilities",
+    "slide-agent://capabilities",
+    {
+      title: "Slide Agent capabilities",
+      description: "Diagram grammars, chart renderers, layouts, checks, and how images can reach a slide in this installation.",
+      mimeType: "application/json",
+    },
+    async (uri: URL) => ({
+      contents: [{
+        uri: uri.href,
+        mimeType: "application/json",
+        text: JSON.stringify({ contractVersion: CONTRACT_VERSION, version: VERSION, ...new SlideAgent().capabilities() }, null, 2),
+      }],
+    }),
+  );
+
+  server.registerTool("get_capabilities", {
+    title: "Get Slide Agent capabilities",
+    description: "What this installation can do: diagram grammars, chart renderers, layouts, quality checks, and — read this before planning imagery — whether images can be fetched, generated, or only read from local paths.",
+    inputSchema: z.object({}),
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
+  }, async () => toolResult({ contractVersion: CONTRACT_VERSION, version: VERSION, ...new SlideAgent().capabilities() }));
 
   server.registerTool("get_authoring_contract", {
     title: "Get the Slide Agent authoring contract",

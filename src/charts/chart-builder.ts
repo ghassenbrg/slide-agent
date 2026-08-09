@@ -3,6 +3,8 @@ import type { Frame } from "../components/element-writer.js";
 import { ElementWriter } from "../components/element-writer.js";
 import { ChartTypes, Shapes } from "../components/pptx-values.js";
 import { resolveTokens, type DeckTokens } from "../design/tokens.js";
+import { Grid } from "../design/grid.js";
+import type { ExtensionRegistry } from "../extensions.js";
 import { ensureContrast, requiredContrast } from "../utils/color.js";
 
 type NativeKind = Exclude<ChartSpec["kind"], "waterfall">;
@@ -52,7 +54,11 @@ function kindOptions(kind: NativeKind): Record<string, unknown> {
 export class ChartBuilder {
   private readonly tokens: DeckTokens;
 
-  public constructor(private readonly config: SlideAgentConfig, tokens?: DeckTokens) {
+  public constructor(
+    private readonly config: SlideAgentConfig,
+    tokens?: DeckTokens,
+    private readonly extensions?: ExtensionRegistry,
+  ) {
     this.tokens = tokens ?? resolveTokens(config);
   }
 
@@ -63,6 +69,18 @@ export class ChartBuilder {
     frame: Frame,
     style: { colors?: string[]; options?: Record<string, unknown> } = {},
   ): void {
+    // A host renderer registered for this kind replaces the built-in entirely,
+    // and still writes through ElementWriter, so it gets the same manifest
+    // tracking and validation.
+    const custom = this.extensions?.chartFor(chart.kind);
+    if (custom) {
+      custom.render(writer, name, chart, frame, {
+        tokens: this.tokens,
+        grid: new Grid(this.config.dimensions, this.tokens),
+        config: this.config,
+      });
+      return;
+    }
     if (chart.kind === "waterfall") {
       this.addWaterfall(writer, name, chart, frame);
       return;

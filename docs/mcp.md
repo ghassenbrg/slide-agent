@@ -130,6 +130,7 @@ Then read `validation` in the result before telling the user it worked.
 | Tool | Required | Optional |
 |---|---|---|
 | `slide_agent_run` | `request` | — |
+| `get_capabilities` | — | — |
 | `get_authoring_contract` | — | `section`, `schema` |
 | `plan_presentation` | `prompt` | `slideCount` |
 | `create_presentation` | `prompt`, `output` | `render`, `validate`, `autoFix`, `maxRetries`, `includeImages` |
@@ -138,6 +139,25 @@ Then read `validation` in the result before telling the user it worked.
 | `render_presentation` | `input`, `output` | `width`, `height`, `includeImages` |
 | `validate_presentation` | `input` | `report`, `manifest`, `previewsDir`, `render`, `includeImages` |
 | `slide_agent_doctor` | — | — |
+
+### Knowing what is possible before you design
+
+`get_capabilities` and `slide-agent://capabilities` report what this
+installation can do. The `images` block is the one to read before planning a
+photo-led deck:
+
+```json
+{ "localPaths": true, "remoteUrls": false, "provider": null,
+  "formats": [".png", ".jpg", ".gif", ".webp"] }
+```
+
+`remoteUrls: false` and `provider: null` means this installation cannot obtain
+a picture at all — only embed one already on disk. Design accordingly rather
+than discovering it after composing eight slides around photography.
+
+`provider` names a host-installed image resolver: stock search, an internal
+asset library, an image generator. Slide Agent ships none of these on purpose
+— see [api.md](api.md#extension-points).
 
 ### Seeing what you built
 
@@ -181,13 +201,15 @@ Twenty-one, in three groups.
 
 | URI | Type | Contents |
 |---|---|---|
+| `slide-agent://capabilities` | JSON | Grammars, chart kinds, layouts, checks, and how images can reach a slide here |
 | `slide-agent://contract` | JSON | Contract version, scene schema id, available schemas |
 | `slide-agent://contract/guide` | Markdown | The complete authoring guide |
 | `slide-agent://contract/guide/<section>` | Markdown | One section |
 | `slide-agent://contract/schema/<name>` | JSON Schema | One schema |
 
 Guide sections: `role`, `creative-direction`, `narrative`, `composition`,
-`canvas`, `scene`, `diagrams`, `data`, `accessibility`, `honesty`, `workflow`.
+`canvas`, `scene`, `diagrams`, `data`, `imagery`, `accessibility`, `honesty`,
+`workflow`.
 
 Schemas: `outline`, `brief`, `slide`, `canvasElement`, `creativeDirection`,
 `chart`, `table`, `sceneRecord`.

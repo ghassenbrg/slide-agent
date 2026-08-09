@@ -19,6 +19,7 @@ export type GuideSectionId =
   | "scene"
   | "diagrams"
   | "data"
+  | "imagery"
   | "accessibility"
   | "honesty"
   | "workflow";
@@ -119,7 +120,7 @@ const SECTIONS: GuideSection[] = [
       "Add every visible word as a text element. Nothing renders implicitly.",
       "Build diagrams from shapes and connectors. Create edges before nodes, or place them on a lower `zIndex`.",
       "Use images for photography, artwork, screenshots, and supplied evidence — never as a flattened substitute for a slide.",
-      "Give every image an `alt` that describes the content.",
+      "Give every image an `alt` that describes the content, and a `provenance` when it is not your own. See the imagery section for where pictures may come from.",
     ],
     examples: [{
       caption: "A text element and a rotated shape",
@@ -186,6 +187,33 @@ const SECTIONS: GuideSection[] = [
     ],
   },
   {
+    id: "imagery",
+    title: "Where pictures come from",
+    body: [
+      "A slide can only show a picture that already exists as a file this machine can read. Slide Agent does not search for images and does not generate them: choosing imagery is your judgement, not the renderer's, and a stock API or a generation service inside the build tool would mean credentials and licence terms in a package whose whole posture is that it does not fetch things.",
+      "Read `capabilities().images` before you design around photography. `localPaths` is always true. `remoteUrls` is true only when the caller enabled remote assets. `provider` names a host-installed resolver — stock search, an asset library, an image generator — and is `null` when there is none. If both are unavailable, this installation can embed only files already on disk, and a deck built around photographs you cannot obtain is a deck that fails at the last step.",
+      "If you can generate images, write them to disk and reference the path. Record `provenance.generated` so the deck knows what it is carrying.",
+    ],
+    rules: [
+      "Prefer PNG or JPEG. WebP renders only in PowerPoint 2019 and later. SVG cannot be embedded on its own — export it to PNG at two or three times its placed size.",
+      "Record `provenance` on every image that is not your own: `credit` and `license` for anything from the web, and the licence's required attribution line verbatim. They are written into the speaker notes under `[Credits]`.",
+      "Set `provenance.generated` on any image a model produced, and never caption a generated image as a photograph of a real place, product, or person.",
+      "Design for the absence of imagery. Type, shape, and colour carry a deck perfectly well; a grey box labelled \"image here\" does not.",
+    ],
+    examples: [{
+      caption: "A credited photograph and a generated illustration",
+      language: "json",
+      code: `{ "id": "site", "type": "image", "x": 7, "y": 1, "w": 5.6, "h": 3.2,
+  "path": "https://images.example.com/turbines.jpg",
+  "alt": "Six turbines on a ridge at first light",
+  "provenance": { "credit": "Photo by A. Name on Unsplash", "license": "Unsplash License" } }
+{ "id": "concept", "type": "image", "x": 0.7, "y": 1, "w": 5, "h": 3.2,
+  "path": "artifacts/generated/flow-concept.png",
+  "alt": "An abstract rendering of three streams merging",
+  "provenance": { "generated": true, "generator": "your image model", "source": "three streams merging into one, editorial illustration" } }`,
+    }],
+  },
+  {
     id: "honesty",
     title: "Honesty",
     body: [
@@ -193,6 +221,7 @@ const SECTIONS: GuideSection[] = [
     ],
     rules: [
       "Never invent sources, data, people, or quotations.",
+      "A generated image is a claim like any other. Disclose it with `provenance.generated`, and do not let a slide imply a model's output is a photograph of something real.",
       "Record real citations in `sources`; they are written into the speaker notes under a `[Sources]` block.",
       "Do not claim success when validation failed, and do not hide unsupported content by deleting it.",
       "When you are asked for something you cannot verify, say so on the slide rather than filling the gap.",

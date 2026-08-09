@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import { lookup } from "node:dns/promises";
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import net from "node:net";
 import path from "node:path";
 
@@ -8,6 +8,19 @@ import { exists } from "../utils/files.js";
 import { SlideAgentError } from "../utils/errors.js";
 
 export interface ImageResolver {
+  /** Named so `capabilities()` can say which provider is installed. */
+  id?: string;
+  /**
+   * Turn whatever a model wrote in `path` into a local file.
+   *
+   * This is the seam for image sourcing. Slide Agent deliberately does not
+   * search for pictures or generate them: choosing imagery is the model's
+   * job, and a stock API or a generation service inside this package would
+   * mean credentials, licence terms, and outbound network policy in a tool
+   * whose whole posture is that it does not fetch things. A host that *can*
+   * do those things plugs in here, and whatever it returns is recorded with
+   * the provenance the caller supplied.
+   */
   resolve(source: string): Promise<string>;
 }
 
@@ -45,6 +58,55 @@ export function detectImageExtension(bytes: Uint8Array): string | undefined {
   return IMAGE_SIGNATURES.find((signature) => signature.test(bytes))?.extension;
 }
 
+/** What a slide can embed, in the order a model should prefer them. */
+export const SUPPORTED_IMAGE_EXTENSIONS = [".png", ".jpg", ".gif", ".webp"] as const;
+
+/**
+ * WebP is legal in OOXML and PowerPoint 2019 and later display it, but Office
+ * 2016 and several viewers show an empty frame instead. Worth saying once,
+ * rather than letting someone find out in the room.
+ */
+export const WEBP_COMPATIBILITY_NOTE =
+  "WebP renders in PowerPoint 2019 and later; older Office builds and some viewers show an empty frame. Use PNG or JPEG if the audience's version is unknown.";
+
+/**
+ * SVG cannot be embedded on its own. OOXML stores vector artwork as a raster
+ * blip carrying the SVG as an enhancement, so a PNG or JPEG has to exist for
+ * the SVG to hang off — there is no rasteriser in this package to make one.
+ * Saying that is more use than a generic "unsupported format".
+ */
+export const SVG_GUIDANCE =
+  "PowerPoint stores an SVG as an enhancement to a raster image, so an SVG alone cannot be embedded. Export the artwork to PNG (a logo at 2–3× its placed size stays crisp) and use that path.";
+
+function isSvg(bytes: Uint8Array): boolean {
+  const head = Buffer.from(bytes.slice(0, 512)).toString("utf8").trimStart();
+  return head.startsWith("<svg") || (head.startsWith("<?xml") && head.includes("<svg"));
+}
+
+/**
+ * Confirm bytes are something a slide can actually show, by content rather
+ * than by file extension.
+ *
+ * The remote path has always done this. Local files did not, and local is the
+ * route every generated image takes — so a model that wrote a PNG that is
+ * really a WebP, or handed over an SVG logo, produced a package that failed
+ * silently in PowerPoint rather than an error anyone could act on.
+ */
+export function assertEmbeddable(bytes: Uint8Array, source: string): { extension: string; warning?: string } {
+  const extension = detectImageExtension(bytes);
+  if (extension) {
+    return { extension, ...(extension === ".webp" ? { warning: `${source}: ${WEBP_COMPATIBILITY_NOTE}` } : {}) };
+  }
+  if (isSvg(bytes)) {
+    throw new SlideAgentError("IMAGE_FORMAT_UNSUPPORTED", `${source} is an SVG. ${SVG_GUIDANCE}`, { source, format: "svg" });
+  }
+  throw new SlideAgentError(
+    "IMAGE_FORMAT_UNSUPPORTED",
+    `${source} is not a format PowerPoint can embed. Supported: ${SUPPORTED_IMAGE_EXTENSIONS.join(", ")}.`,
+    { source, supported: [...SUPPORTED_IMAGE_EXTENSIONS] },
+  );
+}
+
 /**
  * True for addresses that only exist inside the host's own network boundary.
  * A deck's image list is model-authored and frequently derived from untrusted
@@ -74,7 +136,10 @@ export function isPrivateAddress(address: string): boolean {
 }
 
 export class ImageManager implements ImageResolver {
+  public readonly id = "built-in";
   private readonly policy: Required<RemoteAssetPolicy>;
+  /** Compatibility notes raised while resolving, for the caller to surface. */
+  public readonly warnings: string[] = [];
 
   public constructor(private readonly cacheDir: string, policy: RemoteAssetPolicy = { allow: false }) {
     this.policy = { ...DEFAULT_REMOTE_ASSET_POLICY, ...policy };
@@ -89,6 +154,20 @@ export class ImageManager implements ImageResolver {
     if (!(await exists(resolved))) {
       throw new SlideAgentError("IMAGE_NOT_FOUND", `Image does not exist: ${resolved}`, { source });
     }
+    // A local file gets the same scrutiny a downloaded one does. It used to get
+    // none, and local is the route every generated image and every logo takes,
+    // so the checks were absent exactly where they were most needed.
+    const head = await readFile(resolved).catch(() => undefined);
+    if (!head) throw new SlideAgentError("IMAGE_NOT_READABLE", `Image cannot be read: ${resolved}`, { source });
+    if (head.byteLength > this.policy.maximumBytes) {
+      throw new SlideAgentError(
+        "IMAGE_TOO_LARGE",
+        `${resolved} is ${Math.round(head.byteLength / 1024 / 1024)} MB, over the ${Math.round(this.policy.maximumBytes / 1024 / 1024)} MB limit. Downscale it: a full-bleed image needs about 2000px on its long edge.`,
+        { source, bytes: head.byteLength },
+      );
+    }
+    const { warning } = assertEmbeddable(head, resolved);
+    if (warning && !this.warnings.includes(warning)) this.warnings.push(warning);
     return resolved;
   }
 
@@ -174,6 +253,10 @@ export class ImageManager implements ImageResolver {
         `The response is not a PNG, JPEG, GIF, or WebP image: ${url.href}`,
         { url: url.href, contentType: response.headers.get("content-type") },
       );
+    }
+    if (extension === ".webp") {
+      const warning = `${url.href}: ${WEBP_COMPATIBILITY_NOTE}`;
+      if (!this.warnings.includes(warning)) this.warnings.push(warning);
     }
 
     // Content-addressed name in a private cache. The previous predictable,

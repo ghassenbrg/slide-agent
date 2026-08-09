@@ -8,8 +8,20 @@ import type { LayoutContext, SlideAgentConfig, SlideSpec } from "../types/index.
 import { accentForegroundOn, emphasisField, ensureContrast, foregroundOn, requiredContrast, secondaryForegroundOn } from "../utils/color.js";
 import { resolveFont, textBlockHeight } from "../design/font-metrics.js";
 import { estimatedLineCount } from "../validation/manifest-validator.js";
+import type { ExtensionRegistry } from "../extensions.js";
 
 export type LayoutRenderer = (writer: ElementWriter, spec: SlideSpec, context: LayoutContext) => void;
+
+/**
+ * The fallback layouts every installation has. Published through
+ * `capabilities()` so a model can see them without constructing a registry,
+ * and kept beside `registerDefaults` so the two cannot drift.
+ */
+export const BUILT_IN_LAYOUTS = [
+  "title", "section", "executive-summary", "text-image", "comparison",
+  "timeline", "process", "architecture", "table", "chart",
+  "kpi", "quote", "roadmap", "closing", "custom",
+] as const;
 
 export interface LayoutFallback {
   slide: number;
@@ -710,15 +722,22 @@ export class LayoutRegistry {
   /** When true, an unregistered layout id throws instead of falling back. */
   public strict = false;
 
-  public constructor(config: SlideAgentConfig) {
-    this.system = LayoutRegistry.systemFor(config);
+  public constructor(config: SlideAgentConfig, private readonly extensions?: ExtensionRegistry) {
+    this.system = LayoutRegistry.systemFor(config, undefined, extensions);
     this.diagrams = new DiagramBuilder(config, this.system.tokens, this.system.grid);
-    this.charts = new ChartBuilder(config, this.system.tokens);
+    this.charts = new ChartBuilder(config, this.system.tokens, extensions);
     this.registerDefaults();
+    // Host layouts register last so an organisation can replace a built-in of
+    // the same name rather than only add beside it.
+    for (const [id, renderer] of Object.entries(extensions?.layouts ?? {})) this.register(id, renderer);
   }
 
-  private static systemFor(config: SlideAgentConfig, direction?: SlideSpec extends never ? never : Parameters<typeof resolveTokens>[1]): LayoutSystem {
-    const tokens = resolveTokens(config, direction);
+  private static systemFor(
+    config: SlideAgentConfig,
+    direction?: SlideSpec extends never ? never : Parameters<typeof resolveTokens>[1],
+    extensions?: ExtensionRegistry,
+  ): LayoutSystem {
+    const tokens = extensions?.tokenizer?.derive(config, direction, config.dimensions) ?? resolveTokens(config, direction);
     return { tokens, grid: new Grid(config.dimensions, tokens), config };
   }
 
@@ -730,9 +749,9 @@ export class LayoutRegistry {
 
   /** Refreshes the design system while retaining every registered renderer. */
   public configure(config: SlideAgentConfig, direction?: Parameters<typeof resolveTokens>[1]): this {
-    this.system = LayoutRegistry.systemFor(config, direction);
+    this.system = LayoutRegistry.systemFor(config, direction, this.extensions);
     this.diagrams = new DiagramBuilder(config, this.system.tokens, this.system.grid);
-    this.charts = new ChartBuilder(config, this.system.tokens);
+    this.charts = new ChartBuilder(config, this.system.tokens, this.extensions);
     return this;
   }
 

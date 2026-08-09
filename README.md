@@ -67,6 +67,7 @@ Every command returns one JSON object on stdout and JSON-lines logs on stderr.
 | **Diagrams** | `layered`, `swimlane`, `sequence`, `hierarchy`, and `quadrant` grammars, plus hand-composed shapes and connectors |
 | **Data** | Native bar, stacked bar, horizontal bar, line, area, pie, doughnut, scatter and radar charts, editable waterfalls, native tables, and CSV/TSV/JSON connectors that carry provenance |
 | **Formats** | 16:9, 4:3, 9:16, A4 landscape and portrait — layouts adapt rather than overflow |
+| **Imagery** | Local files, opt-in remote URLs, or a host-supplied provider for stock search and generation — with `credit`, `license`, and `generated` carried into the deck |
 | **Brand** | `--brand kit.json` — or point it straight at your `.potx` — locks only what your organisation cannot bend on |
 | **Languages** | `--bilingual` renders a second language as its own editable text, with RTL and script-aware fonts |
 | **Editing** | Slide-level `revise`, OOXML-level `edit`, and a semantic `diff` between two decks |

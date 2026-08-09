@@ -29,6 +29,7 @@ import type {
 } from "./types/index.js";
 import { SlideAgentError, errorDetails } from "./utils/errors.js";
 import { CONTRACT_VERSION } from "./contract/index.js";
+import { ExtensionRegistry, type Capabilities, type Extensions } from "./extensions.js";
 import { exists, fileSha256, readUtf8, writeJson } from "./utils/files.js";
 import { AutoFixer, type UnfixedIssue } from "./validation/auto-fixer.js";
 import { PresentationValidator } from "./validation/validator.js";
@@ -112,25 +113,46 @@ function reconcileReport(report: ValidationReport, unfixed: UnfixedIssue[], retr
 }
 
 /**
- * Said in the result, not only in the log: a caller that asked for previews
- * and got drawings has to be told, or it will report a deck as looked-at when
- * nothing rendered it.
- */
-/**
  * A prompt alone cannot produce a designed deck — there is no model in this
  * process to design one. What comes out is scaffolding, and the result has to
  * say so where a caller will actually read it.
  */
 const DRAFT_NOTE = "No model-authored outline or scene was supplied, so this deck is a structural draft: bracketed placeholders, no art direction. Run `slide-agent draft --prompt <file>` to get a request skeleton to fill in, or `slide-agent contract` for the authoring guide.";
 
-const SCHEMATIC_NOTE ="LibreOffice and Poppler are not installed, so the previews are schematic drawings of the deck's geometry rather than rendered slides. They show position, size, colour, and text wrapping; they do not show typography or chart drawing. Install the preview tools for a true render.";
+/**
+ * Said in the result, not only in the log: a caller that asked for previews
+ * and got drawings has to be told, or it will report a deck as looked-at when
+ * nothing rendered it.
+ */
+const SCHEMATIC_NOTE = "LibreOffice and Poppler are not installed, so the previews are schematic drawings of the deck's geometry rather than rendered slides. They show position, size, colour, and text wrapping; they do not show typography or chart drawing. Install the preview tools for a true render.";
 
 function unique(values: string[]): string[] {
   return [...new Set(values.map((value) => path.resolve(value)))];
 }
 
 export class SlideAgent {
-  public constructor(private readonly logger: Logger = new JsonLogger()) {}
+  /**
+   * Everything a host has contributed: diagram grammars, chart renderers,
+   * quality checks, layouts, a preview backend, a design tokenizer, and — the
+   * one most decks need — an image resolver.
+   *
+   * `ExtensionRegistry` and its interfaces were published and documented but
+   * nothing ever read them, so a host could follow `docs/api.md` exactly and
+   * have none of it take effect. This is where they take effect.
+   */
+  private readonly extensions: ExtensionRegistry;
+
+  public constructor(
+    private readonly logger: Logger = new JsonLogger(),
+    extensions: Extensions | ExtensionRegistry = {},
+  ) {
+    this.extensions = extensions instanceof ExtensionRegistry ? extensions : new ExtensionRegistry(extensions);
+  }
+
+  /** What this installation can actually do, for a model to plan within. */
+  public capabilities(): Capabilities {
+    return this.extensions.capabilities();
+  }
 
   public async execute(request: StructuredAgentRequest): Promise<AgentResult> {
     switch (request.command) {
@@ -256,12 +278,17 @@ export class SlideAgent {
 
       for (let attempt = 0; attempt <= maximumRetries; attempt += 1) {
         this.logger.info("create.iteration", "Building presentation", { requestId, attempt: attempt + 1 });
-        const built = await new DeckBuilder(config, {
+        const builder = new DeckBuilder(config, {
           remoteAssets: remoteAssetPolicy(request.allowRemoteAssets),
+          extensions: this.extensions,
           ...(brand ? { brand } : {}),
           ...(request.bilingual ? { bilingual: request.bilingual } : {}),
-        }).build(outline);
+        });
+        const built = await builder.build(outline);
         finalBuilt = built;
+        for (const note of builder.imageWarnings) {
+          if (!warnings.includes(note)) warnings.push(note);
+        }
         outline = built.outline;
         effectiveConfig = built.config;
         for (const fallback of built.layoutFallbacks) {
@@ -279,6 +306,7 @@ export class SlideAgent {
         if (shouldValidate) {
           report = await new PresentationValidator(built.config, this.logger).validate(output, {
             manifest: built.manifest,
+            checks: this.extensions.checks,
             render: shouldRender,
             previewsDir,
             pdfPath: layout.pdf,
@@ -419,7 +447,10 @@ export class SlideAgent {
     const startedAt = new Date();
     const requestId = randomUUID();
     try {
-      const rendered = await new PresentationRenderer(this.logger).render(request.input, request.output, { width: request.width, height: request.height });
+      const backend = this.extensions.renderBackend;
+      const rendered = backend
+        ? await backend.render(request.input, request.output, { width: request.width, height: request.height })
+        : await new PresentationRenderer(this.logger).render(request.input, request.output, { width: request.width, height: request.height });
       return {
         status: "success",
         generatedFiles: [...rendered.previewFiles, ...(rendered.pdfPath ? [rendered.pdfPath] : [])],
@@ -441,6 +472,7 @@ export class SlideAgent {
       const reportPath = request.report ?? outputLayout(request.input).validation;
       const report = await new PresentationValidator(config, this.logger).validate(request.input, {
         reportPath,
+        checks: this.extensions.checks,
         manifest: request.manifest,
         render: request.render ?? false,
         previewsDir: request.previewsDir,

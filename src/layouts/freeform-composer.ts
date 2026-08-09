@@ -5,6 +5,7 @@ import { renderGrammar } from "../diagrams/grammars.js";
 import { Grid } from "../design/grid.js";
 import { resolveTokens, type DeckTokens } from "../design/tokens.js";
 import type { CanvasElementSpec, CreativeDirection, SlideAgentConfig, SlideSpec } from "../types/index.js";
+import type { ExtensionRegistry } from "../extensions.js";
 
 function setOverlapMetadata(writer: ElementWriter, id: string, element: CanvasElementSpec): void {
   const record = writer.records.find((candidate) => candidate.id === id);
@@ -22,10 +23,11 @@ export class FreeformComposer {
   public constructor(
     private readonly config: SlideAgentConfig,
     private readonly direction?: CreativeDirection,
+    private readonly extensions?: ExtensionRegistry,
   ) {
-    this.tokens = resolveTokens(config, direction);
+    this.tokens = extensions?.tokenizer?.derive(config, direction, config.dimensions) ?? resolveTokens(config, direction);
     this.grid = new Grid(config.dimensions, this.tokens);
-    this.charts = new ChartBuilder(config, this.tokens);
+    this.charts = new ChartBuilder(config, this.tokens, extensions);
   }
 
   public render(writer: ElementWriter, spec: SlideSpec): void {
@@ -76,6 +78,8 @@ export class FreeformComposer {
             rotate: element.style?.rotate,
             transparency: element.style?.transparency,
             options: element.style?.options,
+            ...(element.provenance?.source ? { source: String(element.provenance.source) } : {}),
+            ...(element.provenance ? { provenance: element.provenance } : {}),
             ...(element.link === undefined ? {} : { link: element.link }),
             role: element.role,
             intentionalOverlap: element.intentionalOverlap,
@@ -95,12 +99,17 @@ export class FreeformComposer {
           // A grammar emits many elements, so the overlap metadata below cannot
           // attach to one id; the grammar marks its own nodes instead.
           const before = writer.records.length;
-          renderGrammar(element.grammar, writer, element.spec, frame, {
+          const context = {
             tokens: this.tokens,
             grid: this.grid,
             config: this.config,
             ...(this.direction ? { direction: this.direction } : {}),
-          });
+          };
+          // A host grammar wins over a built-in of the same id, so an
+          // organisation can replace the swimlane notation without forking.
+          const custom = this.extensions?.diagram(element.grammar);
+          if (custom) custom.render(writer, element.spec, frame, context);
+          else renderGrammar(element.grammar, writer, element.spec, frame, context);
           for (const record of writer.records.slice(before)) {
             record.intentionalOverlap = record.intentionalOverlap || (element.intentionalOverlap ?? false);
           }

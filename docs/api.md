@@ -73,9 +73,18 @@ const legalFooter: QualityCheck = {
   },
 };
 
-const registry = new ExtensionRegistry({ diagrams: [houseGrammar], checks: [legalFooter] });
-registry.capabilities();   // what this installation can do
+// Extensions reach the pipeline through the agent that runs it.
+const agent = new SlideAgent(logger, { diagrams: [houseGrammar], checks: [legalFooter] });
+agent.capabilities();   // what this installation can do
+
+// Or build the registry first and share it across runs.
+const registry = new ExtensionRegistry({ diagrams: [houseGrammar] });
+const shared = new SlideAgent(logger, registry);
 ```
+
+A host grammar or layout registered under a built-in id replaces it. A
+`ChartRenderer` can replace how an existing kind is drawn; a kind the contract
+does not define goes through `native-chart` instead.
 
 | Interface | Replaces |
 |---|---|
@@ -83,8 +92,37 @@ registry.capabilities();   // what this installation can do
 | `ChartRenderer` | How one or more chart kinds are drawn |
 | `QualityCheck` | An organisation's own validation rules |
 | `RenderBackend` | Preview generation, e.g. without LibreOffice |
-| `AssetResolver` | How image paths and URLs resolve |
+| `ImageResolver` | Where pictures come from — see below |
 | `DesignTokenizer` | How `creativeDirection` becomes a design system |
+
+### Sourcing images
+
+`ImageResolver` is the seam for stock search, an internal asset library, or an
+image generator. Slide Agent ships none of them deliberately: choosing imagery
+is the model's judgement, and a stock API or a generation service inside the
+build tool would put credentials, licence terms, and outbound network policy in
+a package whose whole posture is that it does not fetch things.
+
+```ts
+const stock: ImageResolver = {
+  id: "acme-asset-library",
+  async resolve(source) {
+    // `source` is whatever the model wrote in the element's `path`.
+    return source.startsWith("acme:") ? downloadFromLibrary(source) : localPath(source);
+  },
+};
+
+const agent = new SlideAgent(logger, { assets: stock });
+```
+
+A resolver replaces the built-in entirely, including its remote-asset policy,
+so a resolver that fetches is responsible for its own timeouts, size caps, and
+address filtering.
+
+Whatever it returns, the model should record `provenance` on the element —
+`credit`, `license`, and `generated`. Those travel into the deck's speaker
+notes under `[Credits]`, and validation reports a web image with neither a
+credit nor a licence.
 
 ## Design system
 
