@@ -24,6 +24,16 @@ export * from "./contract/index.js";
 export * from "./extensions.js";
 export { fallbackFontFor, isRightToLeft, secondaryTextFor, withSecondaryLanguage, type BilingualMode } from "./design/bilingual.js";
 export { applyBrandKit, brandKitSchema, footerAppliesTo, loadBrandKit, logoAppliesTo, type BrandKit } from "./design/brand.js";
+export {
+  brandKitFromTemplate,
+  footerTextIn,
+  isTemplateFile,
+  normalizeKitColors,
+  paletteFromTheme,
+  parseTheme,
+  type TemplateImportOptions,
+  type TemplateTheme,
+} from "./design/template.js";
 export { AccessibilityValidator, type AccessibilityOptions } from "./validation/accessibility.js";
 export { scoreDeck } from "./validation/quality.js";
 export { ManifestValidator } from "./validation/manifest-validator.js";

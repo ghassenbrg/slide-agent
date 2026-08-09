@@ -254,7 +254,7 @@ export class SlideAgent {
           const note = `Slide ${slide}: ${reason}`;
           if (!warnings.includes(note)) warnings.push(note);
         }
-        await new PptxExporter().export(built.presentation, output);
+        await new PptxExporter().export(built.presentation, output, built.config.colors);
         built.manifest.provenance = provenance;
         built.manifest.packageSha256 = await fileSha256(output);
         await writeJson(manifestPath, built.manifest);

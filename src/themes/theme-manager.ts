@@ -1,5 +1,57 @@
+import { readFile, writeFile } from "node:fs/promises";
+
+import JSZip from "jszip";
+
 import type { NativePresentation } from "../components/pptx-values.js";
-import type { CreativeDirection, SlideAgentConfig } from "../types/index.js";
+import type { ColorsConfig, CreativeDirection, SlideAgentConfig } from "../types/index.js";
+import { normalizeHex } from "../utils/color.js";
+
+/**
+ * The theme colour scheme a deck's palette implies.
+ *
+ * `dk1`/`lt1` are the text and background pair and `dk2`/`lt2` the secondary
+ * pair, in the roles the default colour map assigns them — so a dark deck puts
+ * its dark background in `lt1`, which reads oddly by name but is what the map
+ * asks for and what PowerPoint renders.
+ */
+export function themeColorScheme(colors: ColorsConfig): Record<string, string> {
+  const hex = (value: string): string => (normalizeHex(value) ?? "000000").replace(/^#/, "").toUpperCase();
+  return {
+    dk1: hex(colors.ink),
+    lt1: hex(colors.background),
+    dk2: hex(colors.muted),
+    lt2: hex(colors.surface),
+    accent1: hex(colors.accent),
+    accent2: hex(colors.accentAlt),
+    accent3: hex(colors.positive),
+    accent4: hex(colors.warning),
+    accent5: hex(colors.negative),
+    accent6: hex(colors.accentSoft),
+    hlink: hex(colors.accentAlt),
+    folHlink: hex(colors.muted),
+  };
+}
+
+/** Rewrite every theme part's colour scheme to match the deck's palette. */
+export async function writeThemeColors(pptxPath: string, colors: ColorsConfig): Promise<void> {
+  const zip = await JSZip.loadAsync(await readFile(pptxPath));
+  const scheme = themeColorScheme(colors);
+  const themes = Object.keys(zip.files).filter((name) => /^ppt\/theme\/theme\d+\.xml$/.test(name));
+  if (themes.length === 0) return;
+
+  for (const name of themes) {
+    const xml = await zip.file(name)!.async("string");
+    const rewritten = xml.replace(/<a:clrScheme\b[\s\S]*?<\/a:clrScheme>/, (block) =>
+      block.replace(
+        /<a:(dk1|lt1|dk2|lt2|accent[1-6]|hlink|folHlink)>[\s\S]*?<\/a:\1>/g,
+        (roleBlock, role: string) => scheme[role]
+          ? `<a:${role}><a:srgbClr val="${scheme[role]}"/></a:${role}>`
+          : roleBlock,
+      ));
+    zip.file(name, rewritten, { createFolders: false });
+  }
+  await writeFile(pptxPath, await zip.generateAsync({ type: "nodebuffer", compression: "DEFLATE", platform: "DOS" }));
+}
 
 export class ThemeManager {
   public apply(presentation: NativePresentation, config: SlideAgentConfig, title: string, direction?: CreativeDirection): void {

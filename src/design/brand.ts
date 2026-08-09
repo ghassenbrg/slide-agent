@@ -4,6 +4,7 @@ import { z } from "zod";
 import type { CreativeDirection, PresentationOutline } from "../types/index.js";
 import { SlideAgentError } from "../utils/errors.js";
 import { exists, readUtf8 } from "../utils/files.js";
+import { brandKitFromTemplate, isTemplateFile } from "./template.js";
 
 /**
  * An organisation's visual constraints, supplied as a file rather than prose.
@@ -61,8 +62,15 @@ export const brandKitSchema = z.object({
 
 export type BrandKit = z.infer<typeof brandKitSchema>;
 
+/**
+ * Load a brand kit from JSON, or derive one from an organisation's PowerPoint
+ * template. Accepting the template directly matters because the template is
+ * what people actually have: nobody has a brand-kit JSON lying around, and the
+ * step where a human retypes a colour scheme is the step that goes wrong.
+ */
 export async function loadBrandKit(filePath: string): Promise<BrandKit> {
   const resolved = path.resolve(filePath);
+  if (isTemplateFile(resolved)) return brandKitFromTemplate(resolved);
   if (!(await exists(resolved))) {
     throw new SlideAgentError("BRAND_KIT_NOT_FOUND", `Brand kit not found: ${resolved}`, { path: resolved });
   }

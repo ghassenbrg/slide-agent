@@ -11,6 +11,8 @@ import { installManaged } from "./installer.js";
 import { PptxInspector } from "./editing/pptx-inspector.js";
 import { diffDecks, formatDiff } from "./serialization/diff.js";
 import { chartFromData, loadDataTable, provenanceNote, tableFromData } from "./data/connectors.js";
+import { brandKitFromTemplate, normalizeKitColors } from "./design/template.js";
+import { writeUtf8 } from "./utils/files.js";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { spawn } from "node:child_process";
@@ -98,7 +100,7 @@ program.command("create")
   .option("--metadata <file>", "Generation metadata JSON path")
   .option("--inspect <file>", "Round-trippable NDJSON blueprint output path")
   .option("--config <directory>", "Configuration directory")
-  .option("--brand <file>", "Brand kit JSON constraining palette, typography, logo, and footer")
+  .option("--brand <file>", "Brand kit JSON, or a .potx/.pptx template whose theme becomes the kit")
   .option("--bilingual <mode>", "Render secondaryLanguage as parallel, stacked, or notes")
   .option("--max-retries <count>", "Maximum automatic repair retries", Number)
   .option("--render", "Also generate PDF and PNG previews (requires LibreOffice and Poppler)")
@@ -278,6 +280,31 @@ program.command("data")
       speakerNote: provenanceNote(table),
       rows: table.rows.length,
     }, null, 2)}\n`);
+  });
+
+program.command("template")
+  .description("Read an organisation's .potx or .pptx and emit the brand kit its theme implies")
+  .requiredOption("--input <file>", "Template .potx or .pptx")
+  .option("--output <file>", "Write the kit to this path instead of stdout")
+  .option("--name <name>", "Override the theme's own name")
+  .option("--unlock <aspects>", "Comma-separated aspects the model may still override: palette, typography")
+  .action(async (options) => {
+    const unlocked = new Set(String(options.unlock ?? "").split(",").map((value: string) => value.trim()).filter(Boolean));
+    for (const aspect of unlocked) {
+      if (aspect !== "palette" && aspect !== "typography") throw new Error(`Unknown aspect: ${aspect}. Use palette or typography.`);
+    }
+    const locked = (["palette", "typography"] as const).filter((aspect) => !unlocked.has(aspect));
+    const kit = normalizeKitColors(await brandKitFromTemplate(options.input, {
+      ...(options.name ? { name: options.name } : {}),
+      locked: [...locked],
+    }));
+    const json = `${JSON.stringify(kit, null, 2)}\n`;
+    if (options.output) {
+      await writeUtf8(options.output, json);
+      process.stdout.write(`${JSON.stringify({ output: path.resolve(options.output), brand: kit.name, locked: kit.locked }, null, 2)}\n`);
+      return;
+    }
+    process.stdout.write(json);
   });
 
 program.command("run")

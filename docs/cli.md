@@ -15,7 +15,7 @@ slide-agent create --prompt brief.md --output draft.pptx
 | `--scene <file>` | Build from a `slide-agent.scene/1` blueprint. The good path. |
 | `--prompt <file>` | Markdown or text brief. Produces a labelled structural draft. |
 | `--output <file>` | Required. Must end in `.pptx`. |
-| `--brand <file>` | Brand kit constraining palette, typography, logo, footer |
+| `--brand <file>` | Brand kit JSON, or a `.potx`/`.pptx` whose theme becomes the kit |
 | `--bilingual <mode>` | `parallel`, `stacked`, or `notes` |
 | `--config <dir>` | Configuration directory, including the slide format |
 | `--render` | Also produce PDF and PNG previews |
@@ -43,6 +43,23 @@ OOXML-level operations on an existing deck: `replace-text`, `remove-slide`,
 `duplicate-slide`, `add-slide`, `import-slide`, `reorder-slides`,
 `apply-theme`, `replace-image`, `update-table`, `update-chart`. See
 [editing](editing.md) for the limits.
+
+## `template`
+
+```bash
+slide-agent template --input corporate.potx --output brand.json
+```
+
+Reads an organisation's PowerPoint template and writes the brand kit its theme
+implies: the colour scheme mapped through the master's colour map, the major
+and minor typefaces, and the footer line the master already carries. Both
+palette and typography lock by default; `--unlock palette,typography` relaxes
+whichever the organisation does not actually mandate.
+
+`--brand corporate.potx` skips the intermediate file and reads the template
+directly. The template's masters and layouts are not adopted — Slide Agent
+composes from a grid rather than filling placeholders, and a deck carrying both
+would carry two design systems.
 
 ## `validate`
 
