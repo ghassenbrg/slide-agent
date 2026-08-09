@@ -3,7 +3,7 @@
 All notable public changes are recorded here, newest first. Versions follow
 semantic versioning.
 
-## Unreleased — 0.10.0
+## 0.10.0 — 2026-08-09
 
 The release where a model can see what it built, and where measurement stops
 being a guess.
