@@ -99,6 +99,7 @@
     "release:verify": "node scripts/verify-release.mjs",
     "release:audit-artifacts": "node scripts/audit-release-artifacts.mjs",
     "audit:public": "node scripts/audit-public-content.mjs",
+    "audit:deps": "node scripts/audit-dependencies.mjs",
     "lockfile:verify": "node scripts/verify-lockfile.mjs",
     "version:set": "node scripts/set-version.mjs",
     "release:artifacts": "node scripts/package-release.mjs",
