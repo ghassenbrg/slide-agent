@@ -46,7 +46,10 @@ Every pull request and every push to a release branch runs, on Linux, macOS,
 and Windows across Node.js 22 and 24:
 
 - dependency installation from lockfiles;
-- production dependency vulnerability auditing;
+- production dependency vulnerability auditing (`npm run audit:deps`), which
+  fails on any unreviewed high or critical advisory and allows an exception
+  only when it names the advisory, states a reason a script can re-check, and
+  carries an expiry date;
 - TypeScript checks and the automated test suite with coverage thresholds;
 - a repository scan for credentials, private local paths, unapproved
   presentation/document artifacts, confidential identifiers, and

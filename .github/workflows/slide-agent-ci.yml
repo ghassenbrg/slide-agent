@@ -58,7 +58,9 @@ jobs:
       - run: npm run typecheck
       - run: npm run check
         working-directory: extensions/vscode
-      - run: npm audit --omit=dev --audit-level=high
+      # Production advisories, with named and expiring exceptions for the ones
+      # that have no fix upstream. See scripts/audit-dependencies.mjs.
+      - run: npm run audit:deps
       - run: npm audit --audit-level=high
         working-directory: extensions/vscode
       - run: npm run docs:check

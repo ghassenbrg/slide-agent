@@ -91,7 +91,7 @@ Install exactly from lockfiles and run all checks:
 npm run lockfile:verify
 npm ci
 npm --prefix extensions/vscode ci
-npm audit --omit=dev --audit-level=high
+npm run audit:deps
 npm run plugin:build
 npm run plugin:validate
 npm run release:verify
@@ -240,6 +240,6 @@ Or upload the same VSIX through the Marketplace publisher management page. Never
 - [ ] No customer, employer, partner, private deck, or external reference material is present.
 - [ ] Project-owned icon is byte-identical across distributions.
 - [ ] Third-party dependency licenses are documented.
-- [ ] `npm audit`, `audit:public`, tests, build, plugin validation, VSIX packaging, and managed install/uninstall pass.
+- [ ] `audit:deps`, `audit:public`, tests, build, plugin validation, VSIX packaging, and managed install/uninstall pass.
 - [ ] Tag is signed/annotated and exactly matches the version.
 - [ ] npm, npx, GitHub, VS Code, and Codex artifacts are verified after publication.
