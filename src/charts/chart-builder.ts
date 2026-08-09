@@ -5,12 +5,49 @@ import { ChartTypes, Shapes } from "../components/pptx-values.js";
 import { resolveTokens, type DeckTokens } from "../design/tokens.js";
 import { ensureContrast, requiredContrast } from "../utils/color.js";
 
-const CHART_TYPES: Record<Exclude<ChartSpec["kind"], "waterfall">, string> = {
+type NativeKind = Exclude<ChartSpec["kind"], "waterfall">;
+
+const CHART_TYPES: Record<NativeKind, string> = {
   bar: ChartTypes.bar,
+  "bar-stacked": ChartTypes.bar,
+  "bar-horizontal": ChartTypes.bar,
   line: ChartTypes.line,
   pie: ChartTypes.pie,
+  doughnut: ChartTypes.doughnut,
   area: ChartTypes.area,
+  scatter: ChartTypes.scatter,
+  radar: ChartTypes.radar,
 };
+
+const CIRCULAR: NativeKind[] = ["pie", "doughnut"];
+const BAR_LIKE: NativeKind[] = ["bar", "bar-stacked", "bar-horizontal"];
+
+/**
+ * The options that make each kind read as itself. PptxGenJS expresses stacking
+ * and orientation as options on one bar type rather than as separate types, so
+ * they are named as distinct kinds here — a model asking for a stacked bar
+ * should not have to know that.
+ */
+function kindOptions(kind: NativeKind): Record<string, unknown> {
+  switch (kind) {
+    case "bar-stacked":
+      return { barGrouping: "stacked", barDir: "col" };
+    case "bar-horizontal":
+      return { barDir: "bar" };
+    case "bar":
+      return { barDir: "col" };
+    case "doughnut":
+      return { holeSize: 55 };
+    case "area":
+      return { chartColorsOpacity: 58 };
+    case "scatter":
+      return { lineSize: 0, lineDataSymbolSize: 8 };
+    case "radar":
+      return { radarStyle: "marker" };
+    default:
+      return {};
+  }
+}
 
 export class ChartBuilder {
   private readonly tokens: DeckTokens;
@@ -30,18 +67,26 @@ export class ChartBuilder {
       this.addWaterfall(writer, name, chart, frame);
       return;
     }
+    const kind = chart.kind;
     const colors = style.colors ?? [this.config.colors.accent, this.config.colors.accentAlt, this.config.colors.muted];
-    const data: Array<Record<string, unknown>> = chart.series.map((series) => ({
-      name: series.name,
-      labels: chart.labels,
-      values: series.values,
-    }));
+    // A scatter chart plots pairs, so PptxGenJS reads the first series as the
+    // shared x axis. The contract has already checked the labels are numeric.
+    const data: Array<Record<string, unknown>> = kind === "scatter"
+      ? [
+        { name: "X-Axis", values: chart.labels.map(Number) },
+        ...chart.series.map((series) => ({ name: series.name, values: series.values })),
+      ]
+      : chart.series.map((series) => ({
+        name: series.name,
+        labels: chart.labels,
+        values: series.values,
+      }));
     const options: Record<string, unknown> = {
       showTitle: false,
       showLegend: chart.showLegend ?? chart.series.length > 1,
       legendPos: "b",
       chartColors: colors,
-      ...(chart.kind === "area" ? { chartColorsOpacity: 58 } : {}),
+      ...kindOptions(kind),
       catAxisLabelFontFace: this.config.fonts.body,
       catAxisLabelFontSize: this.tokens.type.caption,
       catAxisLabelColor: this.config.colors.ink,
@@ -50,16 +95,18 @@ export class ChartBuilder {
       valAxisLabelColor: this.config.colors.ink,
       legendColor: this.config.colors.ink,
       valGridLine: { color: this.config.colors.rule, width: this.tokens.stroke.hairline },
-      showPercent: chart.kind === "pie",
-      showValue: chart.showValues ?? ["bar", "pie"].includes(chart.kind),
-      dataLabelPosition: chart.kind === "bar" ? "outEnd" : chart.kind === "pie" ? "bestFit" : "t",
-      showLeaderLines: chart.kind === "pie",
+      showPercent: CIRCULAR.includes(kind),
+      showValue: chart.showValues ?? (BAR_LIKE.includes(kind) || CIRCULAR.includes(kind)),
+      // A stacked bar's label belongs inside its segment; an outside-end label
+      // would sit on top of the segment above it.
+      dataLabelPosition: kind === "bar-stacked" ? "ctr" : kind === "bar" ? "outEnd" : kind === "bar-horizontal" ? "outEnd" : CIRCULAR.includes(kind) ? "bestFit" : "t",
+      showLeaderLines: CIRCULAR.includes(kind),
       ...(style.options ?? {}),
       ...frame,
       objectName: name,
-      altText: `${chart.kind} chart: ${chart.series.map((series) => series.name).join(", ")}`,
+      altText: `${kind} chart: ${chart.series.map((series) => series.name).join(", ")}`,
     };
-    writer.slide.addChart(CHART_TYPES[chart.kind], data, options);
+    writer.slide.addChart(CHART_TYPES[kind], data, options);
     writer.recordChart(name, chart, frame);
   }
 

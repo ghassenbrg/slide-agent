@@ -93,7 +93,10 @@ function validateChart(chart: ChartSpec): string[] {
     if (series.values.length !== chart.labels.length) errors.push(`${series.name} has ${series.values.length} values for ${chart.labels.length} labels`);
     if (series.values.some((value) => !Number.isFinite(value))) errors.push(`${series.name} contains a non-finite value`);
   }
-  if (chart.kind === "pie" && chart.series.length !== 1) errors.push("pie charts require exactly one data series");
+  if (["pie", "doughnut"].includes(chart.kind) && chart.series.length !== 1) errors.push(`${chart.kind} charts require exactly one data series`);
+  if (chart.kind === "scatter" && chart.labels.some((label) => !Number.isFinite(Number(label)))) {
+    errors.push("a scatter chart reads its labels as x values, so every label must be a number");
+  }
   return errors;
 }
 
@@ -254,7 +257,13 @@ export class ManifestValidator {
           if (overlapAllowed(left, right)) continue;
           const overlap = intersectionArea(left, right);
           if (overlap > Math.min(area(left), area(right)) * 0.08 && overlap > 0.025) {
-            issues.push(issue("overlapping-elements", "error", `${left.name} overlaps ${right.name} on slide ${slide.number}.`, true, {
+            // A package carries no channel for "this overlap is deliberate":
+            // `intentionalOverlap` lives in the build manifest. Validating a
+            // deck recovered from OOXML alone — an edited deck, or one someone
+            // handed us — must not fail it for an intent it had no way to
+            // record. Report it, and let a human look.
+            const severity = manifest.source === "inspected" ? "warning" : "error";
+            issues.push(issue("overlapping-elements", severity, `${left.name} overlaps ${right.name} on slide ${slide.number}.`, true, {
               slide: slide.number,
               elementIds: [left.id, right.id],
               details: { overlapArea: overlap },

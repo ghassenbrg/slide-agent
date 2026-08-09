@@ -63,7 +63,7 @@ Every command returns one JSON object on stdout and JSON-lines logs on stderr.
 |---|---|
 | **Authoring** | Model-authored art direction, freeform canvases, any slide kind, rich text runs, arbitrary PptxGenJS shapes and options |
 | **Diagrams** | `layered`, `swimlane`, `sequence`, `hierarchy`, and `quadrant` grammars, plus hand-composed shapes and connectors |
-| **Data** | Native bar/line/pie/area charts, editable waterfalls, native tables, and CSV/TSV/JSON connectors that carry provenance |
+| **Data** | Native bar, stacked bar, horizontal bar, line, area, pie, doughnut, scatter and radar charts, editable waterfalls, native tables, and CSV/TSV/JSON connectors that carry provenance |
 | **Formats** | 16:9, 4:3, 9:16, A4 landscape and portrait — layouts adapt rather than overflow |
 | **Brand** | `--brand kit.json` locks only what your organisation cannot bend on |
 | **Languages** | `--bilingual` renders a second language as its own editable text, with RTL and script-aware fonts |

@@ -51,6 +51,12 @@ const outline: PresentationOutline = {
     { id: "line", kind: "chart", title: "Line", chart: { kind: "line", labels: ["Q1", "Q2", "Q3"], series: [{ name: "N", values: [4, 5, 6] }, { name: "M", values: [6, 5, 4] }] } },
     { id: "area", kind: "chart", title: "Area", chart: { kind: "area", labels: ["X", "Y", "Z"], series: [{ name: "A", values: [2, 4, 8] }, { name: "B", values: [1, 2, 3] }] } },
     { id: "pie", kind: "chart", title: "Pie", chart: { kind: "pie", labels: ["One", "Two", "Three"], series: [{ name: "Share", values: [50, 30, 20] }] } },
+    { id: "doughnut", kind: "chart", title: "Doughnut", chart: { kind: "doughnut", labels: ["One", "Two", "Three"], series: [{ name: "Share", values: [50, 30, 20] }] } },
+    { id: "stacked", kind: "chart", title: "Stacked bar", chart: { kind: "bar-stacked", labels: ["A", "B", "C"], series: [{ name: "S1", values: [1, 2, 3] }, { name: "S2", values: [3, 2, 1] }] } },
+    { id: "horizontal", kind: "chart", title: "Horizontal bar", chart: { kind: "bar-horizontal", labels: ["A", "B", "C"], series: [{ name: "S1", values: [1, 2, 3] }] } },
+    { id: "scatter", kind: "chart", title: "Scatter", chart: { kind: "scatter", labels: ["1", "2", "3", "4"], series: [{ name: "Latency", values: [12, 18, 9, 22] }] } },
+    { id: "radar", kind: "chart", title: "Radar", chart: { kind: "radar", labels: ["Cost", "Speed", "Risk", "Reach"], series: [{ name: "Now", values: [3, 4, 2, 5] }, { name: "Target", values: [4, 5, 4, 4] }] } },
+    { id: "waterfall", kind: "chart", title: "Waterfall", chart: { kind: "waterfall", labels: ["Open", "Won", "Churn", "Net"], series: [{ name: "ARR", values: [100, 30, -10, 120] }] } },
   ],
 };
 

@@ -34,7 +34,7 @@ const CHART_WITH_BROKEN_SEQUENCES = `<?xml version="1.0" encoding="UTF-8" standa
 <c:lineChart><c:varyColors val="0"/><c:dLbls><c:showVal val="0"/></c:dLbls>
 <c:ser><c:idx val="0"/><c:order val="0"/><c:invertIfNegative val="0"/><c:dLbls><c:showVal val="0"/></c:dLbls><c:marker><c:symbol val="circle"/></c:marker><c:cat/><c:val/><c:smooth val="0"/></c:ser>
 <c:axId val="1"/><c:axId val="2"/></c:lineChart>
-<c:catAx><c:axId val="1"/></c:catAx><c:valAx><c:axId val="2"/></c:valAx>
+<c:catAx><c:axId val="1"/></c:catAx><c:valAx><c:axId val="2"/><c:auto val="1"/><c:lblAlgn val="ctr"/><c:crossBetween val="between"/></c:valAx>
 </c:plotArea></c:chart></c:chartSpace>`;
 
 async function writeFixture(directory: string): Promise<string> {
@@ -83,6 +83,15 @@ describe("PptxSanitizer schema-sequence repairs", () => {
     const series = /<c:ser>(.*)<\/c:ser>/s.exec(chartXml)![1]!;
     const order = [...series.matchAll(/<c:(idx|order|marker|dLbls|cat|val|smooth)[ >/]/g)].map((match) => match[1]);
     expect(order).toEqual(["idx", "order", "marker", "dLbls", "cat", "val", "smooth"]);
+  });
+
+  it("removes category-axis children from a value axis, as a scatter chart emits", () => {
+    // A scatter chart has value axes on both sides, but PptxGenJS writes the x
+    // axis with c:auto and c:lblAlgn, which CT_ValAx does not allow.
+    const valueAxis = /<c:valAx>(.*?)<\/c:valAx>/s.exec(chartXml)![1]!;
+    expect(valueAxis).not.toContain("<c:auto");
+    expect(valueAxis).not.toContain("<c:lblAlgn");
+    expect(valueAxis).toContain("<c:crossBetween");
   });
 
   it("is reported by PackageValidator before repair and clean after repair", async () => {

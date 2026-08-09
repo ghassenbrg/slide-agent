@@ -353,7 +353,7 @@ export class AutoFixer {
         ...series,
         values: Array.from({ length }, (_, index) => Number.isFinite(series.values[index]) ? series.values[index]! : 0),
       }));
-      if (chart.kind === "pie") chart.series = chart.series.slice(0, 1);
+      if (chart.kind === "pie" || chart.kind === "doughnut") chart.series = chart.series.slice(0, 1);
       return JSON.stringify(chart.series) !== before;
     };
     let changed = slide.chart ? normalize(slide.chart) : false;

@@ -6,11 +6,13 @@ import type {
   ApplyThemeOperation,
   ChartSeries,
   EditOperation,
+  ImportSlideOperation,
   ReplaceImageOperation,
   UpdateChartOperation,
   UpdateTableOperation,
 } from "../types/index.js";
 import { SlideAgentError } from "../utils/errors.js";
+import { checkLink } from "../utils/links.js";
 import { writeBinary } from "../utils/files.js";
 import { PptxSanitizer } from "../export/pptx-sanitizer.js";
 import { resolvePackageTarget } from "../utils/ooxml.js";
@@ -271,6 +273,9 @@ export class PptxEditor {
       case "add-slide":
         await this.duplicateSlide(state, operation.slide, operation.insertAt, operation.replacements ?? []);
         break;
+      case "import-slide":
+        await this.importSlide(state, operation, warnings);
+        break;
       case "reorder-slides":
         this.reorderSlides(state, operation.order);
         break;
@@ -375,6 +380,224 @@ export class PptxEditor {
     const override = sourceOverride?.replace(`/${source.path}`, `/${newPath}`)
       ?? `<Override PartName="/${newPath}" ContentType="application/vnd.openxmlformats-officedocument.presentationml.slide+xml"/>`;
     state.contentTypes = appendBeforeClosing(state.contentTypes, "</Types>", override);
+  }
+
+  /**
+   * Copy a slide out of another presentation.
+   *
+   * Everything the slide points at travels with it — images, charts and their
+   * embedded workbooks, speaker notes — renamed so it cannot collide with a
+   * part already in the destination. The one thing that does not travel is the
+   * slide layout: importing it would drag in its master and theme, and the
+   * deck would end up carrying two design systems. The slide is remapped onto
+   * the destination layout of the same type instead, which is PowerPoint's
+   * "use destination theme", and the substitution is reported.
+   *
+   * Links inside an imported slide are held to the same allowlist as links a
+   * model authors: the source deck is a file the caller has been handed, and
+   * it is not more trustworthy than a canvas.
+   */
+  private async importSlide(state: PackageState, operation: ImportSlideOperation, warnings: string[]): Promise<void> {
+    const sourcePath = path.resolve(operation.source);
+    const sourceZip = await JSZip.loadAsync(await readFile(sourcePath)).catch(() => {
+      throw new SlideAgentError("SOURCE_NOT_READABLE", `Cannot read ${sourcePath} as a PowerPoint package.`);
+    });
+    const sourcePresentation = await sourceZip.file("ppt/presentation.xml")?.async("string");
+    const sourceRels = await sourceZip.file("ppt/_rels/presentation.xml.rels")?.async("string");
+    if (!sourcePresentation || !sourceRels) {
+      throw new SlideAgentError("INVALID_PPTX", `${sourcePath} is missing required presentation parts.`);
+    }
+    const sourceSlides = loadSlides(sourcePresentation, sourceRels);
+    const source = sourceSlides[operation.slide - 1];
+    if (!source) {
+      throw new SlideAgentError("SLIDE_NOT_FOUND", `${sourcePath} has ${sourceSlides.length} slides; slide ${operation.slide} does not exist.`);
+    }
+
+    let slideXml = await sourceZip.file(source.path)?.async("string");
+    if (!slideXml) throw new SlideAgentError("SLIDE_PART_MISSING", `Missing ${source.path} in ${sourcePath}.`);
+    for (const replacement of operation.replacements ?? []) {
+      slideXml = replaceTextNodes(slideXml, replacement.find, replacement.replace, true).xml;
+    }
+
+    const names = Object.keys(state.zip.files);
+    const newPartNumber = maxNumber(names, /^ppt\/slides\/slide(\d+)\.xml$/) + 1;
+    const newPath = `ppt/slides/slide${newPartNumber}.xml`;
+
+    const sourceSlideRels = await sourceZip.file(relsPath(source.path))?.async("string");
+    const rewritten = sourceSlideRels
+      ? await this.importSlideRelationships(state, sourceZip, sourcePath, source.path, newPath, sourceSlideRels, warnings)
+      : undefined;
+
+    state.zip.file(newPath, slideXml);
+    if (rewritten) state.zip.file(relsPath(newPath), rewritten);
+
+    const relationshipNumber = maxNumber([...state.presentationRels.matchAll(/\bId="rId(\d+)"/g)].map((match) => `rId${match[1]}`), /rId(\d+)/) + 1;
+    const relationshipId = `rId${relationshipNumber}`;
+    state.presentationRels = appendBeforeClosing(
+      state.presentationRels,
+      "</Relationships>",
+      `<Relationship Id="${relationshipId}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide${newPartNumber}.xml"/>`,
+    );
+    const slideId = Math.max(255, ...state.slides.map((slide) => Number(slide.block.match(/\bid="(\d+)"/)?.[1] ?? 255))) + 1;
+    const entry: SlideEntry = { block: `<p:sldId id="${slideId}" r:id="${relationshipId}"/>`, relationshipId, path: newPath };
+    const index = Math.max(0, Math.min((operation.insertAt ?? state.slides.length + 1) - 1, state.slides.length));
+    state.slides.splice(index, 0, entry);
+    state.contentTypes = appendBeforeClosing(
+      state.contentTypes,
+      "</Types>",
+      `<Override PartName="/${newPath}" ContentType="application/vnd.openxmlformats-officedocument.presentationml.slide+xml"/>`,
+    );
+  }
+
+  /** Copy everything an imported slide points at, and rewrite its rels. */
+  private async importSlideRelationships(
+    state: PackageState,
+    sourceZip: JSZip,
+    sourceFile: string,
+    sourceSlidePath: string,
+    newSlidePath: string,
+    relsXml: string,
+    warnings: string[],
+  ): Promise<string> {
+    let output = relsXml;
+
+    for (const relationship of relationships(relsXml)) {
+      if (!relationship.target || !relationship.type) continue;
+      const kind = relationship.type.split("/").pop() ?? "";
+
+      if (relationshipAttribute(relationship.block, "TargetMode") === "External") {
+        const { link, rejected } = checkLink(decodeXml(relationship.target));
+        if (link?.url) continue;
+        warnings.push(`Slide imported from ${path.basename(sourceFile)}: ${rejected ?? "refused an external link"}`);
+        output = output.replace(relationship.block, relationship.block.replace(/\bTarget="[^"]*"/, 'Target="https://example.invalid/removed"'));
+        continue;
+      }
+
+      const partPath = resolvePackageTarget(sourceSlidePath, decodeXml(relationship.target));
+
+      if (kind === "slideLayout") {
+        const remapped = await this.matchLayout(state, sourceZip, partPath);
+        output = output.replace(relationship.block, relationship.block.replace(/\bTarget="[^"]*"/, `Target="../slideLayouts/${path.posix.basename(remapped.path)}"`));
+        if (remapped.substituted) {
+          warnings.push(`Imported slide was laid out on "${remapped.sourceType ?? "unknown"}" in ${path.basename(sourceFile)} and now uses this deck's "${remapped.targetType ?? "first"}" layout. Check its placeholders.`);
+        }
+        continue;
+      }
+
+      const copied = await this.copyPart(state, sourceZip, partPath, kind, newSlidePath, warnings);
+      if (!copied) {
+        warnings.push(`Imported slide referenced ${partPath}, which is missing from ${path.basename(sourceFile)}. The reference was dropped.`);
+        output = output.replace(relationship.block, "");
+        continue;
+      }
+      output = output.replace(
+        relationship.block,
+        relationship.block.replace(/\bTarget="[^"]*"/, `Target="${escapeXml(path.posix.relative(path.posix.dirname(newSlidePath), copied))}"`),
+      );
+    }
+
+    return output;
+  }
+
+  /**
+   * Copy one part and everything below it into the destination package under a
+   * name that cannot collide. Returns the new package path.
+   */
+  private async copyPart(
+    state: PackageState,
+    sourceZip: JSZip,
+    partPath: string,
+    kind: string,
+    newSlidePath: string,
+    warnings: string[],
+  ): Promise<string | undefined> {
+    const file = sourceZip.file(partPath);
+    if (!file) return undefined;
+
+    const directory = path.posix.dirname(partPath);
+    const extension = path.posix.extname(partPath);
+    const stem = path.posix.basename(partPath, extension).replace(/\d+$/, "");
+    const existing = Object.keys(state.zip.files);
+    const next = maxNumber(existing, new RegExp(`^${directory}/${stem}(\\d+)\\${extension}$`)) + 1;
+    const targetPath = `${directory}/${stem}${next}${extension}`;
+
+    state.zip.file(targetPath, await file.async("nodebuffer"));
+
+    if (extension) state.contentTypes = ensureDefaultContentType(state.contentTypes, extension.slice(1).toLowerCase());
+    const sourceOverride = await sourceZip.file("[Content_Types].xml")?.async("string");
+    const override = sourceOverride?.match(new RegExp(`<Override\\b[^>]*PartName="/${partPath.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}"[^>]*/>`))?.[0];
+    if (override) {
+      state.contentTypes = appendBeforeClosing(state.contentTypes, "</Types>", override.replace(`/${partPath}`, `/${targetPath}`));
+    }
+
+    // A chart or a notes slide has relationships of its own — an embedded
+    // workbook, a colour style, the slide it belongs to. Follow them, or the
+    // imported chart opens with no data behind it.
+    const childRels = await sourceZip.file(relsPath(partPath))?.async("string");
+    if (childRels) {
+      let rewritten = childRels;
+      for (const child of relationships(childRels)) {
+        if (!child.target || relationshipAttribute(child.block, "TargetMode") === "External") continue;
+        const childKind = child.type?.split("/").pop() ?? "";
+        if (childKind === "slide") {
+          rewritten = rewritten.replace(child.block, child.block.replace(/\bTarget="[^"]*"/, `Target="../slides/${path.posix.basename(newSlidePath)}"`));
+          continue;
+        }
+        const childPath = resolvePackageTarget(partPath, decodeXml(child.target));
+        const copied = await this.copyPart(state, sourceZip, childPath, childKind, newSlidePath, warnings);
+        if (!copied) {
+          rewritten = rewritten.replace(child.block, "");
+          continue;
+        }
+        rewritten = rewritten.replace(
+          child.block,
+          child.block.replace(/\bTarget="[^"]*"/, `Target="${escapeXml(path.posix.relative(directory, copied))}"`),
+        );
+      }
+      state.zip.file(relsPath(targetPath), rewritten);
+    }
+
+    if (kind === "diagramData") warnings.push("The imported slide contains SmartArt. It is copied as-is and cannot be edited by Slide Agent.");
+    return targetPath;
+  }
+
+  /** The destination layout that best matches the one the source slide used. */
+  private async matchLayout(
+    state: PackageState,
+    sourceZip: JSZip,
+    sourceLayoutPath: string,
+  ): Promise<{ path: string; substituted: boolean; sourceType?: string; targetType?: string }> {
+    // `type` is the ECMA-376 layout kind (`title`, `obj`, `blank`). Decks that
+    // do not set one — PptxGenJS writes a single unnamed layout — still carry a
+    // `cSld` name, which is enough to tell "the same layout in both decks"
+    // from a genuine substitution worth reporting.
+    const describe = async (zip: JSZip, layoutPath: string): Promise<{ type?: string; name?: string }> => {
+      const xml = await zip.file(layoutPath)?.async("string") ?? "";
+      return {
+        ...(xml.match(/<p:sldLayout\b[^>]*\btype="([^"]+)"/)?.[1] ? { type: xml.match(/<p:sldLayout\b[^>]*\btype="([^"]+)"/)![1]! } : {}),
+        ...(xml.match(/<p:cSld\b[^>]*\bname="([^"]*)"/)?.[1] ? { name: xml.match(/<p:cSld\b[^>]*\bname="([^"]*)"/)![1]! } : {}),
+      };
+    };
+
+    const source = await describe(sourceZip, sourceLayoutPath);
+    const targets = Object.keys(state.zip.files).filter((name) => /^ppt\/slideLayouts\/slideLayout\d+\.xml$/.test(name)).sort();
+    if (targets.length === 0) {
+      throw new SlideAgentError("NO_SLIDE_LAYOUTS", "The destination presentation has no slide layouts to map the imported slide onto.");
+    }
+
+    const label = source.type ?? source.name;
+    for (const candidate of targets) {
+      const target = await describe(state.zip, candidate);
+      const matches = (source.type && target.type === source.type) || (source.name && target.name === source.name);
+      if (matches) return { path: candidate, substituted: false, ...(label ? { sourceType: label } : {}), targetType: target.type ?? target.name };
+    }
+    const fallback = await describe(state.zip, targets[0]!);
+    return {
+      path: targets[0]!,
+      substituted: true,
+      ...(label ? { sourceType: label } : {}),
+      targetType: fallback.type ?? fallback.name,
+    };
   }
 
   private reorderSlides(state: PackageState, order: number[]): void {

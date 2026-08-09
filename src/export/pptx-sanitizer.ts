@@ -217,6 +217,9 @@ function repairChartSequences(document: Document): void {
   }
 }
 
+/** Children CT_CatAx and CT_DateAx allow that CT_ValAx does not. */
+const VALUE_AXIS_ONLY_INVALID = new Set(["c:auto", "c:lblAlgn", "c:lblOffset", "c:tickLblSkip", "c:tickMarkSkip", "c:noMultiLvlLbl"]);
+
 function repairChartAxes(xml: string, partName: string): string {
   const document = parseXml(xml, partName);
   const axisContainerNames = new Set(["c:catAx", "c:dateAx", "c:serAx", "c:valAx"]);
@@ -252,6 +255,15 @@ function repairChartAxes(xml: string, partName: string): string {
     stringRef.appendChild(stringCache);
     multiLevelRef.parentNode.replaceChild(stringRef, multiLevelRef);
   }
+  // `c:auto` belongs to a category or date axis, not a value axis. A scatter
+  // chart has value axes on both sides, and PptxGenJS writes the x axis with
+  // the category-axis children anyway, which PowerPoint repairs on open.
+  for (const axis of Array.from(document.getElementsByTagName("c:valAx"))) {
+    for (const child of directChildren(axis)) {
+      if (VALUE_AXIS_ONLY_INVALID.has(child.nodeName)) axis.removeChild(child);
+    }
+  }
+
   repairChartSequences(document);
   repairParagraphOrder(document);
   return serializeXml(document);

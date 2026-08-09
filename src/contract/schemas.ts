@@ -37,8 +37,9 @@ export const chartSeriesSchema = z.object({
 });
 
 export const chartSpecSchema = z.object({
-  kind: z.enum(["bar", "line", "pie", "area", "waterfall"]),
-  labels: z.array(z.string()).min(1),
+  kind: z.enum(["bar", "bar-stacked", "bar-horizontal", "line", "pie", "doughnut", "area", "scatter", "radar", "waterfall"])
+    .describe("A native, editable chart. `scatter` reads its labels as x values. For anything else PptxGenJS can draw, use a native-chart element."),
+  labels: z.array(z.string()).min(1).describe("Category labels, one per value in every series. For a scatter chart these are the x values and must be numbers."),
   series: z.array(chartSeriesSchema).min(1),
   unit: z.string().optional(),
   showLegend: z.boolean().optional(),
@@ -47,8 +48,11 @@ export const chartSpecSchema = z.object({
   (chart) => chart.series.every((series) => series.values.length === chart.labels.length),
   { message: "every series must have exactly one value per category label" },
 ).refine(
-  (chart) => chart.kind !== "pie" || chart.series.length === 1,
-  { message: "a pie chart takes exactly one series" },
+  (chart) => !["pie", "doughnut"].includes(chart.kind) || chart.series.length === 1,
+  { message: "a pie or doughnut chart takes exactly one series" },
+).refine(
+  (chart) => chart.kind !== "scatter" || chart.labels.every((label) => Number.isFinite(Number(label))),
+  { message: "a scatter chart reads its labels as x values, so every label must be a number" },
 );
 
 const nativeOptions = z.record(z.string(), z.unknown())

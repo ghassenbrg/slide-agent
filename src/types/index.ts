@@ -16,7 +16,17 @@ export type SlideKind =
   | "custom"
   | (string & {});
 
-export type ChartKind = "bar" | "line" | "pie" | "area" | "waterfall";
+export type ChartKind =
+  | "bar"
+  | "bar-stacked"
+  | "bar-horizontal"
+  | "line"
+  | "pie"
+  | "doughnut"
+  | "area"
+  | "scatter"
+  | "radar"
+  | "waterfall";
 export type PresentationType =
   | "business"
   | "sales"
@@ -501,6 +511,13 @@ export interface DeckManifest {
    * before trusting its authoring metadata (for example intentional overlap).
    */
   packageSha256?: string;
+  /**
+   * Where this manifest came from. `authored` was written by a build and
+   * carries the author's intent — deliberate overlap, roles, alt text.
+   * `inspected` was recovered from the package alone, where none of that
+   * intent survives, so checks that depend on it soften rather than fail.
+   */
+  source?: "authored" | "inspected";
   slides: SlideManifest[];
 }
 
@@ -648,6 +665,22 @@ export interface DuplicateSlideOperation {
   replacements?: Array<{ find: string; replace: string }>;
 }
 
+/**
+ * Copy one slide out of another presentation. The slide arrives with its own
+ * shapes, images, charts, and speaker notes, remapped onto a layout in the
+ * destination deck so the result carries one theme rather than two.
+ */
+export interface ImportSlideOperation {
+  type: "import-slide";
+  /** Path to the source .pptx. */
+  source: string;
+  /** 1-based slide number in the source deck. */
+  slide: number;
+  /** 1-based position in the destination deck. Appends when omitted. */
+  insertAt?: number;
+  replacements?: Array<{ find: string; replace: string }>;
+}
+
 export interface ReorderSlidesOperation {
   type: "reorder-slides";
   order: number[];
@@ -688,6 +721,7 @@ export type EditOperation =
   | ReplaceTextOperation
   | RemoveSlideOperation
   | DuplicateSlideOperation
+  | ImportSlideOperation
   | ReorderSlidesOperation
   | ApplyThemeOperation
   | ReplaceImageOperation

@@ -535,18 +535,25 @@
                 "type": "string",
                 "enum": [
                   "bar",
+                  "bar-stacked",
+                  "bar-horizontal",
                   "line",
                   "pie",
+                  "doughnut",
                   "area",
+                  "scatter",
+                  "radar",
                   "waterfall"
-                ]
+                ],
+                "description": "A native, editable chart. `scatter` reads its labels as x values. For anything else PptxGenJS can draw, use a native-chart element."
               },
               "labels": {
                 "minItems": 1,
                 "type": "array",
                 "items": {
                   "type": "string"
-                }
+                },
+                "description": "Category labels, one per value in every series. For a scatter chart these are the x values and must be numbers."
               },
               "series": {
                 "minItems": 1,
@@ -1548,18 +1555,25 @@
                           "type": "string",
                           "enum": [
                             "bar",
+                            "bar-stacked",
+                            "bar-horizontal",
                             "line",
                             "pie",
+                            "doughnut",
                             "area",
+                            "scatter",
+                            "radar",
                             "waterfall"
-                          ]
+                          ],
+                          "description": "A native, editable chart. `scatter` reads its labels as x values. For anything else PptxGenJS can draw, use a native-chart element."
                         },
                         "labels": {
                           "minItems": 1,
                           "type": "array",
                           "items": {
                             "type": "string"
-                          }
+                          },
+                          "description": "Category labels, one per value in every series. For a scatter chart these are the x values and must be numbers."
                         },
                         "series": {
                           "minItems": 1,

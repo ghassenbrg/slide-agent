@@ -40,9 +40,9 @@ slide-agent edit --input deck.pptx --prompt changes.json --output edited.pptx
 ```
 
 OOXML-level operations on an existing deck: `replace-text`, `remove-slide`,
-`duplicate-slide`, `add-slide`, `reorder-slides`, `apply-theme`,
-`replace-image`, `update-table`, `update-chart`. See [editing](editing.md) for
-the limits.
+`duplicate-slide`, `add-slide`, `import-slide`, `reorder-slides`,
+`apply-theme`, `replace-image`, `update-table`, `update-chart`. See
+[editing](editing.md) for the limits.
 
 ## `validate`
 

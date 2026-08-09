@@ -5,6 +5,7 @@ import JSZip from "jszip";
 import type { ChartSpec, DeckManifest, ElementRecord, PptxInspection, SlideKind } from "../types/index.js";
 import { resolvePackageTarget } from "../utils/ooxml.js";
 import { decodeXml } from "../utils/text.js";
+import { buildTimestamp } from "../utils/reproducible.js";
 
 const EMU_PER_INCH = 914400;
 
@@ -254,7 +255,8 @@ export class PptxInspector {
         presentationTitle,
         width: size.width,
         height: size.height,
-        createdAt: new Date().toISOString(),
+        createdAt: buildTimestamp().toISOString(),
+        source: "inspected",
         slides,
       },
       warnings,
