@@ -343,7 +343,7 @@ function pill(s, id, text, x, y, w, fill) {
     ["Codex", "agent skill", C.greenBright], ["Claude Code", "agent skill", C.greenBright],
     ["MCP clients", "Cursor · Zed · …", C.greenBright], ["VS Code", "language model API", C.greenBright],
     ["CLI agents", "any tool-capable model", C.greenBright],
-    ["Copilot CLI", "best-effort", C.orangeBright], ["Gemini CLI", "experimental · use MCP", C.magBright],
+    ["Copilot CLI", "best-effort", C.orangeBright], ["Gemini / Antigravity", "global plugin", C.greenBright],
   ];
   // Ranked as a hub between two columns: four hosts feed in, three read out.
   const inbound = hosts.slice(0, 4).map(([label]) => label);

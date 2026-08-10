@@ -44,7 +44,7 @@ async function main() {
         SLIDE_AGENT_CODEX_SKILLS_DIR: path.join(skills, "codex"),
         SLIDE_AGENT_COPILOT_SKILLS_DIR: path.join(skills, "copilot"),
         SLIDE_AGENT_CLAUDE_SKILLS_DIR: path.join(skills, "claude"),
-        SLIDE_AGENT_GEMINI_SKILLS_DIR: path.join(skills, "gemini"),
+        SLIDE_AGENT_GEMINI_PLUGIN_DIR: path.join(skills, "gemini", "slide-agent-plugin"),
       },
       shell: process.platform === "win32",
     });

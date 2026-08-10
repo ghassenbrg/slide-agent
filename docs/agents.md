@@ -17,11 +17,21 @@ because only the second is evidence.
 | MCP clients (Cursor, Zed, Windsurf, …) | **verified** | `slide-agent-mcp` over stdio |
 | CLI / any tool-capable agent | **verified** | `slide-agent contract` + `slide-agent run` |
 | GitHub Copilot CLI | best-effort | `~/.copilot/skills/slide-agent` |
-| Gemini CLI | experimental | Registered under `~/.gemini/skills`, which is not a documented Gemini discovery path. Use the MCP server or the CLI instead. |
+| Gemini / Google Antigravity | **verified** | Global plugin at `~/.gemini/config/plugins/slide-agent-plugin`, with the skill under `skills/slide-agent` |
 | VS Code extension | **verified** | Uses the VS Code Language Model API |
 
 We label these honestly rather than claiming universal support. If a level
 here is wrong in either direction, please open an issue.
+
+The `gemini` installer target creates the system-wide user plugin layout:
+
+```text
+~/.gemini/config/plugins/slide-agent-plugin/
+├── plugin.json
+└── skills/
+    └── slide-agent/
+        └── SKILL.md
+```
 
 ## MCP
 

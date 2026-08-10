@@ -18,7 +18,7 @@ const env = {
   SLIDE_AGENT_CODEX_SKILLS_DIR: path.join(skillRoot, "codex"),
   SLIDE_AGENT_COPILOT_SKILLS_DIR: path.join(skillRoot, "copilot"),
   SLIDE_AGENT_CLAUDE_SKILLS_DIR: path.join(skillRoot, "claude"),
-  SLIDE_AGENT_GEMINI_SKILLS_DIR: path.join(skillRoot, "gemini"),
+  SLIDE_AGENT_GEMINI_PLUGIN_DIR: path.join(skillRoot, "gemini", "slide-agent-plugin"),
   SLIDE_AGENT_SKIP_PATH_UPDATE: "1",
 };
 const automaticEnv = {
@@ -26,7 +26,7 @@ const automaticEnv = {
   SLIDE_AGENT_CODEX_SKILLS_DIR: path.join(automaticSkillRoot, "codex"),
   SLIDE_AGENT_COPILOT_SKILLS_DIR: path.join(automaticSkillRoot, "copilot"),
   SLIDE_AGENT_CLAUDE_SKILLS_DIR: path.join(automaticSkillRoot, "claude"),
-  SLIDE_AGENT_GEMINI_SKILLS_DIR: path.join(automaticSkillRoot, "gemini"),
+  SLIDE_AGENT_GEMINI_PLUGIN_DIR: path.join(automaticSkillRoot, "gemini", "slide-agent-plugin"),
   SLIDE_AGENT_SKIP_PATH_UPDATE: "1",
 };
 const npmExecutable = process.env.npm_execpath;
@@ -110,6 +110,7 @@ try {
     await expectLink(cli);
     await expectLink(mcp);
     await expectLink(path.join(skillRoot, "codex", "slide-agent"));
+    await expectLink(path.join(skillRoot, "gemini", "slide-agent-plugin", "skills", "slide-agent"));
   } else {
     if (!await exists(cli) || !await exists(mcp)) throw new Error("Managed Windows launchers are missing.");
   }
@@ -117,7 +118,13 @@ try {
   await run(cli, ["uninstall"]);
   if (process.platform === "win32") await waitForRemoval(cli);
 
-  for (const removedPath of [managedRoot, cli, mcp, path.join(skillRoot, "codex", "slide-agent")]) {
+  for (const removedPath of [
+    managedRoot,
+    cli,
+    mcp,
+    path.join(skillRoot, "codex", "slide-agent"),
+    path.join(skillRoot, "gemini", "slide-agent-plugin"),
+  ]) {
     if (await exists(removedPath)) throw new Error(`Uninstall left a managed path behind: ${removedPath}`);
   }
   process.stdout.write("Managed no-clone install and guarded uninstall verified.\n");

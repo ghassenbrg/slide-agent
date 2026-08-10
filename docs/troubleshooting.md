@@ -16,9 +16,10 @@ Slide Agent will not install a system runtime for you.
 Run `slide-agent doctor`. It distinguishes *registered* from *verified*: if a
 target shows `registered` but not `verified`, Slide Agent placed the skill
 where it expects the host to look but found no host configuration referencing
-it. Check [agents.md](agents.md) for that target's support level — Gemini CLI
-in particular has no documented personal-skills directory, so use the MCP
-server or the CLI there.
+it. Check [agents.md](agents.md) for that target's support level. Gemini /
+Google Antigravity requires the global plugin manifest at
+`~/.gemini/config/plugins/slide-agent-plugin/plugin.json`; reinstall the
+`gemini` target if the manifest is missing.
 
 Restart the chat or host after installing; most hosts scan skills at startup.
 

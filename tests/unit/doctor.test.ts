@@ -11,7 +11,7 @@ const VARIABLES = [
   "SLIDE_AGENT_CODEX_SKILLS_DIR",
   "SLIDE_AGENT_COPILOT_SKILLS_DIR",
   "SLIDE_AGENT_CLAUDE_SKILLS_DIR",
-  "SLIDE_AGENT_GEMINI_SKILLS_DIR",
+  "SLIDE_AGENT_GEMINI_PLUGIN_DIR",
 ];
 
 beforeAll(async () => {
@@ -52,9 +52,7 @@ describe("doctor", () => {
     expect(support.codex).toBe("verified");
     expect(support.claude).toBe("verified");
     expect(support.copilot).toBe("best-effort");
-    // Gemini CLI has no documented personal-skills directory, so claiming a
-    // green check for it would be misleading.
-    expect(support.gemini).toBe("experimental");
+    expect(support.gemini).toBe("verified");
   });
 
   it("checks the MCP server rather than assuming it is wired up", async () => {

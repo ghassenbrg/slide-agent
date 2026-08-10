@@ -60,6 +60,7 @@ interface AgentTarget {
   configFiles: string[];
   support: AgentIntegrationCheck["support"];
   note: string;
+  pluginManifest?: string;
 }
 
 function agentTargets(home: string): AgentTarget[] {
@@ -93,21 +94,35 @@ function agentTargets(home: string): AgentTarget[] {
     },
     {
       target: "gemini",
-      name: "Gemini CLI",
-      skillsDir: process.env.SLIDE_AGENT_GEMINI_SKILLS_DIR ?? path.join(home, ".gemini", "skills"),
+      name: "Gemini / Google Antigravity",
+      skillsDir: path.join(
+        process.env.SLIDE_AGENT_GEMINI_PLUGIN_DIR
+          ?? process.env.SLIDE_AGENT_GEMINI_SKILLS_DIR
+          ?? path.join(home, ".gemini", "config", "plugins", "slide-agent-plugin"),
+        "skills",
+      ),
       configDir: path.join(home, ".gemini"),
       configFiles: ["settings.json"],
-      support: "experimental",
-      note: "Gemini CLI's documented extension point is ~/.gemini/extensions, not a skills directory. Drive Slide Agent through the CLI or the MCP server instead.",
+      support: "verified",
+      note: "Google Antigravity discovers global plugins from ~/.gemini/config/plugins.",
+      pluginManifest: path.join(
+        process.env.SLIDE_AGENT_GEMINI_PLUGIN_DIR
+          ?? process.env.SLIDE_AGENT_GEMINI_SKILLS_DIR
+          ?? path.join(home, ".gemini", "config", "plugins", "slide-agent-plugin"),
+        "plugin.json",
+      ),
     },
   ];
 }
 
 async function checkAgent(target: AgentTarget): Promise<AgentIntegrationCheck> {
   const skillPath = target.skillsDir.endsWith("slide-agent") ? target.skillsDir : path.join(target.skillsDir, "slide-agent");
-  const registered = await exists(path.join(skillPath, "SKILL.md"));
+  const skillPresent = await exists(path.join(skillPath, "SKILL.md"));
+  const hasPluginManifest = target.pluginManifest ? await exists(target.pluginManifest) : false;
+  const registered = skillPresent && (!target.pluginManifest || hasPluginManifest);
   const evidence: string[] = [];
-  if (registered) evidence.push(`skill present at ${skillPath}`);
+  if (skillPresent) evidence.push(`skill present at ${skillPath}`);
+  if (hasPluginManifest) evidence.push(`plugin manifest present at ${target.pluginManifest}`);
 
   const referenced = await configMentions(target.configDir, target.configFiles, "slide-agent");
   if (referenced) evidence.push(`referenced by ${referenced}`);
@@ -116,7 +131,8 @@ async function checkAgent(target: AgentTarget): Promise<AgentIntegrationCheck> {
   const hasExtension = await exists(extensionDir);
   if (hasExtension) evidence.push(`extension installed at ${extensionDir}`);
 
-  const verified = Boolean(referenced) || hasExtension || (registered && target.support === "verified");
+  const verified = Boolean(referenced) || hasExtension
+    || (registered && target.support === "verified" && (!target.pluginManifest || hasPluginManifest));
   const status: DoctorCheck["status"] = !registered ? "warning" : target.support === "experimental" ? "warning" : "ok";
 
   return {

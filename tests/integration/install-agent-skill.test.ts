@@ -24,7 +24,7 @@ function installerEnvironment(): NodeJS.ProcessEnv {
     SLIDE_AGENT_CODEX_SKILLS_DIR: path.join(workspace, "codex"),
     SLIDE_AGENT_COPILOT_SKILLS_DIR: path.join(workspace, "copilot"),
     SLIDE_AGENT_CLAUDE_SKILLS_DIR: path.join(workspace, "claude"),
-    SLIDE_AGENT_GEMINI_SKILLS_DIR: path.join(workspace, "gemini"),
+    SLIDE_AGENT_GEMINI_PLUGIN_DIR: path.join(workspace, "gemini", "slide-agent-plugin"),
   };
 }
 
@@ -45,13 +45,16 @@ describe("agent skill installers", () => {
         SLIDE_AGENT_CODEX_SKILLS_DIR: path.join(portable, "codex"),
         SLIDE_AGENT_COPILOT_SKILLS_DIR: path.join(portable, "copilot"),
         SLIDE_AGENT_CLAUDE_SKILLS_DIR: path.join(portable, "claude"),
-        SLIDE_AGENT_GEMINI_SKILLS_DIR: path.join(portable, "gemini"),
+        SLIDE_AGENT_GEMINI_PLUGIN_DIR: path.join(portable, "gemini", "slide-agent-plugin"),
       };
       const result = await execute(process.execPath, [path.join(scripts, "setup.mjs"), "--target", "all", "--skip-cli"], { env: environment });
       expect(result.stdout).toContain("installation complete for: all");
-      for (const agent of ["codex", "copilot", "claude", "gemini"]) {
+      for (const agent of ["codex", "copilot", "claude"]) {
         expect(await lstat(path.join(portable, agent, "slide-agent"))).toBeDefined();
       }
+      const geminiPlugin = path.join(portable, "gemini", "slide-agent-plugin");
+      expect(JSON.parse(await readFile(path.join(geminiPlugin, "plugin.json"), "utf8"))).toMatchObject({ name: "slide-agent-plugin" });
+      expect(await lstat(path.join(geminiPlugin, "skills", "slide-agent"))).toBeDefined();
     } finally {
       await rm(portable, { recursive: true, force: true });
     }
@@ -101,11 +104,16 @@ describe("agent skill installers", () => {
     const first = await execute("/bin/sh", [installer, "--skip-cli"], { env: installerEnvironment() });
     expect(first.stdout).toContain("installation complete for: all");
 
-    for (const agent of ["codex", "copilot", "claude", "gemini"]) {
+    for (const agent of ["codex", "copilot", "claude"]) {
       const link = path.join(workspace, agent, "slide-agent");
       expect((await lstat(link)).isSymbolicLink()).toBe(true);
       expect(await readlink(link)).toBe(root);
     }
+    const geminiPlugin = path.join(workspace, "gemini", "slide-agent-plugin");
+    const geminiLink = path.join(geminiPlugin, "skills", "slide-agent");
+    expect((await lstat(geminiLink)).isSymbolicLink()).toBe(true);
+    expect(await readlink(geminiLink)).toBe(root);
+    expect(JSON.parse(await readFile(path.join(geminiPlugin, "plugin.json"), "utf8"))).toMatchObject({ name: "slide-agent-plugin" });
 
     const second = await execute("/bin/sh", [installer, "--skip-cli"], { env: installerEnvironment() });
     expect(second.stdout.match(/Already installed for/g)).toHaveLength(4);

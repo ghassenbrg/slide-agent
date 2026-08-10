@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { access, lstat, readFile, readlink, realpath, rm, unlink, writeFile } from "node:fs/promises";
+import { access, lstat, readFile, readlink, realpath, rm, rmdir, unlink, writeFile } from "node:fs/promises";
 import { homedir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -125,13 +125,36 @@ async function removePathEntry(bin) {
   }
 }
 
+const geminiPluginDirectory = path.resolve(
+  process.env.SLIDE_AGENT_GEMINI_PLUGIN_DIR
+    ?? process.env.SLIDE_AGENT_GEMINI_SKILLS_DIR
+    ?? path.join(home, ".gemini", "config", "plugins", "slide-agent-plugin"),
+);
+const geminiSkillsDirectory = path.join(geminiPluginDirectory, "skills");
 const agentDirectories = [
   process.env.SLIDE_AGENT_CODEX_SKILLS_DIR ?? path.join(home, ".agents", "skills"),
   process.env.SLIDE_AGENT_COPILOT_SKILLS_DIR ?? path.join(home, ".copilot", "skills"),
   process.env.SLIDE_AGENT_CLAUDE_SKILLS_DIR ?? path.join(home, ".claude", "skills"),
-  process.env.SLIDE_AGENT_GEMINI_SKILLS_DIR ?? path.join(home, ".gemini", "skills"),
+  geminiSkillsDirectory,
 ];
 for (const directory of agentDirectories) await removeSkill(path.join(directory, "slide-agent"));
+const geminiManifest = path.join(geminiPluginDirectory, "plugin.json");
+const geminiManifestContents = await readFile(geminiManifest, "utf8").catch(() => undefined);
+if (geminiManifestContents) {
+  try {
+    const manifest = JSON.parse(geminiManifestContents);
+    if (manifest.name === "slide-agent-plugin") {
+      await unlink(geminiManifest);
+      removed.push(geminiManifest);
+      await rmdir(geminiSkillsDirectory).catch(() => undefined);
+      await rmdir(geminiPluginDirectory).catch(() => undefined);
+    } else {
+      skipped.push(geminiManifest);
+    }
+  } catch {
+    skipped.push(geminiManifest);
+  }
+}
 for (const name of ["slide-agent", "slide-agent-mcp"]) {
   await removeLauncher(path.join(prefix, "bin", process.platform === "win32" ? `${name}.cmd` : name));
 }

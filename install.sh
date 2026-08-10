@@ -70,5 +70,5 @@ printf '\n%s\n' "Slide Agent is ready. Install once; use it from any supported a
 printf '%s\n' "  Codex:          \$slide-agent"
 printf '%s\n' "  GitHub Copilot: /slide-agent"
 printf '%s\n' "  Claude Code:    /slide-agent"
-printf '%s\n' "  Gemini CLI:     ask it to use slide-agent"
+printf '%s\n' "  Gemini/Antigravity: ask it to use slide-agent"
 printf '%s\n' "  Any other agent can execute: slide-agent --help"

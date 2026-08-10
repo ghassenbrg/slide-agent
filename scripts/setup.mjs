@@ -20,12 +20,18 @@ const skipCli = has("--skip-cli");
 const skipBuild = has("--skip-build");
 const cliOnly = has("--cli-only");
 const prefix = path.resolve(process.env.SLIDE_AGENT_CLI_PREFIX ?? path.join(home, ".local"));
+const geminiPluginDirectory = path.resolve(
+  process.env.SLIDE_AGENT_GEMINI_PLUGIN_DIR
+    ?? process.env.SLIDE_AGENT_GEMINI_SKILLS_DIR
+    ?? path.join(home, ".gemini", "config", "plugins", "slide-agent-plugin"),
+);
+const geminiSkillsDirectory = path.join(geminiPluginDirectory, "skills");
 
 const agentDirectories = {
   codex: process.env.SLIDE_AGENT_CODEX_SKILLS_DIR ?? path.join(home, ".agents", "skills"),
   copilot: process.env.SLIDE_AGENT_COPILOT_SKILLS_DIR ?? path.join(home, ".copilot", "skills"),
   claude: process.env.SLIDE_AGENT_CLAUDE_SKILLS_DIR ?? path.join(home, ".claude", "skills"),
-  gemini: process.env.SLIDE_AGENT_GEMINI_SKILLS_DIR ?? path.join(home, ".gemini", "skills"),
+  gemini: geminiSkillsDirectory,
 };
 
 function targets() {
@@ -82,6 +88,31 @@ async function copySkill(destination) {
     },
   });
   await writeFile(path.join(destination, ".slide-agent-install.json"), `${JSON.stringify({ packageRoot }, null, 2)}\n`, "utf8");
+}
+
+async function installGeminiPluginManifest() {
+  const manifestPath = path.join(geminiPluginDirectory, "plugin.json");
+  const existing = await readFile(manifestPath, "utf8").catch(() => undefined);
+  if (existing !== undefined) {
+    let manifest;
+    try {
+      manifest = JSON.parse(existing);
+    } catch {
+      throw new Error(`Refusing to replace invalid Gemini plugin manifest: ${manifestPath}`);
+    }
+    if (manifest.name !== "slide-agent-plugin") {
+      throw new Error(`Refusing to replace existing Gemini plugin manifest: ${manifestPath}`);
+    }
+  }
+  const packageMetadata = JSON.parse(await readFile(path.join(packageRoot, "package.json"), "utf8"));
+  const manifest = {
+    name: "slide-agent-plugin",
+    version: packageMetadata.version,
+    description: "Create, edit, render, validate, and repair distinctive editable PowerPoint presentations.",
+  };
+  await mkdir(geminiPluginDirectory, { recursive: true });
+  await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
+  process.stdout.write(`Gemini plugin manifest installed: ${manifestPath}\n`);
 }
 
 async function installSkill(agent, skillsDirectory) {
@@ -176,6 +207,9 @@ if (!skipCli) {
   await persistPath(bin);
 }
 if (!cliOnly) {
-  for (const [agent, directory] of targets()) await installSkill(agent, directory);
+  for (const [agent, directory] of targets()) {
+    if (agent === "gemini") await installGeminiPluginManifest();
+    await installSkill(agent, directory);
+  }
   process.stdout.write(`Slide Agent installation complete for: ${target}\n`);
 }
