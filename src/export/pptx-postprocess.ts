@@ -33,6 +33,12 @@ export interface PictureTreatment {
 }
 
 export interface ShapePostProcess {
+  /**
+   * The 1-based slide this element is on. Element ids are unique within a
+   * slide, not across the deck, so a name alone would let one slide's crop
+   * land on another slide's picture of the same name.
+   */
+  slide: number;
   /** The element's `objectName`, which is its authored id. */
   name: string;
   /** Newspaper-style text columns inside one text box. */
@@ -53,9 +59,21 @@ function directChildren(element: Element): Element[] {
   return children;
 }
 
-function firstDescendant(root: Element, nodeName: string): Element | undefined {
-  const found = root.getElementsByTagName(nodeName);
-  return found.length > 0 ? (found[0] as Element) : undefined;
+function firstDescendant(root: Element, ...nodeNames: string[]): Element | undefined {
+  for (const nodeName of nodeNames) {
+    const found = root.getElementsByTagName(nodeName);
+    if (found.length > 0) return found[0] as Element;
+  }
+  return undefined;
+}
+
+/**
+ * The fill is `p:blipFill` inside a `p:pic` and `a:blipFill` inside a shape's
+ * `p:spPr`. Looking for only one of those is how a crop can be applied to
+ * every shape in the deck and reach none of the pictures.
+ */
+function blipFillIn(shape: Element): Element | undefined {
+  return firstDescendant(shape, "p:blipFill", "a:blipFill");
 }
 
 /** The `p:sp`/`p:pic`/`p:graphicFrame` a named non-visual property belongs to. */
@@ -73,7 +91,7 @@ function applyColumns(shape: Element, columns: { count: number; gutterInches?: n
 }
 
 function applyCrop(shape: Element, crop: NonNullable<PictureTreatment["crop"]>, document: Document): void {
-  const fill = firstDescendant(shape, "a:blipFill");
+  const fill = blipFillIn(shape);
   if (!fill) return;
   const existing = directChildren(fill).find((child) => child.nodeName === "a:srcRect");
   const rect = existing ?? document.createElementNS(fill.namespaceURI, "a:srcRect");
@@ -136,9 +154,10 @@ function applyBlipEffects(shape: Element, treatment: PictureTreatment, document:
  * Applies every requested pass to one slide part, returning the XML unchanged
  * when nothing on that slide is targeted.
  */
-export function postProcessSlideXml(xml: string, entries: ShapePostProcess[]): string {
-  if (entries.length === 0) return xml;
-  const byName = new Map(entries.map((entry) => [entry.name, entry]));
+export function postProcessSlideXml(xml: string, entries: ShapePostProcess[], slide: number): string {
+  const forSlide = entries.filter((entry) => entry.slide === slide);
+  if (forSlide.length === 0) return xml;
+  const byName = new Map(forSlide.map((entry) => [entry.name, entry]));
   const document = new DOMParser().parseFromString(xml, "application/xml");
   let changed = false;
 

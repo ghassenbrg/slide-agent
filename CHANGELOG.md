@@ -122,6 +122,21 @@ in. `MIGRATION-0.10.md` says what is new and what you keep.
   and true only about one library.
 - Two decks built into the same directory no longer share one `manifest.json`,
   which silently overwrote the first deck's blueprint.
+- `fit: "cover"` now crops instead of stretching. PptxGenJS emits a zeroed
+  source rectangle, so a 16:9 photograph in a 2:1 frame came out distorted;
+  the crop is derived from the picture's own dimensions and centred on
+  `treatment.focalPoint` when one is declared.
+- Authored picture crops reached no picture at all: the post-processor looked
+  for `a:blipFill` where a `p:pic` carries `p:blipFill`. Post-processing is also
+  keyed by slide now — element ids are unique within a slide, not across the
+  deck, so two pictures called `plate` swapped each other's crops.
+- Render fidelity no longer reports a word as broken because a PDF extractor
+  spaced a large heading oddly. A word counts as broken only when its letters
+  continue onto the next extracted line.
+- Two placements of the same symbol collided in the manifest unless one of them
+  happened to declare overrides: child ids were namespaced inside the override
+  branch rather than on every instance. Collided ids are also unaddressable by
+  a patch, which addresses elements by id.
 - Symbol and group images resolve once per deck rather than once per placement.
 
 ## 0.10.0 — 2026-08-09

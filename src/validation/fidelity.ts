@@ -58,6 +58,29 @@ interface SlideComparison {
 const SIGNIFICANT_LENGTH = 4;
 
 /**
+ * Did the *render* break this word, or did the extractor just space it oddly?
+ *
+ * PDF text extraction inserts spaces inside large display type — a 54pt title
+ * comes back as "Re a ding the ha rbour wa ll" from a slide that reads
+ * perfectly. Reporting that as a defect trains authors to ignore the check,
+ * which is worse than not having it.
+ *
+ * The distinction is where the letters ended up. Odd spacing *within* one
+ * extracted line is the extractor. Letters continuing onto the *next* line are
+ * a word the renderer actually broke in half.
+ */
+function brokenAcrossLines(word: string, observedLines: string[]): boolean {
+  const target = skeleton(word);
+  if (target.length < SIGNIFICANT_LENGTH) return false;
+  const lines = observedLines.map(skeleton).filter(Boolean);
+  if (lines.some((line) => line.includes(target))) return false;
+  for (let index = 0; index < lines.length - 1; index += 1) {
+    if (`${lines[index]!}${lines[index + 1]!}`.includes(target)) return true;
+  }
+  return false;
+}
+
+/**
  * Matching one authored string against the render.
  *
  * The render is read in physical reading order, so two text boxes side by side
@@ -93,7 +116,11 @@ function matchSegment(
   }
   const tailAllMissing = found.slice(firstMissing).every((present) => !present);
   if (tailAllMissing && firstMissing >= Math.max(2, Math.ceil(tokens.length * 0.4))) {
-    return { truncatedAt: tokens.slice(0, firstMissing).join(" ") };
+    // Report the real prefix, not a rejoin of the filtered tokens: an author
+    // comparing "the decision action you are" against their slide is being
+    // shown a string that was never on it.
+    const cut = wanted.indexOf(tokens[firstMissing]!);
+    return { truncatedAt: (cut > 0 ? wanted.slice(0, cut) : tokens.slice(0, firstMissing).join(" ")).trim() };
   }
   return found.filter(Boolean).length <= tokens.length / 2 ? "missing" : "present";
 }
@@ -112,11 +139,13 @@ function compareSlide(slideNumber: number, intended: string[], observedLines: st
     for (const segment of source.split(/\r?\n/).map((line) => line.trim()).filter(Boolean)) {
       const result = matchSegment(segment, observedJoined, observedSkeleton);
       if (result === "present") {
-        // Present but not contiguous: something broke a word the source did not.
+        // Present but not contiguous: check whether the render broke a word,
+        // or the extractor merely spaced one oddly.
         const wanted = normalizeForComparison(segment);
         if (!observedJoined.includes(wanted)) {
-          const broken = wanted.split(" ").filter((word) => word.length > 6 && !observedJoined.includes(word));
-          splitWords.push(...broken);
+          splitWords.push(...wanted.split(" ").filter(
+            (word) => word.length > 6 && !observedJoined.includes(word) && brokenAcrossLines(word, observedLines),
+          ));
         }
         continue;
       }
@@ -125,7 +154,7 @@ function compareSlide(slideNumber: number, intended: string[], observedLines: st
         continue;
       }
       if ("splitWords" in result) {
-        splitWords.push(...result.splitWords);
+        splitWords.push(...result.splitWords.filter((word) => brokenAcrossLines(word, observedLines)));
         continue;
       }
       truncated.push({ intended: segment, observed: result.truncatedAt });

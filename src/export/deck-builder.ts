@@ -11,8 +11,11 @@ import { resolveTokens } from "../design/tokens.js";
 import { Grid } from "../design/grid.js";
 import { CreativeDirector } from "../themes/creative-director.js";
 import { ThemeManager } from "../themes/theme-manager.js";
+import { readImageSize } from "../images/dimensions.js";
+import { cropForFocalPoint } from "./pptx-postprocess.js";
 import type {
   CanvasElementSpec,
+  CanvasImageElement,
   DeckManifest,
   DeckSymbol,
   ElementRecord,
@@ -50,6 +53,29 @@ export interface BuiltDeck {
    * original reference to keep as provenance.
    */
   resolvedAssets: Map<string, string>;
+}
+
+/**
+ * The crop that makes `fit: "cover"` mean cover.
+ *
+ * PptxGenJS writes a zeroed source rectangle and stretches the picture to the
+ * frame, so a 16:9 photograph in a 2:1 box came out horizontally stretched —
+ * "cover" was doing the one thing it exists to avoid. Knowing the source's own
+ * proportions is what turns that back into a crop, and a declared focal point
+ * is what keeps the subject inside it.
+ */
+async function coverCrop(
+  element: CanvasImageElement,
+  localPath: string,
+): Promise<{ treatment?: CanvasImageElement["treatment"] }> {
+  const fit = element.fit ?? "cover";
+  const focal = element.treatment?.focalPoint ?? { x: 0.5, y: 0.5 };
+  // An explicit crop is the author's, and it wins.
+  if (fit !== "cover" || element.treatment?.crop) return {};
+  const size = await readImageSize(localPath);
+  if (!size || element.w <= 0 || element.h <= 0) return {};
+  const crop = cropForFocalPoint(focal, size.width / size.height, element.w / element.h);
+  return crop ? { treatment: { ...element.treatment, crop } } : {};
 }
 
 /** The symbols one canvas places, groups included. */
@@ -189,7 +215,7 @@ export class DeckBuilder {
       const slide = presentation.addSlide();
       slide.background = { color: spec.background?.replace(/^#/, "") ?? effectiveConfig.colors.background };
       const records: ElementRecord[] = [];
-      const writer = new ElementWriter(slide, records, effectiveConfig);
+      const writer = new ElementWriter(slide, records, effectiveConfig, index + 1);
       if (spec.canvas) {
         new FreeformComposer(effectiveConfig, design.direction, this.options.extensions, [...symbols.values()])
           .render(writer, spec, index + 1);
@@ -307,6 +333,7 @@ export class DeckBuilder {
         ...element,
         provenance: { ...element.provenance, source: element.provenance?.source ?? element.path },
         path: local,
+        ...await coverCrop(element, local),
       };
     }));
   }

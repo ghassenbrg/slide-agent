@@ -48,11 +48,20 @@ function place(element: CanvasElementSpec, at: Placement): { x: number; y: numbe
   };
 }
 
-/** Applies one symbol instance's overrides to a child of that symbol. */
-function override(element: CanvasElementSpec, instance: CanvasSymbolInstanceElement): CanvasElementSpec {
-  const overrides = instance.overrides;
-  if (!overrides) return element;
+/**
+ * Prepares one child of a symbol for one placement of it.
+ *
+ * Namespacing is unconditional and deliberately separate from the overrides:
+ * two placements of the same symbol collide in the manifest — and in any later
+ * patch, which addresses elements by id — whether or not either of them
+ * happened to override anything.
+ */
+function instantiate(element: CanvasElementSpec, instance: CanvasSymbolInstanceElement): CanvasElementSpec {
   const next = { ...element } as Record<string, unknown>;
+  next.id = `${instance.id}.${element.id}`;
+
+  const overrides = instance.overrides;
+  if (!overrides) return next as unknown as CanvasElementSpec;
   const text = overrides.text?.[element.id];
   if (text !== undefined && element.type === "text") (next as unknown as CanvasTextElement).text = text;
   const color = overrides.color?.[element.id];
@@ -65,9 +74,6 @@ function override(element: CanvasElementSpec, instance: CanvasSymbolInstanceElem
       ...(styleOverride ?? {}),
     };
   }
-  // The instance's own id namespaces the child so two placements of the same
-  // symbol do not collide in the manifest or in a later patch operation.
-  next.id = `${instance.id}.${element.id}`;
   return next as unknown as CanvasElementSpec;
 }
 
@@ -208,7 +214,7 @@ export class FreeformComposer {
             scale: fit * (element.scale ?? 1),
             groupId: at.groupId ? `${at.groupId}/${element.id}` : element.id,
             ...(layer ? { layer } : {}),
-          }, symbol.elements.map((child) => override(child, element)));
+          }, symbol.elements.map((child) => instantiate(child, element)));
           break;
         }
         case "diagram": {

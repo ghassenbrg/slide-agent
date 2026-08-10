@@ -320,7 +320,8 @@ export class PptxSanitizer {
         let xml = normalizeKnownShapeAliases(await entry.async("string"));
         if (name.startsWith("ppt/") && !name.startsWith("ppt/charts/")) xml = repairNegativeExtents(xml, name);
         if (/^ppt\/charts\/chart\d+\.xml$/.test(name)) xml = repairChartAxes(xml, name);
-        if (/^ppt\/slides\/slide\d+\.xml$/.test(name)) xml = postProcessSlideXml(xml, postProcess);
+        const slideNumber = Number(/^ppt\/slides\/slide(\d+)\.xml$/.exec(name)?.[1] ?? 0);
+        if (slideNumber > 0) xml = postProcessSlideXml(xml, postProcess, slideNumber);
         zip.file(name, xml);
       }
     }

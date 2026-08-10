@@ -123,6 +123,8 @@ export class ElementWriter {
     public readonly slide: NativeSlide,
     public readonly records: ElementRecord[],
     private readonly config: SlideAgentConfig,
+    /** 1-based slide number, so post-processing can be targeted per slide. */
+    private readonly slideNumber: number = 1,
   ) {}
 
   /** Layer, bleed, and group provenance shared by every record type. */
@@ -193,7 +195,7 @@ export class ElementWriter {
       ...(style.radius !== undefined ? { rectRadius: style.radius } : {}),
     });
     if (style.columns && style.columns > 1) {
-      this.postProcess.push({ name, columns: { count: style.columns } });
+      this.postProcess.push({ slide: this.slideNumber, name, columns: { count: style.columns } });
     }
     this.records.push({
       id,
@@ -327,6 +329,7 @@ export class ElementWriter {
     });
     if (treatment?.crop || treatment?.maskShape || treatment?.duotone || treatment?.grayscale) {
       this.postProcess.push({
+        slide: this.slideNumber,
         name,
         picture: {
           ...(treatment.crop ? { crop: treatment.crop } : {}),
