@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "slideId": {
+      "type": "string"
+    },
+    "claim": {
+      "type": "string",
+      "minLength": 1
+    },
+    "kind": {
+      "description": "fact, number, quote, recommendation, illustrative, or your own term.",
+      "type": "string"
+    },
+    "sourceIds": {
+      "description": "Ids from sourceLedger.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "asOf": {
+      "description": "The date this claim was true, when that matters.",
+      "type": "string"
+    },
+    "calculation": {
+      "description": "How a derived number was produced.",
+      "type": "string"
+    },
+    "status": {
+      "description": "verified, needs-review, or illustrative.",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "claim"
+  ],
+  "additionalProperties": {},
+  "description": "One claim and what backs it. Lets revision checks catch orphaned sources and unsupported precision."
+}

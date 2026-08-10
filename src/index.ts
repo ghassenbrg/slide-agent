@@ -79,6 +79,40 @@ export {
 } from "./data/connectors.js";
 export { Grid, SLIDE_FORMATS, slideFormat, type Rect, type SlideFormat } from "./design/grid.js";
 export { densityBudget, resolveTokens, type DeckTokens, type Density, type Geometry } from "./design/tokens.js";
+export { VisualSystem, applyVisualSystem, isVariableReference, VARIABLE_REFERENCE_KEY } from "./design/visual-system.js";
+export { buildReviewPacket, type ReviewOptions } from "./review/packet.js";
+export { formatPatchDiff, patchOutline, type PatchChange, type PatchOperation, type PatchResult } from "./editing/patch-scene.js";
+export {
+  buildArtifactGraph,
+  identify,
+  makeOutlinePortable,
+  packageAsset,
+  referencedAssetPaths,
+  relativeToPackage,
+  sha256Of,
+  verifyArtifactGraph,
+  ASSET_DIRECTORY,
+  type PackagedAsset,
+  type PortableOutlineResult,
+} from "./artifacts/package.js";
+export { compareManifests, verifyRoundTrip, type RoundTripOptions } from "./artifacts/round-trip.js";
+export {
+  NEAR_DUPLICATE_THRESHOLD,
+  SIMILAR_THRESHOLD,
+  compareSignatures,
+  signDeck,
+  signSlide,
+  unionArea,
+  type DeckSignature,
+  type SimilarityResult,
+  type SimilarityVerdict,
+  type SlideSignature,
+} from "./evaluation/visual-signature.js";
+export { HEURISTIC_FLOORS, computeVerdict, isPackageIssue, withPackageEvidence, type Verdict } from "./validation/readiness.js";
+export { defaultRepairMode, describeRepairs, detectRenderRegression, planRepairs, type RepairPlan } from "./validation/repair.js";
+export { compareRenderedText, intendedText, normalizeForComparison } from "./validation/fidelity.js";
+export { extractRenderedText, previewFilesIn, type ExtractedText } from "./rendering/text-extraction.js";
+export { cropForFocalPoint, postProcessSlideXml, type ShapePostProcess } from "./export/pptx-postprocess.js";
 
 import { SlideAgent } from "./pipeline.js";
 import type { AgentResult, StructuredAgentRequest } from "./types/index.js";

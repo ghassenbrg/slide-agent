@@ -93,7 +93,41 @@ does not define goes through `native-chart` instead.
 | `QualityCheck` | An organisation's own validation rules |
 | `RenderBackend` | Preview generation, e.g. without LibreOffice |
 | `ImageResolver` | Where pictures come from — see below |
-| `DesignTokenizer` | How `creativeDirection` becomes a design system |
+| `DesignTokenizer` | How `creativeDirection` becomes the fallback design system |
+| `VisualReviewer` | A reviewer that consumes the deterministic review packet |
+
+### Visual reviewers
+
+`VisualReviewer` receives the same `ReviewPacket` a host AI does and returns
+findings. The core ships the interface and the packet, never a bundled model,
+so nothing here favours one provider.
+
+```ts
+import { SlideAgent, type VisualReviewer } from "@slide-agent/core";
+
+const houseReviewer: VisualReviewer = {
+  id: "house-rules",
+  description: "Checks our own composition rules against the render",
+  review: (packet) => packet.slides
+    .filter((slide) => slide.text.truncated.length > 0)
+    .map((slide) => ({
+      id: `truncated-${slide.number}`,
+      reviewer: "house-rules",
+      severity: "blocking" as const,
+      slide: slide.number,
+      elementIds: slide.elements.map((element) => element.id),
+      observation: "Text is cut short in the render.",
+      rationale: "The audience cannot read a claim that ends mid-sentence.",
+      suggestedTarget: "The full string visible at the authored size.",
+    })),
+};
+
+new SlideAgent(undefined, { reviewers: [houseReviewer] });
+```
+
+A finding must explain itself — severity, slide, elements where known,
+observation, rationale, and a suggested target. An unexplainable scalar score
+cannot be acted on, argued with, or waived.
 
 ### Sourcing images
 
@@ -123,6 +157,58 @@ Whatever it returns, the model should record `provenance` on the element —
 `credit`, `license`, and `generated`. Those travel into the deck's speaker
 notes under `[Credits]`, and validation reports a web image with neither a
 credit nor a licence.
+
+## Reviewing and patching
+
+```ts
+import { SlideAgent } from "@slide-agent/core";
+
+const agent = new SlideAgent();
+
+// The exact render, the words read back off it, the geometry, and the intent.
+const packet = await agent.review("deck.pptx", { from: 3, to: 6 });
+packet.artifacts.pptx.sha256;        // what this packet describes, by content
+packet.slides[0]?.text.missing;      // authored strings the render does not show
+packet.reviewQuestions;              // questions, never answers
+
+// Change one thing, and prove what was left alone.
+const result = await agent.patch({
+  command: "patch",
+  input: "deck.pptx",
+  output: "revised.pptx",
+  render: true,
+  operations: [{ op: "update-text", slide: 4, elementId: "title", text: "Revised" }],
+});
+result.patch?.untouched;             // every element that did not move
+```
+
+## The deck's own visual system
+
+```ts
+import { VisualSystem, applyVisualSystem } from "@slide-agent/core";
+
+const system = new VisualSystem(creativeDirection.visualSystem);
+system.styleNames;                   // exactly what the author declared
+applyVisualSystem(system, element, 1);
+```
+
+Resolution failures throw with the names that do exist and the type that did
+not fit. Nothing is coerced, and nothing is silently dropped.
+
+## Portability and structural signature
+
+```ts
+import { buildArtifactGraph, compareSignatures, signDeck, verifyArtifactGraph } from "@slide-agent/core";
+
+const problems = await verifyArtifactGraph(packageRoot, report.artifacts!);
+// [{ path: "previews/slide-01.png", problem: "changed" }]
+
+const result = compareSignatures(signDeck(left), signDeck(right));
+result.verdict;                      // "near-duplicate" | "similar" | "distinct"
+```
+
+The signature is a diagnostic. It says two decks are structurally the same; it
+never prescribes a replacement layout, and it never rewards novelty.
 
 ## Design system
 

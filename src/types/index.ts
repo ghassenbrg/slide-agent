@@ -1,3 +1,7 @@
+import type { VisualReviewFinding } from "../review/types.js";
+
+export type { ReviewPacket, VisualReviewFinding, VisualFindingSeverity } from "../review/types.js";
+
 export type SlideKind =
   | "title"
   | "section"
@@ -120,6 +124,47 @@ export interface RoadmapLane {
   items: string[];
 }
 
+/** Any value JSON can express. Deck variables are deliberately this open. */
+export type JsonValue = null | boolean | number | string | JsonValue[] | { [key: string]: JsonValue };
+
+/** A reference from a style value to a deck variable: `{"$var":"map-ink"}`. */
+export interface VariableReference {
+  $var: string;
+}
+
+/**
+ * A deck-specific visual system invented by the author.
+ *
+ * Nothing here is chosen from a Slide Agent list. `variables` are arbitrary
+ * JSON under names the author picked, `styles` are arbitrary reusable property
+ * bags, `motifs` record subject-derived ideas and what they mean, and
+ * `constraints` are the author's own rules — not engine presets. Slide Agent
+ * resolves references and validates types; it never renames, substitutes, or
+ * normalizes the vocabulary.
+ */
+export interface DeckVisualSystem {
+  /** Arbitrary names chosen by the author. */
+  variables?: Record<string, JsonValue>;
+  /** Arbitrary reusable style names, with optional inheritance. */
+  styles?: Record<string, {
+    basedOn?: string[];
+    style: Record<string, unknown>;
+  }>;
+  /** Subject-derived visual ideas and what they mean. */
+  motifs?: Record<string, {
+    description: string;
+    meaning?: string;
+    usage?: string;
+    avoid?: string[];
+  }>;
+  /** Author-declared rules, not engine presets. */
+  constraints?: {
+    hard?: string[];
+    soft?: string[];
+  };
+  [key: string]: unknown;
+}
+
 /**
  * A model-authored visual system for one deck. These fields are deliberately
  * open-ended: they communicate intent to an AI host and only the supplied
@@ -146,6 +191,8 @@ export interface CreativeDirection {
   mood?: string[];
   palette?: CreativePalette;
   typography?: CreativeTypography;
+  /** The deck's own variables, named styles, motifs, and declared rules. */
+  visualSystem?: DeckVisualSystem;
   compositionPrinciples?: string[];
   visualLanguage?: string;
   imageLanguage?: string;
@@ -154,6 +201,22 @@ export interface CreativeDirection {
   shapeLanguage?: string;
   textureLanguage?: string;
   motionOrPacing?: string;
+  /** Open prose. Never reduced to an enum; `geometry` is the legacy hint. */
+  geometryLanguage?: string;
+  /** Open prose describing the deck's spacing and pacing logic. */
+  spatialRhythm?: string;
+  /** Open prose describing surface, texture, and material treatment. */
+  materialLanguage?: string;
+  /**
+   * Legacy closed enums kept for compatibility with contract 0.9 hosts. They
+   * feed the fallback layouts only; a model-authored canvas is never restyled
+   * from them. Prefer `geometryLanguage` and `spatialRhythm`.
+   *
+   * @deprecated since contract 0.10
+   */
+  density?: "sparse" | "balanced" | "dense" | (string & {});
+  /** @deprecated since contract 0.10 — see `geometryLanguage`. */
+  geometry?: "sharp" | "soft" | "organic" | (string & {});
   avoid?: string[];
   [key: string]: unknown;
 }
@@ -206,6 +269,22 @@ export interface CanvasElementBase {
   h: number;
   zIndex?: number;
   role?: string;
+  /**
+   * Named styles from `creativeDirection.visualSystem.styles`, applied in
+   * order. The element's own `style` is the final override.
+   */
+  styleRef?: string | string[];
+  /** A named layer, for review and z-order grouping. Never a visual style. */
+  layer?: string;
+  /**
+   * Declares that this element is meant to run past the slide edge.
+   *
+   * A full-bleed plate and a word cropped by the top of the page are ordinary
+   * design, not defects — but they are indistinguishable from a mistake unless
+   * the author says which one it is. Saying so here keeps the check meaningful
+   * for everything that did not.
+   */
+  allowBleed?: boolean;
   intentionalOverlap?: boolean;
   allowOverlapWith?: string[];
 }
@@ -216,28 +295,45 @@ export interface CanvasElementBase {
  */
 export type CanvasLink = string | { url: string; tooltip?: string } | { slide: number; tooltip?: string };
 
+/** Paragraph-level typography, exposed in the schema rather than in `options`. */
+export interface CanvasTextStyle {
+  fontSize?: number;
+  fontFace?: string;
+  color?: string;
+  bold?: boolean;
+  italic?: boolean;
+  underline?: boolean;
+  align?: "left" | "center" | "right" | "justify";
+  valign?: "top" | "middle" | "bottom";
+  margin?: number | [number, number, number, number];
+  fit?: "none" | "shrink" | "resize";
+  fill?: string;
+  transparency?: number;
+  lineColor?: string;
+  lineWidth?: number;
+  rotate?: number;
+  /** Multiple of the font size, e.g. 1.35. Converted to points on write. */
+  lineSpacingMultiple?: number;
+  /** Absolute line spacing in points. Wins over `lineSpacingMultiple`. */
+  lineSpacing?: number;
+  /** Tracking in points; negative tightens. */
+  charSpacing?: number;
+  /** First-line/paragraph indent in inches. */
+  indent?: number;
+  /** Newspaper-style text columns inside the one text box. */
+  columns?: number;
+  /** Replaces spaces with non-breaking spaces so the string never splits. */
+  noBreak?: boolean;
+  bullet?: boolean | { type?: "bullet" | "number"; code?: string; indent?: number };
+  options?: Record<string, unknown>;
+}
+
 export interface CanvasTextElement extends CanvasElementBase {
   type: "text";
   text?: string;
   runs?: CanvasTextRun[];
   link?: CanvasLink;
-  style?: {
-    fontSize?: number;
-    fontFace?: string;
-    color?: string;
-    bold?: boolean;
-    italic?: boolean;
-    align?: "left" | "center" | "right" | "justify";
-    valign?: "top" | "middle" | "bottom";
-    margin?: number | [number, number, number, number];
-    fit?: "none" | "shrink" | "resize";
-    fill?: string;
-    transparency?: number;
-    lineColor?: string;
-    lineWidth?: number;
-    rotate?: number;
-    options?: Record<string, unknown>;
-  };
+  style?: CanvasTextStyle;
 }
 
 export interface CanvasShapeElement extends CanvasElementBase {
@@ -277,11 +373,51 @@ export interface ImageProvenance {
   [key: string]: unknown;
 }
 
+/** How much of an element survives as an editable PowerPoint object. */
+export type Editability =
+  | "native"
+  | "grouped-native"
+  | "embedded-vector"
+  | "embedded-raster"
+  | "generated-native";
+
+/**
+ * Vector artwork carried alongside the raster PowerPoint actually embeds.
+ * OOXML stores an SVG as an *enhancement* to a bitmap blip, so the raster in
+ * `path` is not optional — it is what older viewers draw.
+ */
+export interface CanvasVectorArtwork {
+  /** Path to the .svg. Travels with the package and is declared in the manifest. */
+  path: string;
+  /** Honest editability. Vector artwork is scalable, not shape-editable. */
+  editable: false | "partial" | true;
+  /** Where the artwork came from, and who may use it. */
+  source?: string;
+  license?: string;
+}
+
+/** Deterministic, opt-in pixel work applied before the image is embedded. */
+export interface ImageTreatment {
+  /** Where the subject sits, 0–1 in each axis. Drives `cover` cropping. */
+  focalPoint?: { x: number; y: number };
+  /** Explicit crop as fractions of the source, per edge. */
+  crop?: { left?: number; right?: number; top?: number; bottom?: number };
+  /** A PowerPoint shape name used as a mask, e.g. `ellipse`. */
+  maskShape?: string;
+  /** Flat colour wash: `color` at `amount` (0–1) over the image. */
+  tint?: { color: string; amount?: number };
+  /** Two-tone mapping from shadow to highlight. */
+  duotone?: { shadow: string; highlight: string };
+  grayscale?: boolean;
+}
+
 export interface CanvasImageElement extends CanvasElementBase {
   type: "image";
   path: string;
   alt: string;
   provenance?: ImageProvenance;
+  vector?: CanvasVectorArtwork;
+  treatment?: ImageTreatment;
   link?: CanvasLink;
   fit?: "cover" | "contain" | "stretch";
   style?: {
@@ -324,6 +460,50 @@ export interface CanvasDiagramElement extends CanvasElementBase {
   alt?: string;
 }
 
+/**
+ * A logical group. Children are positioned relative to the group's origin and
+ * expand into ordinary native elements, so every part stays individually
+ * editable in PowerPoint — which a native group does not reliably guarantee
+ * across viewers. The relative transform is preserved on round-trip.
+ */
+export interface CanvasGroupElement extends CanvasElementBase {
+  type: "group";
+  children: CanvasElementSpec[];
+  /** Uniform scale applied to every child's offset and size. Defaults to 1. */
+  scale?: number;
+  alt?: string;
+}
+
+/** Per-instance overrides for one symbol placement, addressed by child id. */
+export interface SymbolInstanceOverrides {
+  text?: Record<string, string>;
+  color?: Record<string, string>;
+  style?: Record<string, Record<string, unknown>>;
+}
+
+/**
+ * One placement of an author-defined symbol. Symbols are declared by the deck
+ * — Slide Agent ships no icon vocabulary — and expand into native elements.
+ */
+export interface CanvasSymbolInstanceElement extends CanvasElementBase {
+  type: "symbol-instance";
+  /** Name of a symbol declared in the scene. */
+  symbol: string;
+  scale?: number;
+  overrides?: SymbolInstanceOverrides;
+  alt?: string;
+}
+
+/** A reusable collection of authored elements, defined by the deck itself. */
+export interface DeckSymbol {
+  id: string;
+  /** Design-time width and height the children were authored against. */
+  w: number;
+  h: number;
+  elements: CanvasElementSpec[];
+  description?: string;
+}
+
 export type CanvasElementSpec =
   | CanvasTextElement
   | CanvasShapeElement
@@ -332,7 +512,9 @@ export type CanvasElementSpec =
   | CanvasTableElement
   | CanvasChartElement
   | CanvasNativeChartElement
-  | CanvasDiagramElement;
+  | CanvasDiagramElement
+  | CanvasGroupElement
+  | CanvasSymbolInstanceElement;
 
 export interface CustomRegion {
   id: string;
@@ -399,11 +581,83 @@ export interface PresentationBrief {
   sourcePrompt: string;
 }
 
+/**
+ * The visual theses the author considered and the one it committed to. Concise
+ * authoring metadata, never private chain-of-thought: it is what later critique
+ * compares the render against.
+ */
+export interface DesignExploration {
+  alternatives?: Array<{
+    name: string;
+    thesis: string;
+    differentiator: string;
+    rejectedBecause?: string;
+  }>;
+  chosen?: string;
+  [key: string]: unknown;
+}
+
+/** One slide's declared narrative job and intended silhouette. */
+export interface SequencePlanItem {
+  slideId: string;
+  narrativeJob: string;
+  dominantArtifact?: string;
+  silhouette?: string;
+  energy?: "quiet" | "medium" | "loud" | (string & {});
+  transition?: string;
+  [key: string]: unknown;
+}
+
+/**
+ * One factual claim the deck makes and what backs it. Concise evidence
+ * metadata: it lets revision checks catch orphaned sources, stale
+ * qualifications, and unsupported precision.
+ */
+export interface ClaimLedgerItem {
+  id: string;
+  slideId?: string;
+  claim: string;
+  kind?: "fact" | "number" | "quote" | "recommendation" | "illustrative" | (string & {});
+  sourceIds?: string[];
+  asOf?: string;
+  calculation?: string;
+  status?: "verified" | "needs-review" | "illustrative" | (string & {});
+  [key: string]: unknown;
+}
+
+/**
+ * What the *host AI* can do, declared so the contract can recommend a workflow
+ * that uses those strengths. Planning context, never a security grant: the core
+ * performs no provider call of its own regardless of what is declared here.
+ */
+export interface HostAuthoringCapabilities {
+  vision?: boolean;
+  webResearch?: boolean;
+  imageGeneration?: boolean;
+  vectorGeneration?: boolean;
+  codeExecution?: boolean;
+  localFileAccess?: boolean;
+  availableAssetProviders?: string[];
+  [key: string]: unknown;
+}
+
 export interface PresentationOutline {
   brief: PresentationBrief;
   narrative: string;
   completeness?: DeckCompletenessPlan;
   creativeDirection?: CreativeDirection;
+  /** Visual theses considered, and the one this deck commits to. */
+  exploration?: DesignExploration;
+  /** Per-slide narrative job and intended silhouette, authored before coordinates. */
+  sequencePlan?: SequencePlanItem[];
+  /** Claims this deck makes and what backs each of them. */
+  claims?: ClaimLedgerItem[];
+  /** Cited sources the claim ledger refers to by id. */
+  sourceLedger?: Array<SourceCitation & { id: string }>;
+  /** Author-defined reusable element collections. Never a built-in vocabulary. */
+  symbols?: DeckSymbol[];
+  /** What the host AI that authored this deck could do. Planning context only. */
+  hostCapabilities?: HostAuthoringCapabilities;
   slides: SlideSpec[];
 }
 
@@ -483,6 +737,8 @@ export interface ElementRecord {
   fontFace?: string;
   textColor?: string;
   fillColor?: string;
+  /** 0–100. A translucent fill is not the colour a reader sees behind text. */
+  fillTransparency?: number;
   /** PowerPoint autofit mode; `shrink` lets the viewer reduce text to fit. */
   fit?: "none" | "shrink" | "resize";
   bold?: boolean;
@@ -498,6 +754,18 @@ export interface ElementRecord {
    */
   imageSource?: string;
   provenance?: ImageProvenance;
+  /**
+   * How much of this element a person can actually edit in PowerPoint. Stated
+   * per element because it is not uniform: text and charts are native objects,
+   * a photograph is pixels, and artwork may be scalable but not shape-editable.
+   */
+  editability?: Editability;
+  /** The author declared this element runs past the slide edge on purpose. */
+  allowBleed?: boolean;
+  /** The group or symbol instance this element was expanded from. */
+  groupId?: string;
+  /** The author's named layer, carried through for review. */
+  layer?: string;
   intentionalOverlap?: boolean;
   allowOverlapWith?: string[];
   metadata?: Record<string, unknown>;
@@ -553,6 +821,38 @@ export interface QualityScore {
   dimensions: QualityDimensionScore[];
 }
 
+/**
+ * One file in a delivered package, identified by content rather than by name.
+ *
+ * A report that names a preview proves nothing: the preview may be from the
+ * revision before last. A report that names its hash, and the hash of the PPTX
+ * it was rendered from, cannot describe a deck it did not see.
+ */
+export interface ArtifactIdentity {
+  /** Relative to the package root, so the record survives being moved. */
+  path: string;
+  sha256: string;
+  bytes: number;
+  /** Paths of the artifacts this one was produced from. */
+  derivedFrom?: string[];
+  createdAt: string;
+}
+
+/** Every artifact of one build, and what produced what. */
+export interface ArtifactGraph {
+  schemaVersion: "1.0";
+  root: string;
+  pptx: ArtifactIdentity;
+  scene?: ArtifactIdentity;
+  manifest?: ArtifactIdentity;
+  validation?: ArtifactIdentity;
+  review?: ArtifactIdentity;
+  pdf?: ArtifactIdentity;
+  previews: ArtifactIdentity[];
+  assets: ArtifactIdentity[];
+  render: { backend: string; version?: string; mode: "render" | "schematic" | "none" };
+}
+
 export type ValidationSeverity = "error" | "warning" | "info";
 
 export interface ValidationIssue {
@@ -568,17 +868,84 @@ export interface ValidationIssue {
   unfixedReason?: string;
 }
 
+/** How much of the intended text survived to the render, and how sure we are. */
+export interface RenderFidelityReport {
+  status: "pass" | "review" | "fail" | "skipped";
+  method: "pdf-text" | "ocr" | "none";
+  confidence: "high" | "medium" | "low";
+  slides: Array<{
+    slide: number;
+    missing: string[];
+    unexpected: string[];
+    truncated: Array<{ intended: string; observed: string }>;
+    repeated: string[];
+    /** Words split by a line break where the source had none. */
+    splitWords: string[];
+    /** Intended text that OCR read at a materially different size or position. */
+    substitutedFonts?: string[];
+  }>;
+  note?: string;
+}
+
+/** What a clean-directory rebuild of the emitted scene proved. */
+export interface RoundTripReport {
+  status: "pass" | "fail" | "skipped";
+  slideCountMatches?: boolean;
+  elementIdsMatch?: boolean;
+  missingElementIds?: string[];
+  /** Element properties that differed between the original and the rebuild. */
+  changedProperties?: Array<{ slide: number; elementId: string; property: string; before: unknown; after: unknown }>;
+  reason?: string;
+}
+
 export interface ValidationReport {
   schemaVersion: "1.0";
+  /**
+   * Kept for contract 0.9 hosts and documented as package-oriented. It mirrors
+   * `packageStatus`; a future breaking contract removes it.
+   *
+   * @deprecated since contract 0.10 — read `packageStatus` and `presentationReadiness`.
+   */
   status: "pass" | "warning" | "fail";
+  /**
+   * Deterministic file, schema, asset, link, render-freshness, and round-trip
+   * integrity. "Does this package hold together?"
+   */
+  packageStatus: "pass" | "warning" | "fail";
+  /**
+   * "Would you put this in front of the audience?" — a different question from
+   * whether the file opens, and never a weighted average: one critical
+   * dimension blocks readiness however good the rest is.
+   */
+  presentationReadiness: "ready" | "review" | "not-ready";
+  /** Why readiness landed where it did, in the order that decided it. */
+  readinessReasons: string[];
   presentation: string;
   checkedAt: string;
   slideCount: number;
   summary: { errors: number; warnings: number; info: number };
   iterations: number;
   issues: ValidationIssue[];
-  /** Advisory read on whether the deck is worth showing, not whether it is valid. */
+  /**
+   * Engine heuristics, named as such. They are proxies for design qualities,
+   * not measurements of them, and they are not a quality score.
+   */
+  heuristics?: QualityScore;
+  /**
+   * @deprecated since contract 0.10 — the same object as `heuristics`, kept so
+   * 0.9 readers do not break.
+   */
   quality?: QualityScore;
+  /** Every artifact this report describes, bound by content hash. */
+  artifacts?: ArtifactGraph;
+  fidelity?: RenderFidelityReport;
+  roundTrip?: RoundTripReport;
+  /** Findings from a host or an installed visual reviewer. */
+  visualFindings?: VisualReviewFinding[];
+  /** Repairs proposed but not applied, under `suggest` mode. */
+  suggestedRepairs?: SuggestedRepair[];
+  /** Repairs actually applied, with rollback data. */
+  appliedRepairs?: AppliedRepair[];
   render?: {
     status: "pass" | "fail" | "skipped";
     previewFiles: string[];
@@ -587,6 +954,29 @@ export interface ValidationReport {
     mode?: "render" | "schematic";
     error?: string;
   };
+}
+
+/** How much freedom the repair loop has over model-authored values. */
+export type RepairMode = "safe" | "suggest" | "off";
+
+export interface SuggestedRepair {
+  issueCode: string;
+  slide?: number;
+  elementIds?: string[];
+  property: string;
+  before: unknown;
+  after: unknown;
+  rationale: string;
+  /** True when the change would alter a value the author wrote deliberately. */
+  changesAuthorIntent: boolean;
+}
+
+export interface AppliedRepair extends SuggestedRepair {
+  appliedAt: string;
+  /** What to write back to undo it. */
+  rollback: { property: string; value: unknown };
+  /** Whether the render and its text survived the change unchanged. */
+  renderRegression: "none" | "not-checked" | "detected";
 }
 
 /**
@@ -598,7 +988,7 @@ export type DeckProvenance = "model-authored" | "template-draft";
 
 export interface ExecutionMetadata {
   requestId: string;
-  command: "create" | "edit" | "render" | "validate" | "revise";
+  command: "create" | "edit" | "render" | "validate" | "revise" | "patch";
   /** The authoring contract this engine implements. */
   contractVersion?: string;
   provenance?: DeckProvenance;
@@ -623,6 +1013,17 @@ export interface AgentResult {
   /** Repairs the auto-fixer applied. Informational: they do not degrade status. */
   repairs?: string[];
   validation?: ValidationReport;
+  /** "Does this package hold together?" — lifted out of the report for callers. */
+  packageStatus?: ValidationReport["packageStatus"];
+  /** "Would you put this in front of the audience?" */
+  presentationReadiness?: ValidationReport["presentationReadiness"];
+  /** What a `patch` changed, and — just as importantly — what it did not. */
+  patch?: {
+    changes: unknown[];
+    untouched: Array<{ slide: number; elementIds: string[] }>;
+    diff: string;
+    applied: boolean;
+  };
   errors: Array<{ code: string; message: string; details?: Record<string, unknown> }>;
   metadata: ExecutionMetadata;
 }
@@ -656,6 +1057,19 @@ export interface CreateRequest {
    * even when this is enabled.
    */
   allowRemoteAssets?: boolean;
+  /**
+   * Rebuild the emitted scene in a clean temporary directory using only the
+   * packaged assets, and compare the result. Off by default because it doubles
+   * the build; on for any run whose output is going to be delivered.
+   */
+  roundTrip?: boolean;
+  /** How much freedom the repair loop has. Defaults to `suggest` on a canvas. */
+  repair?: RepairMode;
+  /**
+   * Where a relative asset path inside a supplied scene resolves from.
+   * Defaults to the scene file's own directory.
+   */
+  assetBaseDir?: string;
   /** Path to a brand-kit JSON file constraining palette, type, logo, footer. */
   brand?: string;
   /**
@@ -780,6 +1194,8 @@ export interface ValidateRequest {
   previewsDir?: string;
   configDir?: string;
   render?: boolean;
+  /** Rebuild the emitted scene in a clean directory and compare the result. */
+  roundTrip?: boolean;
 }
 
 export interface ReviseRequest {
@@ -801,7 +1217,37 @@ export interface ReviseRequest {
   allowRemoteAssets?: boolean;
 }
 
-export type StructuredAgentRequest = CreateRequest | EditRequest | RenderRequest | ValidateRequest | ReviseRequest;
+/**
+ * Change specific elements on specific slides without restating the rest.
+ *
+ * `revise` replaces a whole slide; this replaces a caption. The difference
+ * matters because every restatement is a chance to lose a decision the author
+ * made earlier, and critique is only cheap if acting on it is cheap.
+ */
+export interface PatchRequest {
+  command: "patch";
+  /** The existing deck. Its scene blueprint is discovered beside it. */
+  input: string;
+  output: string;
+  operations: unknown[];
+  /** Override the scene path when it does not sit beside the deck. */
+  scene?: string;
+  /** Report the semantic diff without writing anything. */
+  dryRun?: boolean;
+  configDir?: string;
+  render?: boolean;
+  validate?: boolean;
+  roundTrip?: boolean;
+  allowRemoteAssets?: boolean;
+}
+
+export type StructuredAgentRequest =
+  | CreateRequest
+  | EditRequest
+  | RenderRequest
+  | ValidateRequest
+  | ReviseRequest
+  | PatchRequest;
 
 export interface LayoutContext {
   slideNumber: number;

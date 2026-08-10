@@ -2,15 +2,17 @@
 
 # Reference
 
-Authoring contract 0.9 · scene schema `slide-agent.scene/1`
+Authoring contract 0.10 · scene schema `slide-agent.scene/1`
 
 Every page here is generated from `src/contract`. Change the contract, run
 `npm run docs`, and the prose, the schemas, and the engine stay in step.
 
 ## Guide
 
-- [Your role](role.md) — You are the creative director, information architect, and PowerPoint craftsperson. Slide Agent supplies editable native primitives and a quality floor; it does not supply taste, and it will not impose a house style on you.
-- [Invent the deck's visual thesis](creative-direction.md) — Populate `creativeDirection` with a system specific enough that another designer could recognise the deck, yet loose enough that slides do not become repeated templates. Derive the choices from meaning: topology can shape an architecture deck, material layers a transformation story, field notes a piece of research.
+- [Your role](role.md) — You are the creative director, information architect, and PowerPoint craftsperson. Slide Agent supplies an expressive canvas, faithful translation into editable PowerPoint objects, and the evidence you need to judge the result. It does not supply taste, and it will not normalize your work into a house style.
+- [Invent the deck's visual thesis](creative-direction.md) — Populate `creativeDirection` with a system specific enough that another designer could recognise the deck, yet loose enough that slides do not become repeated templates. Derive the choices from meaning: stratigraphy can shape an excavation report, the margin of a working chart can shape a navigation briefing, a specimen sheet can shape a launch.
+- [Your own variables, styles, and motifs](visual-system.md) — `creativeDirection.visualSystem` is where the deck's design language lives, in the deck's own words. Slide Agent reserves no names: `excavation-note`, `signal-fog`, `runway-crop`, and `ink-bleed` are as valid as `title`. It never renames a style, substitutes a value, or adds one you did not write.
+- [Commit to a plan before you write coordinates](planning.md) — Author two or more visual theses in `exploration.alternatives` and say which one you chose. They must differ structurally — different silhouettes, different dominant masses, a different reading path — not in palette. A palette swap over the same geometry is one design, and the structural signature will say so.
 - [Plan the story before styling it](narrative.md) — Express the job as: by the end, [audience] should [outcome] because [central takeaway]. Choose a cumulative structure that fits the objective — context to stakes to evidence to action, question to analysis to answer, problem to options to recommendation, or one you invent for the material.
 - [Compose from first principles](composition.md) — Vary silhouette and scale across the sequence while keeping the deck's underlying visual logic. Contrast dense against sparse, quiet against loud, diagrammatic against photographic, to create pacing.
 - [The freeform canvas](canvas.md) — `slide.canvas` is an array of editable native elements at coordinates you choose, in inches, on a slide whose size the deck declares. Its presence bypasses the layout registry completely, so `layout` is ignored and `kind` becomes free-form metadata.
@@ -20,7 +22,8 @@ Every page here is generated from `src/contract`. Change the contract, run
 - [Accessibility](accessibility.md) — Slide Agent checks contrast, alt text, reading order, and type size, and reports what it cannot repair. Meeting the floor is the minimum, not the design goal.
 - [Where pictures come from](imagery.md) — A slide can only show a picture that already exists as a file this machine can read. Slide Agent does not search for images and does not generate them: choosing imagery is your judgement, not the renderer's, and a stock API or a generation service inside the build tool would mean credentials and licence terms in a package whose whole posture is that it does not fetch things.
 - [Honesty](honesty.md) — The deck will be presented by a person who has to stand behind it.
-- [Build, inspect, and revise](workflow.md) — Supply a complete outline or scene. Prompt-only mode produces a structural draft with placeholders; it is a starting point, not a substitute for your judgement, and it labels itself as such.
+- [Look at what you built](review.md) — `slide-agent review` returns a deterministic packet for the exact PPTX: artifact hashes, per-slide renders, the words read back off the render compared with the deck's own text, element geometry, your declared intent and sequence plan, current issues, and questions worth asking. Every artifact is bound by hash, so the packet cannot describe one build while showing another.
+- [The loop that produces good decks](workflow.md) — It is not prompt → deck. A deck nobody looked at is a draft, whatever the report says.
 
 ## Schemas
 
@@ -29,6 +32,12 @@ Every page here is generated from `src/contract`. Change the contract, run
 - [`slide`](schemas/slide.schema.json)
 - [`canvasElement`](schemas/canvasElement.schema.json)
 - [`creativeDirection`](schemas/creativeDirection.schema.json)
+- [`visualSystem`](schemas/visualSystem.schema.json)
+- [`symbol`](schemas/symbol.schema.json)
+- [`exploration`](schemas/exploration.schema.json)
+- [`sequencePlanItem`](schemas/sequencePlanItem.schema.json)
+- [`claim`](schemas/claim.schema.json)
+- [`hostCapabilities`](schemas/hostCapabilities.schema.json)
 - [`chart`](schemas/chart.schema.json)
 - [`table`](schemas/table.schema.json)
 - [`sceneRecord`](schemas/sceneRecord.schema.json)

@@ -5,8 +5,8 @@
 <h1 align="center">Slide Agent</h1>
 
 <p align="center">
-  <strong>Turn a design an AI model authors into a real, editable PowerPoint file —<br>
-  then prove it opens cleanly, reads legibly, and is worth showing someone.</strong>
+  <strong>Your AI designs the presentation. Slide Agent gives it an expressive PowerPoint canvas,<br>
+  preserves the design as editable objects, and provides the render-and-revise loop needed to finish well.</strong>
 </p>
 
 <p align="center">
@@ -29,20 +29,35 @@
 
 ## Overview
 
-Slide Agent has no house style. The model chooses the palette, the typography,
-the composition, and the diagram language. Slide Agent supplies the native
-PowerPoint primitives, a quality floor, and one authoring contract that every
-agent implements the same way.
+Slide Agent has no house style, and it does not have one on purpose. The model
+invents the visual system — its own variables, its own style names, its own
+motifs — and Slide Agent's job is to realize it faithfully, check it against
+things that are actually true, and show the model what it built.
 
-Three properties hold throughout:
+Four properties hold throughout:
 
 - **Everything stays editable.** Native text, shapes, tables, and charts. No
-  slide is ever flattened into an image.
-- **Every package is schema-valid.** Each XML part is checked against the
-  bundled official ECMA-376 schemas, offline, before the deck is returned.
+  slide is ever flattened into an image, and the manifest states per element
+  what a person can actually change.
+- **Authored values are preserved.** Repairs default to *suggest* on a
+  model-authored canvas: the engine reports what it would change and changes
+  nothing. Your colours and type sizes are not its to overwrite.
+- **Every package is schema-valid and portable.** Each XML part is checked
+  against the bundled official ECMA-376 schemas, offline; every asset is
+  content-addressed into the package; and `--round-trip` proves the emitted
+  scene rebuilds from the package alone.
 - **Nothing overstates itself.** A draft says it is a draft, a schematic
-  preview says it is not a render, and a refused hyperlink is reported rather
-  than dropped in silence.
+  preview says it is not a render, `heuristics` are called heuristics rather
+  than a quality score, and `presentationReadiness` is a different answer from
+  "the file opens".
+
+Three ways to use it, in descending order of what they produce:
+
+1. **AI-authored freeform** — recommended for any deck whose quality matters.
+2. **Structured native grammar** — when the data or relationships have a known
+   semantic form worth handing to a diagram or chart.
+3. **Prompt-only fallback draft** — scaffolding with bracketed placeholders. It
+   labels itself as such, and it is never presented as finished design.
 
 ## Installation
 
@@ -108,12 +123,19 @@ built before reporting success.
 
 ```text
 deck.pptx                     editable native text, shapes, tables, charts
-deck.pdf                      when previews are requested
-artifacts/
-├── images/                   one preview per slide
-├── intermediate_files/       the manifest and the round-trippable scene
-└── logs/                     validation report and execution metadata
+artifacts/deck/
+├── scene.ndjson              the round-trippable blueprint, with portable asset paths
+├── manifest.json             every element, with its editability
+├── validation.json           issues, readiness, fidelity, and the artifact graph
+├── review.json               the review packet, when one was written
+├── metadata.json             the request and execution record
+├── deck.pdf                  when previews are requested
+├── previews/slide-01.png     one preview per slide
+└── assets/<sha256>.png       every embedded asset, by content hash
 ```
+
+Move that folder anywhere and it still rebuilds — the scene references its
+assets relative to itself, and `--round-trip` proves it.
 
 Every command returns one JSON object on stdout and JSON-lines logs on stderr.
 
@@ -128,8 +150,10 @@ Every command returns one JSON object on stdout and JSON-lines logs on stderr.
 | **Imagery** | Local files, opt-in remote URLs, or a host-supplied provider for stock search and generation, with `credit`, `license`, and `generated` carried into the deck |
 | **Brand** | `--brand kit.json`, or point it straight at your `.potx` — locks only what your organisation cannot bend on |
 | **Languages** | `--bilingual` renders a second language as its own editable text, with RTL and script-aware fonts |
-| **Editing** | Slide-level `revise`, OOXML-level `edit`, cross-deck `import-slide`, and a semantic `diff` between two decks |
-| **Quality** | ECMA-376 validation, per-font and per-script text measurement, geometry, contrast, accessibility, and a score with advice |
+| **Visual systems** | The deck's own variables, named styles with inheritance, motifs, and constraints — arbitrary names, `styleRef` and `{"$var":…}` references, and precise errors instead of silent coercion |
+| **Editing** | Element-level `patch` by id, slide-level `revise`, OOXML-level `edit`, cross-deck `import-slide`, and a semantic `diff` between two decks |
+| **Review loop** | `slide-agent review` returns the exact render, the words read back off it, the geometry, your declared intent, and questions worth asking — bound by hash to the PPTX it describes |
+| **Quality** | ECMA-376 validation, per-font and per-script text measurement, geometry, contrast through translucency, accessibility, render text fidelity, and heuristics that say what they are |
 | **Previews** | LibreOffice renders; without it, Slide Agent draws the deck's own geometry so the look-and-revise loop still closes |
 | **Reproducible** | `SOURCE_DATE_EPOCH` makes the same scene produce byte-identical packages |
 
@@ -160,7 +184,8 @@ agent.capabilities();
 | `QualityCheck` | An organisation's own validation rules |
 | `ImageResolver` | Where images come from — stock search, an asset library, a generator |
 | `RenderBackend` | Preview generation |
-| `DesignTokenizer` | How `creativeDirection` becomes a design system |
+| `DesignTokenizer` | How `creativeDirection` becomes the fallback design system |
+| `VisualReviewer` | A reviewer that consumes the same deterministic review packet a host AI does |
 
 Slide Agent deliberately does not search for images or generate them: choosing
 imagery is the model's judgement, and a stock API inside the build tool would
@@ -179,9 +204,14 @@ plugs in. See [docs/api.md](docs/api.md#extension-points).
 | [MCP server](docs/mcp.md) | Connect Cursor, Zed, Claude Desktop, or any MCP client |
 | [API and extensions](docs/api.md) | TypeScript API and extension points |
 | [Editing existing decks](docs/editing.md) | Operations and their limits |
-| [Validation and quality](docs/validation.md) | What is checked, and what is only advice |
+| [Validation, readiness, and heuristics](docs/validation.md) | What is checked, what is measured, and what is only a proxy |
+| [Showcase decks](examples/showcase/README.md) | Six independent designs, with the similarity report that proves it |
+| [Human evaluation](docs/human-evaluation.md) | The blinded protocol for the questions a metric cannot answer |
+| [Architecture decisions](docs/adr/README.md) | What the engine may never normalize, and why |
 | [Troubleshooting](docs/troubleshooting.md) | When something does not work |
 | [Architecture](docs/architecture.md) | How the pieces fit together |
+| [0.11.0 roadmap](docs/roadmap-0.11.0.md) | Uncaged AI authoring, render-aware review, and portable final artifacts |
+| [Migration to contract 0.10](MIGRATION-0.10.md) | What is new in 0.11.0, and what a 0.9 host keeps |
 | [Migration guide](MIGRATION-0.9.md) | Breaking changes from earlier versions |
 | [Changelog](CHANGELOG.md) | What changed, and why |
 

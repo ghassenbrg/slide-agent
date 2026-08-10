@@ -6,7 +6,9 @@ import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const excludedDirectories = new Set([".git", ".tmp", "node_modules", "dist", "release", "out", "coverage"]);
-const excludedRelativeDirectories = new Set(["examples/output"]);
+// Build output, not source. Both are gitignored; the auditor walks the working
+// tree, so it has to skip them explicitly or a local build fails the audit.
+const excludedRelativeDirectories = new Set(["examples/output", "examples/showcase/output"]);
 const allowedPresentationFiles = new Set(["tests/fixtures/invalid-layout.pptx"]);
 const blockedArtifactExtensions = new Set([".ppt", ".pptx", ".pptm", ".pdf", ".key"]);
 const blockedFileNames = new Set([".env", ".env.local", ".npmrc"]);

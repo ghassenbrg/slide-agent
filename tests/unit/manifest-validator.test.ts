@@ -15,7 +15,10 @@ describe("ManifestValidator", () => {
     expect(codes).toContain("object-outside-slide");
     expect(codes).toContain("overlapping-elements");
     expect(codes).toContain("text-overflow");
-    expect(codes).toContain("font-too-small");
+    // Below the fallback type scale but above the hard legibility floor. On a
+    // fallback-layout deck that is still a defect; on a model-authored canvas
+    // it would be advice, because the scale is Slide Agent's opinion.
+    expect(codes).toContain("font-below-scale");
     expect(codes).toContain("poor-contrast");
     expect(codes).toContain("missing-image");
     expect(codes).toContain("unsupported-font");

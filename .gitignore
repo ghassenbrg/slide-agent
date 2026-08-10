@@ -11,3 +11,4 @@ extensions/vscode/*.vsix
 extensions/vscode/out/
 release/
 examples/output/
+examples/showcase/output/

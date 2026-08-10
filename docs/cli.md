@@ -20,13 +20,69 @@ slide-agent create --prompt brief.md --output draft.pptx
 | `--config <dir>` | Configuration directory, including the slide format |
 | `--render` | Also produce PDF and PNG previews |
 | `--previews/--report/--metadata/--inspect <path>` | Override an artifact path |
+| `--round-trip` | Rebuild the emitted scene in a clean directory and compare. Run it before delivering |
+| `--repair <mode>` | `safe`, `suggest`, or `off`. Defaults to `suggest` for a model-authored canvas |
 | `--max-retries <n>` | Bound the automatic repair loop |
 | `--no-validate` / `--no-auto-fix` | Skip validation / repair |
+
+Read `presentationReadiness`, not only `status`. `packageStatus` says the file
+holds together; readiness says whether the deck is finished, and
+`readinessReasons` says what decided it.
+
+## `review`
+
+```bash
+slide-agent review --input deck.pptx
+slide-agent review --input deck.pptx --slide 4
+slide-agent review --input deck.pptx --from 3 --to 8 --output review.json
+```
+
+The deterministic review packet for the exact PPTX: artifact hashes, per-slide
+renders, the words read back off the render compared with the deck's own text,
+element geometry, the author's declared intent and sequence plan, current
+issues, and questions worth asking.
+
+| Flag | Meaning |
+|---|---|
+| `--input <file>` | Required. Its scene, manifest, report, and previews are discovered beside it |
+| `--slide <n>` / `--from <n>` / `--to <n>` | Which slides to review |
+| `--max-slides <n>` | Cap on slides per packet |
+| `--scene/--manifest/--report <file>` | Override a discovered path |
+| `--output <file>` | Write the packet here instead of stdout |
+
+It contains no aesthetic verdict. `observations.heuristics` are engine proxies,
+`observations.issues` are measured facts, and `observations.visualFindings` are
+somebody's judgement — kept apart on purpose.
+
+## `patch`
+
+```bash
+slide-agent patch --input deck.pptx --operations fix.json --dry-run
+slide-agent patch --input deck.pptx --operations fix.json --output revised.pptx --render
+```
+
+Changes named elements on named slides and rebuilds, leaving every other element
+exactly as it was. `--dry-run` prints the semantic diff and writes nothing.
+
+```jsonc
+{ "operations": [
+  { "op": "update-text",  "slide": 1, "elementId": "title", "text": "Revised" },
+  { "op": "update-style", "slide": 1, "elementId": "note",  "style": { "color": "A32020" } },
+  { "op": "update-bbox",  "slide": 2, "elementId": "plate", "bbox": [0.8, 1.2, 6, 4] },
+  { "op": "apply-style-system", "selector": { "role": "caption" }, "styleRef": "field-note" }
+] }
+```
+
+Also: `add-element`, `remove-element`, `update-z-index`, `update-provenance`,
+`update-slide`, `update-claims`. Every operation names its slide and element id
+— there is no fuzzy matching, and no "make it nicer" operation, because taste is
+yours and a deterministic engine guessing at it would just be a house style.
 
 ## `capabilities`
 
 ```bash
 slide-agent capabilities
+slide-agent capabilities --canvas
 ```
 
 What this installation can actually do: diagram grammars, chart kinds,
@@ -104,8 +160,14 @@ would carry two design systems.
 slide-agent validate --input deck.pptx
 ```
 
-Package integrity, ECMA-376 schema conformance, geometry, legibility,
-accessibility, and a quality score. `--render` adds preview checks.
+Package integrity, ECMA-376 schema conformance, geometry, legibility, and
+accessibility. `--render` adds preview checks and reads the render's text back
+to compare it with the deck's own. `--round-trip` rebuilds the emitted scene in
+a clean directory from the packaged assets alone.
+
+The report carries two verdicts: `packageStatus` for file integrity and
+`presentationReadiness` for whether the deck is finished. `status` is retained
+for contract 0.9 readers and is package-oriented.
 
 ## `diff`
 

@@ -1,7 +1,17 @@
 import path from "node:path";
-import type { CanvasTextRun, ChartSpec, ElementRecord, ImageProvenance, SlideAgentConfig, TableSpec } from "../types/index.js";
+import type {
+  CanvasTextRun,
+  CanvasVectorArtwork,
+  ChartSpec,
+  ElementRecord,
+  ImageProvenance,
+  ImageTreatment,
+  SlideAgentConfig,
+  TableSpec,
+} from "../types/index.js";
 import { emphasisField, foregroundOn } from "../utils/color.js";
 import { checkLink, sanitizeNativeOptions, toNativeHyperlink, type DeckLink } from "../utils/links.js";
+import type { ShapePostProcess } from "../export/pptx-postprocess.js";
 import { Shapes, type NativeSlide } from "./pptx-values.js";
 
 export interface Frame {
@@ -22,11 +32,14 @@ export function normalizeFrame(frame: Frame): Frame {
 }
 
 export interface TextStyle {
+  /** Declares that this element runs past the slide edge on purpose. */
+  allowBleed?: boolean;
   fontSize?: number;
   fontFace?: string;
   color?: string;
   bold?: boolean;
   italic?: boolean;
+  underline?: boolean;
   align?: "left" | "center" | "right" | "justify";
   valign?: "top" | "middle" | "bottom";
   margin?: number | [number, number, number, number];
@@ -38,20 +51,37 @@ export interface TextStyle {
   radius?: number;
   transparency?: number;
   role?: string;
+  layer?: string;
+  groupId?: string;
   intentionalOverlap?: boolean;
   rotate?: number;
+  lineSpacing?: number;
+  lineSpacingMultiple?: number;
+  charSpacing?: number;
+  /** Paragraph indent in inches, applied as a left inset on the frame. */
+  indent?: number;
+  columns?: number;
+  noBreak?: boolean;
+  bullet?: boolean | Record<string, unknown>;
   /** A URL, `{url}`, or `{slide}`. Checked against the scheme allowlist. */
   link?: unknown;
   options?: Record<string, unknown>;
 }
 
+/** U+00A0. A phrase written with these never breaks across lines. */
+const NO_BREAK_SPACE = "\u00a0";
+
 export interface ShapeStyle {
+  /** Declares that this element runs past the slide edge on purpose. */
+  allowBleed?: boolean;
   fill?: string;
   transparency?: number;
   lineColor?: string;
   lineWidth?: number;
   radius?: number;
   role?: string;
+  layer?: string;
+  groupId?: string;
   intentionalOverlap?: boolean;
   rotate?: number;
   link?: unknown;
@@ -59,13 +89,19 @@ export interface ShapeStyle {
 }
 
 export interface ImageStyle {
+  /** Declares that this element runs past the slide edge on purpose. */
+  allowBleed?: boolean;
   fit?: "cover" | "contain" | "stretch";
   /** What the author wrote before the resolver turned it into a local file. */
   source?: string;
   provenance?: ImageProvenance;
+  vector?: CanvasVectorArtwork;
+  treatment?: ImageTreatment;
   rotate?: number;
   transparency?: number;
   role?: string;
+  layer?: string;
+  groupId?: string;
   intentionalOverlap?: boolean;
   link?: unknown;
   options?: Record<string, unknown>;
@@ -77,11 +113,26 @@ export class ElementWriter {
   /** Links refused by the scheme allowlist, surfaced as build warnings. */
   public readonly rejectedLinks: string[] = [];
 
+  /**
+   * Authored properties OOXML supports and PptxGenJS does not emit, collected
+   * for the export pass: text columns, source crops, masks, and blip effects.
+   */
+  public readonly postProcess: ShapePostProcess[] = [];
+
   public constructor(
     public readonly slide: NativeSlide,
     public readonly records: ElementRecord[],
     private readonly config: SlideAgentConfig,
   ) {}
+
+  /** Layer, bleed, and group provenance shared by every record type. */
+  private context(style: { layer?: string; groupId?: string; allowBleed?: boolean }): Partial<ElementRecord> {
+    return {
+      ...(style.layer ? { layer: style.layer } : {}),
+      ...(style.groupId ? { groupId: style.groupId } : {}),
+      ...(style.allowBleed ? { allowBleed: true } : {}),
+    };
+  }
 
   /** A checked link, or nothing, recording any refusal for the caller. */
   private link(value: unknown): DeckLink | undefined {
@@ -97,48 +148,71 @@ export class ElementWriter {
 
   public addText(name: string, text: string | CanvasTextRun[], rawFrame: Frame, style: TextStyle = {}): string {
     const id = this.nextId(name);
+    // An authored indent is a left inset: the paragraph starts further in and
+    // the text still ends where the author put the right edge.
+    const indent = Math.max(0, style.indent ?? 0);
     const frame = normalizeFrame(rawFrame);
+    const laidOut = indent > 0 && indent < frame.w
+      ? { ...frame, x: frame.x + indent, w: frame.w - indent }
+      : frame;
     const fontSize = style.fontSize ?? this.config.fonts.minimums.body;
     const fontFace = style.fontFace ?? this.config.fonts.body;
     const color = style.color ?? this.config.colors.ink;
-    const nativeText = typeof text === "string" ? text : text.map((run) => ({ text: run.text, options: this.native(run.options) }));
+    const bind = (value: string) => style.noBreak ? value.replace(/ /g, NO_BREAK_SPACE) : value;
+    const nativeText = typeof text === "string"
+      ? bind(text)
+      : text.map((run) => ({ text: bind(run.text), options: this.native(run.options) }));
     const link = this.link(style.link);
     const recordText = typeof text === "string" ? text : text.map((run) => run.text).join("");
     const fit = style.fit ?? "shrink";
     this.slide.addText(nativeText, {
       ...this.native(style.options),
       ...(link ? { hyperlink: toNativeHyperlink(link) } : {}),
-      ...frame,
+      ...laidOut,
       objectName: name,
       fontFace,
       fontSize,
       color,
       bold: style.bold,
       italic: style.italic,
+      ...(style.underline ? { underline: { style: "sng" } } : {}),
       align: style.align ?? "left",
       valign: style.valign ?? "top",
       margin: style.margin ?? 0,
       fit,
       breakLine: style.breakLine,
       rotate: style.rotate,
+      ...(style.lineSpacing !== undefined ? { lineSpacing: style.lineSpacing } : {}),
+      ...(style.lineSpacing === undefined && style.lineSpacingMultiple !== undefined
+        ? { lineSpacingMultiple: style.lineSpacingMultiple }
+        : {}),
+      ...(style.charSpacing !== undefined ? { charSpacing: style.charSpacing } : {}),
+      ...(style.bullet !== undefined ? { bullet: style.bullet } : {}),
       ...(style.fill ? { fill: { color: style.fill, transparency: style.transparency ?? 0 } } : {}),
       ...(style.lineColor ? { line: { color: style.lineColor, width: style.lineWidth ?? 1 } } : {}),
       ...(style.radius !== undefined ? { rectRadius: style.radius } : {}),
     });
+    if (style.columns && style.columns > 1) {
+      this.postProcess.push({ name, columns: { count: style.columns } });
+    }
     this.records.push({
       id,
       name,
       type: "text",
       role: style.role ?? "body",
-      ...frame,
+      ...laidOut,
       text: recordText,
       fontSize,
       fontFace,
       textColor: color,
       fit,
+      editability: "native",
+      ...this.context(style),
       ...(style.bold === undefined ? {} : { bold: style.bold }),
       ...(style.fill ? { fillColor: style.fill } : {}),
+      ...(style.fill && style.transparency ? { fillTransparency: style.transparency } : {}),
       ...(link ? { link: link.url ?? `slide:${link.slide}` } : {}),
+      ...(style.columns && style.columns > 1 ? { metadata: { columns: style.columns } } : {}),
       intentionalOverlap: style.intentionalOverlap ?? false,
     });
     return id;
@@ -178,6 +252,9 @@ export class ElementWriter {
       role: style.role ?? "shape",
       ...frame,
       fillColor: style.fill ?? this.config.colors.surface,
+      ...(style.transparency ? { fillTransparency: style.transparency } : {}),
+      editability: "native",
+      ...this.context(style),
       ...(link ? { link: link.url ?? `slide:${link.slide}` } : {}),
       intentionalOverlap: style.intentionalOverlap ?? false,
     });
@@ -195,6 +272,9 @@ export class ElementWriter {
       beginArrow?: boolean;
       dashed?: boolean;
       role?: string;
+      layer?: string;
+      groupId?: string;
+      allowBleed?: boolean;
       native?: Record<string, unknown>;
     } = {},
   ): string {
@@ -222,6 +302,8 @@ export class ElementWriter {
       type: "connector",
       role: options.role ?? "connector",
       ...frame,
+      editability: "native",
+      ...this.context(options),
       intentionalOverlap: true,
     });
     return id;
@@ -231,6 +313,7 @@ export class ElementWriter {
     const id = this.nextId(name);
     const frame = normalizeFrame(rawFrame);
     const link = this.link(style.link);
+    const treatment = style.treatment;
     this.slide.addImage({
       ...this.native(style.options),
       ...(link ? { hyperlink: toNativeHyperlink(link) } : {}),
@@ -242,6 +325,17 @@ export class ElementWriter {
       rotate: style.rotate,
       transparency: style.transparency,
     });
+    if (treatment?.crop || treatment?.maskShape || treatment?.duotone || treatment?.grayscale) {
+      this.postProcess.push({
+        name,
+        picture: {
+          ...(treatment.crop ? { crop: treatment.crop } : {}),
+          ...(treatment.maskShape ? { maskShape: treatment.maskShape } : {}),
+          ...(treatment.duotone ? { duotone: treatment.duotone } : {}),
+          ...(treatment.grayscale ? { grayscale: true } : {}),
+        },
+      });
+    }
     this.records.push({
       id,
       name,
@@ -252,9 +346,33 @@ export class ElementWriter {
       ...(style.source ? { imageSource: style.source } : {}),
       ...(style.provenance ? { provenance: style.provenance } : {}),
       altText: alt,
+      // Pixels stay pixels. Vector artwork is scalable but not shape-editable
+      // unless the author says otherwise, and saying so here is the difference
+      // between an honest manifest and a promise PowerPoint will not keep.
+      editability: style.vector
+        ? (style.vector.editable === true ? "grouped-native" : "embedded-vector")
+        : "embedded-raster",
+      ...this.context(style),
       ...(link ? { link: link.url ?? `slide:${link.slide}` } : {}),
+      ...(style.vector || treatment
+        ? { metadata: { ...(style.vector ? { vector: style.vector } : {}), ...(treatment ? { treatment } : {}) } }
+        : {}),
       intentionalOverlap: style.intentionalOverlap ?? false,
     });
+    // A tint is drawn as a real, editable shape rather than baked into the
+    // pixels: the picture on the slide stays the picture the author supplied,
+    // and anyone can change or remove the wash in PowerPoint.
+    if (treatment?.tint) {
+      const amount = Math.max(0, Math.min(1, treatment.tint.amount ?? 0.35));
+      this.addShape(`${name}-tint`, Shapes.rect, frame, {
+        fill: treatment.tint.color,
+        transparency: Math.round((1 - amount) * 100),
+        lineWidth: 0,
+        role: "decorative",
+        intentionalOverlap: true,
+        ...this.context(style),
+      });
+    }
     return id;
   }
 
@@ -303,6 +421,7 @@ export class ElementWriter {
       fontFace: this.config.fonts.body,
       textColor: this.config.colors.ink,
       fillColor: this.config.colors.surface,
+      editability: "native",
       metadata: { rows: table.rows.length + 1, columns: table.headers.length },
     });
     return id;
@@ -317,6 +436,7 @@ export class ElementWriter {
       role: "chart",
       ...frame,
       altText: alt ?? `${chart.kind} chart: ${chart.series.map((series) => series.name).join(", ")}`,
+      editability: "native",
       intentionalOverlap: true,
       metadata: { chart },
     });
@@ -345,6 +465,7 @@ export class ElementWriter {
       role: "chart",
       ...frame,
       altText: alt ?? `${nativeType} chart`,
+      editability: "native",
       intentionalOverlap: true,
       metadata: { nativeChart: { nativeType, data } },
     });

@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "slideId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "narrativeJob": {
+      "type": "string",
+      "minLength": 1,
+      "description": "What this slide has to accomplish for the audience."
+    },
+    "dominantArtifact": {
+      "description": "The one thing the eye should land on.",
+      "type": "string"
+    },
+    "silhouette": {
+      "description": "The intended shape of the composition, in your own words.",
+      "type": "string"
+    },
+    "energy": {
+      "description": "quiet, medium, loud, or your own term.",
+      "type": "string"
+    },
+    "transition": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "slideId",
+    "narrativeJob"
+  ],
+  "additionalProperties": {},
+  "description": "One slide's declared job and intended silhouette. Later critique compares the render against this."
+}

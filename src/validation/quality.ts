@@ -1,15 +1,23 @@
 import type { DeckManifest, ElementRecord, QualityDimensionScore, QualityScore, SlideAgentConfig, SlideManifest, ValidationIssue } from "../types/index.js";
 import { colorContrast } from "../utils/color.js";
+import { signDeck, unionArea } from "../evaluation/visual-signature.js";
 import { visibleBackgroundFor } from "./manifest-validator.js";
+import { HEURISTIC_FLOORS } from "./readiness.js";
 
 /**
- * A composite read on whether a deck is actually good, separate from whether
- * it is valid.
+ * Heuristics, named as such.
  *
- * Validation answers "will this open and can it be read". Quality answers "is
- * this worth showing someone". The scores are advisory and deliberately
- * explainable: each dimension names what it measured and what would raise it,
- * because an unexplained 62/100 tells an author nothing.
+ * These are proxies. `hierarchy` counts type sizes; it cannot see hierarchy.
+ * `variety` measures how much the geometry changes across a sequence; it cannot
+ * see whether the change was earned. Calling the result a "quality score" told
+ * authors the engine had judged their design, which it had not and cannot —
+ * so the report calls them heuristics, and the review packet keeps them apart
+ * from measured facts and from a reviewer's judgement.
+ *
+ * They are still worth computing: a deck where every slide has one type size,
+ * or where the same silhouette repeats twelve times, has a problem the author
+ * usually wants to know about. The scores say what was measured and what would
+ * move it, because an unexplained 62/100 tells nobody anything.
  */
 
 export type QualityDimension = QualityDimensionScore;
@@ -84,13 +92,17 @@ function contrastScore(manifest: DeckManifest, config: SlideAgentConfig): Qualit
   };
 }
 
-/** Coverage of the slide area: too empty reads as unfinished, too full as noise. */
+/**
+ * Coverage of the slide area, counting overlaps once.
+ *
+ * Summing bounding boxes double-counted every overlap, so a slide made of one
+ * full-bleed photograph with a caption over it reported as 130% covered and
+ * scored as overcrowded. The union is what a person actually sees.
+ */
 function densityScore(manifest: DeckManifest): QualityDimension {
   const area = manifest.width * manifest.height;
   const coverages = manifest.slides.map((slide) => {
-    const used = slide.elements
-      .filter((element) => element.role !== "decorative")
-      .reduce((sum, element) => sum + element.w * element.h, 0);
+    const used = unionArea(slide.elements.filter((element) => element.role !== "decorative"));
     return Math.min(1, used / area);
   });
   if (coverages.length === 0) return { id: "density", score: 50, summary: "No slides to assess." };
@@ -114,39 +126,73 @@ function densityScore(manifest: DeckManifest): QualityDimension {
 }
 
 /**
- * How much the deck varies across its sequence. A deck where every slide has
- * the same silhouette reads as a template even when each slide is fine.
+ * How much the deck's *geometry* varies across its sequence.
+ *
+ * Counting element types was easy to satisfy and meaningless to satisfy: twelve
+ * slides with one title and three boxes each scored as twelve distinct
+ * silhouettes if the box counts happened to differ. This measures what a person
+ * sees from across a room — where the masses sit, how much of the slide is
+ * covered, where the whitespace is, and how far the eye travels — so a deck
+ * that is genuinely one template twelve times reads as one template twelve
+ * times.
  */
 function varietyScore(manifest: DeckManifest): QualityDimension {
   if (manifest.slides.length < 3) return { id: "variety", score: 75, summary: "Too few slides to assess pacing." };
+  const signature = signDeck(manifest);
 
-  const signatures = manifest.slides.map((slide) => {
-    const counts = new Map<string, number>();
-    for (const element of slide.elements) counts.set(element.type, (counts.get(element.type) ?? 0) + 1);
-    return [...counts.entries()].sort().map(([type, count]) => `${type}:${Math.min(count, 4)}`).join(",");
-  });
-  const distinct = new Set(signatures).size;
-  const kinds = new Set(manifest.slides.map((slide) => slide.kind)).size;
-  const modes = new Set(manifest.slides.map((slide) => slide.compositionMode ?? "fallback-layout")).size;
+  const areaHierarchy = signature.slides.map((slide) => Math.round(slide.dominantMass * 6));
+  const readingPaths = signature.slides.map((slide) => Math.round(slide.readingPathLength * 8));
+  const whitespace = signature.slides.map((slide) => `${Math.round(slide.whitespaceBands[0] * 4)}${Math.round(slide.whitespaceBands[1] * 4)}`);
+  const distinctSilhouettes = Math.round(signature.silhouetteVariety * manifest.slides.length);
 
-  const shapeVariety = distinct / manifest.slides.length;
-  const score = clamp(shapeVariety * 70 + Math.min(kinds / manifest.slides.length, 1) * 25 + (modes > 1 ? 5 : 0));
+  const silhouetteVariety = signature.silhouetteVariety;
+  const massVariety = new Set(areaHierarchy).size / manifest.slides.length;
+  const pathVariety = new Set(readingPaths).size / manifest.slides.length;
+  const whitespaceVariety = new Set(whitespace).size / manifest.slides.length;
+  // Rhythm is slide-to-slide change in coverage: a deck that never gets quieter
+  // or louder is flat however many element types it contains.
+  const rhythm = Math.min(1, signature.rhythm * 4);
+
+  const score = clamp(
+    silhouetteVariety * 40
+    + massVariety * 20
+    + whitespaceVariety * 15
+    + pathVariety * 10
+    + rhythm * 15,
+  );
   return {
     id: "variety",
     score,
-    summary: `${distinct} distinct slide silhouettes across ${manifest.slides.length} slides; ${kinds} slide kinds.`,
-    ...(score < 70 ? { advice: "Vary composition, scale, and slide kind across the sequence so it does not read as one repeated template." } : {}),
+    summary: `${distinctSilhouettes} distinct silhouettes across ${manifest.slides.length} slides; `
+      + `${new Set(areaHierarchy).size} distinct dominant-mass levels; coverage moves ${Math.round(signature.rhythm * 100)}% between slides on average.`,
+    ...(score < 70
+      ? {
+        advice: silhouetteVariety < 0.5
+          ? "Most slides put their masses in the same places. Change what dominates — a full-bleed image, a single number, a wide table — rather than changing what fills the same boxes."
+          : "The sequence has little rhythm: nothing gets noticeably quieter or denser. Let some slides breathe and others carry weight.",
+      }
+      : {}),
   };
 }
 
-/** Whether slides show artifacts rather than only asserting claims in prose. */
-function evidenceScore(manifest: DeckManifest): QualityDimension {
+/**
+ * Whether slides show artifacts rather than only asserting claims in prose.
+ *
+ * Two diagram nodes used to count as evidence, which meant a box-and-arrow row
+ * restating a bullet list scored the same as a chart of real data. Evidence now
+ * requires a declared relationship: a chart, table, or image with alt text, a
+ * diagram of at least three related nodes, or an element the deck's own claim
+ * ledger points at.
+ */
+function evidenceScore(manifest: DeckManifest, claimedElementIds: Set<string>): QualityDimension {
   const substantive = manifest.slides.filter((slide) => slide.kind !== "title" && slide.kind !== "section");
   if (substantive.length === 0) return { id: "evidence", score: 60, summary: "No substantive slides to assess." };
 
   const withArtifact = substantive.filter((slide) =>
-    slide.elements.some((element) => element.type === "chart" || element.type === "table" || element.type === "image")
-    || slide.elements.filter((element) => element.role === "diagram-node").length >= 2,
+    slide.elements.some((element) => (element.type === "chart" || element.type === "table")
+      || (element.type === "image" && Boolean(element.altText?.trim())))
+    || slide.elements.filter((element) => element.role === "diagram-node").length >= 3
+    || slide.elements.some((element) => claimedElementIds.has(element.name)),
   ).length;
   const withPlaceholders = manifest.slides.filter((slide) =>
     slide.elements.some((element) => /\[[^\]]{6,}\]/.test(element.text ?? "")),
@@ -166,6 +212,9 @@ function evidenceScore(manifest: DeckManifest): QualityDimension {
 }
 
 function accessibilityScore(issues: ValidationIssue[], slideCount: number): QualityDimension {
+  // `font-below-scale` is deliberately absent: on a model-authored canvas it is
+  // advice about the fallback type scale, not an accessibility defect, and
+  // counting it here let Slide Agent's own scale drive an accessibility score.
   const codes = new Set(["missing-alt-text", "uninformative-alt-text", "reading-order", "image-only-slide", "poor-contrast", "contrast-below-aaa", "font-too-small"]);
   const relevant = issues.filter((entry) => codes.has(entry.code));
   const errors = relevant.filter((entry) => entry.severity === "error").length;
@@ -190,13 +239,18 @@ function placeholderSlides(manifest: DeckManifest): number {
   ).length;
 }
 
-export function scoreDeck(manifest: DeckManifest, config: SlideAgentConfig, issues: ValidationIssue[]): QualityScore {
+export function scoreDeck(
+  manifest: DeckManifest,
+  config: SlideAgentConfig,
+  issues: ValidationIssue[],
+  claimedElementIds: Set<string> = new Set(),
+): QualityScore {
   const dimensions: QualityDimension[] = [
     hierarchyScore(manifest),
     contrastScore(manifest, config),
     densityScore(manifest),
     varietyScore(manifest),
-    evidenceScore(manifest),
+    evidenceScore(manifest, claimedElementIds),
     accessibilityScore(issues, manifest.slides.length),
   ];
   const weighted = dimensions.reduce((sum, dimension) => sum + dimension.score * WEIGHTS[dimension.id], 0);
@@ -208,11 +262,18 @@ export function scoreDeck(manifest: DeckManifest, config: SlideAgentConfig, issu
   // would otherwise let clean typography disguise an unfinished deck.
   const unfinished = placeholderSlides(manifest);
   const heavilyUnfinished = unfinished / Math.max(1, manifest.slides.length) >= 0.3;
+  // A band is not an average. One dimension below its floor caps the band,
+  // because clean typography must not be able to disguise unreadable contrast
+  // or a deck that is the same slide twelve times.
+  const belowFloor = dimensions.filter((dimension) => {
+    const floor = HEURISTIC_FLOORS[dimension.id];
+    return floor !== undefined && dimension.score < floor;
+  });
 
   return {
     overall,
-    band: heavilyUnfinished
-      ? "weak"
+    band: heavilyUnfinished || belowFloor.length > 0
+      ? (belowFloor.length > 1 || heavilyUnfinished ? "weak" : "workable")
       : overall >= 78 ? "strong" : overall >= 58 ? "workable" : "weak",
     dimensions,
   };

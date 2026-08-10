@@ -2,7 +2,7 @@
   "name": "slide-agent-vscode",
   "displayName": "Slide Agent",
   "description": "Create, edit, render, and validate distinctive editable PowerPoint presentations with any AI model.",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "publisher": "ghassenbrg",
   "license": "MIT",
   "icon": "icon.png",

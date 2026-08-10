@@ -11,10 +11,19 @@ import { resolveTokens } from "../design/tokens.js";
 import { Grid } from "../design/grid.js";
 import { CreativeDirector } from "../themes/creative-director.js";
 import { ThemeManager } from "../themes/theme-manager.js";
-import type { DeckManifest, ElementRecord, PresentationOutline, SlideAgentConfig, SlideSpec } from "../types/index.js";
+import type {
+  CanvasElementSpec,
+  DeckManifest,
+  DeckSymbol,
+  ElementRecord,
+  PresentationOutline,
+  SlideAgentConfig,
+  SlideSpec,
+} from "../types/index.js";
 import { ensureContrast, requiredContrast } from "../utils/color.js";
 import { buildTimestamp } from "../utils/reproducible.js";
 import type { ExtensionRegistry } from "../extensions.js";
+import type { ShapePostProcess } from "./pptx-postprocess.js";
 
 export interface BuiltDeck {
   presentation: NativePresentation;
@@ -29,6 +38,38 @@ export interface BuiltDeck {
    * a `file://` link needs to know the deck shipped without it.
    */
   rejectedLinks: Array<{ slide: number; reason: string }>;
+  /**
+   * Authored properties OOXML supports and PptxGenJS cannot emit — text
+   * columns, source crops, picture masks, blip effects — applied to the
+   * package by `PptxExporter` after PptxGenJS has written it.
+   */
+  postProcess: ShapePostProcess[];
+  /**
+   * Where each authored image ended up on this machine, keyed by the path the
+   * author wrote. The packager needs both: the local bytes to copy in, and the
+   * original reference to keep as provenance.
+   */
+  resolvedAssets: Map<string, string>;
+}
+
+/** The symbols one canvas places, groups included. */
+function symbolsUsedBy(canvas: CanvasElementSpec[] | undefined): Set<string> {
+  const used = new Set<string>();
+  for (const element of canvas ?? []) {
+    if (element.type === "symbol-instance") used.add(element.symbol);
+    else if (element.type === "group") for (const id of symbolsUsedBy(element.children)) used.add(id);
+  }
+  return used;
+}
+
+/** Every image element on a slide, including those nested in groups and symbols. */
+function imagesIn(canvas: CanvasElementSpec[] | undefined): CanvasElementSpec[] {
+  const found: CanvasElementSpec[] = [];
+  for (const element of canvas ?? []) {
+    if (element.type === "image") found.push(element);
+    else if (element.type === "group") found.push(...imagesIn(element.children));
+  }
+  return found;
 }
 
 /**
@@ -39,9 +80,13 @@ export interface BuiltDeck {
  * notes are where it can travel without the model having to find room for it
  * in a composition it already balanced.
  */
-function creditsFor(spec: SlideSpec): string[] {
+function creditsFor(spec: SlideSpec, symbols: Map<string, DeckSymbol>): string[] {
   const lines: string[] = [];
-  for (const element of spec.canvas ?? []) {
+  // Only the symbols this slide actually places: a credit repeated on every
+  // slide because a symbol exists somewhere in the deck is noise, not
+  // attribution.
+  const used = [...symbolsUsedBy(spec.canvas)].flatMap((id) => imagesIn(symbols.get(id)?.elements));
+  for (const element of [...imagesIn(spec.canvas), ...used]) {
     if (element.type !== "image") continue;
     const { credit, license, generated, generator, source } = element.provenance ?? {};
     if (generated) {
@@ -55,7 +100,7 @@ function creditsFor(spec: SlideSpec): string[] {
   return lines;
 }
 
-function notesFor(spec: SlideSpec): string {
+function notesFor(spec: SlideSpec, symbols: Map<string, DeckSymbol>): string {
   const body = [...(spec.speakerNotes ?? [])];
   if (spec.sources?.length) {
     body.push("", "[Sources]");
@@ -64,7 +109,7 @@ function notesFor(spec: SlideSpec): string {
     }
     body.push("[/Sources]");
   }
-  const credits = creditsFor(spec);
+  const credits = creditsFor(spec, symbols);
   if (credits.length > 0) {
     body.push("", "[Credits]", ...credits, "[/Credits]");
   }
@@ -85,6 +130,8 @@ export class DeckBuilder {
       brand?: BrandKit;
       bilingual?: BilingualMode;
       extensions?: ExtensionRegistry;
+      /** Where a relative asset path is relative to — normally the scene's own directory. */
+      assetBaseDir?: string;
     } = {},
   ) {
     this.layouts = options.layouts ?? new LayoutRegistry(config, options.extensions);
@@ -93,6 +140,7 @@ export class DeckBuilder {
     this.builtInImages = new ImageManager(
       path.join(tmpdir(), `slide-agent-image-cache-${userInfo().username}`),
       options.remoteAssets ?? remoteAssetPolicy(),
+      options.assetBaseDir,
     );
     // A host resolver is the image-sourcing seam: stock search, a generation
     // service, an internal asset library. It replaces the built-in entirely,
@@ -124,6 +172,10 @@ export class DeckBuilder {
 
     const layoutFallbacks: LayoutFallback[] = [];
     const rejectedLinks: Array<{ slide: number; reason: string }> = [];
+    const postProcess: ShapePostProcess[] = [];
+    // Symbol pictures resolve once, up front: a symbol placed on nine slides
+    // must not be nine downloads.
+    const symbols = new Map((await this.resolveSymbols(resolvedOutline.symbols ?? [])).map((symbol) => [symbol.id, symbol]));
     for (let index = 0; index < resolvedOutline.slides.length; index += 1) {
       const rawSpec = this.options.bilingual
         ? withSecondaryLanguage(
@@ -139,7 +191,8 @@ export class DeckBuilder {
       const records: ElementRecord[] = [];
       const writer = new ElementWriter(slide, records, effectiveConfig);
       if (spec.canvas) {
-        new FreeformComposer(effectiveConfig, design.direction, this.options.extensions).render(writer, spec);
+        new FreeformComposer(effectiveConfig, design.direction, this.options.extensions, [...symbols.values()])
+          .render(writer, spec, index + 1);
       } else {
         const fallback = this.layouts.render(writer, spec, {
           slideNumber: index + 1,
@@ -150,7 +203,8 @@ export class DeckBuilder {
       }
       await this.stampBrand(writer, index + 1, resolvedOutline.slides.length, effectiveConfig, design.direction);
       for (const reason of writer.rejectedLinks) rejectedLinks.push({ slide: index + 1, reason });
-      const notes = notesFor(spec);
+      postProcess.push(...writer.postProcess);
+      const notes = notesFor(spec, symbols);
       if (effectiveConfig.generation.includeSpeakerNotes && notes) slide.addNotes(notes);
       manifest.slides.push({
         number: index + 1,
@@ -164,7 +218,19 @@ export class DeckBuilder {
         notes: spec.speakerNotes ?? [],
       });
     }
-    return { presentation, manifest, outline: resolvedOutline, config: effectiveConfig, layoutFallbacks, rejectedLinks };
+    return {
+      presentation,
+      manifest,
+      // The returned outline keeps the *authored* asset paths: it is what the
+      // scene is emitted from, and a scene carrying this machine's image cache
+      // paths would not rebuild anywhere else.
+      outline: resolvedOutline,
+      config: effectiveConfig,
+      layoutFallbacks,
+      rejectedLinks,
+      postProcess,
+      resolvedAssets: this.resolvedAssets,
+    };
   }
 
   /**
@@ -212,19 +278,45 @@ export class DeckBuilder {
     }
   }
 
+  /** Resolves the pictures inside author-defined symbols once, up front. */
+  private async resolveSymbols(symbols: DeckSymbol[]): Promise<DeckSymbol[]> {
+    return Promise.all(symbols.map(async (symbol) => ({
+      ...symbol,
+      elements: await this.resolveCanvas(symbol.elements),
+    })));
+  }
+
+  /**
+   * Where each authored image ended up on this machine, keyed by the path the
+   * author wrote. The packager needs both: the local bytes to copy, and the
+   * original reference to keep as provenance.
+   */
+  public readonly resolvedAssets = new Map<string, string>();
+
+  /** Turns every authored image path into a local file, groups included. */
+  private async resolveCanvas(canvas: CanvasElementSpec[]): Promise<CanvasElementSpec[]> {
+    return Promise.all(canvas.map(async (element) => {
+      if (element.type === "group") return { ...element, children: await this.resolveCanvas(element.children) };
+      if (element.type !== "image") return element;
+      // Resolution replaces the authored path with a local file, so the origin
+      // has to be preserved first or the manifest ends up recording a cache
+      // path and nothing about where the picture came from.
+      const local = await this.imageResolver.resolve(element.path);
+      this.resolvedAssets.set(element.path, local);
+      return {
+        ...element,
+        provenance: { ...element.provenance, source: element.provenance?.source ?? element.path },
+        path: local,
+      };
+    }));
+  }
+
   private async resolveAssets(spec: SlideSpec): Promise<SlideSpec> {
     const visual = spec.visual?.path ? {
       ...spec.visual,
       path: await this.imageResolver.resolve(spec.visual.path),
     } : spec.visual;
-    // Resolution replaces the authored path with a local file, so the origin
-    // has to be preserved first or the manifest ends up recording a cache
-    // path and nothing about where the picture came from.
-    const canvas = spec.canvas ? await Promise.all(spec.canvas.map(async (element) => element.type === "image" ? {
-      ...element,
-      provenance: { ...element.provenance, source: element.provenance?.source ?? element.path },
-      path: await this.imageResolver.resolve(element.path),
-    } : element)) : undefined;
+    const canvas = spec.canvas ? await this.resolveCanvas(spec.canvas) : undefined;
     return {
       ...spec,
       ...(visual ? { visual } : {}),

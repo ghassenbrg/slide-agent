@@ -120,25 +120,34 @@ async function toolResultWithPreviews(result: AgentResult, includeImages = true)
   };
 }
 
-const INSTRUCTIONS = `Slide Agent builds editable PowerPoint decks from a design you author.
+const INSTRUCTIONS = `Slide Agent gives you an expressive PowerPoint canvas, preserves what you author
+as editable objects, and shows you the render so you can finish well. You design
+the deck; it does not supply taste and will not impose a house style.
 
-Read slide-agent://contract/guide first — it is the complete authoring guide —
-and slide-agent://capabilities for what this installation can do. Check its
-images block before planning a photo-led deck: some installations can only
-read local files, and cannot fetch or generate a picture at all.
+Read slide-agent://capabilities first — its \`canvas\` block is the expressive
+surface, and its \`images\` block says whether this installation can source a
+picture at all. Then slide-agent://contract/guide for how to author.
 
-Then fetch slide-agent://contract/schema/outline (or .../sceneRecord for the
-line-oriented format) and design the deck yourself: palette, typography,
-composition, diagrams, and every element's coordinates are your decisions.
-Call slide_agent_run with that outline or scene.
+The workflow that produces good decks is not prompt → deck. It is:
+
+  1. read capabilities and the contract
+  2. research, and write a claim/source ledger
+  3. invent at least two visual theses that differ structurally, not in palette
+  4. choose one and write a sequence/silhouette plan
+  5. author a freeform scene
+  6. build with render enabled
+  7. call review_presentation and look at every slide
+  8. patch specific defects with patch_presentation
+  9. rerun readiness and the round-trip check
+ 10. deliver the package
+
+Read \`presentationReadiness\`, not just \`status\`. \`packageStatus\` says the file
+holds together; readiness says whether it is finished. Repairs default to
+\`suggest\` on a model-authored canvas: the engine reports what it would change
+and changes nothing, because your values are not its to overwrite.
 
 create_presentation takes only a prompt and returns a structural draft full of
-bracketed placeholders. Use it to start, never to finish. Always read the
-validation report before reporting success.
-
-Ask for render when you build. Every build, edit, and render tool returns the
-slide previews as images: look at them, and revise what reads badly with
-revise_presentation rather than reporting a deck you have never seen.`;
+bracketed placeholders. Use it to start, never to finish.`;
 
 export function buildMcpServer(): McpServer {
   const server = new McpServer(
@@ -284,17 +293,17 @@ export function buildMcpServer(): McpServer {
       contents: [{
         uri: uri.href,
         mimeType: "application/json",
-        text: JSON.stringify({ contractVersion: CONTRACT_VERSION, version: VERSION, ...new SlideAgent().capabilities() }, null, 2),
+        text: JSON.stringify({ contractVersion: CONTRACT_VERSION, version: VERSION, ...await new SlideAgent().capabilityReport() }, null, 2),
       }],
     }),
   );
 
   server.registerTool("get_capabilities", {
     title: "Get Slide Agent capabilities",
-    description: "What this installation can do: diagram grammars, chart renderers, layouts, quality checks, and — read this before planning imagery — whether images can be fetched, generated, or only read from local paths.",
+    description: "What this installation can do. Read the `canvas` block before you simplify an idea into boxes: it lists every element type, property, and treatment the medium supports. Also reports installed fonts, render-backend limitations, and — read this before planning imagery — whether images can be fetched, generated, or only read from local paths.",
     inputSchema: z.object({}),
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-  }, async () => toolResult({ contractVersion: CONTRACT_VERSION, version: VERSION, ...new SlideAgent().capabilities() }));
+  }, async () => toolResult({ contractVersion: CONTRACT_VERSION, version: VERSION, ...await new SlideAgent().capabilityReport() }));
 
   server.registerTool("get_authoring_contract", {
     title: "Get the Slide Agent authoring contract",
@@ -426,6 +435,84 @@ export function buildMcpServer(): McpServer {
     const result = await new SlideAgent().validate({ command: "validate", ...input });
     return toolResultWithPreviews(result, includeImages);
   });
+
+  server.registerTool("review_presentation", {
+    title: "Review a presentation you built",
+    description: "Return the deterministic review packet for the exact PPTX: artifact hashes, per-slide renders, the words read back off the render compared with the deck's own text, element geometry, the author's declared intent, current issues, and questions worth asking. Look at the images before you judge the deck.",
+    inputSchema: z.object({
+      input: z.string().min(1).describe("The .pptx to review. Its scene, manifest, report, and previews are discovered beside it."),
+      scene: z.string().optional(),
+      manifest: z.string().optional(),
+      slide: z.number().int().positive().optional().describe("Review one slide."),
+      from: z.number().int().positive().optional(),
+      to: z.number().int().positive().optional(),
+      maxSlides: z.number().int().positive().max(40).optional(),
+      includeImages: z.boolean().optional().describe("Return the slide renders as images. Default true."),
+    }),
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
+  }, async ({ input, scene, manifest, slide, from, to, maxSlides, includeImages }: {
+    input: string; scene?: string; manifest?: string; slide?: number; from?: number; to?: number; maxSlides?: number; includeImages?: boolean;
+  }) => {
+    const packet = await new SlideAgent().review(input, {
+      ...(scene ? { scene } : {}),
+      ...(manifest ? { manifest } : {}),
+      ...(slide === undefined ? {} : { slide }),
+      ...(from === undefined ? {} : { from }),
+      ...(to === undefined ? {} : { to }),
+      ...(maxSlides === undefined ? {} : { maximumSlides: maxSlides }),
+    });
+    if (includeImages === false) return toolResult(packet);
+    const previews = packet.slides.map((entry) => entry.preview).filter((file): file is string => Boolean(file));
+    const { images, omitted } = await previewImageContent(
+      { artifacts: previews, generatedFiles: [] } as unknown as AgentResult,
+    );
+    if (images.length === 0) return toolResult(packet);
+    const note = omitted > 0
+      ? `\n\n${images.length} of ${images.length + omitted} slide renders follow, in slide order.`
+      : `\n\n${images.length} slide render${images.length === 1 ? "" : "s"} follow, in slide order. These are what the audience will see.`;
+    return {
+      content: [{ type: "text" as const, text: `${JSON.stringify(packet, null, 2)}${note}` }, ...images],
+      isError: false,
+    };
+  });
+
+  server.registerTool("patch_presentation", {
+    title: "Patch specific elements of a deck",
+    description: "Change named elements on named slides and rebuild, leaving every other element exactly as it was. Use this after review_presentation instead of regenerating the deck: a regeneration discards every decision you are not currently thinking about. Every operation names its slide and element id; there is no fuzzy matching.",
+    inputSchema: z.object({
+      input: z.string().min(1),
+      output: z.string().min(1).describe("Must differ from input. Ignored with dryRun."),
+      operations: z.array(z.looseObject({ op: z.string() })).min(1)
+        .describe("add-element, remove-element, update-text, update-style, update-bbox, update-z-index, update-provenance, update-slide, update-claims, or apply-style-system."),
+      scene: z.string().optional(),
+      dryRun: z.boolean().optional().describe("Report the semantic diff without writing anything."),
+      render: z.boolean().optional(),
+      roundTrip: z.boolean().optional(),
+      validate: z.boolean().optional(),
+      includeImages: z.boolean().optional(),
+    }),
+    annotations: { destructiveHint: false, idempotentHint: false },
+  }, async ({ includeImages, ...input }: Record<string, unknown> & { includeImages?: boolean }) => {
+    const result = await new SlideAgent().execute(parseStructuredRequest({ command: "patch", ...input }));
+    return toolResultWithPreviews(result, includeImages);
+  });
+
+  server.registerResource(
+    "canvas-capabilities",
+    "slide-agent://capabilities/canvas",
+    {
+      title: "The expressive canvas",
+      description: "Every element type, property, and treatment the canvas supports, derived from the published schemas — plus what survives as an editable PowerPoint object and what does not.",
+      mimeType: "application/json",
+    },
+    async (uri: URL) => ({
+      contents: [{
+        uri: uri.href,
+        mimeType: "application/json",
+        text: JSON.stringify(new SlideAgent().capabilities().canvas, null, 2),
+      }],
+    }),
+  );
 
   server.registerTool("slide_agent_doctor", {
     title: "Check Slide Agent installation",

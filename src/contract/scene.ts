@@ -3,12 +3,17 @@ import { z } from "zod";
 import {
   canvasElementSchema,
   chartSpecSchema,
+  claimLedgerItemSchema,
   creativeDirectionSchema,
   deckCompletenessSchema,
+  designExplorationSchema,
+  hostAuthoringCapabilitiesSchema,
   presentationBriefSchema,
+  sequencePlanItemSchema,
   slideCommunicationSchema,
   slideSpecSchema,
   sourceCitationSchema,
+  sourceLedgerItemSchema,
   tableSpecSchema,
 } from "./schemas.js";
 import { SCENE_SCHEMA_ID } from "./version.js";
@@ -32,8 +37,24 @@ export const deckRecordSchema = z.looseObject({
   narrative: z.string(),
   completeness: deckCompletenessSchema.optional(),
   creativeDirection: creativeDirectionSchema.optional(),
+  exploration: designExplorationSchema.optional(),
+  sequencePlan: z.array(sequencePlanItemSchema).optional(),
+  claims: z.array(claimLedgerItemSchema).optional(),
+  sourceLedger: z.array(sourceLedgerItemSchema).optional(),
+  hostCapabilities: hostAuthoringCapabilitiesSchema.optional()
+    .describe("What the host AI that authored this scene could do. Planning context that survives round-trip."),
   width: z.number().positive().optional(),
   height: z.number().positive().optional(),
+});
+
+/** A reusable element collection the deck defined for itself. */
+export const symbolRecordSchema = z.looseObject({
+  kind: z.literal("symbol"),
+  id: z.string().min(1),
+  w: z.number().positive(),
+  h: z.number().positive(),
+  elements: z.array(canvasElementSchema).min(1),
+  description: z.string().optional(),
 });
 
 export const freeformSlideRecordSchema = z.looseObject({
@@ -72,6 +93,16 @@ const elementRecordBase = {
 };
 
 export const textboxRecordSchema = z.looseObject({ ...elementRecordBase, kind: z.literal("textbox") });
+export const groupRecordSchema = z.looseObject({
+  ...elementRecordBase,
+  kind: z.literal("group"),
+  children: z.array(canvasElementSchema).min(1),
+});
+export const symbolInstanceRecordSchema = z.looseObject({
+  ...elementRecordBase,
+  kind: z.literal("symbol-instance"),
+  symbol: z.string().min(1),
+});
 export const shapeRecordSchema = z.looseObject({ ...elementRecordBase, kind: z.literal("shape") });
 export const connectorRecordSchema = z.looseObject({ ...elementRecordBase, kind: z.literal("connector") });
 export const imageRecordSchema = z.looseObject({ ...elementRecordBase, kind: z.literal("image") });
@@ -89,6 +120,7 @@ export const notesRecordSchema = z.looseObject({
 
 export const sceneRecordSchema = z.discriminatedUnion("kind", [
   deckRecordSchema,
+  symbolRecordSchema,
   freeformSlideRecordSchema,
   fallbackSlideRecordSchema,
   textboxRecordSchema,
@@ -99,10 +131,15 @@ export const sceneRecordSchema = z.discriminatedUnion("kind", [
   chartRecordSchema,
   nativeChartRecordSchema,
   diagramRecordSchema,
+  groupRecordSchema,
+  symbolInstanceRecordSchema,
   notesRecordSchema,
 ]);
 
-export const ELEMENT_RECORD_KINDS = ["textbox", "shape", "connector", "image", "table", "chart", "native-chart", "diagram"] as const;
+export const ELEMENT_RECORD_KINDS = [
+  "textbox", "shape", "connector", "image", "table", "chart",
+  "native-chart", "diagram", "group", "symbol-instance",
+] as const;
 
 /** Maps a scene record kind onto the canvas element type it becomes. */
 export function canvasTypeForRecordKind(kind: string): string | undefined {
@@ -114,7 +151,7 @@ export function canvasTypeForRecordKind(kind: string): string | undefined {
  * Validates one element record as a canvas element, so a scene file gets the
  * same guarantees as an inline outline instead of a looser parallel check.
  */
-export function parseSceneElement(record: Record<string, unknown>): z.infer<typeof canvasElementSchema> {
+export function parseSceneElement(record: Record<string, unknown>): Record<string, unknown> {
   const type = canvasTypeForRecordKind(String(record.kind));
   if (!type) throw new Error(`Unsupported scene element kind: ${String(record.kind)}`);
   const bounds = record.bbox;
@@ -129,7 +166,7 @@ export function parseSceneElement(record: Record<string, unknown>): z.infer<type
     y: bounds[1],
     w: bounds[2],
     h: bounds[3],
-  });
+  }) as Record<string, unknown>;
 }
 
 export type SceneRecord = z.infer<typeof sceneRecordSchema>;

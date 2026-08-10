@@ -5,6 +5,7 @@ import type { ColorsConfig } from "../types/index.js";
 import { ensureDir } from "../utils/files.js";
 import { writeThemeColors } from "../themes/theme-manager.js";
 import { PptxSanitizer } from "./pptx-sanitizer.js";
+import type { ShapePostProcess } from "./pptx-postprocess.js";
 
 export class PptxExporter {
   /**
@@ -14,8 +15,16 @@ export class PptxExporter {
    * palette — the deck looks right but its theme lies about it, which shows up
    * the moment anyone picks a "theme colour" in PowerPoint or reads the deck
    * back as a template.
+   *
+   * `postProcess` carries the authored properties PptxGenJS cannot emit, keyed
+   * by element id, and is applied to the package's slide parts on the way out.
    */
-  public async export(presentation: NativePresentation, outputPath: string, colors?: ColorsConfig): Promise<string> {
+  public async export(
+    presentation: NativePresentation,
+    outputPath: string,
+    colors?: ColorsConfig,
+    postProcess: ShapePostProcess[] = [],
+  ): Promise<string> {
     const resolved = path.resolve(outputPath);
     if (path.extname(resolved).toLowerCase() !== ".pptx") {
       throw new Error(`PowerPoint output must end in .pptx: ${resolved}`);
@@ -23,7 +32,7 @@ export class PptxExporter {
     await ensureDir(path.dirname(resolved));
     await presentation.writeFile({ fileName: resolved, compression: true });
     if (colors) await writeThemeColors(resolved, colors);
-    await new PptxSanitizer().sanitizeFile(resolved);
+    await new PptxSanitizer().sanitizeFile(resolved, postProcess);
     return resolved;
   }
 }

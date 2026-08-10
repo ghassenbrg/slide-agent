@@ -2,25 +2,41 @@
 
 # Slide Agent authoring guide
 
-Contract version 0.9 · scene schema `slide-agent.scene/1`
+Contract version 0.10 · scene schema `slide-agent.scene/1`
 
 ## The freeform canvas
 
 `slide.canvas` is an array of editable native elements at coordinates you choose, in inches, on a slide whose size the deck declares. Its presence bypasses the layout registry completely, so `layout` is ignored and `kind` becomes free-form metadata.
 
-Element types are `text`, `shape`, `connector`, `image`, `table`, `chart`, and `native-chart`. Shape names and advanced PptxGenJS options are open-ended: pass them through `style.options`.
+Element types are `text`, `shape`, `connector`, `image`, `table`, `chart`, `native-chart`, `diagram`, `group`, and `symbol-instance`. Shape names and advanced PptxGenJS options are open-ended: pass them through `style.options`. `capabilities().canvas` lists every property each type accepts, derived from the schemas themselves.
+
+Text is not limited to a size and a colour: `runs`, `lineSpacingMultiple`, `charSpacing`, `indent`, `columns`, `bullet`, and `noBreak` are all in the schema. `noBreak` is how you stop "40 N·m" from wrapping between the number and its unit.
+
+Pictures support `fit`, an explicit `crop`, a `focalPoint` so a `cover` crop keeps the subject, a `maskShape`, `duotone`, `grayscale`, and `tint`. A tint is drawn as a real editable shape rather than baked into the pixels, so anyone can change or remove it.
+
+`group` positions children relative to its own origin and expands them into ordinary native elements — individually selectable in PowerPoint, individually addressable by a patch. `symbol-instance` places a symbol the deck declared itself, with per-instance scale, text, colour, and style overrides. Slide Agent ships no icon vocabulary; a symbol is whatever you decided is worth reusing.
+
+`layer` names a layer for review and z-order grouping. It carries no visual style.
 
 - Add every visible word as a text element. Nothing renders implicitly.
 - Build diagrams from shapes and connectors. Create edges before nodes, or place them on a lower `zIndex`.
 - Use images for photography, artwork, screenshots, and supplied evidence — never as a flattened substitute for a slide.
 - Give every image an `alt` that describes the content, and a `provenance` when it is not your own. See the imagery section for where pictures may come from.
+- Declare `vector` when you have SVG artwork. The raster `path` is still required — OOXML stores an SVG as an enhancement to a bitmap — and `vector.editable` states honestly what a person can change.
 
-A text element and a rotated shape:
+Type with real paragraph control, a treated picture, and a reusable symbol:
 
 ```json
 { "id": "deck-title", "type": "text", "x": 0.7, "y": 1, "w": 8, "h": 1.5, "role": "title",
   "text": "One boundary absorbs the complexity",
-  "style": { "fontSize": 48, "fontFace": "Georgia", "color": "F8F5E8", "bold": true } }
-{ "id": "signal", "type": "shape", "shape": "hexagon", "x": 9.4, "y": 1, "w": 2.4, "h": 2.4,
-  "style": { "fill": "FF4FD8", "rotate": 12 } }
+  "style": { "fontSize": 48, "fontFace": "Georgia", "color": "F8F5E8", "bold": true, "charSpacing": -1.2 } }
+{ "id": "spec", "type": "text", "x": 0.7, "y": 3, "w": 8, "h": 2.4, "role": "body",
+  "text": "Tighten to 40 N·m in the order shown, then repeat the sequence.",
+  "style": { "fontSize": 11, "columns": 2, "lineSpacingMultiple": 1.2, "indent": 0.25, "noBreak": true } }
+{ "id": "site", "type": "image", "x": 7, "y": 1, "w": 5.6, "h": 3.2,
+  "path": "artifacts/assets/site.png", "alt": "The east trench at first light", "fit": "cover",
+  "treatment": { "focalPoint": { "x": 0.7, "y": 0.35 }, "duotone": { "shadow": "241C15", "highlight": "F1EBDD" } } }
+{ "id": "legend", "type": "group", "x": 0.7, "y": 5.4, "w": 4, "h": 0.6, "children": [
+  { "id": "swatch", "type": "shape", "shape": "rect", "x": 0, "y": 0, "w": 0.3, "h": 0.3, "style": { "fill": "8C5A2B" } },
+  { "id": "label", "type": "text", "x": 0.4, "y": 0, "w": 3.4, "h": 0.3, "text": "Midden deposit" } ] }
 ```

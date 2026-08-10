@@ -31,6 +31,26 @@ export function relativeLuminance(hex: string): number {
   return 0.2126 * values[0]! + 0.7152 * values[1]! + 0.0722 * values[2]!;
 }
 
+/**
+ * `top` composited over `bottom` at `transparency` (0 = opaque, 1 = invisible).
+ *
+ * What a reader sees behind a piece of text is the composite, not the declared
+ * fill. Measuring against the declared fill reports legible type as a defect
+ * whenever an author uses a translucent band, which is a normal thing to do.
+ */
+export function blendHex(top: string, bottom: string, transparency: number): string {
+  const a = normalizeHex(top) ?? "000000";
+  const b = normalizeHex(bottom) ?? "FFFFFF";
+  const alpha = Math.max(0, Math.min(1, 1 - transparency));
+  const channel = (offset: number) => Math.round(
+    parseInt(a.slice(offset, offset + 2), 16) * alpha
+    + parseInt(b.slice(offset, offset + 2), 16) * (1 - alpha),
+  );
+  return [channel(0), channel(2), channel(4)]
+    .map((value) => Math.max(0, Math.min(255, value)).toString(16).padStart(2, "0").toUpperCase())
+    .join("");
+}
+
 export function colorContrast(foreground: string, background: string): number {
   const light = Math.max(relativeLuminance(foreground), relativeLuminance(background));
   const dark = Math.min(relativeLuminance(foreground), relativeLuminance(background));

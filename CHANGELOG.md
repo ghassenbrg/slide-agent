@@ -3,6 +3,127 @@
 All notable public changes are recorded here, newest first. Versions follow
 semantic versioning.
 
+## 0.11.0 — 2026-08-10
+
+Uncaged authoring. The release where the AI's design language is the deck's
+design language, and where "it validated" stops being confused with "it is
+finished".
+
+Contract `0.10`. Every change is additive — `0.9` scenes, outlines, and requests
+build unchanged — but a `0.x` minor is a deliberate adoption step, so hosts opt
+in. `MIGRATION-0.10.md` says what is new and what you keep.
+
+### Added
+
+- **Your own design language.** `creativeDirection.visualSystem` holds the
+  deck's own `variables`, named `styles` with `basedOn` inheritance, `motifs`,
+  and `constraints`. The names are yours — `excavation-note`, `signal-fog`,
+  `runway-crop` — and Slide Agent reserves none of them. Elements reference
+  styles with `styleRef`; any style value can point at a variable with
+  `{"$var":"name"}`. A reference that does not resolve is an error naming the
+  styles that do exist; a variable that lands on a property it cannot satisfy is
+  an error naming the mismatch. Neither is coerced and neither is ignored.
+- **`slide-agent review`** and the `review_presentation` MCP tool return a
+  deterministic packet for the exact PPTX: artifact hashes, per-slide renders,
+  the words read back off the render compared with the deck's own text, element
+  geometry, the author's declared intent and sequence plan, current issues, and
+  questions worth asking. No aesthetic verdict, and the questions are questions.
+- **`slide-agent patch`** and `patch_presentation` change named elements on
+  named slides and rebuild, leaving every other element exactly as it was.
+  `--dry-run` reports the semantic diff and writes nothing. Regenerating a deck
+  to fix a caption used to discard every decision the author was not currently
+  thinking about.
+- **Render text fidelity.** The rendered PDF's own text layer — or Tesseract
+  where Poppler is absent — is read back and compared with the deck's text.
+  Catches clipped endings, strings that vanished into an autofit, words broken
+  by a wrap the author never saw, and copy the manifest cannot account for.
+  OCR uncertainty produces `review`, never a fabricated pass.
+- **A wider canvas.** `group` (children positioned relative to the group origin,
+  expanded into individually editable native elements) and `symbol-instance`
+  (one placement of a symbol the deck declared itself, with per-instance scale,
+  text, colour, and style overrides — Slide Agent ships no icon vocabulary).
+  Text gains `lineSpacing`, `lineSpacingMultiple`, `charSpacing`, `indent`,
+  `columns`, `bullet`, `noBreak`, and `underline` in the schema rather than
+  hidden in `options`. Pictures gain `crop`, `focalPoint`, `maskShape`,
+  `duotone`, `grayscale`, `tint`, and `vector` for SVG artwork with honest
+  `editable` metadata. Every element gains `layer` and `allowBleed`.
+- **`capabilities().canvas`**, derived from the published schemas rather than
+  restated, so it cannot drift. Plus installed fonts and render-backend
+  limitations, through the CLI, the MCP resource `slide-agent://capabilities/canvas`,
+  and the TypeScript API. Available before a model simplifies an idea into boxes.
+- **Planning metadata that survives round-trip:** `exploration` (theses
+  considered, and which was chosen), `sequencePlan` (each slide's narrative job
+  and intended silhouette), `claims` and `sourceLedger` (what is asserted and
+  what backs it), and `hostCapabilities` (what the host AI can do — planning
+  context, never a grant).
+- **A portable, provable package.** Every asset is content-addressed into
+  `artifacts/<deck>/assets/`, and the emitted scene references it relative to
+  the scene's own directory. `--round-trip` rebuilds that scene in a clean
+  temporary directory from the packaged assets alone and compares slide count,
+  element ids, and key properties. All six showcase packages pass it.
+- **An artifact graph.** Every file a report describes is bound by SHA-256 with
+  what it was derived from, so a preview left over from an earlier revision
+  cannot pass as evidence.
+- **`VisualReviewer`** — a provider-neutral extension hook that consumes the
+  same deterministic packet a host AI does. Findings carry severity, slide,
+  element ids, observation, rationale, and a suggested target. The core ships
+  the interface, never a bundled model.
+- **Six showcase decks** under `examples/showcase/`, each authored as its own
+  scene from its own brief, with its own thesis, sequence plan, and claim
+  ledger. `npm run examples:evaluate` compares every pair by geometry
+  signature and includes a palette-only restyle as a control.
+- **`docs/human-evaluation.md`** — the blinded protocol, thresholds, and
+  recording rules for the questions a metric cannot answer.
+
+### Changed
+
+- **Repairs no longer happen behind your back.** The default mode for a
+  model-authored canvas is `suggest`: the engine reports exactly what it would
+  change, from what, to what, and whether that replaces a value you set — and
+  changes nothing. `--repair safe` applies them, records each one with its
+  rollback value, and rolls the whole run back and rebuilds as authored if the
+  render's text gets worse. `autoFix: false` still means "change nothing".
+- **Two verdicts instead of one.** `packageStatus` answers "does this file hold
+  together"; `presentationReadiness` answers "would you put it in front of the
+  audience", with `readinessReasons` saying what decided it. Readiness is not a
+  weighted average: one critical dimension blocks it however good the rest is.
+  `status` stays, documented as package-oriented, for `0.9` readers.
+- **`quality` is now `heuristics`** — both keys are emitted, and the rename is
+  the point. `density` counts the union of element areas rather than the sum, so
+  a full-bleed photograph with a caption over it no longer reports as 130%
+  covered. `variety` measures geometry — occupancy, dominant mass, whitespace
+  topology, reading path, slide-to-slide rhythm — instead of counting element
+  types. `evidence` requires a declared relationship; two diagram nodes are no
+  longer evidence. Bands have per-dimension floors.
+- **An omitted `geometry` no longer means `sharp`.** It resolves to `authored`
+  and contributes nothing, so silence stays silence. `geometry` and `density`
+  are deprecated as closed enums in favour of the open prose fields
+  `geometryLanguage`, `spatialRhythm`, and `materialLanguage`.
+- **The fallback type scale is no longer imposed on a model-authored canvas.**
+  A hard 9pt legibility floor still applies to every deck; between that floor
+  and the fallback scale, a canvas gets `font-below-scale` as advice rather than
+  a defect. A bench manual sets its notes at 11pt on purpose.
+- **Contrast is measured through translucency.** A band drawn at 72%
+  transparency is mostly the slide behind it, and measuring against the declared
+  fill reported perfectly legible type as a defect.
+- **One canonical package root.** The scene, manifest, reports, previews, PDF,
+  and content-addressed assets all live under `artifacts/<deck name>/` with
+  canonical names. The older `intermediate_files/` and `logs/` paths are still
+  read when discovering an existing package.
+- **The authoring guide** gains `visual-system`, `planning`, and `review`
+  sections, and its creative-direction examples are now three structurally
+  unlike decks rather than one palette-plus-geometry bundle.
+
+### Fixed
+
+- Text columns, source crops, picture masks, and blip colour effects are applied
+  to the emitted package directly. PptxGenJS does not expose them, and answering
+  "can I crop this photograph to a circle?" with "no" was false about the medium
+  and true only about one library.
+- Two decks built into the same directory no longer share one `manifest.json`,
+  which silently overwrote the first deck's blueprint.
+- Symbol and group images resolve once per deck rather than once per placement.
+
 ## 0.10.0 — 2026-08-09
 
 The release where a model can see what it built, and where measurement stops

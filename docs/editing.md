@@ -18,7 +18,8 @@ slide-agent revise --input deck.pptx --slide 4 --records slide4.ndjson --output 
 Splices replacement records into the deck's own scene and rebuilds. Because
 the scene round-trips, every slide you did not touch comes out identical.
 
-Needs `artifacts/intermediate_files/<deck>.inspect.ndjson` beside the deck, or
+Needs `artifacts/<deck>/scene.ndjson` beside the deck — the older
+`artifacts/intermediate_files/<deck>.inspect.ndjson` is still read — or
 an explicit `--scene`. A deck Slide Agent did not create has no scene — use
 `edit`.
 

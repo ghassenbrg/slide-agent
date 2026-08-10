@@ -5,6 +5,7 @@ import JSZip from "jszip";
 
 import { ALL_SERIES_ELEMENTS, CHART_TYPE_SCHEMAS } from "../utils/chart-schema.js";
 import { buildTimestamp } from "../utils/reproducible.js";
+import { postProcessSlideXml, type ShapePostProcess } from "./pptx-postprocess.js";
 
 const CONTENT_TYPES = "[Content_Types].xml";
 const NOTES_MASTER = "ppt/notesMasters/notesMaster1.xml";
@@ -305,7 +306,12 @@ async function normalizePackageTimestamps(zip: JSZip): Promise<void> {
  * treatment without constraining model-authored design choices.
  */
 export class PptxSanitizer {
-  public async sanitizeFile(inputPath: string): Promise<void> {
+  /**
+   * `postProcess` carries the authored capabilities PptxGenJS cannot express —
+   * text columns, source crops, picture masks, and blip colour effects — keyed
+   * by the element's own id. Omitting it leaves every slide part untouched.
+   */
+  public async sanitizeFile(inputPath: string, postProcess: ShapePostProcess[] = []): Promise<void> {
     const zip = await JSZip.loadAsync(await readFile(inputPath), { checkCRC32: true });
     await repairNotesMaster(zip);
 
@@ -314,6 +320,7 @@ export class PptxSanitizer {
         let xml = normalizeKnownShapeAliases(await entry.async("string"));
         if (name.startsWith("ppt/") && !name.startsWith("ppt/charts/")) xml = repairNegativeExtents(xml, name);
         if (/^ppt\/charts\/chart\d+\.xml$/.test(name)) xml = repairChartAxes(xml, name);
+        if (/^ppt\/slides\/slide\d+\.xml$/.test(name)) xml = postProcessSlideXml(xml, postProcess);
         zip.file(name, xml);
       }
     }

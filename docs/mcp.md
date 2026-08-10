@@ -73,20 +73,35 @@ configuration currently references the server.
 
 ## The flow that produces good decks
 
-Three calls, in this order. Skipping the first is the single most common reason
-output looks generic.
+It is not prompt → deck. It is build → see → critique → patch, and skipping the
+seeing is the single most common reason output looks generic.
 
-**1. Read the contract.** Fetch `slide-agent://contract/guide` as a resource,
-or call `get_authoring_contract` if your client cannot read resources. This is
-the design guidance: invent an art direction, plan the narrative, compose from
-first principles.
+**1. Read what is possible.** Fetch `slide-agent://capabilities` — its `canvas`
+block is the expressive surface, derived from the schemas the engine enforces —
+and `slide-agent://contract/guide` for how to author. Call `get_capabilities`
+and `get_authoring_contract` if your client cannot read resources.
 
-**2. Design the deck yourself.** Fetch
+**2. Plan before you place coordinates.** Write two visual theses that differ
+structurally, choose one, and record a `sequencePlan` — one entry per slide with
+its narrative job and intended silhouette. If you researched, write the `claims`
+and `sourceLedger` too.
+
+**3. Design the deck yourself.** Fetch
 `slide-agent://contract/schema/outline` (or `.../sceneRecord` for the
 line-oriented format) and author against it. Palette, typography, composition,
 diagrams, and every element's coordinates are your decisions.
 
-**3. Build it** with `slide_agent_run`.
+**4. Build it** with `slide_agent_run`, with `render` on.
+
+**5. Look at it** with `review_presentation`. It returns the renders as images,
+the words read back off them compared against the deck's own text, the geometry,
+your declared intent, and questions worth asking.
+
+**6. Fix exactly what is wrong** with `patch_presentation`, addressing elements
+by id. Regenerating the deck to fix a caption discards every decision you are
+not currently thinking about.
+
+**7. Check readiness**, not just status, and run `roundTrip` before you deliver.
 
 ```jsonc
 {
@@ -100,7 +115,11 @@ diagrams, and every element's coordinates are your decisions.
         "name": "Signal through fog",
         "palette": { "background": "0B1020", "ink": "F5F2E9", "accent": "66E3FF" },
         "typography": { "heading": "Georgia", "body": "Aptos" },
-        "geometry": "sharp",
+        "geometryLanguage": "Hairline routes between few, deliberately placed nodes",
+        "visualSystem": {
+          "variables": { "signal": "66E3FF" },
+          "styles": { "fog-title": { "style": { "fontSize": 48, "color": "F5F2E9", "bold": true } } }
+        },
         "avoid": ["rounded corners", "stock photography"]
       },
       "slides": [
@@ -111,8 +130,8 @@ diagrams, and every element's coordinates are your decisions.
           "background": "0B1020",
           "canvas": [
             { "id": "title", "type": "text", "x": 0.8, "y": 1.2, "w": 9, "h": 1.6,
-              "role": "title", "text": "One boundary absorbs the complexity",
-              "style": { "fontSize": 48, "color": "F5F2E9", "bold": true } }
+              "role": "title", "styleRef": "fog-title",
+              "text": "One boundary absorbs the complexity" }
           ]
         }
       ]
@@ -121,7 +140,9 @@ diagrams, and every element's coordinates are your decisions.
 }
 ```
 
-Then read `validation` in the result before telling the user it worked.
+Then read `validation.presentationReadiness` in the result before telling the
+user it worked. `packageStatus` says the file holds together; readiness says
+whether the deck is finished, and `readinessReasons` says why.
 
 ---
 
@@ -137,7 +158,9 @@ Then read `validation` in the result before telling the user it worked.
 | `revise_presentation` | `input`, `output`, `slide`, `sceneNdjson` | `scene`, `validate`, `render`, `includeImages` |
 | `edit_presentation` | `input`, `output`, `operations` | `render`, `validate`, `includeImages` |
 | `render_presentation` | `input`, `output` | `width`, `height`, `includeImages` |
-| `validate_presentation` | `input` | `report`, `manifest`, `previewsDir`, `render`, `includeImages` |
+| `validate_presentation` | `input` | `report`, `manifest`, `previewsDir`, `render`, `roundTrip`, `includeImages` |
+| `review_presentation` | `input` | `scene`, `manifest`, `slide`, `from`, `to`, `maxSlides`, `includeImages` |
+| `patch_presentation` | `input`, `output`, `operations` | `scene`, `dryRun`, `render`, `roundTrip`, `validate`, `includeImages` |
 | `slide_agent_doctor` | — | — |
 
 ### Knowing what is possible before you design
@@ -197,22 +220,25 @@ Worth calling once if anything behaves unexpectedly.
 
 ## Resources
 
-Twenty-one, in three groups.
+In three groups: capabilities, the contract descriptor and guide, and one
+resource per schema.
 
 | URI | Type | Contents |
 |---|---|---|
-| `slide-agent://capabilities` | JSON | Grammars, chart kinds, layouts, checks, and how images can reach a slide here |
+| `slide-agent://capabilities` | JSON | The canvas surface first, then grammars, chart kinds, layouts, checks, fonts, rendering, and how images can reach a slide here |
+| `slide-agent://capabilities/canvas` | JSON | Every element type, property, and treatment the canvas supports, and what stays editable |
 | `slide-agent://contract` | JSON | Contract version, scene schema id, available schemas |
 | `slide-agent://contract/guide` | Markdown | The complete authoring guide |
 | `slide-agent://contract/guide/<section>` | Markdown | One section |
 | `slide-agent://contract/schema/<name>` | JSON Schema | One schema |
 
-Guide sections: `role`, `creative-direction`, `narrative`, `composition`,
-`canvas`, `scene`, `diagrams`, `data`, `imagery`, `accessibility`, `honesty`,
-`workflow`.
+Guide sections: `role`, `creative-direction`, `visual-system`, `planning`,
+`narrative`, `composition`, `canvas`, `scene`, `diagrams`, `data`, `imagery`,
+`accessibility`, `honesty`, `review`, `workflow`.
 
 Schemas: `outline`, `brief`, `slide`, `canvasElement`, `creativeDirection`,
-`chart`, `table`, `sceneRecord`.
+`visualSystem`, `symbol`, `exploration`, `sequencePlanItem`, `claim`,
+`hostCapabilities`, `chart`, `table`, `sceneRecord`.
 
 Fetch `outline` when authoring nested slide specs, `sceneRecord` when authoring
 the line-oriented NDJSON format, and `canvasElement` when you only need element
@@ -259,25 +285,37 @@ Every tool returns one JSON object as text content.
   "artifacts": ["/…/artifacts/…"],
   "slideCount": 8,
   "warnings": [],
+  "packageStatus": "pass",
+  "presentationReadiness": "review",
   "validation": {
-    "status": "pass",
+    "packageStatus": "pass",
+    "presentationReadiness": "review",
+    "readinessReasons": ["Heuristic floor: variety scored 22, below 25. …"],
     "issues": [],
-    "quality": { "overall": 84, "band": "strong", "dimensions": [/* … */] }
+    "heuristics": { "overall": 84, "band": "strong", "dimensions": [/* … */] },
+    "fidelity": { "status": "pass", "method": "pdf-text", "confidence": "high", "slides": [/* … */] },
+    "artifacts": { "pptx": { "sha256": "…" }, "previews": [/* … */] },
+    "suggestedRepairs": [/* what the engine would change, and changed nothing */]
   },
   "errors": [],
-  "metadata": { "contractVersion": "1.0", "provenance": "model-authored", "…": "…" }
+  "metadata": { "contractVersion": "0.10", "provenance": "model-authored", "…": "…" }
 }
 ```
 
 `isError` is set on the tool result when `status` is `error`.
 
-Two things worth checking before reporting success:
+Three things worth checking before reporting success:
 
-- **`validation.status`** — `fail` means unresolved defects. Issues carry
-  `unfixedReason` when the repair loop could not fix them.
-- **`validation.quality.band`** — `weak` means the deck is not worth showing
-  even if the file is valid. Each dimension below 70 carries `advice` naming
-  the most useful change.
+- **`packageStatus`** — `fail` means the file itself does not hold together:
+  a broken relationship, a missing asset, a failed round-trip.
+- **`presentationReadiness`** — `not-ready` means the audience would see a
+  defect. `review` means something could not be verified. `readinessReasons`
+  lists what decided it, in order.
+- **`validation.suggestedRepairs`** — under the default `suggest` mode the
+  engine reports what it would change and changes nothing. Read them and decide.
+
+`validation.heuristics` are engine proxies, not a quality judgement. The report
+keeps measured facts, heuristics, and reviewer findings apart on purpose.
 
 ---
 
@@ -288,7 +326,10 @@ Two things worth checking before reporting success:
 | `CONTRACT_VALIDATION_FAILED` | Your outline does not match the schema. The message names the exact field path. |
 | `REMOTE_ASSETS_DISABLED` | An image URL was used without `allowRemoteAssets`. |
 | `REMOTE_ASSET_BLOCKED` | The URL resolves to a private or link-local address. |
-| `SCENE_NOT_FOUND` | `revise_presentation` could not find the deck's blueprint. Pass `scene` explicitly. |
+| `SCENE_NOT_FOUND` | `revise_presentation` or `patch_presentation` could not find the deck's blueprint. Pass `scene` explicitly. |
+| `PATCH_ELEMENT_NOT_FOUND` | A patch named an element the slide does not have. The message lists the ids that exist. |
+| `VISUAL_SYSTEM_UNKNOWN_STYLE` | A `styleRef` names a style the deck did not declare. The message lists the declared names. |
+| `VISUAL_SYSTEM_VARIABLE_TYPE` | A `{"$var":…}` landed on a property that cannot accept its type. |
 | `RENDER_DEPENDENCY_MISSING` | A true render was demanded without LibreOffice and Poppler. By default the server falls back to schematic previews instead. |
 | `INPUT_NOT_FOUND` | A path does not exist on the server's machine. |
 

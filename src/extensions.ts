@@ -1,6 +1,8 @@
 import type { ElementWriter, Frame } from "./components/element-writer.js";
+import { canvasCapabilities, type CanvasCapabilities } from "./contract/canvas-capabilities.js";
 import type { Grid } from "./design/grid.js";
 import type { DeckTokens } from "./design/tokens.js";
+import type { ReviewPacket, VisualReviewFinding } from "./review/types.js";
 import { remoteAssetPolicy, SUPPORTED_IMAGE_EXTENSIONS, type ImageResolver } from "./images/image-manager.js";
 import { BUILT_IN_LAYOUTS, type LayoutRenderer } from "./layouts/layout-registry.js";
 import { BUILT_IN_GRAMMARS } from "./diagrams/grammars.js";
@@ -32,9 +34,17 @@ export const BUILT_IN_CHART_KINDS = [
 ] as const;
 
 export interface Capabilities {
+  /**
+   * The expressive canvas, first. Named layouts are fallbacks for prompt-only
+   * operation; a model that reads capabilities to decide "can I build this
+   * idea?" needs the canvas before it needs the fallback list.
+   */
+  canvas: CanvasCapabilities;
   diagrams: Array<{ id: string; description: string }>;
   charts: Array<{ id: string; kinds: string[] }>;
   checks: Array<{ id: string; description?: string }>;
+  reviewers: Array<{ id: string; description?: string }>;
+  /** Prompt-only fallbacks. Never reference art direction. */
   layouts: string[];
   /** How, and whether, this installation can put a picture on a slide. */
   images: {
@@ -47,6 +57,26 @@ export interface Capabilities {
   };
   renderBackend?: string;
   tokenizer?: string;
+}
+
+/** Capabilities plus the answers that require probing this machine. */
+export interface CapabilityReport extends Capabilities {
+  fonts: {
+    /** Typefaces the fallback config names. A deck may use any others it likes. */
+    configured: string[];
+    /** Families this machine can display, when the check could run. */
+    installed: string[];
+    missing: string[];
+    note: string;
+  };
+  rendering: {
+    backend: string;
+    /** True previews need both of these; without them previews are schematic. */
+    libreOffice: string | null;
+    poppler: string | null;
+    mode: "render" | "schematic";
+    limitations: string[];
+  };
 }
 
 /** Context handed to every visual extension. */
@@ -91,11 +121,25 @@ export interface DesignTokenizer {
   derive(config: SlideAgentConfig, direction: CreativeDirection | undefined, dimensions: DimensionsConfig): DeckTokens;
 }
 
+/**
+ * A reviewer that looks at the deterministic review packet and reports what it
+ * sees. Provider-neutral on purpose: the core ships the interface and the
+ * packet, never a bundled model. A finding must explain itself — severity,
+ * slide, elements where known, observation, rationale, and a suggested target
+ * — because an unexplainable scalar is not something an author can act on.
+ */
+export interface VisualReviewer {
+  id: string;
+  description?: string;
+  review(packet: ReviewPacket): Promise<VisualReviewFinding[]> | VisualReviewFinding[];
+}
+
 export interface Extensions {
   layouts?: Record<string, LayoutRenderer>;
   diagrams?: DiagramGrammar[];
   charts?: ChartRenderer[];
   checks?: QualityCheck[];
+  reviewers?: VisualReviewer[];
   assets?: ImageResolver;
   render?: RenderBackend;
   tokenizer?: DesignTokenizer;
@@ -110,6 +154,7 @@ export class ExtensionRegistry {
   private readonly diagramGrammars = new Map<string, DiagramGrammar>();
   private readonly chartRenderers = new Map<string, ChartRenderer>();
   private readonly qualityChecks = new Map<string, QualityCheck>();
+  private readonly visualReviewers = new Map<string, VisualReviewer>();
   private readonly layoutRenderers = new Map<string, LayoutRenderer>();
   public assets?: ImageResolver;
   public renderBackend?: RenderBackend;
@@ -124,6 +169,7 @@ export class ExtensionRegistry {
     for (const grammar of extensions.diagrams ?? []) this.diagramGrammars.set(grammar.id, grammar);
     for (const renderer of extensions.charts ?? []) this.chartRenderers.set(renderer.id, renderer);
     for (const check of extensions.checks ?? []) this.qualityChecks.set(check.id, check);
+    for (const reviewer of extensions.reviewers ?? []) this.visualReviewers.set(reviewer.id, reviewer);
     if (extensions.assets) this.assets = extensions.assets;
     if (extensions.render) this.renderBackend = extensions.render;
     if (extensions.tokenizer) this.tokenizer = extensions.tokenizer;
@@ -146,6 +192,10 @@ export class ExtensionRegistry {
     return [...this.qualityChecks.values()];
   }
 
+  public get reviewers(): VisualReviewer[] {
+    return [...this.visualReviewers.values()];
+  }
+
   public get layouts(): Record<string, LayoutRenderer> {
     return Object.fromEntries(this.layoutRenderers);
   }
@@ -163,12 +213,14 @@ export class ExtensionRegistry {
     const layouts = new Set<string>([...BUILT_IN_LAYOUTS, ...this.layoutRenderers.keys()]);
 
     return {
+      canvas: canvasCapabilities(),
       diagrams: [...diagrams.values()],
       charts: [
         { id: "built-in", kinds: [...BUILT_IN_CHART_KINDS] },
         ...[...this.chartRenderers.values()].map(({ id, kinds }) => ({ id, kinds })),
       ],
       checks: [...this.qualityChecks.values()].map(({ id, description }) => ({ id, ...(description ? { description } : {}) })),
+      reviewers: [...this.visualReviewers.values()].map(({ id, description }) => ({ id, ...(description ? { description } : {}) })),
       layouts: [...layouts],
       images: {
         // The three ways a picture can reach a slide, stated plainly so a

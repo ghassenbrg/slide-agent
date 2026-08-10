@@ -2,6 +2,8 @@ import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 
+import { outputLayout } from "../../src/output/output-layout.js";
+
 import JSZip from "jszip";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
@@ -102,7 +104,7 @@ describe("image provenance", () => {
       provenance: { credit: "A. Name" },
     }]);
     const manifest = JSON.parse(await readFile(
-      path.join(path.dirname(output), "artifacts", "intermediate_files", `${path.basename(output, ".pptx")}.manifest.json`),
+      outputLayout(output).manifest,
       "utf8",
     )) as { slides: Array<{ elements: Array<{ imageSource?: string; provenance?: { credit?: string } }> }> };
     const image = manifest.slides[0]!.elements.find((element) => element.imageSource);
@@ -150,7 +152,7 @@ describe("image provenance", () => {
       provenance: { credit: "A. Name", license: "CC BY 4.0" },
     }]);
     const scene = await readFile(
-      path.join(path.dirname(output), "artifacts", "intermediate_files", `${path.basename(output, ".pptx")}.inspect.ndjson`),
+      outputLayout(output).inspect,
       "utf8",
     );
     expect(scene).toContain("CC BY 4.0");

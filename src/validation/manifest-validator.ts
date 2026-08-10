@@ -10,7 +10,7 @@ import type {
 } from "../types/index.js";
 import { resolveFont, wrapLineCount, wrappedTextHeight, type ResolvedFont } from "../design/font-metrics.js";
 import { words } from "../utils/text.js";
-import { colorContrast as contrastRatio, requiredContrast } from "../utils/color.js";
+import { blendHex, colorContrast as contrastRatio, requiredContrast } from "../utils/color.js";
 import { area, contains, intersectionArea, normalizedBox } from "./geometry.js";
 
 function issue(code: string, severity: ValidationIssue["severity"], message: string, fixable: boolean, options: Partial<ValidationIssue> = {}): ValidationIssue {
@@ -100,6 +100,13 @@ function validateChart(chart: ChartSpec): string[] {
   return errors;
 }
 
+/**
+ * The absolute legibility floor, below which text is not readable from a seat
+ * in the room whatever the design intends. This is a hard constraint and
+ * applies to every deck.
+ */
+export const ABSOLUTE_MINIMUM_FONT = 9;
+
 function minimumFont(element: ElementRecord, config: SlideAgentConfig): number {
   // Labels attached to a mark — a diagram node, an axis, a lane — are read at
   // the distance of the thing they label, not as body copy, so they carry the
@@ -114,19 +121,35 @@ function minimumFont(element: ElementRecord, config: SlideAgentConfig): number {
   return config.fonts.minimums.body;
 }
 
+/**
+ * What a translucent fill actually looks like once the slide shows through it.
+ *
+ * A band drawn at 72% transparency over a dark stage is not the colour in
+ * `fillColor`; it is mostly the stage. Measuring contrast against the declared
+ * fill reported perfectly legible pale type on a dark slide as a defect, which
+ * is the engine misreading the author's composition rather than checking it.
+ */
+function effectiveFill(element: ElementRecord, behind: string): string {
+  if (!element.fillColor) return behind;
+  const transparency = element.fillTransparency ?? 0;
+  if (transparency <= 0) return element.fillColor;
+  if (transparency >= 100) return behind;
+  return blendHex(element.fillColor, behind, transparency / 100);
+}
+
 function visibleBackground(
   element: ElementRecord,
   elementIndex: number,
   elements: ElementRecord[],
   slideBackground: string,
 ): string | undefined {
-  if (element.fillColor) return element.fillColor;
+  if (element.fillColor) return effectiveFill(element, slideBackground);
   for (let index = elementIndex - 1; index >= 0; index -= 1) {
     const candidate = elements[index]!;
     if (!(candidate.type === "shape" || candidate.type === "image")) continue;
     if (!contains(candidate, element)) continue;
     if (candidate.type === "image") return undefined;
-    return candidate.fillColor ?? slideBackground;
+    return effectiveFill(candidate, slideBackground);
   }
   return slideBackground;
 }
@@ -172,6 +195,11 @@ export class ManifestValidator {
       const normalizedTitle = slide.title.trim().toLowerCase();
       if (normalizedTitle) titles.set(normalizedTitle, [...(titles.get(normalizedTitle) ?? []), slide.number]);
 
+      // A slide the model composed itself is held to hard constraints, not to
+      // the fallback design system's type scale.
+      const authoredCanvas = new Set(
+        manifest.slides.filter((entry) => entry.compositionMode === "model-authored").map((entry) => entry.number),
+      );
       const textWordCount = slide.elements.filter((element) => element.type === "text").reduce((total, element) => total + words(element.text ?? "").length, 0);
       if (textWordCount > 120) {
         issues.push(issue("excessive-text-density", "warning", `Slide ${slide.number} contains ${textWordCount} visible words.`, true, {
@@ -186,21 +214,54 @@ export class ManifestValidator {
         const invalidSize = element.type === "connector"
           ? element.w === 0 && element.h === 0
           : element.w <= 0 || element.h < 0;
-        if (invalidSize || box.left < -0.01 || box.top < -0.01 || box.right > manifest.width + 0.01 || box.bottom > manifest.height + 0.01) {
-          issues.push(issue("object-outside-slide", "error", `${element.name} is outside slide ${slide.number}.`, true, {
+        const outside = box.left < -0.01 || box.top < -0.01
+          || box.right > manifest.width + 0.01 || box.bottom > manifest.height + 0.01;
+        if (invalidSize || (outside && !element.allowBleed)) {
+          issues.push(issue("object-outside-slide", "error", `${element.name} is outside slide ${slide.number}.${outside && !invalidSize ? " If it is meant to run past the edge, set allowBleed on it." : ""}`, true, {
             slide: slide.number,
             elementIds: [element.id],
             details: { box, slideSize: { width: manifest.width, height: manifest.height } },
           }));
+        } else if (outside) {
+          // Declared bleed. Still reported, because a reader of the report
+          // should be able to see every element that leaves the page.
+          issues.push(issue("declared-bleed", "info", `${element.name} runs past the edge of slide ${slide.number}, as declared.`, false, {
+            slide: slide.number,
+            elementIds: [element.id],
+            details: { box },
+          }));
         }
         if (element.type === "text" && element.fontSize !== undefined) {
           const minimum = minimumFont(element, this.config);
-          if (element.fontSize < minimum) {
-            issues.push(issue("font-too-small", "warning", `${element.name} uses ${element.fontSize}pt; minimum for ${element.role} is ${minimum}pt.`, true, {
+          if (element.fontSize < ABSOLUTE_MINIMUM_FONT) {
+            // A hard floor: nothing under 9pt is readable from a seat in the
+            // room, whatever the design intends.
+            issues.push(issue("font-too-small", "warning", `${element.name} uses ${element.fontSize}pt, below the ${ABSOLUTE_MINIMUM_FONT}pt legibility floor. Nothing that small is readable from a seat in the room.`, true, {
               slide: slide.number,
               elementIds: [element.id],
-              details: { fontSize: element.fontSize, minimum },
+              details: { fontSize: element.fontSize, minimum: ABSOLUTE_MINIMUM_FONT, floor: "absolute" },
             }));
+          } else if (element.fontSize < minimum) {
+            // Between the hard floor and the fallback design system's scale.
+            // On a model-authored canvas that scale is Slide Agent's opinion,
+            // not a rule: a bench manual sets its notes at 11pt deliberately,
+            // and reporting that as a defect is the engine imposing a type
+            // scale on work it did not author. It is advice there, and a
+            // warning on a deck the fallback layouts built.
+            const authored = authoredCanvas.has(slide.number);
+            issues.push(issue(
+              "font-below-scale",
+              authored ? "info" : "warning",
+              authored
+                ? `${element.name} uses ${element.fontSize}pt where the fallback type scale would use ${minimum}pt for a ${element.role}. That is your call — check it reads at presentation distance.`
+                : `${element.name} uses ${element.fontSize}pt; minimum for ${element.role} is ${minimum}pt.`,
+              !authored,
+              {
+                slide: slide.number,
+                elementIds: [element.id],
+                details: { fontSize: element.fontSize, minimum, compositionMode: slide.compositionMode ?? "fallback-layout" },
+              },
+            ));
           }
           if (element.fontFace && !this.config.fonts.supported.includes(element.fontFace)) {
             issues.push(issue("unsupported-font", "warning", `${element.name} uses unsupported font ${element.fontFace}.`, true, {
@@ -209,12 +270,27 @@ export class ManifestValidator {
               details: { fontFace: element.fontFace },
             }));
           }
-          const fit = measureTextFit(element, minimum);
+          // What counts as "shrunk too far" is the hard legibility floor on a
+          // model-authored canvas, not the fallback type scale. A title that
+          // autofits from 32pt to 30pt renders perfectly legibly; calling that
+          // clipped is the engine enforcing its own type scale on somebody
+          // else's design under the name of a defect.
+          const fitFloor = authoredCanvas.has(slide.number) ? ABSOLUTE_MINIMUM_FONT : minimum;
+          const fit = measureTextFit(element, fitFloor);
           if (fit?.clipped) {
             issues.push(issue("text-overflow", "error", `${element.name} does not fit its text box${element.fit === "shrink" ? ` even after autofit shrinks it to ${fit.effectiveFontSize}pt` : ""}.`, true, {
               slide: slide.number,
               elementIds: [element.id],
-              details: { declaredFontSize: element.fontSize, effectiveFontSize: fit.effectiveFontSize, minimum, box: { w: element.w, h: element.h } },
+              details: { declaredFontSize: element.fontSize, effectiveFontSize: fit.effectiveFontSize, minimum: fitFloor, box: { w: element.w, h: element.h } },
+            }));
+          } else if (fit && fit.effectiveFontSize < minimum && authoredCanvas.has(slide.number)) {
+            // Still worth saying: autofit will render this smaller than the
+            // fallback scale would. That is the author's call, and they should
+            // know it is happening.
+            issues.push(issue("autofit-below-scale", "info", `${element.name} fits only after autofit shrinks it from ${element.fontSize}pt to ${fit.effectiveFontSize}pt. Check it still reads at presentation distance.`, false, {
+              slide: slide.number,
+              elementIds: [element.id],
+              details: { declaredFontSize: element.fontSize, effectiveFontSize: fit.effectiveFontSize },
             }));
           }
           const fillColor = visibleBackground(element, elementIndex, slide.elements, slide.backgroundColor ?? this.config.colors.background);

@@ -107,6 +107,8 @@ program.command("create")
   .option("--bilingual <mode>", "Render secondaryLanguage as parallel, stacked, or notes")
   .option("--max-retries <count>", "Maximum automatic repair retries", Number)
   .option("--render", "Also generate PDF and PNG previews (requires LibreOffice and Poppler)")
+  .option("--round-trip", "Rebuild the emitted scene in a clean directory and compare; required before delivery")
+  .option("--repair <mode>", "safe, suggest, or off. Defaults to suggest for a model-authored canvas")
   .option("--no-validate", "Skip validation")
   .option("--no-auto-fix", "Disable automatic repair")
   .action(async (options) => {
@@ -146,6 +148,8 @@ program.command("create")
       brand: options.brand ?? base.brand,
       bilingual: options.bilingual ?? base.bilingual,
       render: options.render ?? base.render,
+      roundTrip: options.roundTrip ?? base.roundTrip,
+      repair: options.repair ?? base.repair,
       // Commander defaults `--no-*` options to true, so only an explicit
       // negation should override the file.
       validate: options.validate === false ? false : base.validate ?? options.validate,
@@ -202,6 +206,68 @@ program.command("revise")
     validate: options.validate,
   }));
 
+program.command("review")
+  .description("Build the deterministic review packet for a deck: the render, the words read back off it, the geometry, and the questions worth asking")
+  .requiredOption("--input <file>", "The .pptx to review")
+  .option("--slide <number>", "Review one slide", Number)
+  .option("--from <number>", "First slide to review", Number)
+  .option("--to <number>", "Last slide to review", Number)
+  .option("--max-slides <count>", "Cap on slides per packet", Number)
+  .option("--scene <file>", "Scene blueprint path when it does not sit beside the deck")
+  .option("--manifest <file>", "Manifest path when it does not sit beside the deck")
+  .option("--report <file>", "Validation report path when it does not sit beside the deck")
+  .option("--output <file>", "Write the packet here instead of stdout")
+  .action(async (options) => {
+    const packet = await new SlideAgent().review(options.input, {
+      ...(options.slide === undefined ? {} : { slide: options.slide }),
+      ...(options.from === undefined ? {} : { from: options.from }),
+      ...(options.to === undefined ? {} : { to: options.to }),
+      ...(options.maxSlides === undefined ? {} : { maximumSlides: options.maxSlides }),
+      ...(options.scene ? { scene: options.scene } : {}),
+      ...(options.manifest ? { manifest: options.manifest } : {}),
+      ...(options.report ? { report: options.report } : {}),
+    });
+    const json = `${JSON.stringify(packet, null, 2)}\n`;
+    if (!options.output) { process.stdout.write(json); return; }
+    await writeUtf8(options.output, json);
+    process.stdout.write(`${JSON.stringify({
+      review: path.resolve(options.output),
+      pptxSha256: packet.artifacts.pptx.sha256,
+      slides: packet.slides.length,
+      renderMode: packet.deck.renderMode,
+    }, null, 2)}\n`);
+  });
+
+program.command("patch")
+  .description("Change named elements on named slides and rebuild, leaving every other element exactly as it was")
+  .requiredOption("--input <file>", "Existing .pptx path")
+  .requiredOption("--operations <file>", "JSON file holding the patch operations, or {\"operations\":[...]}")
+  .option("--output <file>", "Output .pptx path; must differ from input. Not needed with --dry-run")
+  .option("--scene <file>", "Scene blueprint path when it does not sit beside the deck")
+  .option("--dry-run", "Print the semantic diff without writing anything")
+  .option("--config <directory>", "Configuration directory")
+  .option("--render", "Also render previews")
+  .option("--round-trip", "Rebuild the emitted scene in a clean directory and compare")
+  .option("--no-validate", "Skip validation")
+  .action(async (options) => {
+    if (!options.dryRun && !options.output) throw new Error("patch requires --output unless --dry-run is used.");
+    const parsed = JSON.parse(await text(options.operations)) as unknown;
+    const operations = Array.isArray(parsed) ? parsed : (parsed as { operations?: unknown[] }).operations;
+    if (!Array.isArray(operations)) throw new Error("The operations file must be a JSON array, or an object with an `operations` array.");
+    await printResult({
+      command: "patch",
+      input: options.input,
+      output: options.output ?? options.input,
+      operations,
+      scene: options.scene,
+      dryRun: Boolean(options.dryRun),
+      configDir: options.config,
+      render: options.render,
+      roundTrip: options.roundTrip,
+      validate: options.validate,
+    });
+  });
+
 program.command("render")
   .requiredOption("--input <file>", "Input .pptx path")
   .requiredOption("--output <directory>", "Preview output directory")
@@ -216,7 +282,8 @@ program.command("validate")
   .option("--previews <directory>", "Preview output directory")
   .option("--config <directory>", "Configuration directory")
   .option("--render", "Also generate preview images (requires LibreOffice and Poppler)")
-  .action(async (options) => printResult({ command: "validate", input: options.input, report: options.report, manifest: options.manifest, previewsDir: options.previews, configDir: options.config, render: options.render }));
+  .option("--round-trip", "Rebuild the emitted scene in a clean directory and compare")
+  .action(async (options) => printResult({ command: "validate", input: options.input, report: options.report, manifest: options.manifest, previewsDir: options.previews, configDir: options.config, render: options.render, roundTrip: options.roundTrip }));
 
 program.command("contract")
   .description("Print the authoring contract: schemas, the guide, or a ready-to-use system prompt")
@@ -293,12 +360,14 @@ program.command("data")
   });
 
 program.command("capabilities")
-  .description("What this installation can actually do — including whether it can source images at all")
-  .action(() => {
-    process.stdout.write(`${JSON.stringify({
+  .description("What this installation can actually do: the expressive canvas first, then grammars, charts, fonts, rendering, and whether it can source images at all")
+  .option("--canvas", "Print only the canvas capability block")
+  .action(async (options) => {
+    const report = await new SlideAgent().capabilityReport();
+    process.stdout.write(`${JSON.stringify(options.canvas ? report.canvas : {
       contractVersion: CONTRACT_VERSION,
       version: VERSION,
-      ...new SlideAgent().capabilities(),
+      ...report,
     }, null, 2)}\n`);
   });
 

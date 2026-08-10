@@ -3,6 +3,8 @@ import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 
+import { outputLayout } from "../../src/output/output-layout.js";
+
 import JSZip from "jszip";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
@@ -88,12 +90,12 @@ describe("reproducible builds", () => {
     process.env.SOURCE_DATE_EPOCH = "1700000000";
     await build("manifest");
     const manifest = JSON.parse(await readFile(
-      path.join(workspace, "artifacts", "intermediate_files", "manifest.manifest.json"),
+      outputLayout(path.join(workspace, "manifest.pptx")).manifest,
       "utf8",
     ).catch(async () => {
       // The manifest is named after the deck; find it rather than guess.
       const { readdir } = await import("node:fs/promises");
-      const directory = path.join(workspace, "artifacts", "intermediate_files");
+      const directory = outputLayout(path.join(workspace, "manifest.pptx")).artifacts;
       const found = (await readdir(directory)).find((file) => file.endsWith(".manifest.json"))!;
       return readFile(path.join(directory, found), "utf8");
     })) as { createdAt: string };

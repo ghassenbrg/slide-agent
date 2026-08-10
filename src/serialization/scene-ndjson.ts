@@ -1,6 +1,7 @@
 import type {
   CanvasElementSpec,
   DeckManifest,
+  DeckSymbol,
   ElementRecord,
   PresentationBrief,
   PresentationOutline,
@@ -69,7 +70,17 @@ export function serializeSceneNdjson(outline: PresentationOutline, manifest?: De
     ...(outline.completeness ? { completeness: outline.completeness } : {}),
     ...(manifest ? { width: manifest.width, height: manifest.height } : {}),
     ...(outline.creativeDirection ? { creativeDirection: outline.creativeDirection } : {}),
+    ...(outline.exploration ? { exploration: outline.exploration } : {}),
+    ...(outline.sequencePlan?.length ? { sequencePlan: outline.sequencePlan } : {}),
+    ...(outline.claims?.length ? { claims: outline.claims } : {}),
+    ...(outline.sourceLedger?.length ? { sourceLedger: outline.sourceLedger } : {}),
+    ...(outline.hostCapabilities ? { hostCapabilities: outline.hostCapabilities } : {}),
   }];
+  // Symbols come before the slides that place them, so a reader can resolve an
+  // instance without a second pass.
+  for (const symbol of outline.symbols ?? []) {
+    records.push({ kind: "symbol", ...symbol });
+  }
   outline.slides.forEach((slide, index) => {
     const number = index + 1;
     records.push(slideRecord(slide, number));
@@ -119,7 +130,7 @@ function canvasElement(record: JsonRecord, line: number): CanvasElementSpec {
   try {
     // Scene elements go through the same contract as an inline canvas, so a
     // scene file cannot smuggle in geometry an outline would have rejected.
-    return parseSceneElement(record) as CanvasElementSpec;
+    return parseSceneElement(record) as unknown as CanvasElementSpec;
   } catch (error) {
     if (error instanceof ContractValidationError) {
       throw new Error(`Scene line ${line} (${String(record.kind)} ${String(record.id ?? "?")}): ${error.issues.map((issue) => `${issue.path || "<root>"} ${issue.message}`).join("; ")}`);
@@ -188,10 +199,23 @@ export function parseSceneNdjson(text: string): PresentationOutline {
     if (Array.isArray(record.sources)) slide.sources = record.sources.filter((value): value is SourceCitation => Boolean(value) && typeof value === "object") as SourceCitation[];
   }
 
+  const symbols = records
+    .filter((record) => record.kind === "symbol")
+    .map((record) => {
+      const { kind: _kind, ...rest } = record;
+      return rest as unknown as DeckSymbol;
+    });
+
   const brief = deck.brief as unknown as PresentationBrief;
   return {
     brief: { ...brief, slideCount: slides.length },
     narrative: deck.narrative,
+    ...(symbols.length ? { symbols } : {}),
+    ...(deck.exploration && typeof deck.exploration === "object" ? { exploration: deck.exploration } : {}),
+    ...(Array.isArray(deck.sequencePlan) ? { sequencePlan: deck.sequencePlan } : {}),
+    ...(Array.isArray(deck.claims) ? { claims: deck.claims } : {}),
+    ...(Array.isArray(deck.sourceLedger) ? { sourceLedger: deck.sourceLedger } : {}),
+    ...(deck.hostCapabilities && typeof deck.hostCapabilities === "object" ? { hostCapabilities: deck.hostCapabilities } : {}),
     ...(deck.completeness && typeof deck.completeness === "object" && !Array.isArray(deck.completeness)
       ? { completeness: deck.completeness }
       : {}),

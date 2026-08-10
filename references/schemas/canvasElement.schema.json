@@ -33,6 +33,28 @@
           "description": "Semantic role, e.g. title, body, caption, decorative.",
           "type": "string"
         },
+        "styleRef": {
+          "description": "Named styles from creativeDirection.visualSystem.styles, applied in order. This element's own `style` is the final override.",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "layer": {
+          "description": "A named layer, for review and z-order grouping. Never a visual style.",
+          "type": "string"
+        },
+        "allowBleed": {
+          "description": "This element is meant to run past the slide edge. Without it, anything outside the slide is reported as a defect.",
+          "type": "boolean"
+        },
         "intentionalOverlap": {
           "description": "Marks a deliberate collision so QA does not report it.",
           "type": "boolean"
@@ -119,38 +141,185 @@
           "type": "object",
           "properties": {
             "fontSize": {
-              "type": "number",
-              "exclusiveMinimum": 0
+              "anyOf": [
+                {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "$var": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "A name from creativeDirection.visualSystem.variables."
+                    }
+                  },
+                  "required": [
+                    "$var"
+                  ],
+                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                }
+              ]
             },
             "fontFace": {
-              "type": "string"
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "$var": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "A name from creativeDirection.visualSystem.variables."
+                    }
+                  },
+                  "required": [
+                    "$var"
+                  ],
+                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                }
+              ]
             },
             "color": {
-              "type": "string",
-              "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
-              "description": "Hex color, with or without a leading #."
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+                  "description": "Hex color, with or without a leading #."
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "$var": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "A name from creativeDirection.visualSystem.variables."
+                    }
+                  },
+                  "required": [
+                    "$var"
+                  ],
+                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                }
+              ]
             },
             "bold": {
-              "type": "boolean"
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "$var": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "A name from creativeDirection.visualSystem.variables."
+                    }
+                  },
+                  "required": [
+                    "$var"
+                  ],
+                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                }
+              ]
             },
             "italic": {
-              "type": "boolean"
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "$var": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "A name from creativeDirection.visualSystem.variables."
+                    }
+                  },
+                  "required": [
+                    "$var"
+                  ],
+                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                }
+              ]
+            },
+            "underline": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "$var": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "A name from creativeDirection.visualSystem.variables."
+                    }
+                  },
+                  "required": [
+                    "$var"
+                  ],
+                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                }
+              ]
             },
             "align": {
-              "type": "string",
-              "enum": [
-                "left",
-                "center",
-                "right",
-                "justify"
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "left",
+                    "center",
+                    "right",
+                    "justify"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "$var": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "A name from creativeDirection.visualSystem.variables."
+                    }
+                  },
+                  "required": [
+                    "$var"
+                  ],
+                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                }
               ]
             },
             "valign": {
-              "type": "string",
-              "enum": [
-                "top",
-                "middle",
-                "bottom"
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "top",
+                    "middle",
+                    "bottom"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "$var": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "A name from creativeDirection.visualSystem.variables."
+                    }
+                  },
+                  "required": [
+                    "$var"
+                  ],
+                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                }
               ]
             },
             "margin": {
@@ -174,38 +343,323 @@
                       "type": "number"
                     }
                   ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "$var": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "A name from creativeDirection.visualSystem.variables."
+                    }
+                  },
+                  "required": [
+                    "$var"
+                  ],
+                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
                 }
               ]
             },
             "fit": {
-              "type": "string",
-              "enum": [
-                "none",
-                "shrink",
-                "resize"
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "none",
+                    "shrink",
+                    "resize"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "$var": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "A name from creativeDirection.visualSystem.variables."
+                    }
+                  },
+                  "required": [
+                    "$var"
+                  ],
+                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                }
               ]
             },
             "fill": {
-              "type": "string",
-              "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
-              "description": "Hex color, with or without a leading #."
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+                  "description": "Hex color, with or without a leading #."
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "$var": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "A name from creativeDirection.visualSystem.variables."
+                    }
+                  },
+                  "required": [
+                    "$var"
+                  ],
+                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                }
+              ]
             },
             "transparency": {
-              "type": "number",
-              "minimum": 0,
-              "maximum": 100
+              "anyOf": [
+                {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "$var": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "A name from creativeDirection.visualSystem.variables."
+                    }
+                  },
+                  "required": [
+                    "$var"
+                  ],
+                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                }
+              ]
             },
             "lineColor": {
-              "type": "string",
-              "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
-              "description": "Hex color, with or without a leading #."
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+                  "description": "Hex color, with or without a leading #."
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "$var": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "A name from creativeDirection.visualSystem.variables."
+                    }
+                  },
+                  "required": [
+                    "$var"
+                  ],
+                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                }
+              ]
             },
             "lineWidth": {
-              "type": "number",
-              "minimum": 0
+              "anyOf": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "$var": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "A name from creativeDirection.visualSystem.variables."
+                    }
+                  },
+                  "required": [
+                    "$var"
+                  ],
+                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                }
+              ]
             },
             "rotate": {
-              "type": "number"
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "$var": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "A name from creativeDirection.visualSystem.variables."
+                    }
+                  },
+                  "required": [
+                    "$var"
+                  ],
+                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                }
+              ]
+            },
+            "lineSpacingMultiple": {
+              "description": "Line spacing as a multiple of the font size, e.g. 1.35.",
+              "anyOf": [
+                {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "$var": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "A name from creativeDirection.visualSystem.variables."
+                    }
+                  },
+                  "required": [
+                    "$var"
+                  ],
+                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                }
+              ]
+            },
+            "lineSpacing": {
+              "description": "Absolute line spacing in points. Wins over lineSpacingMultiple.",
+              "anyOf": [
+                {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "$var": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "A name from creativeDirection.visualSystem.variables."
+                    }
+                  },
+                  "required": [
+                    "$var"
+                  ],
+                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                }
+              ]
+            },
+            "charSpacing": {
+              "description": "Tracking in points; negative tightens.",
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "$var": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "A name from creativeDirection.visualSystem.variables."
+                    }
+                  },
+                  "required": [
+                    "$var"
+                  ],
+                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                }
+              ]
+            },
+            "indent": {
+              "description": "First-line indent in inches.",
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "$var": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "A name from creativeDirection.visualSystem.variables."
+                    }
+                  },
+                  "required": [
+                    "$var"
+                  ],
+                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                }
+              ]
+            },
+            "columns": {
+              "description": "Newspaper-style columns inside this one text box.",
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 16
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "$var": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "A name from creativeDirection.visualSystem.variables."
+                    }
+                  },
+                  "required": [
+                    "$var"
+                  ],
+                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                }
+              ]
+            },
+            "noBreak": {
+              "description": "Replaces spaces with non-breaking spaces so the string never wraps mid-phrase.",
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "$var": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "A name from creativeDirection.visualSystem.variables."
+                    }
+                  },
+                  "required": [
+                    "$var"
+                  ],
+                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                }
+              ]
+            },
+            "bullet": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "bullet",
+                        "number"
+                      ]
+                    },
+                    "code": {
+                      "description": "A Unicode code point in hex, e.g. \"2022\".",
+                      "type": "string"
+                    },
+                    "indent": {
+                      "type": "number"
+                    }
+                  },
+                  "additionalProperties": {}
+                }
+              ]
             },
             "options": {
               "type": "object",
@@ -259,6 +713,28 @@
         "role": {
           "description": "Semantic role, e.g. title, body, caption, decorative.",
           "type": "string"
+        },
+        "styleRef": {
+          "description": "Named styles from creativeDirection.visualSystem.styles, applied in order. This element's own `style` is the final override.",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "layer": {
+          "description": "A named layer, for review and z-order grouping. Never a visual style.",
+          "type": "string"
+        },
+        "allowBleed": {
+          "description": "This element is meant to run past the slide edge. Without it, anything outside the slide is reported as a defect.",
+          "type": "boolean"
         },
         "intentionalOverlap": {
           "description": "Marks a deliberate collision so QA does not report it.",
@@ -325,26 +801,116 @@
           "type": "object",
           "properties": {
             "fill": {
-              "type": "string",
-              "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
-              "description": "Hex color, with or without a leading #."
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+                  "description": "Hex color, with or without a leading #."
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "$var": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "A name from creativeDirection.visualSystem.variables."
+                    }
+                  },
+                  "required": [
+                    "$var"
+                  ],
+                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                }
+              ]
             },
             "transparency": {
-              "type": "number",
-              "minimum": 0,
-              "maximum": 100
+              "anyOf": [
+                {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "$var": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "A name from creativeDirection.visualSystem.variables."
+                    }
+                  },
+                  "required": [
+                    "$var"
+                  ],
+                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                }
+              ]
             },
             "lineColor": {
-              "type": "string",
-              "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
-              "description": "Hex color, with or without a leading #."
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+                  "description": "Hex color, with or without a leading #."
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "$var": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "A name from creativeDirection.visualSystem.variables."
+                    }
+                  },
+                  "required": [
+                    "$var"
+                  ],
+                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                }
+              ]
             },
             "lineWidth": {
-              "type": "number",
-              "minimum": 0
+              "anyOf": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "$var": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "A name from creativeDirection.visualSystem.variables."
+                    }
+                  },
+                  "required": [
+                    "$var"
+                  ],
+                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                }
+              ]
             },
             "rotate": {
-              "type": "number"
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "$var": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "A name from creativeDirection.visualSystem.variables."
+                    }
+                  },
+                  "required": [
+                    "$var"
+                  ],
+                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                }
+              ]
             },
             "options": {
               "type": "object",
@@ -399,6 +965,28 @@
           "description": "Semantic role, e.g. title, body, caption, decorative.",
           "type": "string"
         },
+        "styleRef": {
+          "description": "Named styles from creativeDirection.visualSystem.styles, applied in order. This element's own `style` is the final override.",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "layer": {
+          "description": "A named layer, for review and z-order grouping. Never a visual style.",
+          "type": "string"
+        },
+        "allowBleed": {
+          "description": "This element is meant to run past the slide edge. Without it, anything outside the slide is reported as a defect.",
+          "type": "boolean"
+        },
         "intentionalOverlap": {
           "description": "Marks a deliberate collision so QA does not report it.",
           "type": "boolean"
@@ -417,22 +1005,112 @@
           "type": "object",
           "properties": {
             "color": {
-              "type": "string",
-              "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
-              "description": "Hex color, with or without a leading #."
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+                  "description": "Hex color, with or without a leading #."
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "$var": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "A name from creativeDirection.visualSystem.variables."
+                    }
+                  },
+                  "required": [
+                    "$var"
+                  ],
+                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                }
+              ]
             },
             "width": {
-              "type": "number",
-              "minimum": 0
+              "anyOf": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "$var": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "A name from creativeDirection.visualSystem.variables."
+                    }
+                  },
+                  "required": [
+                    "$var"
+                  ],
+                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                }
+              ]
             },
             "arrow": {
-              "type": "boolean"
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "$var": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "A name from creativeDirection.visualSystem.variables."
+                    }
+                  },
+                  "required": [
+                    "$var"
+                  ],
+                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                }
+              ]
             },
             "beginArrow": {
-              "type": "boolean"
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "$var": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "A name from creativeDirection.visualSystem.variables."
+                    }
+                  },
+                  "required": [
+                    "$var"
+                  ],
+                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                }
+              ]
             },
             "dashed": {
-              "type": "boolean"
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "$var": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "A name from creativeDirection.visualSystem.variables."
+                    }
+                  },
+                  "required": [
+                    "$var"
+                  ],
+                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                }
+              ]
             },
             "options": {
               "type": "object",
@@ -488,6 +1166,28 @@
           "description": "Semantic role, e.g. title, body, caption, decorative.",
           "type": "string"
         },
+        "styleRef": {
+          "description": "Named styles from creativeDirection.visualSystem.styles, applied in order. This element's own `style` is the final override.",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "layer": {
+          "description": "A named layer, for review and z-order grouping. Never a visual style.",
+          "type": "string"
+        },
+        "allowBleed": {
+          "description": "This element is meant to run past the slide edge. Without it, anything outside the slide is reported as a defect.",
+          "type": "boolean"
+        },
         "intentionalOverlap": {
           "description": "Marks a deliberate collision so QA does not report it.",
           "type": "boolean"
@@ -538,6 +1238,253 @@
           },
           "additionalProperties": {},
           "description": "Attribution and origin. Written into the speaker notes under [Credits]."
+        },
+        "vector": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Path to the .svg. It is packaged with the deck and declared in the manifest."
+            },
+            "editable": {
+              "anyOf": [
+                {
+                  "type": "boolean",
+                  "const": false
+                },
+                {
+                  "type": "boolean",
+                  "const": true
+                },
+                {
+                  "type": "string",
+                  "const": "partial"
+                }
+              ],
+              "description": "false: scalable artwork only. \"partial\": some parts are separable. true: fully shape-editable after ungrouping."
+            },
+            "source": {
+              "type": "string"
+            },
+            "license": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path",
+            "editable"
+          ],
+          "additionalProperties": {},
+          "description": "Scalable artwork carried with the raster image. Declares its own editability."
+        },
+        "treatment": {
+          "type": "object",
+          "properties": {
+            "focalPoint": {
+              "description": "Where the subject sits, 0–1 in each axis. Drives `cover` cropping so the subject survives the crop.",
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "y": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              },
+              "required": [
+                "x",
+                "y"
+              ]
+            },
+            "crop": {
+              "description": "Explicit crop as a fraction of the source, per edge.",
+              "type": "object",
+              "properties": {
+                "left": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "right": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "top": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "bottom": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              },
+              "additionalProperties": {}
+            },
+            "maskShape": {
+              "description": "A PowerPoint shape name used as the picture's outline, e.g. \"ellipse\".",
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "$var": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "A name from creativeDirection.visualSystem.variables."
+                    }
+                  },
+                  "required": [
+                    "$var"
+                  ],
+                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                }
+              ]
+            },
+            "tint": {
+              "type": "object",
+              "properties": {
+                "color": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+                      "description": "Hex color, with or without a leading #."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "$var": {
+                          "type": "string",
+                          "minLength": 1,
+                          "description": "A name from creativeDirection.visualSystem.variables."
+                        }
+                      },
+                      "required": [
+                        "$var"
+                      ],
+                      "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                    }
+                  ]
+                },
+                "amount": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "$var": {
+                          "type": "string",
+                          "minLength": 1,
+                          "description": "A name from creativeDirection.visualSystem.variables."
+                        }
+                      },
+                      "required": [
+                        "$var"
+                      ],
+                      "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "color"
+              ],
+              "additionalProperties": {}
+            },
+            "duotone": {
+              "type": "object",
+              "properties": {
+                "shadow": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+                      "description": "Hex color, with or without a leading #."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "$var": {
+                          "type": "string",
+                          "minLength": 1,
+                          "description": "A name from creativeDirection.visualSystem.variables."
+                        }
+                      },
+                      "required": [
+                        "$var"
+                      ],
+                      "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                    }
+                  ]
+                },
+                "highlight": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+                      "description": "Hex color, with or without a leading #."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "$var": {
+                          "type": "string",
+                          "minLength": 1,
+                          "description": "A name from creativeDirection.visualSystem.variables."
+                        }
+                      },
+                      "required": [
+                        "$var"
+                      ],
+                      "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "shadow",
+                "highlight"
+              ],
+              "additionalProperties": {}
+            },
+            "grayscale": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "$var": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "A name from creativeDirection.visualSystem.variables."
+                    }
+                  },
+                  "required": [
+                    "$var"
+                  ],
+                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                }
+              ]
+            }
+          },
+          "additionalProperties": {},
+          "description": "Deterministic, opt-in picture treatment. Applied on write; the source file is never modified."
         },
         "link": {
           "anyOf": [
@@ -594,12 +1541,48 @@
           "type": "object",
           "properties": {
             "rotate": {
-              "type": "number"
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "$var": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "A name from creativeDirection.visualSystem.variables."
+                    }
+                  },
+                  "required": [
+                    "$var"
+                  ],
+                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                }
+              ]
             },
             "transparency": {
-              "type": "number",
-              "minimum": 0,
-              "maximum": 100
+              "anyOf": [
+                {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "$var": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "A name from creativeDirection.visualSystem.variables."
+                    }
+                  },
+                  "required": [
+                    "$var"
+                  ],
+                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                }
+              ]
             },
             "options": {
               "type": "object",
@@ -655,6 +1638,28 @@
         "role": {
           "description": "Semantic role, e.g. title, body, caption, decorative.",
           "type": "string"
+        },
+        "styleRef": {
+          "description": "Named styles from creativeDirection.visualSystem.styles, applied in order. This element's own `style` is the final override.",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "layer": {
+          "description": "A named layer, for review and z-order grouping. Never a visual style.",
+          "type": "string"
+        },
+        "allowBleed": {
+          "description": "This element is meant to run past the slide edge. Without it, anything outside the slide is reported as a defect.",
+          "type": "boolean"
         },
         "intentionalOverlap": {
           "description": "Marks a deliberate collision so QA does not report it.",
@@ -768,6 +1773,28 @@
           "description": "Semantic role, e.g. title, body, caption, decorative.",
           "type": "string"
         },
+        "styleRef": {
+          "description": "Named styles from creativeDirection.visualSystem.styles, applied in order. This element's own `style` is the final override.",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "layer": {
+          "description": "A named layer, for review and z-order grouping. Never a visual style.",
+          "type": "string"
+        },
+        "allowBleed": {
+          "description": "This element is meant to run past the slide edge. Without it, anything outside the slide is reported as a defect.",
+          "type": "boolean"
+        },
         "intentionalOverlap": {
           "description": "Marks a deliberate collision so QA does not report it.",
           "type": "boolean"
@@ -854,12 +1881,48 @@
           "type": "object",
           "properties": {
             "colors": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
-                "description": "Hex color, with or without a leading #."
-              }
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+                        "description": "Hex color, with or without a leading #."
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "$var": {
+                            "type": "string",
+                            "minLength": 1,
+                            "description": "A name from creativeDirection.visualSystem.variables."
+                          }
+                        },
+                        "required": [
+                          "$var"
+                        ],
+                        "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "$var": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "A name from creativeDirection.visualSystem.variables."
+                    }
+                  },
+                  "required": [
+                    "$var"
+                  ],
+                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                }
+              ]
             },
             "options": {
               "type": "object",
@@ -914,6 +1977,28 @@
         "role": {
           "description": "Semantic role, e.g. title, body, caption, decorative.",
           "type": "string"
+        },
+        "styleRef": {
+          "description": "Named styles from creativeDirection.visualSystem.styles, applied in order. This element's own `style` is the final override.",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "layer": {
+          "description": "A named layer, for review and z-order grouping. Never a visual style.",
+          "type": "string"
+        },
+        "allowBleed": {
+          "description": "This element is meant to run past the slide edge. Without it, anything outside the slide is reported as a defect.",
+          "type": "boolean"
         },
         "intentionalOverlap": {
           "description": "Marks a deliberate collision so QA does not report it.",
@@ -1000,6 +2085,28 @@
           "description": "Semantic role, e.g. title, body, caption, decorative.",
           "type": "string"
         },
+        "styleRef": {
+          "description": "Named styles from creativeDirection.visualSystem.styles, applied in order. This element's own `style` is the final override.",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "layer": {
+          "description": "A named layer, for review and z-order grouping. Never a visual style.",
+          "type": "string"
+        },
+        "allowBleed": {
+          "description": "This element is meant to run past the slide edge. Without it, anything outside the slide is reported as a defect.",
+          "type": "boolean"
+        },
         "intentionalOverlap": {
           "description": "Marks a deliberate collision so QA does not report it.",
           "type": "boolean"
@@ -1042,6 +2149,252 @@
         "spec"
       ],
       "description": "A diagram expressed as a relationship rather than as hand-placed shapes."
+    },
+    {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Unique within the slide; used by validation and revision."
+        },
+        "x": {
+          "type": "number",
+          "description": "Inches on the slide canvas."
+        },
+        "y": {
+          "type": "number",
+          "description": "Inches on the slide canvas."
+        },
+        "w": {
+          "type": "number",
+          "description": "Inches on the slide canvas."
+        },
+        "h": {
+          "type": "number",
+          "description": "Inches on the slide canvas."
+        },
+        "zIndex": {
+          "description": "Paint order. Lower values sit behind.",
+          "type": "number"
+        },
+        "role": {
+          "description": "Semantic role, e.g. title, body, caption, decorative.",
+          "type": "string"
+        },
+        "styleRef": {
+          "description": "Named styles from creativeDirection.visualSystem.styles, applied in order. This element's own `style` is the final override.",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "layer": {
+          "description": "A named layer, for review and z-order grouping. Never a visual style.",
+          "type": "string"
+        },
+        "allowBleed": {
+          "description": "This element is meant to run past the slide edge. Without it, anything outside the slide is reported as a defect.",
+          "type": "boolean"
+        },
+        "intentionalOverlap": {
+          "description": "Marks a deliberate collision so QA does not report it.",
+          "type": "boolean"
+        },
+        "allowOverlapWith": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "type": {
+          "type": "string",
+          "const": "group"
+        },
+        "children": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "$ref": "#"
+          },
+          "description": "Child elements. Their x/y are offsets from the group's x/y, in inches."
+        },
+        "scale": {
+          "description": "Uniform scale applied to every child offset and size. Defaults to 1.",
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "alt": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "x",
+        "y",
+        "w",
+        "h",
+        "type",
+        "children"
+      ]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Unique within the slide; used by validation and revision."
+        },
+        "x": {
+          "type": "number",
+          "description": "Inches on the slide canvas."
+        },
+        "y": {
+          "type": "number",
+          "description": "Inches on the slide canvas."
+        },
+        "w": {
+          "type": "number",
+          "description": "Inches on the slide canvas."
+        },
+        "h": {
+          "type": "number",
+          "description": "Inches on the slide canvas."
+        },
+        "zIndex": {
+          "description": "Paint order. Lower values sit behind.",
+          "type": "number"
+        },
+        "role": {
+          "description": "Semantic role, e.g. title, body, caption, decorative.",
+          "type": "string"
+        },
+        "styleRef": {
+          "description": "Named styles from creativeDirection.visualSystem.styles, applied in order. This element's own `style` is the final override.",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "layer": {
+          "description": "A named layer, for review and z-order grouping. Never a visual style.",
+          "type": "string"
+        },
+        "allowBleed": {
+          "description": "This element is meant to run past the slide edge. Without it, anything outside the slide is reported as a defect.",
+          "type": "boolean"
+        },
+        "intentionalOverlap": {
+          "description": "Marks a deliberate collision so QA does not report it.",
+          "type": "boolean"
+        },
+        "allowOverlapWith": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "type": {
+          "type": "string",
+          "const": "symbol-instance"
+        },
+        "symbol": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The id of a symbol declared in the scene's symbol records."
+        },
+        "scale": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "overrides": {
+          "type": "object",
+          "properties": {
+            "text": {
+              "description": "Child element id → replacement text.",
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "color": {
+              "description": "Child element id → replacement colour.",
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+                    "description": "Hex color, with or without a leading #."
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "$var": {
+                        "type": "string",
+                        "minLength": 1,
+                        "description": "A name from creativeDirection.visualSystem.variables."
+                      }
+                    },
+                    "required": [
+                      "$var"
+                    ],
+                    "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                  }
+                ]
+              }
+            },
+            "style": {
+              "description": "Child element id → style overrides.",
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {}
+              }
+            }
+          },
+          "additionalProperties": {}
+        },
+        "alt": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "x",
+        "y",
+        "w",
+        "h",
+        "type",
+        "symbol"
+      ]
     }
   ]
 }

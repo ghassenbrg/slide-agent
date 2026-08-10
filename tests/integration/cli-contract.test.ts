@@ -2,6 +2,8 @@ import { execFile } from "node:child_process";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
+
+import { outputLayout } from "../../src/output/output-layout.js";
 import { promisify } from "node:util";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
@@ -153,7 +155,7 @@ describe("CLI contract", () => {
 
   it("round-trips a deck through its own scene blueprint", async () => {
     const source = path.join(workspace, "deck.pptx");
-    const scene = path.join(workspace, "artifacts", "intermediate_files", "deck.inspect.ndjson");
+    const scene = outputLayout(path.join(workspace, "deck.pptx")).inspect;
     const rebuilt = path.join(workspace, "rebuilt.pptx");
 
     const result = await run(["create", "--scene", scene, "--output", rebuilt]);

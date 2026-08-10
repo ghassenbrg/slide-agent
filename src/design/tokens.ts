@@ -12,7 +12,13 @@ import type { ColorsConfig, CreativeDirection, FontsConfig, SlideAgentConfig } f
  */
 
 export type Density = "sparse" | "balanced" | "dense";
-export type Geometry = "sharp" | "soft" | "organic";
+/**
+ * `authored` means the author said nothing about shape language, so neither
+ * does Slide Agent. It is the default: an omitted field is not a request for
+ * the engine's taste, and the previous silent fall-through to `sharp` gave
+ * every unspecified deck a corner treatment nobody asked for.
+ */
+export type Geometry = "sharp" | "soft" | "organic" | "authored";
 
 export interface TypeScale {
   display: number;
@@ -53,7 +59,7 @@ const DENSITY_WORDS: Record<Density, string[]> = {
   balanced: [],
 };
 
-const GEOMETRY_WORDS: Record<Geometry, string[]> = {
+const GEOMETRY_WORDS: Record<Exclude<Geometry, "authored">, string[]> = {
   sharp: ["sharp", "hard", "precise", "brutal", "angular", "editorial", "engineered", "grid"],
   organic: ["organic", "hand", "natural", "botanical", "sketch", "irregular", "papercut", "torn"],
   soft: ["soft", "rounded", "friendly", "warm", "approachable", "gentle"],
@@ -65,12 +71,14 @@ function matches(haystack: string, words: string[]): boolean {
 
 function inferDensity(direction: CreativeDirection | undefined): Density {
   const declared = direction?.density;
-  if (declared === "sparse" || declared === "balanced" || declared === "dense") return declared;
+  if (declared === "sparse" || declared === "balanced" || declared === "dense") return declared as Density;
   const text = [
     ...(direction?.mood ?? []),
     direction?.concept,
     direction?.visualLanguage,
     direction?.textureLanguage,
+    direction?.spatialRhythm,
+    direction?.materialLanguage,
     ...(direction?.compositionPrinciples ?? []),
   ].filter(Boolean).join(" ").toLowerCase();
   if (matches(text, DENSITY_WORDS.dense)) return "dense";
@@ -78,11 +86,19 @@ function inferDensity(direction: CreativeDirection | undefined): Density {
   return "balanced";
 }
 
+/**
+ * The author's shape language, or `authored` when they did not state one.
+ *
+ * The legacy `geometry` enum still wins when a 0.9 host supplies it, and the
+ * prose fields are still read for a strong signal. What changed in 0.10 is the
+ * end of the chain: silence now stays silence instead of becoming `sharp`.
+ */
 function inferGeometry(direction: CreativeDirection | undefined): Geometry {
   const declared = direction?.geometry;
-  if (declared === "sharp" || declared === "soft" || declared === "organic") return declared;
+  if (declared === "sharp" || declared === "soft" || declared === "organic") return declared as Geometry;
   const text = [
     ...(direction?.mood ?? []),
+    direction?.geometryLanguage,
     direction?.shapeLanguage,
     direction?.visualLanguage,
     direction?.concept,
@@ -90,7 +106,7 @@ function inferGeometry(direction: CreativeDirection | undefined): Geometry {
   if (matches(text, GEOMETRY_WORDS.organic)) return "organic";
   if (matches(text, GEOMETRY_WORDS.sharp)) return "sharp";
   if (matches(text, GEOMETRY_WORDS.soft)) return "soft";
-  return "sharp";
+  return "authored";
 }
 
 /** A modular scale anchored on the configured legibility minimums. */
@@ -144,8 +160,11 @@ export function resolveTokens(config: SlideAgentConfig, direction?: CreativeDire
   const shortestEdge = Math.min(config.dimensions.width, config.dimensions.height);
   const space = spaceScale(density, shortestEdge);
 
-  const softRadius = geometry === "soft" ? 0.14 : geometry === "organic" ? 0.1 : 0.04;
-  const suppressRadius = geometry === "sharp" && avoids(avoid, "round", "radius", "soft corner");
+  // `authored` contributes no radius at all: the deck did not ask for a corner
+  // language, so the fallback layouts do not invent one.
+  const softRadius = geometry === "soft" ? 0.14 : geometry === "organic" ? 0.1 : geometry === "sharp" ? 0.04 : 0;
+  const suppressRadius = (geometry === "sharp" || geometry === "authored")
+    && avoids(avoid, "round", "radius", "soft corner");
   const radius = {
     none: 0 as const,
     soft: suppressRadius || avoids(avoid, "rounded corner", "round corner") ? 0 : softRadius,

@@ -3,9 +3,15 @@ import { z } from "zod";
 import {
   canvasElementSchema,
   chartSpecSchema,
+  claimLedgerItemSchema,
   creativeDirectionSchema,
+  deckSymbolSchema,
+  deckVisualSystemSchema,
+  designExplorationSchema,
+  hostAuthoringCapabilitiesSchema,
   presentationBriefSchema,
   presentationOutlineSchema,
+  sequencePlanItemSchema,
   slideSpecSchema,
   tableSpecSchema,
 } from "./schemas.js";
@@ -15,7 +21,8 @@ import { CONTRACT_VERSION, SCENE_SCHEMA_ID } from "./version.js";
 export * from "./schemas.js";
 export * from "./scene.js";
 export * from "./guide.js";
-export { CONTRACT_VERSION, SCENE_SCHEMA_ID, supportsContractVersion } from "./version.js";
+export * from "./canvas-capabilities.js";
+export { CONTRACT_VERSION, SCENE_SCHEMA_ID, SUPPORTED_CONTRACT_VERSIONS, supportsContractVersion } from "./version.js";
 
 /** Every schema a host may need, addressable by name. */
 export const contractSchemas = {
@@ -24,6 +31,12 @@ export const contractSchemas = {
   slide: slideSpecSchema,
   canvasElement: canvasElementSchema,
   creativeDirection: creativeDirectionSchema,
+  visualSystem: deckVisualSystemSchema,
+  symbol: deckSymbolSchema,
+  exploration: designExplorationSchema,
+  sequencePlanItem: sequencePlanItemSchema,
+  claim: claimLedgerItemSchema,
+  hostCapabilities: hostAuthoringCapabilitiesSchema,
   chart: chartSpecSchema,
   table: tableSpecSchema,
   sceneRecord: sceneRecordSchema,

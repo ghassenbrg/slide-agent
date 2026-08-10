@@ -6,9 +6,21 @@ import type { Logger } from "../logging/logger.js";
 import { silentLogger } from "../logging/logger.js";
 import { outputLayout } from "../output/output-layout.js";
 import { PresentationRenderer } from "../rendering/renderer.js";
-import type { DeckManifest, SlideAgentConfig, ValidationIssue, ValidationReport } from "../types/index.js";
+import type {
+  ArtifactGraph,
+  DeckManifest,
+  RoundTripReport,
+  SlideAgentConfig,
+  ValidationIssue,
+  ValidationReport,
+  VisualReviewFinding,
+} from "../types/index.js";
 import { exists, fileSha256, writeJson } from "../utils/files.js";
 import type { QualityCheck } from "../extensions.js";
+import { extractRenderedText } from "../rendering/text-extraction.js";
+import { compareRenderedText } from "./fidelity.js";
+import { verifyArtifactGraph } from "../artifacts/package.js";
+import { computeVerdict } from "./readiness.js";
 import { AccessibilityValidator, type AccessibilityOptions } from "./accessibility.js";
 import { ManifestValidator } from "./manifest-validator.js";
 import { scoreDeck } from "./quality.js";
@@ -26,6 +38,24 @@ export interface ValidationOptions {
   accessibility?: AccessibilityOptions;
   /** Extra checks contributed by a host. */
   checks?: QualityCheck[];
+  /** Read the words back off the render and compare them with the deck. */
+  fidelity?: boolean;
+  /** Bind the report to the exact artifacts it describes. */
+  artifacts?: ArtifactGraph;
+  /** Result of rebuilding the emitted scene in a clean directory. */
+  roundTrip?: RoundTripReport;
+  /** Findings supplied by a host reviewer, folded into readiness. */
+  visualFindings?: VisualReviewFinding[];
+  /** Claim ids still marked `needs-review` in the deck's own ledger. */
+  unresolvedClaims?: string[];
+  /** Element ids the deck's claim ledger points at, so evidence means something. */
+  claimedElementIds?: Set<string>;
+  /**
+   * Re-check a previously written artifact graph against the files on disk.
+   * This is what makes a stale preview impossible to present as evidence on a
+   * standalone `validate` run, where nothing has just been rendered.
+   */
+  verifyArtifacts?: boolean;
 }
 
 
@@ -44,6 +74,13 @@ function withDeckFonts(config: SlideAgentConfig, manifest: DeckManifest): SlideA
     ...config,
     fonts: { ...config.fonts, supported: [...new Set([...config.fonts.supported, ...extra])] },
   };
+}
+
+/** Slides still carrying an unresolved `[bracketed instruction]`. */
+function placeholderSlideCount(manifest: DeckManifest): number {
+  return manifest.slides.filter((slide) =>
+    slide.elements.some((element) => /\[[^\]]{6,}\]/.test(element.text ?? "")),
+  ).length;
 }
 
 function summary(issues: ValidationIssue[]): ValidationReport["summary"] {
@@ -67,15 +104,42 @@ export class PresentationValidator {
    * `validate` run without ever trusting a stale or foreign manifest.
    */
   private async discoverManifest(input: string): Promise<DeckManifest | undefined> {
-    try {
-      const manifestPath = outputLayout(input).manifest;
-      if (!(await exists(manifestPath))) return undefined;
-      const manifest = JSON.parse(await readFile(manifestPath, "utf8")) as DeckManifest;
-      if (!manifest.packageSha256 || manifest.packageSha256 !== await fileSha256(input)) return undefined;
-      return manifest;
-    } catch {
-      return undefined;
+    const layout = outputLayout(input);
+    // The canonical path first, then where earlier versions wrote it: a
+    // package built by 0.10 must still validate under 0.11.
+    for (const manifestPath of [layout.manifest, layout.legacy.manifest]) {
+      try {
+        if (!(await exists(manifestPath))) continue;
+        const manifest = JSON.parse(await readFile(manifestPath, "utf8")) as DeckManifest;
+        if (!manifest.packageSha256 || manifest.packageSha256 !== await fileSha256(input)) continue;
+        return manifest;
+      } catch {
+        continue;
+      }
     }
+    return undefined;
+  }
+
+  /**
+   * The artifact graph a previous run recorded beside this deck, and only when
+   * it describes *this* package: a graph whose PPTX hash has moved on belongs
+   * to an earlier revision and proves nothing about this one.
+   */
+  private async discoverArtifactGraph(input: string): Promise<ArtifactGraph | undefined> {
+    const layout = outputLayout(input);
+    for (const reportPath of [layout.validation, layout.legacy.validation]) {
+      try {
+        if (!(await exists(reportPath))) continue;
+        const previous = JSON.parse(await readFile(reportPath, "utf8")) as ValidationReport;
+        const graph = previous.artifacts;
+        if (!graph) continue;
+        if (graph.pptx.sha256 !== await fileSha256(input)) continue;
+        return graph;
+      } catch {
+        continue;
+      }
+    }
+    return undefined;
   }
 
   public async validate(inputPath: string, options: ValidationOptions = {}): Promise<ValidationReport> {
@@ -125,6 +189,30 @@ export class PresentationValidator {
       }
     }
 
+    // A package built earlier records the hash of every artifact it produced.
+    // Re-checking those hashes is the difference between "a preview exists"
+    // and "this preview is of this deck".
+    let carriedArtifacts: ArtifactGraph | undefined;
+    if (options.verifyArtifacts !== false) {
+      const previous = await this.discoverArtifactGraph(input);
+      if (previous) {
+        carriedArtifacts = previous;
+        const problems = await verifyArtifactGraph(outputLayout(input).artifacts, previous);
+        for (const problem of problems) {
+          const stale = problem.problem === "changed";
+          issues.push({
+            code: stale ? "stale-preview" : "missing-preview",
+            severity: "error",
+            message: stale
+              ? `${problem.path} is not the file this deck's report describes: its content no longer matches the recorded hash. Re-render before presenting it as evidence.`
+              : `${problem.path} is named by this deck's report but is not on disk.`,
+            details: { path: problem.path, recorded: previous.pptx.sha256 },
+            fixable: false,
+          });
+        }
+      }
+    }
+
     let render: ValidationReport["render"] = { status: "skipped", previewFiles: [] };
     if (options.render) {
       try {
@@ -153,22 +241,76 @@ export class PresentationValidator {
         issues.push({ code: "render-failed", severity: "error", message, fixable: false });
       }
     }
+    // The render is the evidence. Reading the words back off it is the only
+    // check that can catch a title autofit shrank until its last word fell off.
+    let fidelity: ValidationReport["fidelity"];
+    if (options.fidelity !== false && render.status === "pass" && render.previewFiles.length > 0) {
+      const extracted = await extractRenderedText({
+        ...(render.pdfPath ? { pdfPath: render.pdfPath } : {}),
+        previewFiles: render.previewFiles,
+      });
+      const compared = compareRenderedText(manifest, extracted);
+      fidelity = compared.report;
+      issues.push(...compared.issues);
+      this.logger.info("validation.fidelity", "Compared the render against the deck", {
+        method: compared.report.method,
+        status: compared.report.status,
+      });
+    }
+
+    for (const finding of options.visualFindings ?? []) {
+      issues.push({
+        code: `visual-${finding.severity}`,
+        severity: finding.severity === "blocking" ? "error" : finding.severity === "note" ? "info" : "warning",
+        slide: finding.slide,
+        ...(finding.elementIds ? { elementIds: finding.elementIds } : {}),
+        message: `${finding.reviewer}: ${finding.observation} — ${finding.rationale} Target: ${finding.suggestedTarget}`,
+        fixable: false,
+      });
+    }
+
     const counts = summary(issues);
+    const heuristics = scoreDeck(manifest, deckConfig, issues, options.claimedElementIds ?? new Set());
+    const verdict = computeVerdict({
+      issues,
+      heuristics,
+      ...(fidelity ? { fidelity } : {}),
+      ...(options.roundTrip ? { roundTrip: options.roundTrip } : {}),
+      ...(options.visualFindings ? { visualFindings: options.visualFindings } : {}),
+      render,
+      ...(options.unresolvedClaims ? { unresolvedClaims: options.unresolvedClaims } : {}),
+      placeholderSlides: placeholderSlideCount(manifest),
+    });
+    // `status` stays for contract 0.9 readers and stays package-oriented, so a
+    // host that has not migrated sees the same kind of answer it always did.
     const status: ValidationReport["status"] = counts.errors > 0 ? "fail" : counts.warnings > 0 ? "warning" : "pass";
     const report: ValidationReport = {
       schemaVersion: "1.0",
       status,
+      packageStatus: verdict.packageStatus,
+      presentationReadiness: verdict.presentationReadiness,
+      readinessReasons: verdict.readinessReasons,
       presentation: input,
       checkedAt: new Date().toISOString(),
       slideCount: manifest.slides.length,
       summary: counts,
       iterations: options.iterations ?? 1,
       issues,
-      quality: scoreDeck(manifest, deckConfig, issues),
+      heuristics,
+      quality: heuristics,
+      ...(options.artifacts ?? carriedArtifacts ? { artifacts: (options.artifacts ?? carriedArtifacts)! } : {}),
+      ...(fidelity ? { fidelity } : {}),
+      ...(options.roundTrip ? { roundTrip: options.roundTrip } : {}),
+      ...(options.visualFindings?.length ? { visualFindings: options.visualFindings } : {}),
       render,
     };
     if (options.reportPath) await writeJson(options.reportPath, report);
-    this.logger.info("validation.complete", "Validated presentation", { status, ...counts });
+    this.logger.info("validation.complete", "Validated presentation", {
+      status,
+      packageStatus: verdict.packageStatus,
+      readiness: verdict.presentationReadiness,
+      ...counts,
+    });
     return report;
   }
 }

@@ -66,7 +66,11 @@ const productSlides: SlideSpec[] = [
       { id: "expand-node", type: "shape", shape: "ellipse", x: 9.82, y: 1.78, w: 0.78, h: 0.78, role: "diagram-node", style: { fill: "FF4B3E", lineWidth: 0 } },
       { id: "expand-index", type: "text", x: 9.12, y: 0.92, w: 1.2, h: 0.7, role: "decorative", text: "03", style: { fontFace: "Arial Black", fontSize: 48, color: "FFD6D1", bold: true } },
       { id: "expand-label", type: "text", x: 9.75, y: 2.82, w: 2.65, h: 0.85, role: "diagram-label", text: "EXPAND\nOnly after gates clear", style: { fontSize: 17, color: "151126", bold: true } },
-      { id: "horizon-note", type: "text", x: 0.72, y: 6.75, w: 3.0, h: 0.26, role: "caption", text: "WEEK 1                                      WEEK 12", style: { fontFace: "Aptos Mono", fontSize: 11, color: "5C546B" } },
+      // Two labels rather than one string padded with spaces: the padded
+      // version depended on the renderer keeping runs of spaces, and it did
+      // not fit its own box.
+      { id: "horizon-start", type: "text", x: 0.72, y: 6.75, w: 1.6, h: 0.26, role: "caption", text: "WEEK 1", style: { fontFace: "Aptos Mono", fontSize: 11, color: "5C546B" } },
+      { id: "horizon-end", type: "text", x: 9.9, y: 6.75, w: 1.9, h: 0.26, role: "caption", text: "WEEK 12", style: { fontFace: "Aptos Mono", fontSize: 11, color: "5C546B", align: "right" } },
     ],
   },
   {

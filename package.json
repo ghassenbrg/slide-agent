@@ -1,6 +1,6 @@
 {
   "name": "@slide-agent/core",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "description": "Portable AI-agent skill and TypeScript toolkit for creating, editing, rendering, and validating editable PowerPoint presentations.",
   "keywords": [
     "powerpoint",
@@ -47,6 +47,7 @@
   "files": [
     "CHANGELOG.md",
     "LICENSE",
+    "MIGRATION-0.10.md",
     "MIGRATION-0.9.md",
     "README.md",
     "SECURITY.md",
@@ -60,6 +61,10 @@
     "examples/prompts",
     "examples/requests",
     "examples/scenes",
+    "examples/showcase/*.json",
+    "examples/showcase/*.md",
+    "examples/showcase/*.ndjson",
+    "examples/showcase/assets",
     "images/icon.png",
     "install.cmd",
     "install.ps1",
@@ -110,7 +115,11 @@
     "test:coverage": "vitest run --coverage",
     "verify:consumer": "npm run build && npm pack --pack-destination .tmp && node scripts/verify-consumer-install.mjs .tmp",
     "docs": "tsx scripts/generate-docs.ts",
-    "docs:check": "tsx scripts/generate-docs.ts --check"
+    "docs:check": "tsx scripts/generate-docs.ts --check",
+    "examples:showcase": "tsx scripts/build-showcase.ts",
+    "examples:evaluate": "tsx scripts/evaluate-examples.ts",
+    "examples:evaluate:check": "tsx scripts/evaluate-examples.ts --check",
+    "examples:assets": "tsx scripts/generate-showcase-assets.ts"
   },
   "dependencies": {
     "@modelcontextprotocol/server": "^2.0.0",

@@ -33,6 +33,9 @@ function report(issues: ValidationIssue[]): ValidationReport {
   return {
     schemaVersion: "1.0",
     status: "fail",
+    packageStatus: "fail",
+    presentationReadiness: "not-ready",
+    readinessReasons: [],
     presentation: "test.pptx",
     checkedAt: new Date().toISOString(),
     slideCount: 2,

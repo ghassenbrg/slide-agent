@@ -4,6 +4,7 @@ import {
   CONTRACT_VERSION,
   ContractValidationError,
   SCENE_SCHEMA_ID,
+  SUPPORTED_CONTRACT_VERSIONS,
   allContractJsonSchemas,
   authoringGuide,
   contractDescriptor,
@@ -35,10 +36,12 @@ describe("contract descriptor", () => {
   it("publishes a version independent of the engine version", () => {
     expect(CONTRACT_VERSION).toMatch(/^\d+\.\d+$/);
     expect(supportsContractVersion(CONTRACT_VERSION)).toBe(true);
-    // A 0.x contract makes no compatibility promise across minor versions —
-    // that is what 0.x means — so a minor bump must read as incompatible.
+    // A 0.x contract makes no blanket compatibility promise across minors, so
+    // the accepted set is stated explicitly rather than inferred. 0.10 is
+    // additive over 0.9, so 0.9 hosts keep working during the transition.
+    for (const version of SUPPORTED_CONTRACT_VERSIONS) expect(supportsContractVersion(version)).toBe(true);
     const [major = 0, minor = 0] = CONTRACT_VERSION.split(".").map(Number);
-    expect(supportsContractVersion(`${major}.${minor + 1}`)).toBe(major !== 0);
+    expect(supportsContractVersion(`${major}.${minor + 1}`)).toBe(false);
     expect(supportsContractVersion(`${major + 1}.0`)).toBe(false);
   });
 
@@ -59,7 +62,8 @@ describe("contract descriptor", () => {
     // Assert the element types by name; a bare count silently drifts whenever a
     // new element type is added, which is the change most worth noticing.
     expect(variants.map((variant) => variant.properties?.type?.const).sort()).toEqual([
-      "chart", "connector", "diagram", "image", "native-chart", "shape", "table", "text",
+      "chart", "connector", "diagram", "group", "image",
+      "native-chart", "shape", "symbol-instance", "table", "text",
     ]);
   });
 });

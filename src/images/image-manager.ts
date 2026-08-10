@@ -141,7 +141,18 @@ export class ImageManager implements ImageResolver {
   /** Compatibility notes raised while resolving, for the caller to surface. */
   public readonly warnings: string[] = [];
 
-  public constructor(private readonly cacheDir: string, policy: RemoteAssetPolicy = { allow: false }) {
+  /**
+   * `baseDir` is what a relative path is relative *to*. A packaged scene
+   * references its assets as `assets/<sha256>.png` relative to its own
+   * directory, so the package rebuilds wherever it is moved to; without a base
+   * directory those paths would silently resolve against the process's working
+   * directory and the rebuild would fail on someone else's machine.
+   */
+  public constructor(
+    private readonly cacheDir: string,
+    policy: RemoteAssetPolicy = { allow: false },
+    private readonly baseDir?: string,
+  ) {
     this.policy = { ...DEFAULT_REMOTE_ASSET_POLICY, ...policy };
   }
 
@@ -150,7 +161,9 @@ export class ImageManager implements ImageResolver {
     if (/^[a-z][a-z0-9+.-]+:/i.test(source) && !path.isAbsolute(source) && !/^[a-z]:[\\/]/i.test(source)) {
       throw new SlideAgentError("UNSUPPORTED_ASSET_SCHEME", `Only local paths and http(s) URLs are supported: ${source}`, { source });
     }
-    const resolved = path.resolve(source);
+    const resolved = this.baseDir && !path.isAbsolute(source)
+      ? await this.locate(source)
+      : path.resolve(source);
     if (!(await exists(resolved))) {
       throw new SlideAgentError("IMAGE_NOT_FOUND", `Image does not exist: ${resolved}`, { source });
     }
@@ -169,6 +182,17 @@ export class ImageManager implements ImageResolver {
     const { warning } = assertEmbeddable(head, resolved);
     if (warning && !this.warnings.includes(warning)) this.warnings.push(warning);
     return resolved;
+  }
+
+  /**
+   * A relative path is tried against the package first and the working
+   * directory second, so a packaged deck keeps working while a hand-authored
+   * scene that uses paths relative to where it is run keeps working too.
+   */
+  private async locate(source: string): Promise<string> {
+    const inPackage = path.resolve(this.baseDir!, source);
+    if (await exists(inPackage)) return inPackage;
+    return path.resolve(source);
   }
 
   private async assertHostAllowed(url: URL): Promise<void> {
