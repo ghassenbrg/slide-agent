@@ -113,6 +113,7 @@
     "verify": "npm run typecheck && npm run docs:check && npm test && npm run build",
     "prepack": "npm run build",
     "test:coverage": "vitest run --coverage",
+    "test:portable": "node scripts/test-portable.mjs",
     "verify:consumer": "npm run build && npm pack --pack-destination .tmp && node scripts/verify-consumer-install.mjs .tmp",
     "docs": "tsx scripts/generate-docs.ts",
     "docs:check": "tsx scripts/generate-docs.ts --check",

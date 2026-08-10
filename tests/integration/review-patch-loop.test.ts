@@ -207,7 +207,9 @@ describe("portable packages", () => {
     expect(emitted).toMatch(/"path":"assets\/[0-9a-f]{64}\.png"/);
     // The author's original reference survives as provenance, which is where a
     // credit line has to live once the bytes have been renamed by their hash.
-    expect(emitted).toContain(`"source":"${path.join(assets, "strata-face.png")}"`);
+    // The scene is JSON, so the expected form is the *encoded* path: on Windows
+    // every separator in it comes back doubled.
+    expect(emitted).toContain(`"source":${JSON.stringify(path.join(assets, "strata-face.png"))}`);
 
     // Move the package somewhere else and delete both the original deck and
     // the source assets: this is the recipient's situation.
