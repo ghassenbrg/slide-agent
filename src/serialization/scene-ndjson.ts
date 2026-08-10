@@ -27,7 +27,15 @@ function elementKind(element: CanvasElementSpec): string {
 
 function elementRecord(element: CanvasElementSpec, slide: number): JsonRecord {
   const { type: _type, x, y, w, h, ...rest } = element;
-  return { kind: elementKind(element), slide, bbox: [x, y, w, h], ...rest };
+  // An anchored connector has no frame to emit; writing `[null, null, …]` here
+  // would produce a scene the parser refuses to read back.
+  const framed = [x, y, w, h].every((value) => typeof value === "number");
+  return {
+    kind: elementKind(element),
+    slide,
+    ...(framed ? { bbox: [x, y, w, h] } : {}),
+    ...rest,
+  };
 }
 
 function inspectionRecord(element: ElementRecord, slide: number): JsonRecord {
@@ -57,6 +65,7 @@ function slideRecord(spec: SlideSpec, slide: number): JsonRecord {
     ...(spec.communication ? { communication: spec.communication } : {}),
     ...(spec.designIntent ? { designIntent: spec.designIntent } : {}),
     ...(spec.composition ? { composition: spec.composition } : {}),
+    ...(spec.chrome !== undefined ? { chrome: spec.chrome } : {}),
   };
 }
 
@@ -68,6 +77,7 @@ export function serializeSceneNdjson(outline: PresentationOutline, manifest?: De
     brief: outline.brief,
     narrative: outline.narrative,
     ...(outline.completeness ? { completeness: outline.completeness } : {}),
+    ...(outline.slideChrome ? { slideChrome: outline.slideChrome } : {}),
     ...(manifest ? { width: manifest.width, height: manifest.height } : {}),
     ...(outline.creativeDirection ? { creativeDirection: outline.creativeDirection } : {}),
     ...(outline.exploration ? { exploration: outline.exploration } : {}),
@@ -151,6 +161,9 @@ function freeformSlide(record: JsonRecord): SlideSpec {
       : {}),
     ...(typeof record.designIntent === "string" ? { designIntent: record.designIntent } : {}),
     ...(typeof record.composition === "string" ? { composition: record.composition } : {}),
+    ...(record.chrome === false || (record.chrome && typeof record.chrome === "object" && !Array.isArray(record.chrome))
+      ? { chrome: record.chrome as SlideSpec["chrome"] }
+      : {}),
     canvas: [],
   };
 }
@@ -218,6 +231,9 @@ export function parseSceneNdjson(text: string): PresentationOutline {
     ...(deck.hostCapabilities && typeof deck.hostCapabilities === "object" ? { hostCapabilities: deck.hostCapabilities } : {}),
     ...(deck.completeness && typeof deck.completeness === "object" && !Array.isArray(deck.completeness)
       ? { completeness: deck.completeness }
+      : {}),
+    ...(deck.slideChrome && typeof deck.slideChrome === "object" && !Array.isArray(deck.slideChrome)
+      ? { slideChrome: deck.slideChrome }
       : {}),
     ...(deck.creativeDirection && typeof deck.creativeDirection === "object" && !Array.isArray(deck.creativeDirection)
       ? { creativeDirection: deck.creativeDirection }

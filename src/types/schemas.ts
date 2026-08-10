@@ -35,6 +35,8 @@ const createRequest = z.object({
   outline: presentationOutlineSchema.optional(),
   scene: z.string().optional(),
   sceneNdjson: z.string().optional(),
+  script: z.string().optional()
+    .describe("Path to a JavaScript module that composes the deck and exports it. It is imported into this process and runs with the caller's privileges."),
   creativeDirection: creativeDirectionSchema.optional(),
   output: z.string(),
   previewsDir: z.string().optional(),
@@ -96,6 +98,19 @@ const patchOperation = z.discriminatedUnion("op", [
   }),
 ]);
 
+/** What a reviewer saw in one render. `note` is how "this is sound" is said. */
+export const visualReviewFindingSchema = z.object({
+  id: z.string().min(1),
+  reviewer: z.string().min(1).describe("Who or what looked at the render."),
+  severity: z.enum(["blocking", "major", "minor", "note"]),
+  slide: z.number().int().positive(),
+  elementIds: z.array(z.string()).optional(),
+  observation: z.string().min(1).describe("What is visible."),
+  rationale: z.string().min(1).describe("Why it matters for this audience and this intent."),
+  suggestedTarget: z.string().min(1).describe("What the fixed state would look like."),
+  waived: z.object({ by: z.string(), reason: z.string(), at: z.string() }).optional(),
+});
+
 export const patchOperationSchema = patchOperation;
 
 const patchRequest = z.object({
@@ -137,6 +152,8 @@ const renderRequest = z.object({
 
 const validateRequest = z.object({
   command: z.literal("validate"),
+  visualFindings: z.array(visualReviewFindingSchema).optional()
+    .describe("What a reviewer saw in the renders. Supplying findings is what records that somebody looked, which is required before an authored deck reports ready."),
   input: z.string(),
   report: z.string().optional(),
   manifest: z.string().optional(),
@@ -160,6 +177,7 @@ const reviseRequest = z.object({
   maxRetries: z.number().int().nonnegative().optional(),
   allowRemoteAssets: z.boolean().optional(),
 });
+
 
 export const structuredRequestSchema = z.discriminatedUnion("command", [createRequest, editRequest, renderRequest, validateRequest, reviseRequest, patchRequest]);
 

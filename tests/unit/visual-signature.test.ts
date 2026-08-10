@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   NEAR_DUPLICATE_THRESHOLD,
   compareSignatures,
+  repeatedSilhouettes,
   signDeck,
   unionArea,
 } from "../../src/evaluation/visual-signature.js";
@@ -101,5 +102,80 @@ describe("geometry signature", () => {
     const reordered = deck("Reordered", [...composed.slides].reverse().map((slide) => slide.elements));
     const result = compareSignatures(signDeck(composed), signDeck(reordered));
     expect(result.verdict).toBe("near-duplicate");
+  });
+});
+
+describe("repeated silhouettes within one deck", () => {
+  function slideOf(number: number, elements: Array<{ x: number; y: number; w: number; h: number; id: string }>, kind = "custom") {
+    return {
+      number,
+      id: `s${number}`,
+      title: `Slide ${number}`,
+      kind,
+      backgroundColor: "FFFFFF",
+      notes: [],
+      elements: elements.map((element) => ({
+        ...element,
+        name: element.id,
+        type: "shape" as const,
+        role: "shape",
+        fillColor: "203040",
+      })),
+    };
+  }
+
+  function deckOf(slides: ReturnType<typeof slideOf>[]) {
+    return {
+      schemaVersion: "1.0" as const,
+      presentationTitle: "Deck",
+      width: 13.333333,
+      height: 7.5,
+      createdAt: new Date().toISOString(),
+      slides,
+    };
+  }
+
+  const hub = [
+    { id: "a", x: 5.5, y: 3, w: 2.4, h: 1.4 },
+    { id: "b", x: 1, y: 1, w: 2, h: 0.8 },
+    { id: "c", x: 10, y: 1, w: 2, h: 0.8 },
+    { id: "d", x: 1, y: 5.5, w: 2, h: 0.8 },
+    { id: "e", x: 10, y: 5.5, w: 2, h: 0.8 },
+  ];
+
+  it("names the two slides that came out as the same drawing", () => {
+    const pairs = repeatedSilhouettes(deckOf([
+      slideOf(1, [{ id: "band", x: 0.7, y: 0.7, w: 11.9, h: 2 }]),
+      slideOf(2, hub),
+      slideOf(3, [{ id: "one", x: 0.7, y: 4, w: 5, h: 2 }]),
+      slideOf(4, hub.map((element) => ({ ...element, id: `${element.id}2` }))),
+    ]));
+    expect(pairs.some((pair) => pair.left === 2 && pair.right === 4)).toBe(true);
+  });
+
+  it("leaves a deck of genuinely different compositions alone", () => {
+    const pairs = repeatedSilhouettes(deckOf([
+      slideOf(1, [{ id: "full", x: 0, y: 0, w: 13.3, h: 7.5 }]),
+      slideOf(2, [{ id: "left", x: 0.7, y: 0.7, w: 5, h: 6 }]),
+      slideOf(3, [{ id: "strip", x: 0.7, y: 6, w: 11.9, h: 0.8 }]),
+    ]));
+    expect(pairs).toEqual([]);
+  });
+
+  it("holds slides of the same declared kind to a stricter threshold", () => {
+    // Two section dividers are meant to rhyme; that is rhythm, not repetition.
+    const dividers = deckOf([
+      slideOf(1, [{ id: "a", x: 0.7, y: 3, w: 6, h: 1 }], "section"),
+      slideOf(2, [{ id: "b", x: 0.72, y: 3.02, w: 6, h: 1 }], "section"),
+      slideOf(3, [{ id: "c", x: 0.7, y: 0.7, w: 11.9, h: 5 }]),
+    ]);
+    const mixed = deckOf([
+      slideOf(1, [{ id: "a", x: 0.7, y: 3, w: 6, h: 1 }], "custom"),
+      slideOf(2, [{ id: "b", x: 0.72, y: 3.02, w: 6, h: 1 }], "text-image"),
+      slideOf(3, [{ id: "c", x: 0.7, y: 0.7, w: 11.9, h: 5 }]),
+    ]);
+    expect(repeatedSilhouettes(mixed).length).toBeGreaterThanOrEqual(
+      repeatedSilhouettes(dividers).length,
+    );
   });
 });

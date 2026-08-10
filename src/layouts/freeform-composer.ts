@@ -3,9 +3,11 @@ import { ElementWriter } from "../components/element-writer.js";
 import { Shapes } from "../components/pptx-values.js";
 import { renderGrammar } from "../diagrams/grammars.js";
 import { Grid } from "../design/grid.js";
+import { routeConnector, type Point } from "../design/routing.js";
 import { resolveTokens, type DeckTokens } from "../design/tokens.js";
 import { VisualSystem, applyVisualSystem } from "../design/visual-system.js";
 import type {
+  CanvasConnectorElement,
   CanvasElementSpec,
   CanvasGroupElement,
   CanvasSymbolInstanceElement,
@@ -22,7 +24,13 @@ function setOverlapMetadata(writer: ElementWriter, id: string, element: CanvasEl
   const record = writer.records.find((candidate) => candidate.id === id);
   if (!record) return;
   record.intentionalOverlap = element.intentionalOverlap ?? record.intentionalOverlap;
-  record.allowOverlapWith = element.allowOverlapWith;
+  // The writer may already have recorded exemptions the author did not state —
+  // a routed connector exempts the two elements it joins. Overwriting with an
+  // absent authored value would discard them and report the route as colliding
+  // with the very nodes it connects.
+  if (element.allowOverlapWith) {
+    record.allowOverlapWith = [...new Set([...(record.allowOverlapWith ?? []), ...element.allowOverlapWith])];
+  }
 }
 
 /** Context that travels down into a group or symbol instance. */
@@ -38,13 +46,20 @@ interface Placement {
 
 const ROOT: Placement = { x: 0, y: 0, scale: 1 };
 
+interface Frame {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
 /** Applies a placement to one element's own frame. */
-function place(element: CanvasElementSpec, at: Placement): { x: number; y: number; w: number; h: number } {
+function place(element: CanvasElementSpec, at: Placement): Frame {
   return {
-    x: at.x + element.x * at.scale,
-    y: at.y + element.y * at.scale,
-    w: element.w * at.scale,
-    h: element.h * at.scale,
+    x: at.x + (element.x ?? 0) * at.scale,
+    y: at.y + (element.y ?? 0) * at.scale,
+    w: (element.w ?? 0) * at.scale,
+    h: (element.h ?? 0) * at.scale,
   };
 }
 
@@ -99,7 +114,65 @@ export class FreeformComposer {
   }
 
   public render(writer: ElementWriter, spec: SlideSpec, slideNumber = 1): void {
-    this.paint(writer, spec.canvas ?? [], slideNumber, ROOT);
+    const canvas = spec.canvas ?? [];
+    // Connectors are resolved against the frames of the elements they join, so
+    // every frame on the slide has to be known before anything is drawn. The
+    // index is built with the same placement maths the paint pass uses, which
+    // keeps an anchored connector correct inside a group or a scaled symbol.
+    this.frames = new Map();
+    this.indexFrames(canvas, ROOT);
+    this.paint(writer, canvas, slideNumber, ROOT);
+  }
+
+  /** Absolute frames by element id, for connector anchoring. */
+  private frames = new Map<string, Frame>();
+
+  private indexFrames(canvas: CanvasElementSpec[], at: Placement, prefix = ""): void {
+    for (const element of canvas) {
+      const id = prefix ? `${prefix}.${element.id}` : element.id;
+      if (element.type === "connector") continue;
+      const frame = place(element, at);
+      this.frames.set(id, frame);
+      if (element.type === "group") {
+        this.indexFrames(element.children, {
+          ...at,
+          x: frame.x,
+          y: frame.y,
+          scale: at.scale * (element.scale ?? 1),
+        }, id);
+        continue;
+      }
+      if (element.type === "symbol-instance") {
+        const symbol = this.symbols.get(element.symbol);
+        if (!symbol) continue;
+        const fit = Math.min(frame.w / symbol.w, frame.h / symbol.h);
+        this.indexFrames(symbol.elements, {
+          ...at,
+          x: frame.x,
+          y: frame.y,
+          scale: fit * (element.scale ?? 1),
+        }, id);
+      }
+    }
+  }
+
+  /**
+   * What a route should go around.
+   *
+   * Full-bleed plates and background washes are excluded: they cover the slide
+   * by design, and treating them as obstacles would make every route impossible
+   * and every score identical. So are other connectors, whose bounding boxes
+   * describe almost nothing about where they run.
+   */
+  private obstaclesFor(exclude: Set<string>): Array<{ id: string; box: Frame }> {
+    const slideArea = this.config.dimensions.width * this.config.dimensions.height;
+    const obstacles: Array<{ id: string; box: Frame }> = [];
+    for (const [id, box] of this.frames) {
+      if (exclude.has(id)) continue;
+      if (box.w * box.h > slideArea * 0.5) continue;
+      obstacles.push({ id, box });
+    }
+    return obstacles;
   }
 
   private paint(writer: ElementWriter, canvas: CanvasElementSpec[], slideNumber: number, at: Placement): void {
@@ -115,7 +188,9 @@ export class FreeformComposer {
       // authored element is never mutated, so what the scene emits later is
       // still exactly what the author wrote.
       const element = applyVisualSystem(this.visualSystem, authored, slideNumber);
-      const frame = place(element, at);
+      const frame = element.type === "connector" && element.from !== undefined && element.to !== undefined
+        ? { x: 0, y: 0, w: 0, h: 0 }
+        : place(element as Exclude<CanvasElementSpec, CanvasConnectorElement>, at);
       const layer = element.layer ?? at.layer;
       const shared = {
         role: element.role,
@@ -147,11 +222,8 @@ export class FreeformComposer {
             role: element.role ?? "shape",
           });
           break;
-        case "connector":
-          id = writer.addConnector(element.id, { x: frame.x, y: frame.y }, {
-            x: frame.x + frame.w,
-            y: frame.y + frame.h,
-          }, {
+        case "connector": {
+          const style = {
             color: element.style?.color,
             width: element.style?.width,
             arrow: element.style?.arrow,
@@ -159,8 +231,20 @@ export class FreeformComposer {
             dashed: element.style?.dashed,
             native: element.style?.options,
             ...shared,
-          });
+          };
+          if (element.from !== undefined && element.to !== undefined) {
+            const path = this.route(element, at, slideNumber);
+            id = writer.addRoutedConnector(element.id, path.points, { ...style, joins: path.joins });
+          } else {
+            const start = place({ ...element, x: element.x ?? 0, y: element.y ?? 0, w: 0, h: 0 } as never, at);
+            const span = { w: (element.w ?? 0) * at.scale, h: (element.h ?? 0) * at.scale };
+            id = writer.addConnector(element.id, { x: start.x, y: start.y }, {
+              x: start.x + span.w,
+              y: start.y + span.h,
+            }, style);
+          }
           break;
+        }
         case "image":
           id = writer.addImage(element.id, element.path, element.alt, frame, {
             fit: element.fit,
@@ -245,6 +329,39 @@ export class FreeformComposer {
       }
       if (id) setOverlapMetadata(writer, id, element);
     }
+  }
+
+  /** Resolves an anchored connector into an absolute path. */
+  private route(element: CanvasConnectorElement, at: Placement, slideNumber: number): { points: Point[]; joins: string[] } {
+    const resolve = (endpoint: NonNullable<CanvasConnectorElement["from"]>) => {
+      const id = typeof endpoint === "string" ? endpoint : endpoint.id;
+      const scoped = at.groupId ? `${at.groupId}.${id}` : id;
+      const box = this.frames.get(scoped) ?? this.frames.get(id);
+      if (!box) {
+        throw new SlideAgentError(
+          "UNKNOWN_CONNECTOR_ANCHOR",
+          `Slide ${slideNumber} connector "${element.id}" anchors to "${id}", which is not an element on this slide.`,
+          { connector: element.id, anchor: id, available: [...this.frames.keys()] },
+        );
+      }
+      return { id: scoped, box, side: typeof endpoint === "string" ? undefined : endpoint.side };
+    };
+
+    const from = resolve(element.from!);
+    const to = resolve(element.to!);
+    const exempt = new Set([from.id, to.id, ...(element.mayCross ?? [])]);
+    const routed = routeConnector({
+      from: from.box,
+      to: to.box,
+      ...(from.side ? { fromSide: from.side } : {}),
+      ...(to.side ? { toSide: to.side } : {}),
+      kind: element.route ?? "elbow",
+      ...(element.clearance === undefined ? {} : { clearance: element.clearance }),
+      ...(element.stub === undefined ? {} : { stub: element.stub }),
+      obstacles: this.obstaclesFor(exempt),
+      bounds: { x: 0, y: 0, w: this.config.dimensions.width, h: this.config.dimensions.height },
+    });
+    return { points: routed.points, joins: [...exempt] };
   }
 
   /**

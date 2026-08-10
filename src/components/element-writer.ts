@@ -107,6 +107,22 @@ export interface ImageStyle {
   options?: Record<string, unknown>;
 }
 
+export interface ConnectorStyle {
+  color?: string;
+  width?: number;
+  arrow?: boolean;
+  beginArrow?: boolean;
+  dashed?: boolean;
+  role?: string;
+  layer?: string;
+  groupId?: string;
+  allowBleed?: boolean;
+  intentionalOverlap?: boolean;
+  /** Ids of the elements this connector joins, exempt from overlap reporting. */
+  joins?: string[];
+  native?: Record<string, unknown>;
+}
+
 export class ElementWriter {
   private sequence = 0;
 
@@ -267,37 +283,72 @@ export class ElementWriter {
     name: string,
     from: { x: number; y: number },
     to: { x: number; y: number },
-    options: {
-      color?: string;
-      width?: number;
-      arrow?: boolean;
-      beginArrow?: boolean;
-      dashed?: boolean;
-      role?: string;
-      layer?: string;
-      groupId?: string;
-      allowBleed?: boolean;
-      native?: Record<string, unknown>;
-    } = {},
+    options: ConnectorStyle = {},
   ): string {
+    return this.addRoutedConnector(name, [from, to], options);
+  }
+
+  /**
+   * Writes a connector along an explicit path.
+   *
+   * Two points stay a `line`, which is the shape PowerPoint users expect and
+   * the one every viewer draws identically. Anything with a bend becomes a
+   * custom-geometry polyline: still one native, selectable, restylable shape —
+   * and still one manifest record, so a later patch addresses the whole route
+   * by its id rather than a handful of anonymous segments.
+   *
+   * The path is kept on the record. A connector's bounding box says almost
+   * nothing about where it actually runs, so overlap checking needs the real
+   * geometry; without it the only options were to report every diagonal as
+   * colliding with everything near it, or to exempt connectors entirely.
+   */
+  public addRoutedConnector(name: string, path: Array<{ x: number; y: number }>, options: ConnectorStyle = {}): string {
     const id = this.nextId(name);
-    const dx = to.x - from.x;
-    const dy = to.y - from.y;
-    const frame = { x: Math.min(from.x, to.x), y: Math.min(from.y, to.y), w: Math.abs(dx), h: Math.abs(dy) };
-    this.slide.addShape(Shapes.line, {
-      ...this.native(options.native),
-      ...frame,
-      flipH: dx < 0,
-      flipV: dy < 0,
-      objectName: name,
-      line: {
-        color: options.color ?? this.config.colors.rule,
-        width: options.width ?? 1.5,
-        dashType: options.dashed ? "dash" : "solid",
-        beginArrowType: options.beginArrow ? "triangle" : "none",
-        endArrowType: options.arrow === false ? "none" : "triangle",
-      },
-    });
+    const points = path.length >= 2 ? path : [{ x: 0, y: 0 }, { x: 0, y: 0 }];
+    const xs = points.map((point) => point.x);
+    const ys = points.map((point) => point.y);
+    const frame = {
+      x: Math.min(...xs),
+      y: Math.min(...ys),
+      w: Math.max(...xs) - Math.min(...xs),
+      h: Math.max(...ys) - Math.min(...ys),
+    };
+    const line = {
+      color: options.color ?? this.config.colors.rule,
+      width: options.width ?? 1.5,
+      dashType: options.dashed ? "dash" : "solid",
+      beginArrowType: options.beginArrow ? "triangle" : "none",
+      endArrowType: options.arrow === false ? "none" : "triangle",
+    };
+
+    if (points.length === 2) {
+      const start = points[0]!;
+      const end = points[1]!;
+      this.slide.addShape(Shapes.line, {
+        ...this.native(options.native),
+        ...frame,
+        flipH: end.x - start.x < 0,
+        flipV: end.y - start.y < 0,
+        objectName: name,
+        line,
+      });
+    } else {
+      // A zero-extent axis would give the custom path a zero-width coordinate
+      // space to draw in, so the box is floored to a hairline it can round to.
+      const drawn = { ...frame, w: Math.max(frame.w, 0.01), h: Math.max(frame.h, 0.01) };
+      this.slide.addShape(Shapes.custGeom, {
+        ...this.native(options.native),
+        ...drawn,
+        objectName: name,
+        points: points.map((point, index) => ({
+          x: point.x - drawn.x,
+          y: point.y - drawn.y,
+          ...(index === 0 ? { moveTo: true } : {}),
+        })),
+        line,
+      });
+    }
+
     this.records.push({
       id,
       name,
@@ -306,7 +357,11 @@ export class ElementWriter {
       ...frame,
       editability: "native",
       ...this.context(options),
-      intentionalOverlap: true,
+      // A connector legitimately meets the two elements it joins; everything
+      // else it touches is a defect until the author says otherwise.
+      intentionalOverlap: options.intentionalOverlap ?? false,
+      ...(options.joins?.length ? { allowOverlapWith: options.joins } : {}),
+      metadata: { path: points.map((point) => ({ x: point.x, y: point.y })) },
     });
     return id;
   }

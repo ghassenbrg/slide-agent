@@ -295,3 +295,105 @@ describe("diagram grammars", () => {
     expect(records.every((record) => record.editability === "generated-native")).toBe(true);
   });
 });
+
+describe("anchored connectors", () => {
+  const box = (id: string, x: number, y: number, w = 2, h = 1): CanvasElementSpec => ({
+    id, type: "shape", shape: "roundRect", x, y, w, h, style: { fill: "203040" },
+  });
+
+  it("lands on the edges of the elements it joins", async () => {
+    const { records } = await build([
+      box("a", 1, 3),
+      box("b", 9, 3),
+      { id: "edge", type: "connector", from: "a", to: "b", route: "elbow", zIndex: -1 },
+    ]);
+    const path = byName(records, "edge")!.metadata!.path as Array<{ x: number; y: number }>;
+    expect(path[0]!.x).toBeCloseTo(3, 6);
+    expect(path.at(-1)!.x).toBeCloseTo(9, 6);
+  });
+
+  it("routes around an element between the two it joins", async () => {
+    const { records } = await build([
+      box("a", 1, 3),
+      box("b", 10, 3),
+      box("mid", 5.5, 2.8, 2, 1.5),
+      { id: "edge", type: "connector", from: "a", to: "b", route: "elbow", zIndex: -1 },
+    ]);
+    const path = byName(records, "edge")!.metadata!.path as Array<{ x: number; y: number }>;
+    // A straight run would sit at the anchors' y; a detour does not.
+    expect(path.some((point) => Math.abs(point.y - 3.5) > 0.2)).toBe(true);
+  });
+
+  it("keeps a route inside the slide", async () => {
+    const { records } = await build([
+      box("a", 0.5, 3),
+      box("b", 11, 3),
+      box("mid", 5.5, 0.2, 2, 7),
+      { id: "edge", type: "connector", from: "a", to: "b", route: "elbow", zIndex: -1 },
+    ]);
+    const path = byName(records, "edge")!.metadata!.path as Array<{ x: number; y: number }>;
+    for (const point of path) {
+      expect(point.y).toBeGreaterThanOrEqual(-0.001);
+      expect(point.y).toBeLessThanOrEqual(config.dimensions.height + 0.001);
+    }
+  });
+
+  it("honours an explicitly requested side", async () => {
+    const { records } = await build([
+      box("a", 1, 3),
+      box("b", 9, 3),
+      { id: "edge", type: "connector", from: { id: "a", side: "top" }, to: { id: "b", side: "top" }, zIndex: -1 },
+    ]);
+    const path = byName(records, "edge")!.metadata!.path as Array<{ x: number; y: number }>;
+    expect(path[0]!.y).toBeCloseTo(3, 6);
+  });
+
+  it("draws a curved route as a curve", async () => {
+    const { records } = await build([
+      box("a", 1, 3),
+      box("b", 9, 3),
+      { id: "edge", type: "connector", from: "a", to: "b", route: "curved", zIndex: -1 },
+    ]);
+    // A flattened cubic has far more points than an elbow's handful of bends.
+    expect((byName(records, "edge")!.metadata!.path as unknown[]).length).toBeGreaterThan(8);
+  });
+
+  it("exempts the elements it joins from overlap reporting", async () => {
+    const { records } = await build([
+      box("a", 1, 3),
+      box("b", 9, 3),
+      { id: "edge", type: "connector", from: "a", to: "b", zIndex: -1 },
+    ]);
+    expect(byName(records, "edge")!.allowOverlapWith).toEqual(expect.arrayContaining(["a", "b"]));
+    expect(byName(records, "edge")!.intentionalOverlap).toBe(false);
+  });
+
+  it("anchors to an element inside a group", async () => {
+    const { records } = await build([
+      {
+        id: "cluster", type: "group", x: 1, y: 2, w: 5, h: 2, children: [
+          box("inner", 0, 0, 2, 1),
+        ],
+      },
+      box("far", 9, 2.2),
+      { id: "edge", type: "connector", from: "cluster.inner", to: "far", zIndex: -1 },
+    ]);
+    expect(byName(records, "edge")).toBeDefined();
+  });
+
+  it("names the anchor it cannot find", async () => {
+    await expect(build([
+      box("a", 1, 3),
+      { id: "edge", type: "connector", from: "a", to: "ghost", zIndex: -1 },
+    ])).rejects.toThrow(/anchors to "ghost"/);
+  });
+
+  it("still draws a plain vector connector when no anchors are given", async () => {
+    const { records } = await build([
+      { id: "rule", type: "connector", x: 1, y: 6, w: 10, h: 0, style: { color: "35D0BA" } },
+    ]);
+    const record = byName(records, "rule")!;
+    expect(record.x).toBeCloseTo(1, 6);
+    expect(record.w).toBeCloseTo(10, 6);
+  });
+});

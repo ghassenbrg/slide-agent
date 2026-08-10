@@ -12,6 +12,7 @@ import { remoteAssetPolicy } from "./images/image-manager.js";
 import { applyBrandKit, loadBrandKit, type BrandKit } from "./design/brand.js";
 import { RequestAnalyzer } from "./planner/request-analyzer.js";
 import { PresentationRenderer } from "./rendering/renderer.js";
+import { runBuildScript } from "./authoring/run-script.js";
 import { parseSceneNdjson, readSceneNdjson, serializeSceneNdjson, writeSceneNdjson } from "./serialization/scene-ndjson.js";
 import { reviseScene } from "./serialization/revise-scene.js";
 import { formatPatchDiff, patchOutline, type PatchOperation } from "./editing/patch-scene.js";
@@ -383,6 +384,7 @@ export class SlideAgent {
     try {
       const config = await loadConfig(request.configDir);
       const authored = request.outline
+        ?? (request.script ? await runBuildScript(request.script) : undefined)
         ?? (request.sceneNdjson ? parseSceneNdjson(request.sceneNdjson) : undefined)
         ?? (request.scene ? await readSceneNdjson(request.scene) : undefined);
       // A deck a model designed and one the planner scaffolded are different
@@ -487,6 +489,7 @@ export class SlideAgent {
             // This build writes its own graph below. Re-checking the previous
             // run's would be measuring a deck that no longer exists.
             verifyArtifacts: false,
+            authored: true,
           });
         } else if (shouldRender) {
           const rendered = await new PresentationRenderer(this.logger).render(output, previewsDir, {
@@ -561,6 +564,7 @@ export class SlideAgent {
             pdfPath: layout.pdf,
             iterations: retries + 1,
             verifyArtifacts: false,
+            authored: true,
           });
         }
       }
@@ -772,6 +776,7 @@ export class SlideAgent {
         manifest: request.manifest,
         render: request.render ?? false,
         previewsDir: request.previewsDir,
+        ...(request.visualFindings?.length ? { visualFindings: request.visualFindings } : {}),
       });
       if (request.roundTrip) {
         const layout = outputLayout(request.input);
@@ -806,6 +811,10 @@ export class SlideAgent {
         slideCount: report.slideCount,
         warnings: report.issues.filter((item) => item.severity !== "error").map((item) => item.message),
         validation: report,
+        // Surfaced beside the report the same way `create` does it: a caller
+        // reading only the top level should get the same verdict either way.
+        packageStatus: report.packageStatus,
+        presentationReadiness: report.presentationReadiness,
         errors: report.issues.filter((item) => item.severity === "error").map((item) => ({ code: item.code, message: item.message })),
         metadata: metadata("validate", requestId, startedAt, 0),
       };

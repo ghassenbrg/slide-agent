@@ -2,7 +2,7 @@
 
 # Slide Agent authoring guide
 
-Contract version 0.10 · scene schema `slide-agent.scene/1`
+Contract version 0.11 · scene schema `slide-agent.scene/1`
 
 ## The freeform canvas
 
@@ -18,8 +18,14 @@ Pictures support `fit`, an explicit `crop`, a `focalPoint` so a `cover` crop kee
 
 `layer` names a layer for review and z-order grouping. It carries no visual style.
 
+`place` states position as a relationship instead of a number: `{"place":{"x":{"alignLeft":"title"},"y":{"below":"chart","gap":0.2}}}`. It reads `alignLeft`, `alignRight`, `alignTop`, `alignBottom`, `centerX`, `centerY`, `above`, `below`, `leftOf`, `rightOf`, `sameAs`, and `spanFrom`/`spanTo`, and may only reference an element declared earlier on the slide. Relations are solved into inches before the slide is composed, so the scene, the manifest, and any later patch carry coordinates rather than relationships.
+
+A connector can name the elements it joins instead of carrying coordinates: `{"type":"connector","from":"cache","to":"db","route":"elbow"}`. The engine resolves the anchors on the real frames, stands the arrow off the edge, and routes around anything in the way, so the arrow meets the shape rather than its bounding box. Give `from`/`to` a `{ id, side }` when you want a specific edge, `route: "straight" | "elbow" | "curved"`, and `mayCross` for anything it is allowed to pass through. A connector with `x`/`y`/`w`/`h` and no anchors is still a plain line between two points.
+
+`slideChrome` on the deck record repeats elements you wrote — a kicker, a slide number, a footer rule, a brand mark — on every model-authored slide, interpolating `{{slideNumber}}`, `{{slideNumberPadded}}`, `{{slideCount}}`, `{{slideTitle}}`, `{{deckTitle}}`, and any key a slide supplies in its own `chrome`. A slide sets `chrome: false` to opt out. Slide Agent ships no chrome and has no opinion about whether your deck should have any.
+
 - Add every visible word as a text element. Nothing renders implicitly.
-- Build diagrams from shapes and connectors. Create edges before nodes, or place them on a lower `zIndex`.
+- Build diagrams from shapes and connectors. Anchor the connectors with `from`/`to` and let the engine route them; hand-computed line geometry is how arrows end up in dead space and through labels.
 - Use images for photography, artwork, screenshots, and supplied evidence — never as a flattened substitute for a slide.
 - Give every image an `alt` that describes the content, and a `provenance` when it is not your own. See the imagery section for where pictures may come from.
 - Declare `vector` when you have SVG artwork. The raster `path` is still required — OOXML stores an SVG as an enhancement to a bitmap — and `vector.editable` states honestly what a person can change.

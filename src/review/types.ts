@@ -59,6 +59,14 @@ export interface ReviewSlide {
   designIntent?: string;
   communication?: SlideCommunicationPlan;
   plan?: SequencePlanItem;
+  /**
+   * Other slides whose composition is near-identical to this one.
+   *
+   * The sequence plan states an intended silhouette per slide, and nothing used
+   * to check the render against it. This is the measurable half of that: two
+   * slides that came out as the same drawing, named by number.
+   */
+  twins?: Array<{ slide: number; similarity: number }>;
   claims?: ClaimLedgerItem[];
   elements: ReviewElement[];
   /** Path to this slide's full-size render. */

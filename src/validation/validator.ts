@@ -46,6 +46,15 @@ export interface ValidationOptions {
   roundTrip?: RoundTripReport;
   /** Findings supplied by a host reviewer, folded into readiness. */
   visualFindings?: VisualReviewFinding[];
+  /**
+   * This run built the deck it is validating.
+   *
+   * It is what lets an empty finding list mean "nobody has judged this yet"
+   * rather than "we have no way of knowing", so a deck being authored is held
+   * at `review` until somebody says what they saw, while a PPTX arriving from
+   * elsewhere is not punished for a history it never had.
+   */
+  authored?: boolean;
   /** Claim ids still marked `needs-review` in the deck's own ledger. */
   unresolvedClaims?: string[];
   /** Element ids the deck's claim ledger points at, so evidence means something. */
@@ -277,6 +286,14 @@ export class PresentationValidator {
       ...(fidelity ? { fidelity } : {}),
       ...(options.roundTrip ? { roundTrip: options.roundTrip } : {}),
       ...(options.visualFindings ? { visualFindings: options.visualFindings } : {}),
+      // Only a caller that authored the deck can know whether its renders were
+      // looked at. `authored` says this run built what it is validating, so an
+      // empty finding list means nobody judged it rather than that we cannot
+      // tell — which is the difference between a deck in progress and a PPTX
+      // somebody handed us.
+      // Findings supplied on any run are a recorded judgement; without them,
+      // only a run that authored the deck can say nobody has looked yet.
+      ...(options.visualFindings?.length ? { reviewed: true } : options.authored ? { reviewed: false } : {}),
       render,
       ...(options.unresolvedClaims ? { unresolvedClaims: options.unresolvedClaims } : {}),
       placeholderSlides: placeholderSlideCount(manifest),
@@ -302,6 +319,9 @@ export class PresentationValidator {
       ...(fidelity ? { fidelity } : {}),
       ...(options.roundTrip ? { roundTrip: options.roundTrip } : {}),
       ...(options.visualFindings?.length ? { visualFindings: options.visualFindings } : {}),
+      // Findings supplied on any run are a recorded judgement; without them,
+      // only a run that authored the deck can say nobody has looked yet.
+      ...(options.visualFindings?.length ? { reviewed: true } : options.authored ? { reviewed: false } : {}),
       render,
     };
     if (options.reportPath) await writeJson(options.reportPath, report);

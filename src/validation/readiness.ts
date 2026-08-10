@@ -80,20 +80,43 @@ const PRESENTATION_BLOCKING_CODES = new Set([
   "render-text-repeated",
   "render-word-split",
   "unsupported-content",
+  // A route drawn through a label strikes the words out. It is as much a
+  // reading defect as text that overflowed its box, and just as invisible
+  // anywhere but the render.
+  "connector-crosses-text",
 ]);
 
 export function isPackageIssue(issue: ValidationIssue): boolean {
   return PACKAGE_CODES.has(issue.code);
 }
 
-/** Per-dimension floors. An average cannot rescue a dimension that failed. */
+/**
+ * Per-dimension floors. An average cannot rescue a dimension that failed.
+ *
+ * These sat at 25 across the board, which is a floor only a catastrophe could
+ * hit. A deck could score 57 on variety with the engine's own advice reading
+ * "nothing gets noticeably quieter or denser", and 42 on evidence with "show
+ * more evidence: a chart, table, diagram, or artifact beats another bulleted
+ * assertion", and still report `ready` with a single reason saying nothing was
+ * wrong. Measuring something honestly and then declining to act on it is worse
+ * than not measuring it, because it launders the problem as a pass.
+ *
+ * A floor here holds the deck at `review`, never at `not-ready`: these are
+ * proxies, and a proxy should make somebody look rather than refuse to ship.
+ *
+ * The value is the same for every dimension, and it is not a number picked to
+ * feel strict: 58 is where `scoreDeck` already stops calling a deck `workable`.
+ * A dimension scoring below the point at which the engine would decline to call
+ * the whole deck workable is exactly the case worth a second look, so the floor
+ * inherits that boundary rather than inventing a second opinion beside it.
+ */
 export const HEURISTIC_FLOORS: Record<string, number> = {
-  contrast: 45,
-  accessibility: 55,
-  hierarchy: 30,
-  density: 25,
-  variety: 25,
-  evidence: 25,
+  contrast: 58,
+  accessibility: 58,
+  hierarchy: 58,
+  density: 58,
+  variety: 58,
+  evidence: 58,
 };
 
 export interface ReadinessInput {
@@ -102,6 +125,14 @@ export interface ReadinessInput {
   fidelity?: RenderFidelityReport;
   roundTrip?: RoundTripReport;
   visualFindings?: VisualReviewFinding[];
+  /**
+   * Whether anybody has recorded a judgement on the renders.
+   *
+   * Left undefined by callers that cannot know — validating a PPTX somebody
+   * handed us says nothing about whether its author reviewed it, and inventing
+   * a "no" there would hold every imported deck at `review` forever.
+   */
+  reviewed?: boolean;
   render?: ValidationReport["render"];
   /** Claims still marked `needs-review`, by id. */
   unresolvedClaims?: string[];
@@ -141,6 +172,11 @@ export function withPackageEvidence(
     ...(report.fidelity ? { fidelity: report.fidelity } : {}),
     ...(evidence.roundTrip ? { roundTrip: evidence.roundTrip } : {}),
     ...(report.visualFindings ? { visualFindings: report.visualFindings } : {}),
+    // Carried on the report rather than recomputed: this function folds in
+    // late evidence and cannot tell an authored build from an imported deck,
+    // so dropping the flag here would quietly retire the gate on exactly the
+    // delivery-path runs it exists for.
+    ...(report.reviewed === undefined ? {} : { reviewed: report.reviewed }),
     ...(report.render ? { render: report.render } : {}),
     ...(evidence.unresolvedClaims ? { unresolvedClaims: evidence.unresolvedClaims } : {}),
   });
@@ -224,8 +260,23 @@ export function computeVerdict(input: ReadinessInput): Verdict {
     const floor = HEURISTIC_FLOORS[dimension.id];
     if (floor !== undefined && dimension.score < floor) {
       review = true;
-      reasons.push(`Heuristic floor: ${dimension.id} scored ${dimension.score}, below ${floor}. ${dimension.summary}`);
+      // The dimension's own advice travels with the reason. A bare number tells
+      // nobody what to do about it, and the advice is already written.
+      reasons.push(`Heuristic floor: ${dimension.id} scored ${dimension.score}, below ${floor}. ${dimension.summary}${dimension.advice ? ` ${dimension.advice}` : ""}`);
     }
+  }
+
+  // Rendering the deck is not the same as looking at it. Everything above this
+  // point is something the engine can measure, and a deck can clear all of it
+  // and still be a deck nobody has formed an opinion about — which is exactly
+  // how a sequence of slides that repeat one another ships as finished. So
+  // `ready` requires a recorded verdict: `visualFindings` is where the author's
+  // judgement enters, and an empty one after a successful render means the
+  // question was never asked. Recording that the slides were reviewed and found
+  // sound is one finding with severity `none`; it just has to be said out loud.
+  if (input.reviewed === false) {
+    review = true;
+    reasons.push("The renders exist but no visual review finding was recorded, so nothing has judged whether the slides do what they were planned to do. Inspect the renders and record what you found — including that they are sound.");
   }
 
   if (input.placeholderSlides && input.placeholderSlides > 0) {

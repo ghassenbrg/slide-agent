@@ -75,6 +75,56 @@
       "type": "string",
       "description": "One line: what changes for the audience by the end."
     },
+    "slideChrome": {
+      "type": "object",
+      "properties": {
+        "elements": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/__schema0"
+          },
+          "description": "Elements repeated on every model-authored slide. Any string may interpolate {{slideNumber}}, {{slideNumberPadded}}, {{slideCount}}, {{slideTitle}}, {{deckTitle}}, or a key the slide supplies in its own `chrome`."
+        },
+        "variants": {
+          "description": "Style overrides per named variant, keyed by variant then by element id. A slide selects one with chrome: { variant: \"paper\" }. Only style properties change.",
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            }
+          }
+        },
+        "skipSlides": {
+          "description": "Slide ids that opt out entirely, e.g. a cover.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "idPrefix": {
+          "description": "Namespace applied to chrome element ids. Defaults to `chrome`.",
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "elements"
+      ],
+      "additionalProperties": {},
+      "description": "Per-slide furniture the deck declares once. Slide Agent ships none and repeats only what you wrote."
+    },
     "completeness": {
       "type": "object",
       "properties": {
@@ -234,6 +284,15 @@
               "items": {
                 "type": "string"
               }
+            },
+            "scale": {
+              "description": "The point sizes this deck commits to, largest first. Elements that step off it are reported, never refused.",
+              "minItems": 2,
+              "type": "array",
+              "items": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              }
             }
           },
           "additionalProperties": {}
@@ -248,7 +307,7 @@
                 "type": "string"
               },
               "additionalProperties": {
-                "$ref": "#/$defs/__schema0"
+                "$ref": "#/$defs/__schema1"
               }
             },
             "styles": {
@@ -577,7 +636,7 @@
             "minItems": 1,
             "type": "array",
             "items": {
-              "$ref": "#/$defs/__schema1"
+              "$ref": "#/$defs/__schema0"
             }
           },
           "description": {
@@ -1141,11 +1200,29 @@
               }
             ]
           },
+          "chrome": {
+            "description": "How this slide treats the deck's slideChrome. false suppresses it; an object supplies values the chrome interpolates, such as a kicker.",
+            "anyOf": [
+              {
+                "type": "boolean",
+                "const": false
+              },
+              {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {
+                  "type": "string"
+                }
+              }
+            ]
+          },
           "canvas": {
             "description": "The model's own scene. When present it *is* the layout and the registry is bypassed.",
             "type": "array",
             "items": {
-              "$ref": "#/$defs/__schema1"
+              "$ref": "#/$defs/__schema0"
             }
           },
           "speakerNotes": {
@@ -1191,38 +1268,6 @@
   "additionalProperties": {},
   "$defs": {
     "__schema0": {
-      "description": "Any JSON value. Deck variables are deliberately this open.",
-      "anyOf": [
-        {
-          "type": "null"
-        },
-        {
-          "type": "boolean"
-        },
-        {
-          "type": "number"
-        },
-        {
-          "type": "string"
-        },
-        {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/__schema0"
-          }
-        },
-        {
-          "type": "object",
-          "propertyNames": {
-            "type": "string"
-          },
-          "additionalProperties": {
-            "$ref": "#/$defs/__schema0"
-          }
-        }
-      ]
-    },
-    "__schema1": {
       "oneOf": [
         {
           "type": "object",
@@ -1286,6 +1331,268 @@
               "type": "array",
               "items": {
                 "type": "string"
+              }
+            },
+            "place": {
+              "description": "Placement stated against elements already on this slide. Any axis given here wins over the literal x/y/w/h, and is solved into inches before the slide is composed.",
+              "type": "object",
+              "properties": {
+                "x": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "description": "Inches on the slide canvas."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alignLeft": {
+                          "type": "string"
+                        },
+                        "alignRight": {
+                          "type": "string"
+                        },
+                        "alignTop": {
+                          "type": "string"
+                        },
+                        "alignBottom": {
+                          "type": "string"
+                        },
+                        "centerX": {
+                          "type": "string"
+                        },
+                        "centerY": {
+                          "type": "string"
+                        },
+                        "below": {
+                          "type": "string"
+                        },
+                        "above": {
+                          "type": "string"
+                        },
+                        "rightOf": {
+                          "type": "string"
+                        },
+                        "leftOf": {
+                          "type": "string"
+                        },
+                        "sameAs": {
+                          "description": "Take the referenced element's width or height.",
+                          "type": "string"
+                        },
+                        "spanFrom": {
+                          "description": "With spanTo, stretch from one element's near edge to another's far edge.",
+                          "type": "string"
+                        },
+                        "spanTo": {
+                          "type": "string"
+                        },
+                        "gap": {
+                          "description": "Distance held from the referenced element, in inches.",
+                          "type": "number"
+                        },
+                        "offset": {
+                          "description": "Added after everything else, in inches.",
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": {},
+                      "description": "A relation to an element declared earlier on the same slide."
+                    }
+                  ]
+                },
+                "y": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "description": "Inches on the slide canvas."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alignLeft": {
+                          "type": "string"
+                        },
+                        "alignRight": {
+                          "type": "string"
+                        },
+                        "alignTop": {
+                          "type": "string"
+                        },
+                        "alignBottom": {
+                          "type": "string"
+                        },
+                        "centerX": {
+                          "type": "string"
+                        },
+                        "centerY": {
+                          "type": "string"
+                        },
+                        "below": {
+                          "type": "string"
+                        },
+                        "above": {
+                          "type": "string"
+                        },
+                        "rightOf": {
+                          "type": "string"
+                        },
+                        "leftOf": {
+                          "type": "string"
+                        },
+                        "sameAs": {
+                          "description": "Take the referenced element's width or height.",
+                          "type": "string"
+                        },
+                        "spanFrom": {
+                          "description": "With spanTo, stretch from one element's near edge to another's far edge.",
+                          "type": "string"
+                        },
+                        "spanTo": {
+                          "type": "string"
+                        },
+                        "gap": {
+                          "description": "Distance held from the referenced element, in inches.",
+                          "type": "number"
+                        },
+                        "offset": {
+                          "description": "Added after everything else, in inches.",
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": {},
+                      "description": "A relation to an element declared earlier on the same slide."
+                    }
+                  ]
+                },
+                "w": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "description": "Inches on the slide canvas."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alignLeft": {
+                          "type": "string"
+                        },
+                        "alignRight": {
+                          "type": "string"
+                        },
+                        "alignTop": {
+                          "type": "string"
+                        },
+                        "alignBottom": {
+                          "type": "string"
+                        },
+                        "centerX": {
+                          "type": "string"
+                        },
+                        "centerY": {
+                          "type": "string"
+                        },
+                        "below": {
+                          "type": "string"
+                        },
+                        "above": {
+                          "type": "string"
+                        },
+                        "rightOf": {
+                          "type": "string"
+                        },
+                        "leftOf": {
+                          "type": "string"
+                        },
+                        "sameAs": {
+                          "description": "Take the referenced element's width or height.",
+                          "type": "string"
+                        },
+                        "spanFrom": {
+                          "description": "With spanTo, stretch from one element's near edge to another's far edge.",
+                          "type": "string"
+                        },
+                        "spanTo": {
+                          "type": "string"
+                        },
+                        "gap": {
+                          "description": "Distance held from the referenced element, in inches.",
+                          "type": "number"
+                        },
+                        "offset": {
+                          "description": "Added after everything else, in inches.",
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": {},
+                      "description": "A relation to an element declared earlier on the same slide."
+                    }
+                  ]
+                },
+                "h": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "description": "Inches on the slide canvas."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alignLeft": {
+                          "type": "string"
+                        },
+                        "alignRight": {
+                          "type": "string"
+                        },
+                        "alignTop": {
+                          "type": "string"
+                        },
+                        "alignBottom": {
+                          "type": "string"
+                        },
+                        "centerX": {
+                          "type": "string"
+                        },
+                        "centerY": {
+                          "type": "string"
+                        },
+                        "below": {
+                          "type": "string"
+                        },
+                        "above": {
+                          "type": "string"
+                        },
+                        "rightOf": {
+                          "type": "string"
+                        },
+                        "leftOf": {
+                          "type": "string"
+                        },
+                        "sameAs": {
+                          "description": "Take the referenced element's width or height.",
+                          "type": "string"
+                        },
+                        "spanFrom": {
+                          "description": "With spanTo, stretch from one element's near edge to another's far edge.",
+                          "type": "string"
+                        },
+                        "spanTo": {
+                          "type": "string"
+                        },
+                        "gap": {
+                          "description": "Distance held from the referenced element, in inches.",
+                          "type": "number"
+                        },
+                        "offset": {
+                          "description": "Added after everything else, in inches.",
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": {},
+                      "description": "A relation to an element declared earlier on the same slide."
+                    }
+                  ]
+                }
               }
             },
             "type": {
@@ -1969,6 +2276,268 @@
                 "type": "string"
               }
             },
+            "place": {
+              "description": "Placement stated against elements already on this slide. Any axis given here wins over the literal x/y/w/h, and is solved into inches before the slide is composed.",
+              "type": "object",
+              "properties": {
+                "x": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "description": "Inches on the slide canvas."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alignLeft": {
+                          "type": "string"
+                        },
+                        "alignRight": {
+                          "type": "string"
+                        },
+                        "alignTop": {
+                          "type": "string"
+                        },
+                        "alignBottom": {
+                          "type": "string"
+                        },
+                        "centerX": {
+                          "type": "string"
+                        },
+                        "centerY": {
+                          "type": "string"
+                        },
+                        "below": {
+                          "type": "string"
+                        },
+                        "above": {
+                          "type": "string"
+                        },
+                        "rightOf": {
+                          "type": "string"
+                        },
+                        "leftOf": {
+                          "type": "string"
+                        },
+                        "sameAs": {
+                          "description": "Take the referenced element's width or height.",
+                          "type": "string"
+                        },
+                        "spanFrom": {
+                          "description": "With spanTo, stretch from one element's near edge to another's far edge.",
+                          "type": "string"
+                        },
+                        "spanTo": {
+                          "type": "string"
+                        },
+                        "gap": {
+                          "description": "Distance held from the referenced element, in inches.",
+                          "type": "number"
+                        },
+                        "offset": {
+                          "description": "Added after everything else, in inches.",
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": {},
+                      "description": "A relation to an element declared earlier on the same slide."
+                    }
+                  ]
+                },
+                "y": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "description": "Inches on the slide canvas."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alignLeft": {
+                          "type": "string"
+                        },
+                        "alignRight": {
+                          "type": "string"
+                        },
+                        "alignTop": {
+                          "type": "string"
+                        },
+                        "alignBottom": {
+                          "type": "string"
+                        },
+                        "centerX": {
+                          "type": "string"
+                        },
+                        "centerY": {
+                          "type": "string"
+                        },
+                        "below": {
+                          "type": "string"
+                        },
+                        "above": {
+                          "type": "string"
+                        },
+                        "rightOf": {
+                          "type": "string"
+                        },
+                        "leftOf": {
+                          "type": "string"
+                        },
+                        "sameAs": {
+                          "description": "Take the referenced element's width or height.",
+                          "type": "string"
+                        },
+                        "spanFrom": {
+                          "description": "With spanTo, stretch from one element's near edge to another's far edge.",
+                          "type": "string"
+                        },
+                        "spanTo": {
+                          "type": "string"
+                        },
+                        "gap": {
+                          "description": "Distance held from the referenced element, in inches.",
+                          "type": "number"
+                        },
+                        "offset": {
+                          "description": "Added after everything else, in inches.",
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": {},
+                      "description": "A relation to an element declared earlier on the same slide."
+                    }
+                  ]
+                },
+                "w": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "description": "Inches on the slide canvas."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alignLeft": {
+                          "type": "string"
+                        },
+                        "alignRight": {
+                          "type": "string"
+                        },
+                        "alignTop": {
+                          "type": "string"
+                        },
+                        "alignBottom": {
+                          "type": "string"
+                        },
+                        "centerX": {
+                          "type": "string"
+                        },
+                        "centerY": {
+                          "type": "string"
+                        },
+                        "below": {
+                          "type": "string"
+                        },
+                        "above": {
+                          "type": "string"
+                        },
+                        "rightOf": {
+                          "type": "string"
+                        },
+                        "leftOf": {
+                          "type": "string"
+                        },
+                        "sameAs": {
+                          "description": "Take the referenced element's width or height.",
+                          "type": "string"
+                        },
+                        "spanFrom": {
+                          "description": "With spanTo, stretch from one element's near edge to another's far edge.",
+                          "type": "string"
+                        },
+                        "spanTo": {
+                          "type": "string"
+                        },
+                        "gap": {
+                          "description": "Distance held from the referenced element, in inches.",
+                          "type": "number"
+                        },
+                        "offset": {
+                          "description": "Added after everything else, in inches.",
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": {},
+                      "description": "A relation to an element declared earlier on the same slide."
+                    }
+                  ]
+                },
+                "h": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "description": "Inches on the slide canvas."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alignLeft": {
+                          "type": "string"
+                        },
+                        "alignRight": {
+                          "type": "string"
+                        },
+                        "alignTop": {
+                          "type": "string"
+                        },
+                        "alignBottom": {
+                          "type": "string"
+                        },
+                        "centerX": {
+                          "type": "string"
+                        },
+                        "centerY": {
+                          "type": "string"
+                        },
+                        "below": {
+                          "type": "string"
+                        },
+                        "above": {
+                          "type": "string"
+                        },
+                        "rightOf": {
+                          "type": "string"
+                        },
+                        "leftOf": {
+                          "type": "string"
+                        },
+                        "sameAs": {
+                          "description": "Take the referenced element's width or height.",
+                          "type": "string"
+                        },
+                        "spanFrom": {
+                          "description": "With spanTo, stretch from one element's near edge to another's far edge.",
+                          "type": "string"
+                        },
+                        "spanTo": {
+                          "type": "string"
+                        },
+                        "gap": {
+                          "description": "Distance held from the referenced element, in inches.",
+                          "type": "number"
+                        },
+                        "offset": {
+                          "description": "Added after everything else, in inches.",
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": {},
+                      "description": "A relation to an element declared earlier on the same slide."
+                    }
+                  ]
+                }
+              }
+            },
             "type": {
               "type": "string",
               "const": "shape"
@@ -2220,9 +2789,361 @@
                 "type": "string"
               }
             },
+            "place": {
+              "description": "Placement stated against elements already on this slide. Any axis given here wins over the literal x/y/w/h, and is solved into inches before the slide is composed.",
+              "type": "object",
+              "properties": {
+                "x": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "description": "Inches on the slide canvas."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alignLeft": {
+                          "type": "string"
+                        },
+                        "alignRight": {
+                          "type": "string"
+                        },
+                        "alignTop": {
+                          "type": "string"
+                        },
+                        "alignBottom": {
+                          "type": "string"
+                        },
+                        "centerX": {
+                          "type": "string"
+                        },
+                        "centerY": {
+                          "type": "string"
+                        },
+                        "below": {
+                          "type": "string"
+                        },
+                        "above": {
+                          "type": "string"
+                        },
+                        "rightOf": {
+                          "type": "string"
+                        },
+                        "leftOf": {
+                          "type": "string"
+                        },
+                        "sameAs": {
+                          "description": "Take the referenced element's width or height.",
+                          "type": "string"
+                        },
+                        "spanFrom": {
+                          "description": "With spanTo, stretch from one element's near edge to another's far edge.",
+                          "type": "string"
+                        },
+                        "spanTo": {
+                          "type": "string"
+                        },
+                        "gap": {
+                          "description": "Distance held from the referenced element, in inches.",
+                          "type": "number"
+                        },
+                        "offset": {
+                          "description": "Added after everything else, in inches.",
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": {},
+                      "description": "A relation to an element declared earlier on the same slide."
+                    }
+                  ]
+                },
+                "y": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "description": "Inches on the slide canvas."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alignLeft": {
+                          "type": "string"
+                        },
+                        "alignRight": {
+                          "type": "string"
+                        },
+                        "alignTop": {
+                          "type": "string"
+                        },
+                        "alignBottom": {
+                          "type": "string"
+                        },
+                        "centerX": {
+                          "type": "string"
+                        },
+                        "centerY": {
+                          "type": "string"
+                        },
+                        "below": {
+                          "type": "string"
+                        },
+                        "above": {
+                          "type": "string"
+                        },
+                        "rightOf": {
+                          "type": "string"
+                        },
+                        "leftOf": {
+                          "type": "string"
+                        },
+                        "sameAs": {
+                          "description": "Take the referenced element's width or height.",
+                          "type": "string"
+                        },
+                        "spanFrom": {
+                          "description": "With spanTo, stretch from one element's near edge to another's far edge.",
+                          "type": "string"
+                        },
+                        "spanTo": {
+                          "type": "string"
+                        },
+                        "gap": {
+                          "description": "Distance held from the referenced element, in inches.",
+                          "type": "number"
+                        },
+                        "offset": {
+                          "description": "Added after everything else, in inches.",
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": {},
+                      "description": "A relation to an element declared earlier on the same slide."
+                    }
+                  ]
+                },
+                "w": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "description": "Inches on the slide canvas."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alignLeft": {
+                          "type": "string"
+                        },
+                        "alignRight": {
+                          "type": "string"
+                        },
+                        "alignTop": {
+                          "type": "string"
+                        },
+                        "alignBottom": {
+                          "type": "string"
+                        },
+                        "centerX": {
+                          "type": "string"
+                        },
+                        "centerY": {
+                          "type": "string"
+                        },
+                        "below": {
+                          "type": "string"
+                        },
+                        "above": {
+                          "type": "string"
+                        },
+                        "rightOf": {
+                          "type": "string"
+                        },
+                        "leftOf": {
+                          "type": "string"
+                        },
+                        "sameAs": {
+                          "description": "Take the referenced element's width or height.",
+                          "type": "string"
+                        },
+                        "spanFrom": {
+                          "description": "With spanTo, stretch from one element's near edge to another's far edge.",
+                          "type": "string"
+                        },
+                        "spanTo": {
+                          "type": "string"
+                        },
+                        "gap": {
+                          "description": "Distance held from the referenced element, in inches.",
+                          "type": "number"
+                        },
+                        "offset": {
+                          "description": "Added after everything else, in inches.",
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": {},
+                      "description": "A relation to an element declared earlier on the same slide."
+                    }
+                  ]
+                },
+                "h": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "description": "Inches on the slide canvas."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alignLeft": {
+                          "type": "string"
+                        },
+                        "alignRight": {
+                          "type": "string"
+                        },
+                        "alignTop": {
+                          "type": "string"
+                        },
+                        "alignBottom": {
+                          "type": "string"
+                        },
+                        "centerX": {
+                          "type": "string"
+                        },
+                        "centerY": {
+                          "type": "string"
+                        },
+                        "below": {
+                          "type": "string"
+                        },
+                        "above": {
+                          "type": "string"
+                        },
+                        "rightOf": {
+                          "type": "string"
+                        },
+                        "leftOf": {
+                          "type": "string"
+                        },
+                        "sameAs": {
+                          "description": "Take the referenced element's width or height.",
+                          "type": "string"
+                        },
+                        "spanFrom": {
+                          "description": "With spanTo, stretch from one element's near edge to another's far edge.",
+                          "type": "string"
+                        },
+                        "spanTo": {
+                          "type": "string"
+                        },
+                        "gap": {
+                          "description": "Distance held from the referenced element, in inches.",
+                          "type": "number"
+                        },
+                        "offset": {
+                          "description": "Added after everything else, in inches.",
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": {},
+                      "description": "A relation to an element declared earlier on the same slide."
+                    }
+                  ]
+                }
+              }
+            },
             "type": {
               "type": "string",
               "const": "connector"
+            },
+            "from": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "side": {
+                      "description": "Which edge to leave from or arrive at. Defaults to the edge facing the other element.",
+                      "type": "string",
+                      "enum": [
+                        "top",
+                        "right",
+                        "bottom",
+                        "left",
+                        "auto"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id"
+                  ]
+                }
+              ],
+              "description": "An element id on the same slide, optionally with the side to use."
+            },
+            "to": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "side": {
+                      "description": "Which edge to leave from or arrive at. Defaults to the edge facing the other element.",
+                      "type": "string",
+                      "enum": [
+                        "top",
+                        "right",
+                        "bottom",
+                        "left",
+                        "auto"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id"
+                  ]
+                }
+              ],
+              "description": "An element id on the same slide, optionally with the side to use."
+            },
+            "route": {
+              "description": "How the path is drawn between the two anchors. Defaults to elbow when the connector is anchored.",
+              "type": "string",
+              "enum": [
+                "straight",
+                "elbow",
+                "curved"
+              ]
+            },
+            "clearance": {
+              "description": "Gap held from elements the route is not joining, in inches.",
+              "type": "number",
+              "minimum": 0
+            },
+            "stub": {
+              "description": "How far the route runs straight out of an anchor before it may turn, in inches.",
+              "type": "number",
+              "minimum": 0
+            },
+            "mayCross": {
+              "description": "Ids this route may cross without it being reported as a collision.",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             },
             "style": {
               "type": "object",
@@ -2349,13 +3270,9 @@
           },
           "required": [
             "id",
-            "x",
-            "y",
-            "w",
-            "h",
             "type"
           ],
-          "description": "x/y is the start point; w/h is the delta to the end point and may be negative."
+          "description": "Anchor it with from/to and the engine routes it around whatever is in the way. Without anchors, x/y is the start point and w/h is the delta to the end point, which may be negative."
         },
         {
           "type": "object",
@@ -2419,6 +3336,268 @@
               "type": "array",
               "items": {
                 "type": "string"
+              }
+            },
+            "place": {
+              "description": "Placement stated against elements already on this slide. Any axis given here wins over the literal x/y/w/h, and is solved into inches before the slide is composed.",
+              "type": "object",
+              "properties": {
+                "x": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "description": "Inches on the slide canvas."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alignLeft": {
+                          "type": "string"
+                        },
+                        "alignRight": {
+                          "type": "string"
+                        },
+                        "alignTop": {
+                          "type": "string"
+                        },
+                        "alignBottom": {
+                          "type": "string"
+                        },
+                        "centerX": {
+                          "type": "string"
+                        },
+                        "centerY": {
+                          "type": "string"
+                        },
+                        "below": {
+                          "type": "string"
+                        },
+                        "above": {
+                          "type": "string"
+                        },
+                        "rightOf": {
+                          "type": "string"
+                        },
+                        "leftOf": {
+                          "type": "string"
+                        },
+                        "sameAs": {
+                          "description": "Take the referenced element's width or height.",
+                          "type": "string"
+                        },
+                        "spanFrom": {
+                          "description": "With spanTo, stretch from one element's near edge to another's far edge.",
+                          "type": "string"
+                        },
+                        "spanTo": {
+                          "type": "string"
+                        },
+                        "gap": {
+                          "description": "Distance held from the referenced element, in inches.",
+                          "type": "number"
+                        },
+                        "offset": {
+                          "description": "Added after everything else, in inches.",
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": {},
+                      "description": "A relation to an element declared earlier on the same slide."
+                    }
+                  ]
+                },
+                "y": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "description": "Inches on the slide canvas."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alignLeft": {
+                          "type": "string"
+                        },
+                        "alignRight": {
+                          "type": "string"
+                        },
+                        "alignTop": {
+                          "type": "string"
+                        },
+                        "alignBottom": {
+                          "type": "string"
+                        },
+                        "centerX": {
+                          "type": "string"
+                        },
+                        "centerY": {
+                          "type": "string"
+                        },
+                        "below": {
+                          "type": "string"
+                        },
+                        "above": {
+                          "type": "string"
+                        },
+                        "rightOf": {
+                          "type": "string"
+                        },
+                        "leftOf": {
+                          "type": "string"
+                        },
+                        "sameAs": {
+                          "description": "Take the referenced element's width or height.",
+                          "type": "string"
+                        },
+                        "spanFrom": {
+                          "description": "With spanTo, stretch from one element's near edge to another's far edge.",
+                          "type": "string"
+                        },
+                        "spanTo": {
+                          "type": "string"
+                        },
+                        "gap": {
+                          "description": "Distance held from the referenced element, in inches.",
+                          "type": "number"
+                        },
+                        "offset": {
+                          "description": "Added after everything else, in inches.",
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": {},
+                      "description": "A relation to an element declared earlier on the same slide."
+                    }
+                  ]
+                },
+                "w": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "description": "Inches on the slide canvas."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alignLeft": {
+                          "type": "string"
+                        },
+                        "alignRight": {
+                          "type": "string"
+                        },
+                        "alignTop": {
+                          "type": "string"
+                        },
+                        "alignBottom": {
+                          "type": "string"
+                        },
+                        "centerX": {
+                          "type": "string"
+                        },
+                        "centerY": {
+                          "type": "string"
+                        },
+                        "below": {
+                          "type": "string"
+                        },
+                        "above": {
+                          "type": "string"
+                        },
+                        "rightOf": {
+                          "type": "string"
+                        },
+                        "leftOf": {
+                          "type": "string"
+                        },
+                        "sameAs": {
+                          "description": "Take the referenced element's width or height.",
+                          "type": "string"
+                        },
+                        "spanFrom": {
+                          "description": "With spanTo, stretch from one element's near edge to another's far edge.",
+                          "type": "string"
+                        },
+                        "spanTo": {
+                          "type": "string"
+                        },
+                        "gap": {
+                          "description": "Distance held from the referenced element, in inches.",
+                          "type": "number"
+                        },
+                        "offset": {
+                          "description": "Added after everything else, in inches.",
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": {},
+                      "description": "A relation to an element declared earlier on the same slide."
+                    }
+                  ]
+                },
+                "h": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "description": "Inches on the slide canvas."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alignLeft": {
+                          "type": "string"
+                        },
+                        "alignRight": {
+                          "type": "string"
+                        },
+                        "alignTop": {
+                          "type": "string"
+                        },
+                        "alignBottom": {
+                          "type": "string"
+                        },
+                        "centerX": {
+                          "type": "string"
+                        },
+                        "centerY": {
+                          "type": "string"
+                        },
+                        "below": {
+                          "type": "string"
+                        },
+                        "above": {
+                          "type": "string"
+                        },
+                        "rightOf": {
+                          "type": "string"
+                        },
+                        "leftOf": {
+                          "type": "string"
+                        },
+                        "sameAs": {
+                          "description": "Take the referenced element's width or height.",
+                          "type": "string"
+                        },
+                        "spanFrom": {
+                          "description": "With spanTo, stretch from one element's near edge to another's far edge.",
+                          "type": "string"
+                        },
+                        "spanTo": {
+                          "type": "string"
+                        },
+                        "gap": {
+                          "description": "Distance held from the referenced element, in inches.",
+                          "type": "number"
+                        },
+                        "offset": {
+                          "description": "Added after everything else, in inches.",
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": {},
+                      "description": "A relation to an element declared earlier on the same slide."
+                    }
+                  ]
+                }
               }
             },
             "type": {
@@ -2894,6 +4073,268 @@
                 "type": "string"
               }
             },
+            "place": {
+              "description": "Placement stated against elements already on this slide. Any axis given here wins over the literal x/y/w/h, and is solved into inches before the slide is composed.",
+              "type": "object",
+              "properties": {
+                "x": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "description": "Inches on the slide canvas."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alignLeft": {
+                          "type": "string"
+                        },
+                        "alignRight": {
+                          "type": "string"
+                        },
+                        "alignTop": {
+                          "type": "string"
+                        },
+                        "alignBottom": {
+                          "type": "string"
+                        },
+                        "centerX": {
+                          "type": "string"
+                        },
+                        "centerY": {
+                          "type": "string"
+                        },
+                        "below": {
+                          "type": "string"
+                        },
+                        "above": {
+                          "type": "string"
+                        },
+                        "rightOf": {
+                          "type": "string"
+                        },
+                        "leftOf": {
+                          "type": "string"
+                        },
+                        "sameAs": {
+                          "description": "Take the referenced element's width or height.",
+                          "type": "string"
+                        },
+                        "spanFrom": {
+                          "description": "With spanTo, stretch from one element's near edge to another's far edge.",
+                          "type": "string"
+                        },
+                        "spanTo": {
+                          "type": "string"
+                        },
+                        "gap": {
+                          "description": "Distance held from the referenced element, in inches.",
+                          "type": "number"
+                        },
+                        "offset": {
+                          "description": "Added after everything else, in inches.",
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": {},
+                      "description": "A relation to an element declared earlier on the same slide."
+                    }
+                  ]
+                },
+                "y": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "description": "Inches on the slide canvas."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alignLeft": {
+                          "type": "string"
+                        },
+                        "alignRight": {
+                          "type": "string"
+                        },
+                        "alignTop": {
+                          "type": "string"
+                        },
+                        "alignBottom": {
+                          "type": "string"
+                        },
+                        "centerX": {
+                          "type": "string"
+                        },
+                        "centerY": {
+                          "type": "string"
+                        },
+                        "below": {
+                          "type": "string"
+                        },
+                        "above": {
+                          "type": "string"
+                        },
+                        "rightOf": {
+                          "type": "string"
+                        },
+                        "leftOf": {
+                          "type": "string"
+                        },
+                        "sameAs": {
+                          "description": "Take the referenced element's width or height.",
+                          "type": "string"
+                        },
+                        "spanFrom": {
+                          "description": "With spanTo, stretch from one element's near edge to another's far edge.",
+                          "type": "string"
+                        },
+                        "spanTo": {
+                          "type": "string"
+                        },
+                        "gap": {
+                          "description": "Distance held from the referenced element, in inches.",
+                          "type": "number"
+                        },
+                        "offset": {
+                          "description": "Added after everything else, in inches.",
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": {},
+                      "description": "A relation to an element declared earlier on the same slide."
+                    }
+                  ]
+                },
+                "w": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "description": "Inches on the slide canvas."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alignLeft": {
+                          "type": "string"
+                        },
+                        "alignRight": {
+                          "type": "string"
+                        },
+                        "alignTop": {
+                          "type": "string"
+                        },
+                        "alignBottom": {
+                          "type": "string"
+                        },
+                        "centerX": {
+                          "type": "string"
+                        },
+                        "centerY": {
+                          "type": "string"
+                        },
+                        "below": {
+                          "type": "string"
+                        },
+                        "above": {
+                          "type": "string"
+                        },
+                        "rightOf": {
+                          "type": "string"
+                        },
+                        "leftOf": {
+                          "type": "string"
+                        },
+                        "sameAs": {
+                          "description": "Take the referenced element's width or height.",
+                          "type": "string"
+                        },
+                        "spanFrom": {
+                          "description": "With spanTo, stretch from one element's near edge to another's far edge.",
+                          "type": "string"
+                        },
+                        "spanTo": {
+                          "type": "string"
+                        },
+                        "gap": {
+                          "description": "Distance held from the referenced element, in inches.",
+                          "type": "number"
+                        },
+                        "offset": {
+                          "description": "Added after everything else, in inches.",
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": {},
+                      "description": "A relation to an element declared earlier on the same slide."
+                    }
+                  ]
+                },
+                "h": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "description": "Inches on the slide canvas."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alignLeft": {
+                          "type": "string"
+                        },
+                        "alignRight": {
+                          "type": "string"
+                        },
+                        "alignTop": {
+                          "type": "string"
+                        },
+                        "alignBottom": {
+                          "type": "string"
+                        },
+                        "centerX": {
+                          "type": "string"
+                        },
+                        "centerY": {
+                          "type": "string"
+                        },
+                        "below": {
+                          "type": "string"
+                        },
+                        "above": {
+                          "type": "string"
+                        },
+                        "rightOf": {
+                          "type": "string"
+                        },
+                        "leftOf": {
+                          "type": "string"
+                        },
+                        "sameAs": {
+                          "description": "Take the referenced element's width or height.",
+                          "type": "string"
+                        },
+                        "spanFrom": {
+                          "description": "With spanTo, stretch from one element's near edge to another's far edge.",
+                          "type": "string"
+                        },
+                        "spanTo": {
+                          "type": "string"
+                        },
+                        "gap": {
+                          "description": "Distance held from the referenced element, in inches.",
+                          "type": "number"
+                        },
+                        "offset": {
+                          "description": "Added after everything else, in inches.",
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": {},
+                      "description": "A relation to an element declared earlier on the same slide."
+                    }
+                  ]
+                }
+              }
+            },
             "type": {
               "type": "string",
               "const": "table"
@@ -3026,6 +4467,268 @@
               "type": "array",
               "items": {
                 "type": "string"
+              }
+            },
+            "place": {
+              "description": "Placement stated against elements already on this slide. Any axis given here wins over the literal x/y/w/h, and is solved into inches before the slide is composed.",
+              "type": "object",
+              "properties": {
+                "x": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "description": "Inches on the slide canvas."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alignLeft": {
+                          "type": "string"
+                        },
+                        "alignRight": {
+                          "type": "string"
+                        },
+                        "alignTop": {
+                          "type": "string"
+                        },
+                        "alignBottom": {
+                          "type": "string"
+                        },
+                        "centerX": {
+                          "type": "string"
+                        },
+                        "centerY": {
+                          "type": "string"
+                        },
+                        "below": {
+                          "type": "string"
+                        },
+                        "above": {
+                          "type": "string"
+                        },
+                        "rightOf": {
+                          "type": "string"
+                        },
+                        "leftOf": {
+                          "type": "string"
+                        },
+                        "sameAs": {
+                          "description": "Take the referenced element's width or height.",
+                          "type": "string"
+                        },
+                        "spanFrom": {
+                          "description": "With spanTo, stretch from one element's near edge to another's far edge.",
+                          "type": "string"
+                        },
+                        "spanTo": {
+                          "type": "string"
+                        },
+                        "gap": {
+                          "description": "Distance held from the referenced element, in inches.",
+                          "type": "number"
+                        },
+                        "offset": {
+                          "description": "Added after everything else, in inches.",
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": {},
+                      "description": "A relation to an element declared earlier on the same slide."
+                    }
+                  ]
+                },
+                "y": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "description": "Inches on the slide canvas."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alignLeft": {
+                          "type": "string"
+                        },
+                        "alignRight": {
+                          "type": "string"
+                        },
+                        "alignTop": {
+                          "type": "string"
+                        },
+                        "alignBottom": {
+                          "type": "string"
+                        },
+                        "centerX": {
+                          "type": "string"
+                        },
+                        "centerY": {
+                          "type": "string"
+                        },
+                        "below": {
+                          "type": "string"
+                        },
+                        "above": {
+                          "type": "string"
+                        },
+                        "rightOf": {
+                          "type": "string"
+                        },
+                        "leftOf": {
+                          "type": "string"
+                        },
+                        "sameAs": {
+                          "description": "Take the referenced element's width or height.",
+                          "type": "string"
+                        },
+                        "spanFrom": {
+                          "description": "With spanTo, stretch from one element's near edge to another's far edge.",
+                          "type": "string"
+                        },
+                        "spanTo": {
+                          "type": "string"
+                        },
+                        "gap": {
+                          "description": "Distance held from the referenced element, in inches.",
+                          "type": "number"
+                        },
+                        "offset": {
+                          "description": "Added after everything else, in inches.",
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": {},
+                      "description": "A relation to an element declared earlier on the same slide."
+                    }
+                  ]
+                },
+                "w": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "description": "Inches on the slide canvas."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alignLeft": {
+                          "type": "string"
+                        },
+                        "alignRight": {
+                          "type": "string"
+                        },
+                        "alignTop": {
+                          "type": "string"
+                        },
+                        "alignBottom": {
+                          "type": "string"
+                        },
+                        "centerX": {
+                          "type": "string"
+                        },
+                        "centerY": {
+                          "type": "string"
+                        },
+                        "below": {
+                          "type": "string"
+                        },
+                        "above": {
+                          "type": "string"
+                        },
+                        "rightOf": {
+                          "type": "string"
+                        },
+                        "leftOf": {
+                          "type": "string"
+                        },
+                        "sameAs": {
+                          "description": "Take the referenced element's width or height.",
+                          "type": "string"
+                        },
+                        "spanFrom": {
+                          "description": "With spanTo, stretch from one element's near edge to another's far edge.",
+                          "type": "string"
+                        },
+                        "spanTo": {
+                          "type": "string"
+                        },
+                        "gap": {
+                          "description": "Distance held from the referenced element, in inches.",
+                          "type": "number"
+                        },
+                        "offset": {
+                          "description": "Added after everything else, in inches.",
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": {},
+                      "description": "A relation to an element declared earlier on the same slide."
+                    }
+                  ]
+                },
+                "h": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "description": "Inches on the slide canvas."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alignLeft": {
+                          "type": "string"
+                        },
+                        "alignRight": {
+                          "type": "string"
+                        },
+                        "alignTop": {
+                          "type": "string"
+                        },
+                        "alignBottom": {
+                          "type": "string"
+                        },
+                        "centerX": {
+                          "type": "string"
+                        },
+                        "centerY": {
+                          "type": "string"
+                        },
+                        "below": {
+                          "type": "string"
+                        },
+                        "above": {
+                          "type": "string"
+                        },
+                        "rightOf": {
+                          "type": "string"
+                        },
+                        "leftOf": {
+                          "type": "string"
+                        },
+                        "sameAs": {
+                          "description": "Take the referenced element's width or height.",
+                          "type": "string"
+                        },
+                        "spanFrom": {
+                          "description": "With spanTo, stretch from one element's near edge to another's far edge.",
+                          "type": "string"
+                        },
+                        "spanTo": {
+                          "type": "string"
+                        },
+                        "gap": {
+                          "description": "Distance held from the referenced element, in inches.",
+                          "type": "number"
+                        },
+                        "offset": {
+                          "description": "Added after everything else, in inches.",
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": {},
+                      "description": "A relation to an element declared earlier on the same slide."
+                    }
+                  ]
+                }
               }
             },
             "type": {
@@ -3233,6 +4936,268 @@
                 "type": "string"
               }
             },
+            "place": {
+              "description": "Placement stated against elements already on this slide. Any axis given here wins over the literal x/y/w/h, and is solved into inches before the slide is composed.",
+              "type": "object",
+              "properties": {
+                "x": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "description": "Inches on the slide canvas."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alignLeft": {
+                          "type": "string"
+                        },
+                        "alignRight": {
+                          "type": "string"
+                        },
+                        "alignTop": {
+                          "type": "string"
+                        },
+                        "alignBottom": {
+                          "type": "string"
+                        },
+                        "centerX": {
+                          "type": "string"
+                        },
+                        "centerY": {
+                          "type": "string"
+                        },
+                        "below": {
+                          "type": "string"
+                        },
+                        "above": {
+                          "type": "string"
+                        },
+                        "rightOf": {
+                          "type": "string"
+                        },
+                        "leftOf": {
+                          "type": "string"
+                        },
+                        "sameAs": {
+                          "description": "Take the referenced element's width or height.",
+                          "type": "string"
+                        },
+                        "spanFrom": {
+                          "description": "With spanTo, stretch from one element's near edge to another's far edge.",
+                          "type": "string"
+                        },
+                        "spanTo": {
+                          "type": "string"
+                        },
+                        "gap": {
+                          "description": "Distance held from the referenced element, in inches.",
+                          "type": "number"
+                        },
+                        "offset": {
+                          "description": "Added after everything else, in inches.",
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": {},
+                      "description": "A relation to an element declared earlier on the same slide."
+                    }
+                  ]
+                },
+                "y": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "description": "Inches on the slide canvas."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alignLeft": {
+                          "type": "string"
+                        },
+                        "alignRight": {
+                          "type": "string"
+                        },
+                        "alignTop": {
+                          "type": "string"
+                        },
+                        "alignBottom": {
+                          "type": "string"
+                        },
+                        "centerX": {
+                          "type": "string"
+                        },
+                        "centerY": {
+                          "type": "string"
+                        },
+                        "below": {
+                          "type": "string"
+                        },
+                        "above": {
+                          "type": "string"
+                        },
+                        "rightOf": {
+                          "type": "string"
+                        },
+                        "leftOf": {
+                          "type": "string"
+                        },
+                        "sameAs": {
+                          "description": "Take the referenced element's width or height.",
+                          "type": "string"
+                        },
+                        "spanFrom": {
+                          "description": "With spanTo, stretch from one element's near edge to another's far edge.",
+                          "type": "string"
+                        },
+                        "spanTo": {
+                          "type": "string"
+                        },
+                        "gap": {
+                          "description": "Distance held from the referenced element, in inches.",
+                          "type": "number"
+                        },
+                        "offset": {
+                          "description": "Added after everything else, in inches.",
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": {},
+                      "description": "A relation to an element declared earlier on the same slide."
+                    }
+                  ]
+                },
+                "w": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "description": "Inches on the slide canvas."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alignLeft": {
+                          "type": "string"
+                        },
+                        "alignRight": {
+                          "type": "string"
+                        },
+                        "alignTop": {
+                          "type": "string"
+                        },
+                        "alignBottom": {
+                          "type": "string"
+                        },
+                        "centerX": {
+                          "type": "string"
+                        },
+                        "centerY": {
+                          "type": "string"
+                        },
+                        "below": {
+                          "type": "string"
+                        },
+                        "above": {
+                          "type": "string"
+                        },
+                        "rightOf": {
+                          "type": "string"
+                        },
+                        "leftOf": {
+                          "type": "string"
+                        },
+                        "sameAs": {
+                          "description": "Take the referenced element's width or height.",
+                          "type": "string"
+                        },
+                        "spanFrom": {
+                          "description": "With spanTo, stretch from one element's near edge to another's far edge.",
+                          "type": "string"
+                        },
+                        "spanTo": {
+                          "type": "string"
+                        },
+                        "gap": {
+                          "description": "Distance held from the referenced element, in inches.",
+                          "type": "number"
+                        },
+                        "offset": {
+                          "description": "Added after everything else, in inches.",
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": {},
+                      "description": "A relation to an element declared earlier on the same slide."
+                    }
+                  ]
+                },
+                "h": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "description": "Inches on the slide canvas."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alignLeft": {
+                          "type": "string"
+                        },
+                        "alignRight": {
+                          "type": "string"
+                        },
+                        "alignTop": {
+                          "type": "string"
+                        },
+                        "alignBottom": {
+                          "type": "string"
+                        },
+                        "centerX": {
+                          "type": "string"
+                        },
+                        "centerY": {
+                          "type": "string"
+                        },
+                        "below": {
+                          "type": "string"
+                        },
+                        "above": {
+                          "type": "string"
+                        },
+                        "rightOf": {
+                          "type": "string"
+                        },
+                        "leftOf": {
+                          "type": "string"
+                        },
+                        "sameAs": {
+                          "description": "Take the referenced element's width or height.",
+                          "type": "string"
+                        },
+                        "spanFrom": {
+                          "description": "With spanTo, stretch from one element's near edge to another's far edge.",
+                          "type": "string"
+                        },
+                        "spanTo": {
+                          "type": "string"
+                        },
+                        "gap": {
+                          "description": "Distance held from the referenced element, in inches.",
+                          "type": "number"
+                        },
+                        "offset": {
+                          "description": "Added after everything else, in inches.",
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": {},
+                      "description": "A relation to an element declared earlier on the same slide."
+                    }
+                  ]
+                }
+              }
+            },
             "type": {
               "type": "string",
               "const": "native-chart"
@@ -3340,6 +5305,268 @@
                 "type": "string"
               }
             },
+            "place": {
+              "description": "Placement stated against elements already on this slide. Any axis given here wins over the literal x/y/w/h, and is solved into inches before the slide is composed.",
+              "type": "object",
+              "properties": {
+                "x": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "description": "Inches on the slide canvas."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alignLeft": {
+                          "type": "string"
+                        },
+                        "alignRight": {
+                          "type": "string"
+                        },
+                        "alignTop": {
+                          "type": "string"
+                        },
+                        "alignBottom": {
+                          "type": "string"
+                        },
+                        "centerX": {
+                          "type": "string"
+                        },
+                        "centerY": {
+                          "type": "string"
+                        },
+                        "below": {
+                          "type": "string"
+                        },
+                        "above": {
+                          "type": "string"
+                        },
+                        "rightOf": {
+                          "type": "string"
+                        },
+                        "leftOf": {
+                          "type": "string"
+                        },
+                        "sameAs": {
+                          "description": "Take the referenced element's width or height.",
+                          "type": "string"
+                        },
+                        "spanFrom": {
+                          "description": "With spanTo, stretch from one element's near edge to another's far edge.",
+                          "type": "string"
+                        },
+                        "spanTo": {
+                          "type": "string"
+                        },
+                        "gap": {
+                          "description": "Distance held from the referenced element, in inches.",
+                          "type": "number"
+                        },
+                        "offset": {
+                          "description": "Added after everything else, in inches.",
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": {},
+                      "description": "A relation to an element declared earlier on the same slide."
+                    }
+                  ]
+                },
+                "y": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "description": "Inches on the slide canvas."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alignLeft": {
+                          "type": "string"
+                        },
+                        "alignRight": {
+                          "type": "string"
+                        },
+                        "alignTop": {
+                          "type": "string"
+                        },
+                        "alignBottom": {
+                          "type": "string"
+                        },
+                        "centerX": {
+                          "type": "string"
+                        },
+                        "centerY": {
+                          "type": "string"
+                        },
+                        "below": {
+                          "type": "string"
+                        },
+                        "above": {
+                          "type": "string"
+                        },
+                        "rightOf": {
+                          "type": "string"
+                        },
+                        "leftOf": {
+                          "type": "string"
+                        },
+                        "sameAs": {
+                          "description": "Take the referenced element's width or height.",
+                          "type": "string"
+                        },
+                        "spanFrom": {
+                          "description": "With spanTo, stretch from one element's near edge to another's far edge.",
+                          "type": "string"
+                        },
+                        "spanTo": {
+                          "type": "string"
+                        },
+                        "gap": {
+                          "description": "Distance held from the referenced element, in inches.",
+                          "type": "number"
+                        },
+                        "offset": {
+                          "description": "Added after everything else, in inches.",
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": {},
+                      "description": "A relation to an element declared earlier on the same slide."
+                    }
+                  ]
+                },
+                "w": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "description": "Inches on the slide canvas."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alignLeft": {
+                          "type": "string"
+                        },
+                        "alignRight": {
+                          "type": "string"
+                        },
+                        "alignTop": {
+                          "type": "string"
+                        },
+                        "alignBottom": {
+                          "type": "string"
+                        },
+                        "centerX": {
+                          "type": "string"
+                        },
+                        "centerY": {
+                          "type": "string"
+                        },
+                        "below": {
+                          "type": "string"
+                        },
+                        "above": {
+                          "type": "string"
+                        },
+                        "rightOf": {
+                          "type": "string"
+                        },
+                        "leftOf": {
+                          "type": "string"
+                        },
+                        "sameAs": {
+                          "description": "Take the referenced element's width or height.",
+                          "type": "string"
+                        },
+                        "spanFrom": {
+                          "description": "With spanTo, stretch from one element's near edge to another's far edge.",
+                          "type": "string"
+                        },
+                        "spanTo": {
+                          "type": "string"
+                        },
+                        "gap": {
+                          "description": "Distance held from the referenced element, in inches.",
+                          "type": "number"
+                        },
+                        "offset": {
+                          "description": "Added after everything else, in inches.",
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": {},
+                      "description": "A relation to an element declared earlier on the same slide."
+                    }
+                  ]
+                },
+                "h": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "description": "Inches on the slide canvas."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alignLeft": {
+                          "type": "string"
+                        },
+                        "alignRight": {
+                          "type": "string"
+                        },
+                        "alignTop": {
+                          "type": "string"
+                        },
+                        "alignBottom": {
+                          "type": "string"
+                        },
+                        "centerX": {
+                          "type": "string"
+                        },
+                        "centerY": {
+                          "type": "string"
+                        },
+                        "below": {
+                          "type": "string"
+                        },
+                        "above": {
+                          "type": "string"
+                        },
+                        "rightOf": {
+                          "type": "string"
+                        },
+                        "leftOf": {
+                          "type": "string"
+                        },
+                        "sameAs": {
+                          "description": "Take the referenced element's width or height.",
+                          "type": "string"
+                        },
+                        "spanFrom": {
+                          "description": "With spanTo, stretch from one element's near edge to another's far edge.",
+                          "type": "string"
+                        },
+                        "spanTo": {
+                          "type": "string"
+                        },
+                        "gap": {
+                          "description": "Distance held from the referenced element, in inches.",
+                          "type": "number"
+                        },
+                        "offset": {
+                          "description": "Added after everything else, in inches.",
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": {},
+                      "description": "A relation to an element declared earlier on the same slide."
+                    }
+                  ]
+                }
+              }
+            },
             "type": {
               "type": "string",
               "const": "diagram"
@@ -3437,6 +5664,268 @@
                 "type": "string"
               }
             },
+            "place": {
+              "description": "Placement stated against elements already on this slide. Any axis given here wins over the literal x/y/w/h, and is solved into inches before the slide is composed.",
+              "type": "object",
+              "properties": {
+                "x": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "description": "Inches on the slide canvas."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alignLeft": {
+                          "type": "string"
+                        },
+                        "alignRight": {
+                          "type": "string"
+                        },
+                        "alignTop": {
+                          "type": "string"
+                        },
+                        "alignBottom": {
+                          "type": "string"
+                        },
+                        "centerX": {
+                          "type": "string"
+                        },
+                        "centerY": {
+                          "type": "string"
+                        },
+                        "below": {
+                          "type": "string"
+                        },
+                        "above": {
+                          "type": "string"
+                        },
+                        "rightOf": {
+                          "type": "string"
+                        },
+                        "leftOf": {
+                          "type": "string"
+                        },
+                        "sameAs": {
+                          "description": "Take the referenced element's width or height.",
+                          "type": "string"
+                        },
+                        "spanFrom": {
+                          "description": "With spanTo, stretch from one element's near edge to another's far edge.",
+                          "type": "string"
+                        },
+                        "spanTo": {
+                          "type": "string"
+                        },
+                        "gap": {
+                          "description": "Distance held from the referenced element, in inches.",
+                          "type": "number"
+                        },
+                        "offset": {
+                          "description": "Added after everything else, in inches.",
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": {},
+                      "description": "A relation to an element declared earlier on the same slide."
+                    }
+                  ]
+                },
+                "y": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "description": "Inches on the slide canvas."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alignLeft": {
+                          "type": "string"
+                        },
+                        "alignRight": {
+                          "type": "string"
+                        },
+                        "alignTop": {
+                          "type": "string"
+                        },
+                        "alignBottom": {
+                          "type": "string"
+                        },
+                        "centerX": {
+                          "type": "string"
+                        },
+                        "centerY": {
+                          "type": "string"
+                        },
+                        "below": {
+                          "type": "string"
+                        },
+                        "above": {
+                          "type": "string"
+                        },
+                        "rightOf": {
+                          "type": "string"
+                        },
+                        "leftOf": {
+                          "type": "string"
+                        },
+                        "sameAs": {
+                          "description": "Take the referenced element's width or height.",
+                          "type": "string"
+                        },
+                        "spanFrom": {
+                          "description": "With spanTo, stretch from one element's near edge to another's far edge.",
+                          "type": "string"
+                        },
+                        "spanTo": {
+                          "type": "string"
+                        },
+                        "gap": {
+                          "description": "Distance held from the referenced element, in inches.",
+                          "type": "number"
+                        },
+                        "offset": {
+                          "description": "Added after everything else, in inches.",
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": {},
+                      "description": "A relation to an element declared earlier on the same slide."
+                    }
+                  ]
+                },
+                "w": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "description": "Inches on the slide canvas."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alignLeft": {
+                          "type": "string"
+                        },
+                        "alignRight": {
+                          "type": "string"
+                        },
+                        "alignTop": {
+                          "type": "string"
+                        },
+                        "alignBottom": {
+                          "type": "string"
+                        },
+                        "centerX": {
+                          "type": "string"
+                        },
+                        "centerY": {
+                          "type": "string"
+                        },
+                        "below": {
+                          "type": "string"
+                        },
+                        "above": {
+                          "type": "string"
+                        },
+                        "rightOf": {
+                          "type": "string"
+                        },
+                        "leftOf": {
+                          "type": "string"
+                        },
+                        "sameAs": {
+                          "description": "Take the referenced element's width or height.",
+                          "type": "string"
+                        },
+                        "spanFrom": {
+                          "description": "With spanTo, stretch from one element's near edge to another's far edge.",
+                          "type": "string"
+                        },
+                        "spanTo": {
+                          "type": "string"
+                        },
+                        "gap": {
+                          "description": "Distance held from the referenced element, in inches.",
+                          "type": "number"
+                        },
+                        "offset": {
+                          "description": "Added after everything else, in inches.",
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": {},
+                      "description": "A relation to an element declared earlier on the same slide."
+                    }
+                  ]
+                },
+                "h": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "description": "Inches on the slide canvas."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alignLeft": {
+                          "type": "string"
+                        },
+                        "alignRight": {
+                          "type": "string"
+                        },
+                        "alignTop": {
+                          "type": "string"
+                        },
+                        "alignBottom": {
+                          "type": "string"
+                        },
+                        "centerX": {
+                          "type": "string"
+                        },
+                        "centerY": {
+                          "type": "string"
+                        },
+                        "below": {
+                          "type": "string"
+                        },
+                        "above": {
+                          "type": "string"
+                        },
+                        "rightOf": {
+                          "type": "string"
+                        },
+                        "leftOf": {
+                          "type": "string"
+                        },
+                        "sameAs": {
+                          "description": "Take the referenced element's width or height.",
+                          "type": "string"
+                        },
+                        "spanFrom": {
+                          "description": "With spanTo, stretch from one element's near edge to another's far edge.",
+                          "type": "string"
+                        },
+                        "spanTo": {
+                          "type": "string"
+                        },
+                        "gap": {
+                          "description": "Distance held from the referenced element, in inches.",
+                          "type": "number"
+                        },
+                        "offset": {
+                          "description": "Added after everything else, in inches.",
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": {},
+                      "description": "A relation to an element declared earlier on the same slide."
+                    }
+                  ]
+                }
+              }
+            },
             "type": {
               "type": "string",
               "const": "group"
@@ -3445,7 +5934,7 @@
               "minItems": 1,
               "type": "array",
               "items": {
-                "$ref": "#/$defs/__schema1"
+                "$ref": "#/$defs/__schema0"
               },
               "description": "Child elements. Their x/y are offsets from the group's x/y, in inches."
             },
@@ -3530,6 +6019,268 @@
               "type": "array",
               "items": {
                 "type": "string"
+              }
+            },
+            "place": {
+              "description": "Placement stated against elements already on this slide. Any axis given here wins over the literal x/y/w/h, and is solved into inches before the slide is composed.",
+              "type": "object",
+              "properties": {
+                "x": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "description": "Inches on the slide canvas."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alignLeft": {
+                          "type": "string"
+                        },
+                        "alignRight": {
+                          "type": "string"
+                        },
+                        "alignTop": {
+                          "type": "string"
+                        },
+                        "alignBottom": {
+                          "type": "string"
+                        },
+                        "centerX": {
+                          "type": "string"
+                        },
+                        "centerY": {
+                          "type": "string"
+                        },
+                        "below": {
+                          "type": "string"
+                        },
+                        "above": {
+                          "type": "string"
+                        },
+                        "rightOf": {
+                          "type": "string"
+                        },
+                        "leftOf": {
+                          "type": "string"
+                        },
+                        "sameAs": {
+                          "description": "Take the referenced element's width or height.",
+                          "type": "string"
+                        },
+                        "spanFrom": {
+                          "description": "With spanTo, stretch from one element's near edge to another's far edge.",
+                          "type": "string"
+                        },
+                        "spanTo": {
+                          "type": "string"
+                        },
+                        "gap": {
+                          "description": "Distance held from the referenced element, in inches.",
+                          "type": "number"
+                        },
+                        "offset": {
+                          "description": "Added after everything else, in inches.",
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": {},
+                      "description": "A relation to an element declared earlier on the same slide."
+                    }
+                  ]
+                },
+                "y": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "description": "Inches on the slide canvas."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alignLeft": {
+                          "type": "string"
+                        },
+                        "alignRight": {
+                          "type": "string"
+                        },
+                        "alignTop": {
+                          "type": "string"
+                        },
+                        "alignBottom": {
+                          "type": "string"
+                        },
+                        "centerX": {
+                          "type": "string"
+                        },
+                        "centerY": {
+                          "type": "string"
+                        },
+                        "below": {
+                          "type": "string"
+                        },
+                        "above": {
+                          "type": "string"
+                        },
+                        "rightOf": {
+                          "type": "string"
+                        },
+                        "leftOf": {
+                          "type": "string"
+                        },
+                        "sameAs": {
+                          "description": "Take the referenced element's width or height.",
+                          "type": "string"
+                        },
+                        "spanFrom": {
+                          "description": "With spanTo, stretch from one element's near edge to another's far edge.",
+                          "type": "string"
+                        },
+                        "spanTo": {
+                          "type": "string"
+                        },
+                        "gap": {
+                          "description": "Distance held from the referenced element, in inches.",
+                          "type": "number"
+                        },
+                        "offset": {
+                          "description": "Added after everything else, in inches.",
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": {},
+                      "description": "A relation to an element declared earlier on the same slide."
+                    }
+                  ]
+                },
+                "w": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "description": "Inches on the slide canvas."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alignLeft": {
+                          "type": "string"
+                        },
+                        "alignRight": {
+                          "type": "string"
+                        },
+                        "alignTop": {
+                          "type": "string"
+                        },
+                        "alignBottom": {
+                          "type": "string"
+                        },
+                        "centerX": {
+                          "type": "string"
+                        },
+                        "centerY": {
+                          "type": "string"
+                        },
+                        "below": {
+                          "type": "string"
+                        },
+                        "above": {
+                          "type": "string"
+                        },
+                        "rightOf": {
+                          "type": "string"
+                        },
+                        "leftOf": {
+                          "type": "string"
+                        },
+                        "sameAs": {
+                          "description": "Take the referenced element's width or height.",
+                          "type": "string"
+                        },
+                        "spanFrom": {
+                          "description": "With spanTo, stretch from one element's near edge to another's far edge.",
+                          "type": "string"
+                        },
+                        "spanTo": {
+                          "type": "string"
+                        },
+                        "gap": {
+                          "description": "Distance held from the referenced element, in inches.",
+                          "type": "number"
+                        },
+                        "offset": {
+                          "description": "Added after everything else, in inches.",
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": {},
+                      "description": "A relation to an element declared earlier on the same slide."
+                    }
+                  ]
+                },
+                "h": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "description": "Inches on the slide canvas."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alignLeft": {
+                          "type": "string"
+                        },
+                        "alignRight": {
+                          "type": "string"
+                        },
+                        "alignTop": {
+                          "type": "string"
+                        },
+                        "alignBottom": {
+                          "type": "string"
+                        },
+                        "centerX": {
+                          "type": "string"
+                        },
+                        "centerY": {
+                          "type": "string"
+                        },
+                        "below": {
+                          "type": "string"
+                        },
+                        "above": {
+                          "type": "string"
+                        },
+                        "rightOf": {
+                          "type": "string"
+                        },
+                        "leftOf": {
+                          "type": "string"
+                        },
+                        "sameAs": {
+                          "description": "Take the referenced element's width or height.",
+                          "type": "string"
+                        },
+                        "spanFrom": {
+                          "description": "With spanTo, stretch from one element's near edge to another's far edge.",
+                          "type": "string"
+                        },
+                        "spanTo": {
+                          "type": "string"
+                        },
+                        "gap": {
+                          "description": "Distance held from the referenced element, in inches.",
+                          "type": "number"
+                        },
+                        "offset": {
+                          "description": "Added after everything else, in inches.",
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": {},
+                      "description": "A relation to an element declared earlier on the same slide."
+                    }
+                  ]
+                }
               }
             },
             "type": {
@@ -3618,6 +6369,38 @@
             "type",
             "symbol"
           ]
+        }
+      ]
+    },
+    "__schema1": {
+      "description": "Any JSON value. Deck variables are deliberately this open.",
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/__schema1"
+          }
+        },
+        {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/__schema1"
+          }
         }
       ]
     }

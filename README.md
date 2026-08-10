@@ -92,6 +92,31 @@ the authoring contract, designs the deck, and calls Slide Agent to build it:
 > Make me a 10-slide board deck on the zero-trust migration. Dense and
 > technical, dark, no stock photography.
 
+### As a build script
+
+For a deck whose quality matters, have the model write a JavaScript module that
+composes it, and run:
+
+```bash
+slide-agent build --script deck.mjs --output deck.pptx --render --round-trip
+```
+
+The module defines this deck's own repeated forms as ordinary functions and
+places them in loops, so a card with a title, a sub-label, and an accent bar
+costs one call instead of four hand-computed records. Slide Agent supplies the
+arithmetic — `columns`, `rows`, `grid`, `split`, `distribute`, `inset`, and
+`measureText` — and ships no components and no house style. The emitted
+`scene.ndjson` stays canonical, so `patch`, `revise`, and `--round-trip` work
+exactly as they do for hand-authored scenes.
+
+The script imports `@slide-agent/core`, so it needs the package resolvable from
+its own directory — `npm install @slide-agent/core` beside it, or a workspace
+that already has it. It is then imported and run in the engine's process with
+your privileges: the same decision as running it with `node`. Slide Agent never
+discovers, downloads, or executes a script it was not handed.
+
+See [`examples/scripts/rollout-deck.mjs`](examples/scripts/rollout-deck.mjs).
+
 ### With any model, by hand
 
 ```bash
@@ -144,7 +169,10 @@ Every command returns one JSON object on stdout and JSON-lines logs on stderr.
 | | |
 |---|---|
 | **Authoring** | Model-authored art direction, freeform canvases, any slide kind, rich text runs, arbitrary PptxGenJS shapes and options |
-| **Diagrams** | `layered`, `swimlane`, `sequence`, `hierarchy`, and `quadrant` grammars, plus hand-composed shapes and connectors |
+| **Build scripts** | Compose a deck as a program: your own components as functions, `columns`/`rows`/`grid`/`split`/`distribute` for placement, `measureText` and `autoHeight` so a box fits its own text |
+| **Diagrams** | `slide.graph` ranks, orders, places, and routes — you only draw the node; connectors anchor to the elements they join and route around what is in the way, straight, elbowed, or curved; `layered`, `swimlane`, `sequence`, `hierarchy`, and `quadrant` grammars |
+| **Placement** | Absolute inches, or `place` relations — `alignLeft`, `below`, `rightOf`, `sameAs`, `spanFrom`/`spanTo` — solved into inches before composition |
+| **Repetition** | `slideChrome` repeats the kicker, slide number, footer rule, and brand mark you wrote, with per-slide values interpolated |
 | **Data** | Native bar, stacked, horizontal, line, area, pie, doughnut, scatter, and radar charts; editable waterfalls; native tables; CSV/TSV/JSON connectors that carry provenance |
 | **Formats** | 16:9, 4:3, 9:16, A4 landscape and portrait — layouts adapt rather than overflow |
 | **Imagery** | Local files, opt-in remote URLs, or a host-supplied provider for stock search and generation, with `credit`, `license`, and `generated` carried into the deck |
@@ -152,7 +180,7 @@ Every command returns one JSON object on stdout and JSON-lines logs on stderr.
 | **Languages** | `--bilingual` renders a second language as its own editable text, with RTL and script-aware fonts |
 | **Visual systems** | The deck's own variables, named styles with inheritance, motifs, and constraints — arbitrary names, `styleRef` and `{"$var":…}` references, and precise errors instead of silent coercion |
 | **Editing** | Element-level `patch` by id, slide-level `revise`, OOXML-level `edit`, cross-deck `import-slide`, and a semantic `diff` between two decks |
-| **Review loop** | `slide-agent review` returns the exact render, the words read back off it, the geometry, your declared intent, and questions worth asking — bound by hash to the PPTX it describes |
+| **Review loop** | `slide-agent review` returns the exact render, the words read back off it, the geometry, your declared intent, and questions worth asking — bound by hash to the PPTX it describes; slides that came out as the same drawing are named by number, and `validate --findings` records the verdict that closes the loop |
 | **Quality** | ECMA-376 validation, per-font and per-script text measurement, geometry, contrast through translucency, accessibility, render text fidelity, and heuristics that say what they are |
 | **Previews** | LibreOffice renders; without it, Slide Agent draws the deck's own geometry so the look-and-revise loop still closes |
 | **Reproducible** | `SOURCE_DATE_EPOCH` makes the same scene produce byte-identical packages |

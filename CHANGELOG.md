@@ -3,6 +3,128 @@
 All notable public changes are recorded here, newest first. Versions follow
 semantic versioning.
 
+## 0.12.0 — 2026-08-10
+
+Composition stops being expensive. 0.11 gave the model a canvas it could design
+anything on and then charged it, per element, in hand-computed coordinates —
+and the bill fell on exactly the things that make a deck look finished. A card
+with a title, a sub-label and an accent bar costs four hand-written records; a
+bare floating label costs one. Nothing in the guidance asked for bare floating
+labels. Economising produced them anyway.
+
+Contract `0.11`. Every change is additive: `0.10` scenes, outlines, and requests
+build unchanged.
+
+### Added
+
+- **The engine places the diagram, not just the arrows.** `slide.graph(id, spec,
+  draw)` ranks the nodes, orders each rank so edges cross as little as possible,
+  places them in the frame, and routes the connectors — then calls your `draw`
+  with a rectangle per node. What a node looks like stays entirely yours; where
+  it sits stops being your arithmetic. Cycles survive ranking, so a feedback
+  edge does not collapse a flow into one column, and a rank that cannot fit its
+  frame is refused with what it needed and what it was given rather than being
+  placed off the slide.
+- **Placement as a relationship.** Any element may carry `place`:
+  `{"x":{"alignLeft":"title"},"y":{"below":"chart","gap":0.2}}`, with
+  `alignLeft/Right/Top/Bottom`, `centerX/Y`, `above`, `below`, `leftOf`,
+  `rightOf`, `sameAs`, and `spanFrom`/`spanTo`. Relations may only reference an
+  element declared earlier on the slide, which rules out cycles by construction,
+  and they are solved into inches before composition — so the scene, the
+  manifest, and any later patch carry coordinates, never relationships.
+- **Slides that came out as the same drawing are named.** `repeated-silhouette`
+  reports the pair by number. The variety score already noticed this in
+  aggregate; what it could not say was *which* slides, which is the only part an
+  author can act on. Slides sharing a declared `kind` are held to a stricter
+  threshold, because two section dividers are a rhythm rather than a repetition.
+  The review packet carries the same finding per slide as `twins`.
+- **`validate --findings`.** What a reviewer saw, recorded against the deck.
+  This is how the loop closes: an authored deck is held at `review` until a
+  judgement exists, and a single `note` finding saying the slides are sound is
+  that judgement.
+- **Author the deck as a program.** `slide-agent build --script deck.mjs` runs a
+  JavaScript module that composes the deck with `defineDeck` and exports it. You
+  define this deck's own repeated forms as ordinary functions and place them in
+  loops; the engine supplies the arithmetic — `columns`, `rows`, `grid`,
+  `split`, `distribute`, `inset` return rectangles, and `measureText` says how
+  tall a string will actually set before you commit to a frame. Slide Agent
+  ships no components and no house style: what your functions draw is yours. The
+  emitted `.ndjson` remains canonical, so patch, revise, and the clean-directory
+  round-trip work unchanged on decks built this way. The script runs in the
+  engine's process with your privileges — the same decision as running it with
+  `node` — and nothing discovers or fetches scripts.
+- **Connectors that route themselves.** A connector can name the elements it
+  joins — `{"type":"connector","from":"cache","to":"db","route":"elbow"}` —
+  and the engine resolves the anchors against the real frames, stands the arrow
+  off the edge, and routes around whatever is in the way. `route` is `straight`,
+  `elbow`, or `curved`; `from`/`to` take a `{ id, side }` when a specific edge
+  matters; `clearance`, `stub`, and `mayCross` tune the rest. Elbow routes are
+  emitted as one native custom-geometry shape, so a route is still one editable
+  object and one manifest record.
+- **`slideChrome`.** The kicker, slide number, footer rule, and brand mark
+  declared once on the deck record and repeated on every model-authored slide,
+  interpolating `{{slideNumber}}`, `{{slideNumberPadded}}`, `{{slideCount}}`,
+  `{{slideTitle}}`, `{{deckTitle}}`, and any key a slide supplies in its own
+  `chrome`. A slide opts out with `chrome: false`. Slide Agent ships no chrome
+  and has no opinion about whether a deck should have any; it repeats what you
+  wrote.
+- **`typography.scale`.** Declare the point sizes the deck commits to, largest
+  first, and the report names every element that stepped off the ladder as
+  `type-off-scale`. It stays advice: a deliberate departure is a design
+  decision, not a defect.
+- **`slide-agent measure`.** Line count, laid-out height, and overflow for a
+  string in a frame, using the same metrics validation uses — so the answer you
+  get before building matches the one the report gives you after. Available as
+  `measureText` from the library, and as `autoHeight` on an authored text box.
+
+### Changed
+
+- **Density is measured as ink, not as reserved boxes.** Coverage used to union
+  bounding boxes, so a two-inch text box holding one line of ten-point type
+  counted as full and a slide of six such boxes reported as fully covered while
+  reading as a blank page with labels on it. Text now contributes the block its
+  glyphs occupy, an unfilled outline contributes its stroke rather than its
+  interior, and only real masses — pictures, charts, tables, filled shapes —
+  contribute a whole frame.
+- **Hierarchy measures a ladder, not a headcount.** Counting distinct sizes per
+  slide scored a scale and a scatter identically. It now measures how few sizes
+  the deck commits to overall and how far the dominant text on a slide outranks
+  its body, which is what a reader actually sees.
+- **The heuristic floors bind.** They sat at 25, a floor only a catastrophe
+  could hit, so a deck could score 57 on variety with the engine's own advice
+  reading "nothing gets noticeably quieter or denser" and still report `ready`
+  with a single reason saying nothing was wrong. Every floor is now 58 — the
+  same threshold at which `scoreDeck` already declines to call a deck workable —
+  and the failing dimension's own advice travels into `readinessReasons`.
+- **`ready` requires that somebody looked.** A deck this engine built reaches
+  `ready` only once a visual review finding is recorded. Rendering a deck is not
+  the same as forming an opinion about it, and an empty `visualFindings` after a
+  successful render means the question was never asked. Recording that the
+  slides are sound is one finding; it just has to be said. Decks arriving from
+  elsewhere are unaffected — nobody can know whether their author reviewed them.
+
+### Fixed
+
+- **Routes stay on the slide.** Going around an obstacle could pick a lane past
+  the edge of the page, which is worse than the crossing it avoided: an arrow
+  that leaves the slide reads as a bug and clips differently in every viewer.
+  Routing now scores an escaped path below a crossing one and clamps its
+  candidate lanes to the slide.
+- **`validate` reports readiness at the top level**, the way `create` always
+  has. A caller reading only the result object used to get `undefined`.
+- **Connectors are no longer exempt from collision checking.** Every connector
+  record was written with `intentionalOverlap: true`, which made one whole class
+  of defect unreportable: a route drawn straight through a label, striking the
+  words out, invisible in the scene, the manifest, and the package alike. Routed
+  connectors keep their real path on the record, so the check now asks whether
+  the line crosses text rather than whether two bounding boxes intersect, and
+  reports `connector-crosses-text` when it does.
+- **A shape wholly inside an earlier shape is layering, not collision.** A
+  miniature drawn on a card, a dot on a track, or a bar in a plot frame no
+  longer reports an overlap per instance — noise that argued against composing
+  anything at all. Elements expanded from the same group or symbol are likewise
+  one authored object.
+
 ## 0.11.0 — 2026-08-10
 
 Uncaged authoring. The release where the AI's design language is the deck's

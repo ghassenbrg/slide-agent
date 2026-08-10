@@ -9,6 +9,7 @@ import {
   designExplorationSchema,
   hostAuthoringCapabilitiesSchema,
   presentationBriefSchema,
+  slideChromeSchema,
   sequencePlanItemSchema,
   slideCommunicationSchema,
   slideSpecSchema,
@@ -36,6 +37,7 @@ export const deckRecordSchema = z.looseObject({
   brief: presentationBriefSchema,
   narrative: z.string(),
   completeness: deckCompletenessSchema.optional(),
+  slideChrome: slideChromeSchema.optional(),
   creativeDirection: creativeDirectionSchema.optional(),
   exploration: designExplorationSchema.optional(),
   sequencePlan: z.array(sequencePlanItemSchema).optional(),
@@ -69,6 +71,7 @@ export const freeformSlideRecordSchema = z.looseObject({
   communication: slideCommunicationSchema.optional(),
   designIntent: z.string().optional(),
   composition: z.string().optional(),
+  chrome: z.union([z.literal(false), z.record(z.string(), z.string())]).optional(),
 });
 
 export const fallbackSlideRecordSchema = z.looseObject({
@@ -104,7 +107,13 @@ export const symbolInstanceRecordSchema = z.looseObject({
   symbol: z.string().min(1),
 });
 export const shapeRecordSchema = z.looseObject({ ...elementRecordBase, kind: z.literal("shape") });
-export const connectorRecordSchema = z.looseObject({ ...elementRecordBase, kind: z.literal("connector") });
+export const connectorRecordSchema = z.looseObject({
+  ...elementRecordBase,
+  // Anchored connectors carry `from`/`to` instead of a frame, so the bbox that
+  // every other record requires is optional here and validated in context.
+  bbox: bbox.optional(),
+  kind: z.literal("connector"),
+});
 export const imageRecordSchema = z.looseObject({ ...elementRecordBase, kind: z.literal("image") });
 export const tableRecordSchema = z.looseObject({ ...elementRecordBase, kind: z.literal("table"), table: tableSpecSchema.optional() });
 export const chartRecordSchema = z.looseObject({ ...elementRecordBase, kind: z.literal("chart"), chart: chartSpecSchema.optional() });
@@ -155,18 +164,21 @@ export function parseSceneElement(record: Record<string, unknown>): Record<strin
   const type = canvasTypeForRecordKind(String(record.kind));
   if (!type) throw new Error(`Unsupported scene element kind: ${String(record.kind)}`);
   const bounds = record.bbox;
-  if (!Array.isArray(bounds) || bounds.length !== 4 || bounds.some((value) => typeof value !== "number" || !Number.isFinite(value))) {
-    throw new Error(`${String(record.kind)} record requires bbox: [x, y, w, h] in inches.`);
-  }
   const { kind: _kind, slide: _slide, bbox: _bbox, mode: _mode, ...rest } = record;
-  return canvasElementSchema.parse({
-    ...rest,
-    type,
-    x: bounds[0],
-    y: bounds[1],
-    w: bounds[2],
-    h: bounds[3],
-  }) as Record<string, unknown>;
+  // An anchored connector has no frame of its own: it is wherever the two
+  // elements it joins turned out to be. Requiring a bbox would mean writing
+  // coordinates that the router is about to discard, and reading them back as
+  // if they meant something.
+  const anchored = type === "connector" && rest.from !== undefined && rest.to !== undefined;
+  if (!anchored) {
+    if (!Array.isArray(bounds) || bounds.length !== 4 || bounds.some((value) => typeof value !== "number" || !Number.isFinite(value))) {
+      throw new Error(`${String(record.kind)} record requires bbox: [x, y, w, h] in inches.`);
+    }
+  }
+  const frame = Array.isArray(bounds) && bounds.length === 4 && bounds.every((value) => typeof value === "number" && Number.isFinite(value))
+    ? { x: bounds[0], y: bounds[1], w: bounds[2], h: bounds[3] }
+    : {};
+  return canvasElementSchema.parse({ ...rest, type, ...frame }) as Record<string, unknown>;
 }
 
 export type SceneRecord = z.infer<typeof sceneRecordSchema>;

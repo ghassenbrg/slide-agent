@@ -2,7 +2,7 @@
 
 # Slide Agent authoring guide
 
-Contract version 0.10 · scene schema `slide-agent.scene/1`
+Contract version 0.11 · scene schema `slide-agent.scene/1`
 
 ## Invent the deck's visual thesis
 
@@ -13,6 +13,7 @@ Creative freedom is not the same as loud styling. Dense technical manuals, monoc
 The three examples below are deliberately unlike each other in structure, not only in palette. Read them as three different answers, not as three variants of one template — and then write a fourth.
 
 - Give concrete hex values for the palette and real font names for the typography. Those are what the renderer consumes.
+- Declare `typography.scale`: the point sizes this deck commits to, largest first. A short ladder reused everywhere is a type system; a size chosen separately for each element is not, and the report will name every element that stepped off it. Unless the subject argues otherwise, a deck title wants roughly 44pt or more, a slide title 32pt or more, subheads and callout titles around 20pt, and body text at least 14pt — and the largest thing on a slide should be at least twice its body.
 - Prefer the open prose fields — `geometryLanguage`, `spatialRhythm`, `materialLanguage` — over the legacy `geometry` and `density` enums. Omitting them is fine: the engine will not choose a shape language on your behalf.
 - State `avoid` when the subject rules something out. The renderer honours it.
 - Do not reuse a palette, font pairing, cover structure, or closing treatment across unrelated decks merely because it worked before.

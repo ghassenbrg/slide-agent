@@ -184,6 +184,7 @@ describe("AutoFixer", () => {
     ]));
     const element = fixed.outline.slides[0]!.canvas![0]!;
     const region = fixed.outline.slides[0]!.custom![0]!;
+    if (element.type === "connector") throw new Error("expected the clamped element to be a shape");
     expect(element.x + element.w).toBeLessThanOrEqual(config.dimensions.width + 0.001);
     expect(element.y + element.h).toBeLessThanOrEqual(config.dimensions.height + 0.001);
     expect(region.x + region.w).toBeLessThanOrEqual(config.dimensions.width + 0.001);

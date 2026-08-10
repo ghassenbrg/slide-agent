@@ -2,7 +2,7 @@
 
 # Reference
 
-Authoring contract 0.10 · scene schema `slide-agent.scene/1`
+Authoring contract 0.11 · scene schema `slide-agent.scene/1`
 
 Every page here is generated from `src/contract`. Change the contract, run
 `npm run docs`, and the prose, the schemas, and the engine stay in step.
@@ -15,6 +15,7 @@ Every page here is generated from `src/contract`. Change the contract, run
 - [Commit to a plan before you write coordinates](planning.md) — Author two or more visual theses in `exploration.alternatives` and say which one you chose. They must differ structurally — different silhouettes, different dominant masses, a different reading path — not in palette. A palette swap over the same geometry is one design, and the structural signature will say so.
 - [Plan the story before styling it](narrative.md) — Express the job as: by the end, [audience] should [outcome] because [central takeaway]. Choose a cumulative structure that fits the objective — context to stakes to evidence to action, question to analysis to answer, problem to options to recommendation, or one you invent for the material.
 - [Compose from first principles](composition.md) — Vary silhouette and scale across the sequence while keeping the deck's underlying visual logic. Contrast dense against sparse, quiet against loud, diagrammatic against photographic, to create pacing.
+- [Author the deck as a program](build-script.md) — For any deck whose quality matters, write a JavaScript module that composes it and run `slide-agent build --script deck.mjs --output deck.pptx`. The module imports `defineDeck` from `@slide-agent/core` and exports the deck; the engine turns it into the same scene file every other path produces, so patching, revising, and the clean-directory round-trip all work exactly as they do for hand-authored NDJSON.
 - [The freeform canvas](canvas.md) — `slide.canvas` is an array of editable native elements at coordinates you choose, in inches, on a slide whose size the deck declares. Its presence bypasses the layout registry completely, so `layout` is ignored and `kind` becomes free-form metadata.
 - [The NDJSON scene format](scene.md) — For long or highly designed decks, author the line-oriented scene instead of a nested outline. One JSON object per line, schema `slide-agent.scene/1`.
 - [Diagrams and systems](diagrams.md) — A diagram earns its place when the relationship between things is the point. Give nodes meaning, route edges deliberately, and label both. A box-and-arrow row that restates a bulleted list is worse than the list.

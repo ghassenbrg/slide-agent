@@ -146,11 +146,34 @@ describe("build, review, patch", () => {
     // the claim reason is gone, and the only reason that may survive it is the
     // one the machine imposes when it cannot render.
     expect(patched.validation?.readinessReasons.join(" ")).not.toMatch(/c1/);
-    expect(patched.presentationReadiness).toBe(rendererAvailable ? "ready" : "review");
-    if (!rendererAvailable) {
-      expect(patched.validation?.readinessReasons).toEqual([expect.stringMatching(/schematic/)]);
-    }
+    // A patch produces a deck nobody has looked at yet, so readiness waits on a
+    // recorded judgement rather than on the claim that was just resolved.
+    expect(patched.presentationReadiness).toBe("review");
+    expect(patched.validation?.readinessReasons.join(" ")).toMatch(
+      rendererAvailable ? /no visual review finding was recorded/ : /schematic/,
+    );
     expect(patched.patch?.untouched.find((entry) => entry.slide === 2)?.elementIds).toEqual(["figure", "peaks"]);
+
+    // Recording what the reviewer saw is what closes the loop; without a way to
+    // say it, an authored deck could never reach `ready` at all.
+    if (rendererAvailable) {
+      const reviewed = await agent.validate({
+        command: "validate",
+        input: revised,
+        render: true,
+        previewsDir: path.join(workspace, "revised-previews"),
+        visualFindings: [{
+          id: "f1",
+          reviewer: "test",
+          severity: "note",
+          slide: 1,
+          observation: "The title reads as intended and nothing is clipped.",
+          rationale: "The deck is presented from this render.",
+          suggestedTarget: "No change; recorded as reviewed.",
+        }],
+      });
+      expect(reviewed.presentationReadiness).toBe("ready");
+    }
 
     const revisedScene = await readFile(outputLayout(revised).inspect, "utf8");
     expect(revisedScene).toContain("The tide tables changed in March 2026");

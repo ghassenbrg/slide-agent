@@ -13,6 +13,7 @@ import { diffDecks, formatDiff } from "./serialization/diff.js";
 import { chartFromData, loadDataTable, provenanceNote, tableFromData } from "./data/connectors.js";
 import { brandKitFromTemplate, normalizeKitColors } from "./design/template.js";
 import { checkFontAvailability, fontAvailabilityAdvice } from "./design/font-availability.js";
+import { measureText } from "./authoring/index.js";
 import { planOutline } from "./planner/index.js";
 import { writeUtf8 } from "./utils/files.js";
 import { fileURLToPath } from "node:url";
@@ -94,9 +95,40 @@ program.command("uninstall")
     });
   });
 
-program.command("create")
-  .option("--prompt <file>", "Prompt Markdown/text file or structured create request JSON")
-  .option("--scene <file>", "Model-authored .inspect.ndjson scene blueprint")
+program.command("measure")
+  .description("Measure how text will wrap and how tall it will set, before anything is built")
+  .requiredOption("--text <string>", "The string to measure, or - to read stdin")
+  .requiredOption("--width <inches>", "Frame width in inches", Number)
+  .option("--height <inches>", "Frame height, to report whether the text overflows it", Number)
+  .option("--font-size <points>", "Point size", Number)
+  .option("--font <name>", "Font family")
+  .option("--bold", "Measure the bold face")
+  .option("--line-spacing <multiple>", "Line spacing as a multiple of the font size", Number)
+  .action(async (options) => {
+    const body = options.text === "-"
+      ? await new Promise<string>((resolve, reject) => {
+        let buffer = "";
+        process.stdin.setEncoding("utf8");
+        process.stdin.on("data", (chunk) => { buffer += chunk; });
+        process.stdin.on("end", () => resolve(buffer));
+        process.stdin.on("error", reject);
+      })
+      : options.text;
+    const measured = measureText({
+      text: body,
+      w: options.width,
+      ...(options.height === undefined ? {} : { h: options.height }),
+      ...(options.fontSize === undefined ? {} : { fontSize: options.fontSize }),
+      ...(options.font === undefined ? {} : { fontFace: options.font }),
+      ...(options.bold ? { bold: true } : {}),
+      ...(options.lineSpacing === undefined ? {} : { lineSpacingMultiple: options.lineSpacing }),
+    });
+    process.stdout.write(`${JSON.stringify(measured, null, 2)}\n`);
+  });
+
+program.command("build")
+  .description("Build a deck from a JavaScript module that composes it with the authoring API")
+  .requiredOption("--script <file>", "ES module exporting a deck built with defineDeck(...)")
   .requiredOption("--output <file>", "Output .pptx path")
   .option("--previews <directory>", "Rendered preview directory")
   .option("--report <file>", "Validation report JSON path")
@@ -112,7 +144,49 @@ program.command("create")
   .option("--no-validate", "Skip validation")
   .option("--no-auto-fix", "Disable automatic repair")
   .action(async (options) => {
-    if (!options.prompt && !options.scene) throw new Error("create requires --prompt or --scene.");
+    // The script runs in this process with the privileges of whoever invoked
+    // the CLI. That is the same decision as running it with `node`, and it is
+    // worth saying once rather than burying in the docs.
+    await printResult({
+      command: "create",
+      script: options.script,
+      output: options.output,
+      previewsDir: options.previews,
+      reportPath: options.report,
+      metadataPath: options.metadata,
+      inspectPath: options.inspect,
+      configDir: options.config,
+      brand: options.brand,
+      bilingual: options.bilingual,
+      render: options.render,
+      roundTrip: options.roundTrip,
+      repair: options.repair,
+      validate: options.validate,
+      autoFix: options.autoFix,
+      maxRetries: options.maxRetries,
+    });
+  });
+
+program.command("create")
+  .option("--prompt <file>", "Prompt Markdown/text file or structured create request JSON")
+  .option("--scene <file>", "Model-authored .inspect.ndjson scene blueprint")
+  .option("--script <file>", "JavaScript module that composes the deck with the authoring API")
+  .requiredOption("--output <file>", "Output .pptx path")
+  .option("--previews <directory>", "Rendered preview directory")
+  .option("--report <file>", "Validation report JSON path")
+  .option("--metadata <file>", "Generation metadata JSON path")
+  .option("--inspect <file>", "Round-trippable NDJSON blueprint output path")
+  .option("--config <directory>", "Configuration directory")
+  .option("--brand <file>", "Brand kit JSON, or a .potx/.pptx template whose theme becomes the kit")
+  .option("--bilingual <mode>", "Render secondaryLanguage as parallel, stacked, or notes")
+  .option("--max-retries <count>", "Maximum automatic repair retries", Number)
+  .option("--render", "Also generate PDF and PNG previews (requires LibreOffice and Poppler)")
+  .option("--round-trip", "Rebuild the emitted scene in a clean directory and compare; required before delivery")
+  .option("--repair <mode>", "safe, suggest, or off. Defaults to suggest for a model-authored canvas")
+  .option("--no-validate", "Skip validation")
+  .option("--no-auto-fix", "Disable automatic repair")
+  .action(async (options) => {
+    if (!options.prompt && !options.scene && !options.script) throw new Error("create requires --prompt, --scene, or --script.");
     if (options.prompt && !options.scene && !options.prompt.endsWith(".json")) {
       process.stderr.write(
         "slide-agent create --prompt builds a structural draft: bracketed placeholders and no art direction. "
@@ -139,6 +213,7 @@ program.command("create")
       command: "create",
       prompt: parsed ? parsed.prompt : prompt,
       scene: options.scene ?? base.scene,
+      script: options.script ?? base.script,
       output: options.output,
       previewsDir: options.previews ?? base.previewsDir,
       reportPath: options.report ?? base.reportPath,
@@ -283,7 +358,26 @@ program.command("validate")
   .option("--config <directory>", "Configuration directory")
   .option("--render", "Also generate preview images (requires LibreOffice and Poppler)")
   .option("--round-trip", "Rebuild the emitted scene in a clean directory and compare")
-  .action(async (options) => printResult({ command: "validate", input: options.input, report: options.report, manifest: options.manifest, previewsDir: options.previews, configDir: options.config, render: options.render, roundTrip: options.roundTrip }));
+  .option("--findings <file>", "JSON array of visual review findings: what you saw in the renders")
+  .action(async (options) => {
+    // Recording what a reviewer saw is what lets an authored deck reach
+    // `ready`. A single `note` finding saying the slides are sound counts —
+    // the point is that somebody looked and said so, not that they complained.
+    const findings = options.findings
+      ? JSON.parse(await text(options.findings)) as unknown[]
+      : undefined;
+    await printResult({
+      command: "validate",
+      input: options.input,
+      report: options.report,
+      manifest: options.manifest,
+      previewsDir: options.previews,
+      configDir: options.config,
+      render: options.render,
+      roundTrip: options.roundTrip,
+      ...(findings ? { visualFindings: findings } : {}),
+    } as never);
+  });
 
 program.command("contract")
   .description("Print the authoring contract: schemas, the guide, or a ready-to-use system prompt")

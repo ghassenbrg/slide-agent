@@ -2,7 +2,7 @@
 
 # Slide Agent authoring guide
 
-Contract version 0.10 · scene schema `slide-agent.scene/1`
+Contract version 0.11 · scene schema `slide-agent.scene/1`
 
 ## Diagrams and systems
 
@@ -10,6 +10,7 @@ A diagram earns its place when the relationship between things is the point. Giv
 
 Slide Agent ships diagram grammars for layered architectures, swimlanes, sequences, hierarchies, and quadrants. Use one when it fits and compose freely when it does not.
 
-- Draw connectors before the nodes they join, or give them a lower `zIndex`.
+- Anchor every edge to the nodes it joins. A routed connector lands on the shape's own edge, keeps clear of the other elements, and moves with the node when a later patch shifts it.
 - Label edges when the relationship is not obvious from position alone.
 - Do not exceed roughly nine primary nodes in one diagram; split the idea instead.
+- Two slides that come out as the same drawing are reported by number as `repeated-silhouette`. A rhythm is deliberate repetition; the same hub-and-spoke twice because it was the easiest shape to reach for is not.

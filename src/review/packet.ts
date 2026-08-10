@@ -7,6 +7,7 @@ import { outputLayout } from "../output/output-layout.js";
 import { PptxInspector } from "../editing/pptx-inspector.js";
 import { extractRenderedText, previewFilesIn } from "../rendering/text-extraction.js";
 import { compareRenderedText, intendedText } from "../validation/fidelity.js";
+import { repeatedSilhouettes } from "../evaluation/visual-signature.js";
 import { parseSceneNdjson } from "../serialization/scene-ndjson.js";
 import type {
   ArtifactIdentity,
@@ -98,6 +99,13 @@ function questionsFor(slide: ReviewSlide, deckAverageWords: number): string[] {
   if (slide.plan?.silhouette) {
     questions.push(`The intended silhouette was "${slide.plan.silhouette}". Does the render read that way, or has it settled into the same shape as its neighbours?`);
   }
+  // "Has it settled into the same shape as its neighbours" is a question the
+  // engine can already answer for itself, so where it can, it does — with the
+  // slide number, which is the part an author can act on.
+  if (slide.twins?.length) {
+    const twins = slide.twins.map((twin) => `${twin.slide} (${Math.round(twin.similarity * 100)}%)`).join(", ");
+    questions.push(`This slide's composition is near-identical to slide ${twins}. Are they making the same point, or do they only look like they are?`);
+  }
   if (slide.designIntent) {
     questions.push(`Design intent: "${slide.designIntent}". Is that legible to someone seeing the slide for six seconds?`);
   }
@@ -185,6 +193,15 @@ export async function buildReviewPacket({ input, options = {} }: ReviewPacketInp
   const issuesFor = (slideNumber: number): ValidationIssue[] =>
     [...(report?.issues ?? []), ...fidelity.issues].filter((issue) => issue.slide === slideNumber);
 
+  // Computed once for the deck, then attached to each slide it names.
+  const twinsBySlide = new Map<number, Array<{ slide: number; similarity: number }>>();
+  if (manifest.slides.length >= 3) {
+    for (const pair of repeatedSilhouettes(manifest)) {
+      twinsBySlide.set(pair.left, [...(twinsBySlide.get(pair.left) ?? []), { slide: pair.right, similarity: pair.similarity }]);
+      twinsBySlide.set(pair.right, [...(twinsBySlide.get(pair.right) ?? []), { slide: pair.left, similarity: pair.similarity }]);
+    }
+  }
+
   const slides: ReviewSlide[] = included.map((number) => {
     const slide = manifest.slides.find((entry) => entry.number === number)!;
     const authored = outline?.slides[number - 1];
@@ -198,6 +215,7 @@ export async function buildReviewPacket({ input, options = {} }: ReviewPacketInp
       ...(slide.designIntent ? { designIntent: slide.designIntent } : {}),
       ...(authored?.communication ? { communication: authored.communication } : {}),
       ...(planById.get(slide.id) ? { plan: planById.get(slide.id)! } : {}),
+      ...(twinsBySlide.get(number) ? { twins: twinsBySlide.get(number)! } : {}),
       ...(claimsBySlide.get(slide.id) ? { claims: claimsBySlide.get(slide.id)! } : {}),
       elements: slide.elements.map((element) => ({
         id: element.name,

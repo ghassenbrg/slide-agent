@@ -94,6 +94,27 @@ export const linkSchema = z.union([
   }),
 ]).describe("A hyperlink. Only http, https, and mailto are accepted; anything else is refused and reported.");
 
+/** One edge or size expressed against another element on the same slide. */
+const frameRelation = z.looseObject({
+  alignLeft: z.string().optional(),
+  alignRight: z.string().optional(),
+  alignTop: z.string().optional(),
+  alignBottom: z.string().optional(),
+  centerX: z.string().optional(),
+  centerY: z.string().optional(),
+  below: z.string().optional(),
+  above: z.string().optional(),
+  rightOf: z.string().optional(),
+  leftOf: z.string().optional(),
+  sameAs: z.string().optional().describe("Take the referenced element's width or height."),
+  spanFrom: z.string().optional().describe("With spanTo, stretch from one element's near edge to another's far edge."),
+  spanTo: z.string().optional(),
+  gap: z.number().optional().describe("Distance held from the referenced element, in inches."),
+  offset: z.number().optional().describe("Added after everything else, in inches."),
+}).describe("A relation to an element declared earlier on the same slide.");
+
+const frameValue = z.union([inches, frameRelation]);
+
 const canvasBase = {
   id: z.string().min(1).describe("Unique within the slide; used by validation and revision."),
   x: inches,
@@ -108,6 +129,12 @@ const canvasBase = {
   allowBleed: z.boolean().optional().describe("This element is meant to run past the slide edge. Without it, anything outside the slide is reported as a defect."),
   intentionalOverlap: z.boolean().optional().describe("Marks a deliberate collision so QA does not report it."),
   allowOverlapWith: z.array(z.string()).optional(),
+  place: z.object({
+    x: frameValue.optional(),
+    y: frameValue.optional(),
+    w: frameValue.optional(),
+    h: frameValue.optional(),
+  }).optional().describe("Placement stated against elements already on this slide. Any axis given here wins over the literal x/y/w/h, and is solved into inches before the slide is composed."),
 };
 
 const textStyleSchema = z.looseObject({
@@ -170,9 +197,29 @@ export const canvasShapeSchema = z.object({
   }).optional(),
 });
 
+const connectorEndpointSchema = z.union([
+  z.string().min(1),
+  z.object({
+    id: z.string().min(1),
+    side: z.enum(["top", "right", "bottom", "left", "auto"]).optional()
+      .describe("Which edge to leave from or arrive at. Defaults to the edge facing the other element."),
+  }),
+]).describe("An element id on the same slide, optionally with the side to use.");
+
 export const canvasConnectorSchema = z.object({
   ...canvasBase,
+  x: inches.optional(),
+  y: inches.optional(),
+  w: inches.optional(),
+  h: inches.optional(),
   type: z.literal("connector"),
+  from: connectorEndpointSchema.optional(),
+  to: connectorEndpointSchema.optional(),
+  route: z.enum(["straight", "elbow", "curved"]).optional()
+    .describe("How the path is drawn between the two anchors. Defaults to elbow when the connector is anchored."),
+  clearance: z.number().nonnegative().optional().describe("Gap held from elements the route is not joining, in inches."),
+  stub: z.number().nonnegative().optional().describe("How far the route runs straight out of an anchor before it may turn, in inches."),
+  mayCross: z.array(z.string()).optional().describe("Ids this route may cross without it being reported as a collision."),
   style: z.looseObject({
     color: orVar(hex).optional(),
     width: orVar(z.number().nonnegative()).optional(),
@@ -181,7 +228,11 @@ export const canvasConnectorSchema = z.object({
     dashed: orVar(z.boolean()).optional(),
     options: nativeOptions.optional(),
   }).optional(),
-}).describe("x/y is the start point; w/h is the delta to the end point and may be negative.");
+}).refine(
+  (element) => (element.from !== undefined && element.to !== undefined)
+    || (element.x !== undefined && element.y !== undefined && element.w !== undefined && element.h !== undefined),
+  { message: "a connector needs either from and to, or an explicit x, y, w, and h" },
+).describe("Anchor it with from/to and the engine routes it around whatever is in the way. Without anchors, x/y is the start point and w/h is the delta to the end point, which may be negative.");
 
 /**
  * Where a picture came from, and whether a person made it.
@@ -361,6 +412,8 @@ export const creativeTypographySchema = z.looseObject({
   mono: z.string().optional(),
   numeric: z.string().optional(),
   fallbacks: z.array(z.string()).optional(),
+  scale: z.array(z.number().positive()).min(2).optional()
+    .describe("The point sizes this deck commits to, largest first. Elements that step off it are reported, never refused."),
 });
 
 /**
@@ -536,6 +589,8 @@ export const slideSpecSchema = z.looseObject({
   designIntent: z.string().optional().describe("Why this composition communicates the claim. Never rendered."),
   composition: z.string().optional().describe("Intended hierarchy, balance, rhythm, and reading path."),
   background: orVar(hex).optional(),
+  chrome: z.union([z.literal(false), z.record(z.string(), z.string())]).optional()
+    .describe("How this slide treats the deck's slideChrome. false suppresses it; an object supplies values the chrome interpolates, such as a kicker."),
   canvas: z.array(canvasElementSchema).optional()
     .describe("The model's own scene. When present it *is* the layout and the registry is bypassed."),
   speakerNotes: z.array(z.string()).optional(),
@@ -561,9 +616,19 @@ export const sourceLedgerItemSchema = sourceCitationSchema.extend({
   id: z.string().min(1).describe("Referenced from claims[].sourceIds."),
 });
 
+export const slideChromeSchema = z.looseObject({
+  elements: z.array(canvasElementSchema).min(1)
+    .describe("Elements repeated on every model-authored slide. Any string may interpolate {{slideNumber}}, {{slideNumberPadded}}, {{slideCount}}, {{slideTitle}}, {{deckTitle}}, or a key the slide supplies in its own `chrome`."),
+  variants: z.record(z.string(), z.record(z.string(), z.record(z.string(), z.unknown()))).optional()
+    .describe("Style overrides per named variant, keyed by variant then by element id. A slide selects one with chrome: { variant: \"paper\" }. Only style properties change."),
+  skipSlides: z.array(z.string()).optional().describe("Slide ids that opt out entirely, e.g. a cover."),
+  idPrefix: z.string().min(1).optional().describe("Namespace applied to chrome element ids. Defaults to `chrome`."),
+}).describe("Per-slide furniture the deck declares once. Slide Agent ships none and repeats only what you wrote.");
+
 export const presentationOutlineSchema = z.looseObject({
   brief: presentationBriefSchema,
   narrative: z.string().describe("One line: what changes for the audience by the end."),
+  slideChrome: slideChromeSchema.optional(),
   completeness: deckCompletenessSchema.optional(),
   creativeDirection: creativeDirectionSchema.optional(),
   exploration: designExplorationSchema.optional(),

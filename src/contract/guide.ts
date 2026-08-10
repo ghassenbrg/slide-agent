@@ -17,6 +17,7 @@ export type GuideSectionId =
   | "planning"
   | "narrative"
   | "composition"
+  | "build-script"
   | "canvas"
   | "scene"
   | "diagrams"
@@ -69,6 +70,7 @@ const SECTIONS: GuideSection[] = [
     ],
     rules: [
       "Give concrete hex values for the palette and real font names for the typography. Those are what the renderer consumes.",
+      "Declare `typography.scale`: the point sizes this deck commits to, largest first. A short ladder reused everywhere is a type system; a size chosen separately for each element is not, and the report will name every element that stepped off it. Unless the subject argues otherwise, a deck title wants roughly 44pt or more, a slide title 32pt or more, subheads and callout titles around 20pt, and body text at least 14pt — and the largest thing on a slide should be at least twice its body.",
       "Prefer the open prose fields — `geometryLanguage`, `spatialRhythm`, `materialLanguage` — over the legacy `geometry` and `density` enums. Omitting them is fine: the engine will not choose a shape language on your behalf.",
       "State `avoid` when the subject rules something out. The renderer honours it.",
       "Do not reuse a palette, font pairing, cover structure, or closing treatment across unrelated decks merely because it worked before.",
@@ -216,10 +218,69 @@ const SECTIONS: GuideSection[] = [
       "Use content-driven density. Avoiding overcrowding does not mean leaving most of every slide empty: a detailed deck may need three to five levels of hierarchy and many editable objects. Establish legibility through grouping, scale, alignment, semantic color, rules, and attached annotations.",
     ],
     rules: [
-      "Avoid repeated card grids, small UI panels, and mechanically centred content unless the story calls for exactly that.",
+      "A container is not the problem; using the same container for every relationship is. A 3×2 card grid on six consecutive slides is one design repeated six times — but a thing that is a thing deserves a surface. Give it one.",
+      "Empty is not the same as spare. A label floating in the middle of a slide with nothing bounding it, aligning it, or relating it to anything is not restraint; it is an unfinished object. Density is measured as ink, not as reserved boxes.",
+      "One claim per slide should be decisively the largest thing on it. A title that is 1.2× its body competes with the body; the same title at 2.5× leads.",
       "Keep every element inside the slide. Mark deliberate collisions with `intentionalOverlap` or `allowOverlapWith` rather than disabling QA.",
       "Preserve real artifacts — code, configuration, file trees, decision tables, diagnostic output — when they help the audience understand the subject.",
     ],
+  },
+  {
+    id: "build-script",
+    title: "Author the deck as a program",
+    body: [
+      "For any deck whose quality matters, write a JavaScript module that composes it and run `slide-agent build --script deck.mjs --output deck.pptx`. The module imports `defineDeck` from `@slide-agent/core` and exports the deck; the engine turns it into the same scene file every other path produces, so patching, revising, and the clean-directory round-trip all work exactly as they do for hand-authored NDJSON.",
+      "This exists because hand-writing every element as a separate JSON record with coordinates you worked out yourself sets a price on design, and the price is paid in the wrong currency. A card with a title, a sub-label and an accent bar is four records; a bare floating label is one. Nothing in the guidance asks for bare floating labels, but that is what economising produces. In a program you name the card once, as an ordinary function, and place six of them in a loop.",
+      "Slide Agent supplies no components and no house style here. `node()`, `header()`, `footer()`, `statCard()` are functions *you* write in *your* script, drawing whatever this deck's visual thesis calls for. What the engine supplies is arithmetic: `columns`, `rows`, `grid`, `split`, `distribute`, and `inset` return rectangles, and `measureText` tells you how tall a string will actually set before you commit to a frame.",
+      "`slide.graph(id, { nodes, edges, direction, frame }, draw)` goes further: the engine ranks the nodes, orders each rank so edges cross as little as possible, places them, and routes the connectors — and calls your `draw` for each one with a rectangle. What a node looks like stays yours; where it sits stops being your arithmetic. A rank that cannot fit its frame is refused with what it needed and what it was given, rather than being placed off the slide.",
+      "The script imports `@slide-agent/core`, so the package has to be resolvable from the script's own directory. It is then imported and run in the engine's process with your privileges — the same decision as running it with `node`. Slide Agent never discovers, downloads, or executes a script it was not handed.",
+    ],
+    rules: [
+      "Define the deck's repeated forms as functions before you place anything. If you write the same four elements twice, that was a function.",
+      "Hold content in data — arrays of labels, values, and accents — and place it with a loop. That is what makes rhythm exact and what makes a change to the content a one-line change.",
+      "Use `measureText` before committing to a text frame, or pass `autoHeight` and let the box fit its own text. A guessed height clips its last line or leaves a hole.",
+      "Declare `slideChrome` once for the kicker, slide number, footer rule, and brand mark. Repeating them by hand on thirteen slides is how they end up omitted, which is most of why a deck reads as unfinished. Give it `variants` when the deck alternates light and dark slides, so pacing does not cost the deck its chrome.",
+      "Reach for `graph` whenever the relationship is the point. Hand-placing nodes is how a diagram becomes labels on diagonals: the geometry costs more attention than the idea, and the idea gets simplified until the geometry is cheap.",
+      "The emitted `.ndjson` remains the canonical artifact. Keep the script, but deliver the package.",
+    ],
+    examples: [{
+      caption: "A composite the deck defines for itself, placed on a computed rhythm",
+      language: "javascript",
+      code: `import { defineDeck, columns } from "@slide-agent/core";
+
+const deck = defineDeck({
+  brief: { title: "Zero-trust migration", audience: "Security and platform leads",
+           objective: "Approve a phased rollout", presentationType: "technical",
+           tone: "precise, unhurried", language: "English" },
+  narrative: "By the end, the board should approve the phased rollout.",
+  creativeDirection: { palette: { background: "0B1020", ink: "F6F7FB", accent: "35D0BA" },
+                       typography: { display: "Helvetica", body: "Helvetica", scale: [44, 28, 17, 12] } },
+  slideChrome: { elements: [
+    { id: "num", type: "text", x: 12.1, y: 0.44, w: 0.6, h: 0.26, text: "{{slideNumberPadded}}",
+      role: "decorative", style: { fontSize: 12, color: "9CA9BF", align: "right" } },
+  ], skipSlides: ["cover"] },
+});
+
+// Your component, not Slide Agent's. It draws whatever this deck needs.
+function stage(slide, id, frame, label, sub, accent) {
+  slide.shape(\`\${id}-box\`, "roundRect", { ...frame, style: { fill: "141C2F", lineColor: "2D3850", lineWidth: 1 } });
+  slide.shape(\`\${id}-bar\`, "rect", { ...frame, w: 0.06, style: { fill: accent }, role: "decorative" });
+  slide.text(\`\${id}-label\`, label, { x: frame.x + 0.22, y: frame.y + 0.12, w: frame.w - 0.34, h: 0.34,
+    style: { fontSize: 17, bold: true, color: "F6F7FB" } });
+  slide.text(\`\${id}-sub\`, sub, { x: frame.x + 0.22, y: frame.y + 0.5, w: frame.w - 0.34, h: 0.3,
+    style: { fontSize: 12, color: "9CA9BF" } });
+  return \`\${id}-box\`;
+}
+
+const s = deck.slide({ id: "flow", title: "The rollout runs in four gated waves" });
+const stages = [["ASSESS", "inventory", "35D0BA"], ["PILOT", "one business unit", "35D0BA"],
+                ["EXPAND", "wave by wave", "FF9D57"], ["ENFORCE", "legacy off", "35D0BA"]];
+const cells = columns({ x: 0.72, y: 2.8, w: 11.9, h: 1.05 }, stages.length, 0.22);
+const ids = stages.map(([label, sub, accent], i) => stage(s, \`st\${i}\`, cells[i], label, sub, accent));
+ids.slice(1).forEach((id, i) => s.connect(\`edge\${i}\`, ids[i], id, { style: { color: "35D0BA", width: 1.6 } }));
+
+export default deck;`,
+    }],
   },
   {
     id: "canvas",
@@ -231,10 +292,13 @@ const SECTIONS: GuideSection[] = [
       "Pictures support `fit`, an explicit `crop`, a `focalPoint` so a `cover` crop keeps the subject, a `maskShape`, `duotone`, `grayscale`, and `tint`. A tint is drawn as a real editable shape rather than baked into the pixels, so anyone can change or remove it.",
       "`group` positions children relative to its own origin and expands them into ordinary native elements — individually selectable in PowerPoint, individually addressable by a patch. `symbol-instance` places a symbol the deck declared itself, with per-instance scale, text, colour, and style overrides. Slide Agent ships no icon vocabulary; a symbol is whatever you decided is worth reusing.",
       "`layer` names a layer for review and z-order grouping. It carries no visual style.",
+      "`place` states position as a relationship instead of a number: `{\"place\":{\"x\":{\"alignLeft\":\"title\"},\"y\":{\"below\":\"chart\",\"gap\":0.2}}}`. It reads `alignLeft`, `alignRight`, `alignTop`, `alignBottom`, `centerX`, `centerY`, `above`, `below`, `leftOf`, `rightOf`, `sameAs`, and `spanFrom`/`spanTo`, and may only reference an element declared earlier on the slide. Relations are solved into inches before the slide is composed, so the scene, the manifest, and any later patch carry coordinates rather than relationships.",
+      "A connector can name the elements it joins instead of carrying coordinates: `{\"type\":\"connector\",\"from\":\"cache\",\"to\":\"db\",\"route\":\"elbow\"}`. The engine resolves the anchors on the real frames, stands the arrow off the edge, and routes around anything in the way, so the arrow meets the shape rather than its bounding box. Give `from`/`to` a `{ id, side }` when you want a specific edge, `route: \"straight\" | \"elbow\" | \"curved\"`, and `mayCross` for anything it is allowed to pass through. A connector with `x`/`y`/`w`/`h` and no anchors is still a plain line between two points.",
+      "`slideChrome` on the deck record repeats elements you wrote — a kicker, a slide number, a footer rule, a brand mark — on every model-authored slide, interpolating `{{slideNumber}}`, `{{slideNumberPadded}}`, `{{slideCount}}`, `{{slideTitle}}`, `{{deckTitle}}`, and any key a slide supplies in its own `chrome`. A slide sets `chrome: false` to opt out. Slide Agent ships no chrome and has no opinion about whether your deck should have any.",
     ],
     rules: [
       "Add every visible word as a text element. Nothing renders implicitly.",
-      "Build diagrams from shapes and connectors. Create edges before nodes, or place them on a lower `zIndex`.",
+      "Build diagrams from shapes and connectors. Anchor the connectors with `from`/`to` and let the engine route them; hand-computed line geometry is how arrows end up in dead space and through labels.",
       "Use images for photography, artwork, screenshots, and supplied evidence — never as a flattened substitute for a slide.",
       "Give every image an `alt` that describes the content, and a `provenance` when it is not your own. See the imagery section for where pictures may come from.",
       "Declare `vector` when you have SVG artwork. The raster `path` is still required — OOXML stores an SVG as an enhancement to a bitmap — and `vector.editable` states honestly what a person can change.",
@@ -279,9 +343,10 @@ const SECTIONS: GuideSection[] = [
       "Slide Agent ships diagram grammars for layered architectures, swimlanes, sequences, hierarchies, and quadrants. Use one when it fits and compose freely when it does not.",
     ],
     rules: [
-      "Draw connectors before the nodes they join, or give them a lower `zIndex`.",
+      "Anchor every edge to the nodes it joins. A routed connector lands on the shape's own edge, keeps clear of the other elements, and moves with the node when a later patch shifts it.",
       "Label edges when the relationship is not obvious from position alone.",
       "Do not exceed roughly nine primary nodes in one diagram; split the idea instead.",
+      "Two slides that come out as the same drawing are reported by number as `repeated-silhouette`. A rhythm is deliberate repetition; the same hub-and-spoke twice because it was the easiest shape to reach for is not.",
     ],
   },
   {

@@ -77,10 +77,10 @@ function resolvedBackdrop(slide: SlideSpec, element: CanvasElementSpec, deckBack
   for (let candidateIndex = index - 1; candidateIndex >= 0; candidateIndex -= 1) {
     const candidate = ordered[candidateIndex]!;
     if (candidate.type !== "shape" || !candidate.style?.fill) continue;
-    const covers = element.x >= candidate.x - 0.03
-      && element.y >= candidate.y - 0.03
-      && element.x + element.w <= candidate.x + candidate.w + 0.03
-      && element.y + element.h <= candidate.y + candidate.h + 0.03;
+    const covers = (element.x ?? 0) >= candidate.x - 0.03
+      && (element.y ?? 0) >= candidate.y - 0.03
+      && (element.x ?? 0) + (element.w ?? 0) <= candidate.x + candidate.w + 0.03
+      && (element.y ?? 0) + (element.h ?? 0) <= candidate.y + candidate.h + 0.03;
     if (covers) return candidate.style.fill.replace(/^#/, "");
   }
   return slideBackground;
@@ -321,8 +321,12 @@ export class AutoFixer {
       if (region.type === "text") region.fontSize = Math.max(region.fontSize ?? 18, this.config.fonts.minimums.body);
     }
     for (const element of slide.canvas ?? []) {
-      const x = Math.max(0, Math.min(element.x, width - 0.05));
-      const y = Math.max(0, Math.min(element.y, height - 0.05));
+      // An anchored connector has no coordinates of its own: it is wherever the
+      // elements it joins ended up, so clamping it here would mean inventing a
+      // frame the router is about to recompute anyway.
+      if (element.type === "connector" && element.from !== undefined && element.to !== undefined) continue;
+      const x = Math.max(0, Math.min(element.x ?? 0, width - 0.05));
+      const y = Math.max(0, Math.min(element.y ?? 0, height - 0.05));
       if (x !== element.x || y !== element.y) changed = true;
       element.x = x;
       element.y = y;

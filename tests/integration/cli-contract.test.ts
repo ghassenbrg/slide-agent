@@ -129,7 +129,7 @@ describe("CLI contract", () => {
   it("fails with a usage message, not a stack trace, when arguments are wrong", async () => {
     const result = await run(["create", "--output", path.join(workspace, "x.pptx")]);
     expect(result.code).toBe(1);
-    expect(result.stderr).toContain("--prompt or --scene");
+    expect(result.stderr).toContain("--prompt, --scene, or --script");
   });
 
   it("publishes the authoring contract in three usable shapes", async () => {

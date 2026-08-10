@@ -252,6 +252,49 @@ export type SimilarityVerdict = "near-duplicate" | "similar" | "distinct";
 export const NEAR_DUPLICATE_THRESHOLD = 0.93;
 export const SIMILAR_THRESHOLD = 0.82;
 
+/**
+ * Two slides in the same deck that came out as the same drawing.
+ *
+ * A sequence plan can promise thirteen distinct silhouettes and deliver eight,
+ * and nothing notices: each slide is individually fine, the deck-level variety
+ * score drops a few points, and the advice — "most slides put their masses in
+ * the same places" — is true but unactionable because it does not say which
+ * ones. Naming the pair is what makes it a defect somebody can fix.
+ *
+ * Deliberate repetition is real: a section divider repeated four times is a
+ * rhythm, not a mistake. So this reports rather than refuses, and slides that
+ * share a `kind` are held to a looser threshold.
+ */
+export interface RepeatedPair {
+  left: number;
+  right: number;
+  similarity: number;
+}
+
+/** Slides whose geometry is close enough to read as the same composition. */
+export function repeatedSilhouettes(
+  manifest: DeckManifest,
+  threshold = NEAR_DUPLICATE_THRESHOLD,
+): RepeatedPair[] {
+  const signature = signDeck(manifest);
+  const kinds = new Map(manifest.slides.map((slide) => [slide.number, slide.kind]));
+  const pairs: RepeatedPair[] = [];
+  for (let left = 0; left < signature.slides.length; left += 1) {
+    for (let right = left + 1; right < signature.slides.length; right += 1) {
+      const a = signature.slides[left]!;
+      const b = signature.slides[right]!;
+      const similarity = cosine(featureVector(a), featureVector(b));
+      // Slides the author declared to be the same kind — two section dividers,
+      // two closing cards — are meant to rhyme. Only near-identity counts there.
+      const sameKind = kinds.get(a.slide) === kinds.get(b.slide);
+      if (similarity >= (sameKind ? Math.min(0.985, threshold + 0.05) : threshold)) {
+        pairs.push({ left: a.slide, right: b.slide, similarity: Number(similarity.toFixed(4)) });
+      }
+    }
+  }
+  return pairs.sort((left, right) => right.similarity - left.similarity);
+}
+
 export interface SimilarityResult {
   left: string;
   right: string;

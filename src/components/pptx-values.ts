@@ -45,6 +45,8 @@ export const Shapes = {
   ellipse: "ellipse",
   line: "line",
   chevron: "chevron",
+  /** A path the engine supplies point by point, e.g. a routed connector. */
+  custGeom: "custGeom",
 } as const;
 
 export type ShapeValue = (typeof Shapes)[keyof typeof Shapes];

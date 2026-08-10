@@ -122,6 +122,15 @@
           "items": {
             "type": "string"
           }
+        },
+        "scale": {
+          "description": "The point sizes this deck commits to, largest first. Elements that step off it are reported, never refused.",
+          "minItems": 2,
+          "type": "array",
+          "items": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          }
         }
       },
       "additionalProperties": {}

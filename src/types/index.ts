@@ -1,6 +1,8 @@
 import type { VisualReviewFinding } from "../review/types.js";
+import type { RelativeFrame } from "../design/relations.js";
 
 export type { ReviewPacket, VisualReviewFinding, VisualFindingSeverity } from "../review/types.js";
+export type { FrameRelation, FrameValue, RelativeFrame } from "../design/relations.js";
 
 export type SlideKind =
   | "title"
@@ -182,6 +184,16 @@ export interface CreativeTypography {
   mono?: string;
   numeric?: string;
   fallbacks?: string[];
+  /**
+   * The point sizes this deck commits to, largest first.
+   *
+   * A ladder is what separates a type system from a series of separate
+   * decisions. Declaring one lets the report say which elements stepped off it,
+   * which is a question nobody can answer by looking at a list of sizes. It is
+   * a statement of intent, not a constraint: an element may use any size it
+   * likes, and the deviation is reported rather than refused.
+   */
+  scale?: number[];
 }
 
 export interface CreativeDirection {
@@ -287,6 +299,14 @@ export interface CanvasElementBase {
   allowBleed?: boolean;
   intentionalOverlap?: boolean;
   allowOverlapWith?: string[];
+  /**
+   * Placement stated against elements already on the slide.
+   *
+   * Any axis given here wins over the literal `x`/`y`/`w`/`h`. Relations are
+   * solved before the slide is composed and the solved inches are what the
+   * scene and the manifest carry, so nothing downstream sees a relation.
+   */
+  place?: RelativeFrame;
 }
 
 /**
@@ -351,8 +371,42 @@ export interface CanvasShapeElement extends CanvasElementBase {
   };
 }
 
-export interface CanvasConnectorElement extends CanvasElementBase {
+/** Which edge of an element a connector leaves from or arrives at. */
+export type ConnectorEndpointSide = "top" | "right" | "bottom" | "left" | "auto";
+
+/** An element id, optionally with the side the connector should use. */
+export type ConnectorEndpoint = string | { id: string; side?: ConnectorEndpointSide };
+
+/**
+ * A line between two points, or — when `from` and `to` name elements — a route
+ * the engine resolves against the real frames on the slide.
+ *
+ * Anchored connectors are the reason a diagram reads as drawn rather than
+ * sketched: the arrow meets the edge of the shape it points at, it stands off
+ * far enough that the head is legible, and it goes around anything in the way.
+ * None of that is a judgement about the diagram, so none of it belongs to the
+ * author.
+ */
+export interface CanvasConnectorElement extends Omit<CanvasElementBase, "x" | "y" | "w" | "h"> {
   type: "connector";
+  /** Start point when the connector is not anchored. */
+  x?: number;
+  y?: number;
+  /** Delta to the end point when the connector is not anchored; may be negative. */
+  w?: number;
+  h?: number;
+  /** Start element. With `to`, x/y/w/h are computed and may be omitted. */
+  from?: ConnectorEndpoint;
+  /** End element. */
+  to?: ConnectorEndpoint;
+  /** How the path is drawn between the anchors. Defaults to `elbow`. */
+  route?: "straight" | "elbow" | "curved";
+  /** Gap held from elements the route is not joining, in inches. */
+  clearance?: number;
+  /** How far the route runs straight out of an anchor before turning, in inches. */
+  stub?: number;
+  /** Ids the route may cross without it being reported. */
+  mayCross?: string[];
   style?: {
     color?: string;
     width?: number;
@@ -551,6 +605,12 @@ export interface SlideSpec {
   custom?: CustomRegion[];
   /** Content and reasoning metadata; it never forces a visible layout. */
   communication?: SlideCommunicationPlan;
+  /**
+   * How this slide treats the deck's `slideChrome`. `false` suppresses it —
+   * a cover rarely wants a page number — and an object supplies values the
+   * chrome interpolates, such as this slide's kicker.
+   */
+  chrome?: false | Record<string, string>;
   /** Internal creative instruction; it is never rendered automatically. */
   designIntent?: string;
   /** Free-form description of the intended spatial composition. */
@@ -641,9 +701,40 @@ export interface HostAuthoringCapabilities {
   [key: string]: unknown;
 }
 
+/**
+ * Elements repeated on every model-authored slide, declared once by the deck.
+ *
+ * Slide Agent ships none of these and has no opinion about whether a deck
+ * should have any. It repeats what the author wrote and fills in the few values
+ * that differ per slide.
+ */
+export interface SlideChrome {
+  /**
+   * The elements to repeat. Any string may interpolate `{{slideNumber}}`,
+   * `{{slideNumberPadded}}`, `{{slideCount}}`, `{{slideTitle}}`,
+   * `{{deckTitle}}`, or any key a slide supplies in its own `chrome`.
+   */
+  elements: CanvasElementSpec[];
+  /**
+   * Style overrides per named variant, keyed by variant then by element id.
+   *
+   * A slide picks one with `chrome: { variant: "paper" }`. Only style
+   * properties change; the elements, their text, and their positions remain a
+   * single declaration, so a deck can alternate light and dark slides without
+   * either giving up its chrome or restating it.
+   */
+  variants?: Record<string, Record<string, Record<string, unknown>>>;
+  /** Slide ids that opt out entirely, e.g. a cover. */
+  skipSlides?: string[];
+  /** Namespace applied to chrome element ids. Defaults to `chrome`. */
+  idPrefix?: string;
+}
+
 export interface PresentationOutline {
   brief: PresentationBrief;
   narrative: string;
+  /** Elements repeated on every model-authored slide. */
+  slideChrome?: SlideChrome;
   completeness?: DeckCompletenessPlan;
   creativeDirection?: CreativeDirection;
   /** Visual theses considered, and the one this deck commits to. */
@@ -942,6 +1033,13 @@ export interface ValidationReport {
   roundTrip?: RoundTripReport;
   /** Findings from a host or an installed visual reviewer. */
   visualFindings?: VisualReviewFinding[];
+  /**
+   * Whether anybody recorded a judgement on this deck's renders.
+   *
+   * Only set when this run authored the deck; absent for a package that
+   * arrived from elsewhere, whose review history is unknowable.
+   */
+  reviewed?: boolean;
   /** Repairs proposed but not applied, under `suggest` mode. */
   suggestedRepairs?: SuggestedRepair[];
   /** Repairs actually applied, with rollback data. */
@@ -1037,6 +1135,14 @@ export interface CreateRequest {
   scene?: string;
   /** Inline scene blueprint; useful for extension APIs. */
   sceneNdjson?: string;
+  /**
+   * Path to a JavaScript module that builds the deck and exports it.
+   *
+   * The script is imported into this process and runs with the privileges of
+   * the caller — the same trust decision as running it with `node`. It is only
+   * ever a path the caller supplied; nothing discovers or fetches scripts.
+   */
+  script?: string;
   /** Host-model creative direction; overrides the one embedded in an outline. */
   creativeDirection?: CreativeDirection;
   output: string;
@@ -1188,6 +1294,14 @@ export interface RenderRequest {
 export interface ValidateRequest {
   command: "validate";
   input: string;
+  /**
+   * What a reviewer saw in the renders.
+   *
+   * This is how the loop closes. A deck this engine built is held at `review`
+   * until somebody records a judgement on it; supplying findings here — even a
+   * single one at severity `none` saying the slides are sound — is that record.
+   */
+  visualFindings?: VisualReviewFinding[];
   /** Validation report JSON path; defaults to artifacts/logs next to the deck. */
   report?: string;
   manifest?: string;

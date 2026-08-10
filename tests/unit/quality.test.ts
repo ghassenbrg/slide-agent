@@ -168,3 +168,66 @@ describe("quality scoring", () => {
     expect(broken.overall).toBeLessThan(clean.overall);
   });
 });
+
+describe("ink-based density", () => {
+  const dimension = (deck: DeckManifest, id: string) =>
+    scoreDeck(deck, config, [], new Set()).dimensions.find((entry) => entry.id === id)!;
+
+  it("does not count the empty part of an oversized text box", () => {
+    // One short line inside a box tall enough for a paragraph. Measuring the
+    // box says the slide is full; measuring the text says it is nearly empty.
+    const roomy = manifest([slide(1, [
+      element({ id: "t", text: "Six words is all this holds", x: 0.5, y: 0.5, w: 12, h: 6.5, fontSize: 12 }),
+    ])]);
+    expect(dimension(roomy, "density").summary).toMatch(/1 sparse/);
+  });
+
+  it("counts a filled shape as the mass it is", () => {
+    const filled = manifest([slide(1, [
+      element({ id: "plate", type: "shape", role: "shape", x: 1, y: 1, w: 8, h: 4, fillColor: "203040" }),
+      element({ id: "t", text: "Title over the plate", x: 1.4, y: 1.4, w: 6, h: 0.8, fontSize: 32 }),
+    ])]);
+    expect(dimension(filled, "density").summary).toMatch(/0 sparse/);
+  });
+
+  it("counts an unfilled outline as its border, not its interior", () => {
+    const outlined = manifest([slide(1, [
+      element({ id: "frame", type: "shape", role: "shape", x: 1, y: 1, w: 11, h: 5.5 }),
+    ])]);
+    expect(dimension(outlined, "density").summary).toMatch(/1 sparse/);
+  });
+});
+
+describe("typographic hierarchy", () => {
+  const hierarchy = (deck: DeckManifest) =>
+    scoreDeck(deck, config, [], new Set()).dimensions.find((entry) => entry.id === "hierarchy")!;
+
+  it("rewards a short ladder with a decisive lead size", () => {
+    const laddered = manifest([1, 2, 3].map((number) => slide(number, [
+      element({ id: `title-${number}`, text: "The claim this slide makes", fontSize: 40, role: "title" }),
+      element({ id: `body-${number}`, text: "Supporting detail for the claim", fontSize: 16 }),
+      element({ id: `note-${number}`, text: "A caption", fontSize: 11 }),
+    ])));
+    expect(hierarchy(laddered).score).toBeGreaterThan(80);
+  });
+
+  it("marks down a scatter of unrelated sizes with no clear lead", () => {
+    const scattered = manifest([1, 2, 3].map((number) => slide(number, [
+      element({ id: `a-${number}`, text: "The claim this slide makes", fontSize: 18 + number }),
+      element({ id: `b-${number}`, text: "Supporting detail for the claim", fontSize: 14.5 + number }),
+      element({ id: `c-${number}`, text: "A caption", fontSize: 12.3 + number }),
+      element({ id: `d-${number}`, text: "Another label", fontSize: 10.5 + number }),
+    ])));
+    const score = hierarchy(scattered);
+    expect(score.score).toBeLessThan(70);
+    expect(score.summary).toMatch(/distinct type sizes across the deck/);
+  });
+
+  it("says so when the largest text barely outranks the body", () => {
+    const flat = manifest([slide(1, [
+      element({ id: "title", text: "A title that does not lead", fontSize: 20, role: "title" }),
+      element({ id: "body", text: "Body copy at almost the same size", fontSize: 18 }),
+    ])]);
+    expect(hierarchy(flat).advice).toMatch(/barely outranks/);
+  });
+});

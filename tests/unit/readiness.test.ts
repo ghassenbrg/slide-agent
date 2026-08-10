@@ -147,3 +147,77 @@ describe("the split verdict", () => {
     expect(verdict.presentationReadiness).toBe("not-ready");
   });
 });
+
+describe("heuristics that bind", () => {
+  const withScores = (scores: Partial<Record<string, number>>): QualityScore => ({
+    overall: 70,
+    band: "workable",
+    dimensions: strongHeuristics.dimensions.map((dimension) => ({
+      ...dimension,
+      score: scores[dimension.id] ?? dimension.score,
+      ...(scores[dimension.id] !== undefined ? { advice: `fix ${dimension.id}` } : {}),
+    })),
+  });
+
+  it("holds a deck at review when a dimension the engine measured is weak", () => {
+    // The floors used to sit at 25, so a deck scoring 57 on variety and 42 on
+    // evidence reported ready with nothing to say about either.
+    const verdict = computeVerdict({
+      issues: [],
+      heuristics: withScores({ variety: 51, evidence: 42 }),
+      render: cleanRender,
+      reviewed: true,
+    });
+    expect(verdict.presentationReadiness).toBe("review");
+    expect(verdict.readinessReasons.join(" ")).toContain("variety scored 51");
+    expect(verdict.readinessReasons.join(" ")).toContain("evidence scored 42");
+  });
+
+  it("carries the dimension's own advice into the reason", () => {
+    const verdict = computeVerdict({
+      issues: [],
+      heuristics: withScores({ density: 20 }),
+      render: cleanRender,
+      reviewed: true,
+    });
+    expect(verdict.readinessReasons.join(" ")).toContain("fix density");
+  });
+
+  it("keeps every floor below the score a sound deck reaches", () => {
+    for (const [dimension, floor] of Object.entries(HEURISTIC_FLOORS)) {
+      const sound = strongHeuristics.dimensions.find((entry) => entry.id === dimension);
+      expect(sound, `${dimension} is scored but has no floor fixture`).toBeDefined();
+      expect(floor).toBeLessThanOrEqual(sound!.score);
+    }
+  });
+});
+
+describe("a recorded verdict on the renders", () => {
+  it("holds an authored deck at review until somebody says what they saw", () => {
+    const unreviewed = computeVerdict({
+      issues: [],
+      heuristics: strongHeuristics,
+      render: cleanRender,
+      reviewed: false,
+    });
+    expect(unreviewed.presentationReadiness).toBe("review");
+    expect(unreviewed.readinessReasons.join(" ")).toContain("no visual review finding was recorded");
+  });
+
+  it("accepts a note that the slides were looked at and found sound", () => {
+    const reviewed = computeVerdict({
+      issues: [],
+      heuristics: strongHeuristics,
+      render: cleanRender,
+      reviewed: true,
+    });
+    expect(reviewed.presentationReadiness).toBe("ready");
+  });
+
+  it("does not punish a deck whose history it cannot know", () => {
+    // Validating a PPTX from elsewhere: nobody can say whether its author
+    // reviewed it, and assuming they did not would hold every import forever.
+    const imported = computeVerdict({ issues: [], heuristics: strongHeuristics, render: cleanRender });
+    expect(imported.presentationReadiness).toBe("ready");
+  });
+});

@@ -9,6 +9,8 @@ import type {
   ValidationIssue,
 } from "../types/index.js";
 import { resolveFont, wrapLineCount, wrappedTextHeight, type ResolvedFont } from "../design/font-metrics.js";
+import { pathCrossings } from "../design/routing.js";
+import { repeatedSilhouettes } from "../evaluation/visual-signature.js";
 import { words } from "../utils/text.js";
 import { blendHex, colorContrast as contrastRatio, requiredContrast } from "../utils/color.js";
 import { area, contains, intersectionArea, normalizedBox } from "./geometry.js";
@@ -75,12 +77,61 @@ export function measureTextFit(element: ElementRecord, minimumFontSize: number):
   return { effectiveFontSize: floor, clipped: true };
 }
 
+/** The routed path a connector was drawn along, when the build recorded one. */
+function connectorPath(element: ElementRecord): Array<{ x: number; y: number }> | undefined {
+  if (element.type !== "connector") return undefined;
+  const path = element.metadata?.path;
+  if (!Array.isArray(path) || path.length < 2) return undefined;
+  return path.filter((point): point is { x: number; y: number } =>
+    typeof point === "object" && point !== null
+    && typeof (point as { x?: unknown }).x === "number"
+    && typeof (point as { y?: unknown }).y === "number");
+}
+
+/**
+ * Text a routed connector passes through.
+ *
+ * A connector's bounding box says almost nothing about where its line runs — a
+ * diagonal across a slide has a box that touches most of it — which is why
+ * connectors were excluded from area-based overlap checking altogether. That
+ * exclusion also hid the one connector defect that matters: a route drawn
+ * straight through a label, which strikes the words out and is invisible in the
+ * scene, the manifest, and the package. With the real path recorded the
+ * question becomes answerable, so it gets asked here rather than avoided.
+ */
+function connectorStrikes(connector: ElementRecord, elements: ElementRecord[]): ElementRecord[] {
+  const path = connectorPath(connector);
+  if (!path) return [];
+  const exempt = new Set(connector.allowOverlapWith ?? []);
+  const candidates = elements.filter((element) =>
+    element.id !== connector.id
+    && element.type === "text"
+    && Boolean(element.text?.trim())
+    && element.role !== "decorative"
+    && !exempt.has(element.id)
+    && !element.intentionalOverlap
+    && !element.allowOverlapWith?.includes(connector.id));
+  const struck = new Set(pathCrossings(path, candidates.map((element) => ({ id: element.id, box: element }))));
+  return candidates.filter((element) => struck.has(element.id));
+}
+
 function overlapAllowed(left: ElementRecord, right: ElementRecord): boolean {
   if (left.intentionalOverlap || right.intentionalOverlap) return true;
-  if (left.type === "connector" || right.type === "connector") return true;
   if (left.allowOverlapWith?.includes(right.id) || right.allowOverlapWith?.includes(left.id)) return true;
+  if (left.type === "connector" || right.type === "connector") return true;
   if ((left.type === "shape" || left.type === "image") && right.type === "text" && contains(left, right)) return true;
   if ((right.type === "shape" || right.type === "image") && left.type === "text" && contains(right, left)) return true;
+  // Elements expanded from the same group or symbol are one authored object.
+  // Its internal geometry is a composition the author drew on purpose, and
+  // reporting a card against its own accent bar once per instance is noise
+  // that argues against composing anything at all.
+  if (left.groupId && left.groupId === right.groupId) return true;
+  // A shape wholly inside an earlier shape is layering, not collision: a
+  // miniature drawn on a card, a dot on a track, a bar in a plot frame. The
+  // loop always compares an earlier element as `left`, so containment here
+  // means the smaller shape is painted on top of the surface holding it —
+  // the case where something is hidden underneath is not exempted.
+  if (left.type === "shape" && (right.type === "shape" || right.type === "image") && contains(left, right)) return true;
   if (left.role === "decorative" || right.role === "decorative") return true;
   return false;
 }
@@ -200,6 +251,7 @@ export class ManifestValidator {
       const authoredCanvas = new Set(
         manifest.slides.filter((entry) => entry.compositionMode === "model-authored").map((entry) => entry.number),
       );
+      const declaredScale = manifest.creativeDirection?.typography?.scale;
       const textWordCount = slide.elements.filter((element) => element.type === "text").reduce((total, element) => total + words(element.text ?? "").length, 0);
       if (textWordCount > 120) {
         issues.push(issue("excessive-text-density", "warning", `Slide ${slide.number} contains ${textWordCount} visible words.`, true, {
@@ -262,6 +314,23 @@ export class ManifestValidator {
                 details: { fontSize: element.fontSize, minimum, compositionMode: slide.compositionMode ?? "fallback-layout" },
               },
             ));
+          }
+          // A declared ladder is the author's own statement about this deck, so
+          // stepping off it is measured against them rather than against a
+          // Slide Agent opinion. It stays advice: the ladder is intent, and an
+          // element that departs from it deliberately is a design decision.
+          if (declaredScale && element.fontSize && element.role !== "decorative") {
+            const nearest = declaredScale.reduce(
+              (best, size) => Math.abs(size - element.fontSize!) < Math.abs(best - element.fontSize!) ? size : best,
+              declaredScale[0]!,
+            );
+            if (Math.abs(nearest - element.fontSize) > 0.26) {
+              issues.push(issue("type-off-scale", "info", `${element.name} is set at ${element.fontSize}pt, which is not on the deck's declared type scale; the nearest step is ${nearest}pt.`, false, {
+                slide: slide.number,
+                elementIds: [element.id],
+                details: { fontSize: element.fontSize, nearest, scale: declaredScale },
+              }));
+            }
           }
           if (element.fontFace && !this.config.fonts.supported.includes(element.fontFace)) {
             issues.push(issue("unsupported-font", "warning", `${element.name} uses unsupported font ${element.fontFace}.`, true, {
@@ -326,6 +395,17 @@ export class ManifestValidator {
         }
       }
 
+      for (const connector of slide.elements) {
+        if (connector.type !== "connector") continue;
+        for (const struck of connectorStrikes(connector, slide.elements)) {
+          issues.push(issue("connector-crosses-text", "warning", `${connector.name} is drawn through the text of ${struck.name} on slide ${slide.number}.`, true, {
+            slide: slide.number,
+            elementIds: [connector.id, struck.id],
+            details: { text: struck.text?.slice(0, 80) },
+          }));
+        }
+      }
+
       for (let leftIndex = 0; leftIndex < slide.elements.length; leftIndex += 1) {
         const left = slide.elements[leftIndex]!;
         for (let rightIndex = leftIndex + 1; rightIndex < slide.elements.length; rightIndex += 1) {
@@ -365,6 +445,21 @@ export class ManifestValidator {
             }));
           }
         }
+      }
+    }
+
+    // Two slides that came out as the same drawing. The deck-level variety
+    // score already notices this in aggregate; what it cannot say is which
+    // slides, which is the only part an author can act on.
+    if (manifest.slides.length >= 3) {
+      for (const pair of repeatedSilhouettes(manifest)) {
+        issues.push(issue(
+          "repeated-silhouette",
+          "warning",
+          `Slides ${pair.left} and ${pair.right} have near-identical compositions. If they are making different points, they should not look like the same slide twice.`,
+          false,
+          { slide: pair.right, details: { slides: [pair.left, pair.right], similarity: pair.similarity } },
+        ));
       }
     }
 

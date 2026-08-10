@@ -2,7 +2,7 @@
 
 # Slide Agent authoring guide
 
-Contract version 0.10 · scene schema `slide-agent.scene/1`
+Contract version 0.11 · scene schema `slide-agent.scene/1`
 
 ## Your own variables, styles, and motifs
 

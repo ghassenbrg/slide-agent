@@ -12,6 +12,34 @@ export { PptxInspector } from "./editing/pptx-inspector.js";
 export { parseEditPrompt } from "./editing/parse-edit-prompt.js";
 export { LayoutRegistry, type LayoutRenderer } from "./layouts/layout-registry.js";
 export { FreeformComposer } from "./layouts/freeform-composer.js";
+export {
+  DeckBuilder as AuthoringDeckBuilder,
+  SlideBuilder,
+  columns,
+  defineDeck,
+  distribute,
+  grid,
+  inset,
+  measureText,
+  rows,
+  split,
+  type ConnectOptions,
+  type DeckOptions,
+  type Handle,
+  type MeasureRequest,
+  type Rect as AuthoringRect,
+  type ShapeOptions,
+  type SlideOptions,
+  type TextMeasurement,
+  type TextOptions,
+} from "./authoring/index.js";
+export { runBuildScript } from "./authoring/run-script.js";
+export { layoutGraph, type GraphEdge, type GraphLayout, type GraphLayoutSpec, type GraphNode, type PlacedNode } from "./design/graph-layout.js";
+export { solveFrame, type FrameRelation as LayoutRelation, type RelativeFrame as LayoutFrame } from "./design/relations.js";
+export { resolveSlideRelations } from "./design/resolve-relations.js";
+export { withSlideChrome } from "./design/slide-chrome.js";
+export { repeatedSilhouettes, type RepeatedPair } from "./evaluation/visual-signature.js";
+export { routeConnector, pathBounds, pathCrossings, type ConnectorSide, type RouteKind, type RoutedPath } from "./design/routing.js";
 export { CreativeDirector, type ResolvedDeckDesign } from "./themes/creative-director.js";
 export { PresentationRenderer } from "./rendering/renderer.js";
 export { PresentationValidator } from "./validation/validator.js";

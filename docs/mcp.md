@@ -233,8 +233,8 @@ resource per schema.
 | `slide-agent://contract/schema/<name>` | JSON Schema | One schema |
 
 Guide sections: `role`, `creative-direction`, `visual-system`, `planning`,
-`narrative`, `composition`, `canvas`, `scene`, `diagrams`, `data`, `imagery`,
-`accessibility`, `honesty`, `review`, `workflow`.
+`narrative`, `composition`, `build-script`, `canvas`, `scene`, `diagrams`,
+`data`, `imagery`, `accessibility`, `honesty`, `review`, `workflow`.
 
 Schemas: `outline`, `brief`, `slide`, `canvasElement`, `creativeDirection`,
 `visualSystem`, `symbol`, `exploration`, `sequencePlanItem`, `claim`,

@@ -9,6 +9,8 @@ import { footerAppliesTo, logoAppliesTo, type BrandKit } from "../design/brand.j
 import { withSecondaryLanguage, type BilingualMode } from "../design/bilingual.js";
 import { resolveTokens } from "../design/tokens.js";
 import { Grid } from "../design/grid.js";
+import { resolveSlideRelations } from "../design/resolve-relations.js";
+import { withSlideChrome } from "../design/slide-chrome.js";
 import { CreativeDirector } from "../themes/creative-director.js";
 import { ThemeManager } from "../themes/theme-manager.js";
 import { readImageSize } from "../images/dimensions.js";
@@ -211,7 +213,16 @@ export class DeckBuilder {
           new Grid(effectiveConfig.dimensions, resolveTokens(effectiveConfig, design.direction)),
         )
         : resolvedOutline.slides[index]!;
-      const spec = await this.resolveAssets(rawSpec);
+      // Relations become inches before anything else looks at the canvas, so
+      // chrome, composition, the manifest, and the emitted scene all deal in
+      // solved coordinates.
+      const placed = resolveSlideRelations(rawSpec);
+      const chromed = withSlideChrome(placed, resolvedOutline.slideChrome, {
+        slideNumber: index + 1,
+        slideCount: resolvedOutline.slides.length,
+        deckTitle: resolvedOutline.brief.title,
+      });
+      const spec = await this.resolveAssets(chromed);
       const slide = presentation.addSlide();
       slide.background = { color: spec.background?.replace(/^#/, "") ?? effectiveConfig.colors.background };
       const records: ElementRecord[] = [];

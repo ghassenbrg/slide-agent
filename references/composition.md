@@ -2,7 +2,7 @@
 
 # Slide Agent authoring guide
 
-Contract version 0.10 · scene schema `slide-agent.scene/1`
+Contract version 0.11 · scene schema `slide-agent.scene/1`
 
 ## Compose from first principles
 
@@ -10,6 +10,8 @@ Vary silhouette and scale across the sequence while keeping the deck's underlyin
 
 Use content-driven density. Avoiding overcrowding does not mean leaving most of every slide empty: a detailed deck may need three to five levels of hierarchy and many editable objects. Establish legibility through grouping, scale, alignment, semantic color, rules, and attached annotations.
 
-- Avoid repeated card grids, small UI panels, and mechanically centred content unless the story calls for exactly that.
+- A container is not the problem; using the same container for every relationship is. A 3×2 card grid on six consecutive slides is one design repeated six times — but a thing that is a thing deserves a surface. Give it one.
+- Empty is not the same as spare. A label floating in the middle of a slide with nothing bounding it, aligning it, or relating it to anything is not restraint; it is an unfinished object. Density is measured as ink, not as reserved boxes.
+- One claim per slide should be decisively the largest thing on it. A title that is 1.2× its body competes with the body; the same title at 2.5× leads.
 - Keep every element inside the slide. Mark deliberate collisions with `intentionalOverlap` or `allowOverlapWith` rather than disabling QA.
 - Preserve real artifacts — code, configuration, file trees, decision tables, diagnostic output — when they help the audience understand the subject.
