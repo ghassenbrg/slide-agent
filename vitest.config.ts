@@ -27,6 +27,11 @@ export default defineConfig({
        * is useful for finding code nobody exercised — which is how the
        * `p:blipFill` crop bug and the symbol id collision were found — not as a
        * score to maximise.
+       *
+       * A floor also has to hold on the runners that have no LibreOffice — CI
+       * installs the preview tools on Linux only. Code reachable solely through
+       * a real render is dead on the other two, so every number here is the one
+       * the *least* equipped machine can reach, not the one this laptop reports.
        */
       thresholds: {
         lines: 85,
@@ -40,7 +45,10 @@ export default defineConfig({
         "src/layouts/**": { lines: 90, functions: 89, statements: 86, branches: 68 },
         "src/components/**": { lines: 91, functions: 92, statements: 90, branches: 75 },
         "src/evaluation/**": { lines: 96, functions: 96, statements: 94, branches: 69 },
-        "src/review/**": { lines: 90, functions: 96, statements: 88, branches: 62 },
+        // Two of the packet's 21 functions read the per-slide fidelity
+        // comparison, which `compareRenderedText` leaves empty when no text
+        // extractor exists — so 19/21 is the ceiling without LibreOffice.
+        "src/review/**": { lines: 90, functions: 88, statements: 88, branches: 62 },
       },
     },
   },

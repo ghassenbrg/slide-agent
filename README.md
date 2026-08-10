@@ -207,6 +207,7 @@ plugs in. See [docs/api.md](docs/api.md#extension-points).
 | [Validation, readiness, and heuristics](docs/validation.md) | What is checked, what is measured, and what is only a proxy |
 | [Showcase decks](examples/showcase/README.md) | Six independent designs, with the similarity report that proves it |
 | [Human evaluation](docs/human-evaluation.md) | The blinded protocol for the questions a metric cannot answer |
+| [Model evaluation prompts](docs/model-evaluation-prompts.md) | Five briefs for comparing how different host models use the contract |
 | [Architecture decisions](docs/adr/README.md) | What the engine may never normalize, and why |
 | [Troubleshooting](docs/troubleshooting.md) | When something does not work |
 | [Architecture](docs/architecture.md) | How the pieces fit together |

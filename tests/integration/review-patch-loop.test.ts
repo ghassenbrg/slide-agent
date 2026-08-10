@@ -7,6 +7,7 @@ import { SlideAgent } from "../../src/pipeline.js";
 import { silentLogger } from "../../src/logging/logger.js";
 import { outputLayout } from "../../src/output/output-layout.js";
 import { exists } from "../../src/utils/files.js";
+import { findExecutable } from "../../src/utils/process.js";
 
 /**
  * The loop the release exists for: build → see → critique → patch → rebuild,
@@ -15,6 +16,18 @@ import { exists } from "../../src/utils/files.js";
 
 const root = path.resolve(import.meta.dirname, "../..");
 let workspace: string;
+
+/**
+ * Without LibreOffice the previews are schematic drawings, and a schematic
+ * preview holds any deck at `review` on its own — nothing has confirmed what
+ * the audience will see. That is a fact about the machine, not about this loop,
+ * so the readiness assertion below is stated against the best verdict the
+ * environment can reach.
+ */
+const rendererAvailable = Boolean(
+  await findExecutable(["soffice", "libreoffice"], process.env.SLIDE_AGENT_SOFFICE)
+  && await findExecutable(["pdftoppm"], process.env.SLIDE_AGENT_PDFTOPPM),
+);
 
 const SCENE = [
   JSON.stringify({
@@ -129,9 +142,14 @@ describe("build, review, patch", () => {
       ],
     });
     expect(patched.status, JSON.stringify(patched.errors)).not.toBe("error");
-    // Resolving the claim is what moves readiness, and nothing else changed.
+    // Resolving the claim is what moves readiness, and nothing else changed:
+    // the claim reason is gone, and the only reason that may survive it is the
+    // one the machine imposes when it cannot render.
     expect(patched.validation?.readinessReasons.join(" ")).not.toMatch(/c1/);
-    expect(patched.presentationReadiness).toBe("ready");
+    expect(patched.presentationReadiness).toBe(rendererAvailable ? "ready" : "review");
+    if (!rendererAvailable) {
+      expect(patched.validation?.readinessReasons).toEqual([expect.stringMatching(/schematic/)]);
+    }
     expect(patched.patch?.untouched.find((entry) => entry.slide === 2)?.elementIds).toEqual(["figure", "peaks"]);
 
     const revisedScene = await readFile(outputLayout(revised).inspect, "utf8");
