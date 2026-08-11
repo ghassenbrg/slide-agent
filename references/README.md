@@ -19,7 +19,7 @@ guide as one page is [`guide.md`](guide.md).
 - [Commit to a plan before you write coordinates](planning.md) — Before you write coordinates, to commit to a sequence and a silhouette per slide. (~380 tokens)
 - [Plan the story before styling it](narrative.md) — When the order of the slides is still open, or the deck has no single sentence it is trying to land. (~260 tokens)
 - [Compose from first principles](composition.md) — When placing elements on a slide and deciding what carries the eye. (~380 tokens)
-- [Author the deck as a program](build-script.md) — Before authoring anything substantial. This is the recommended path and the cheapest one. (~1470 tokens)
+- [Author the deck as a program](build-script.md) — Before authoring anything substantial. This is the recommended path and the cheapest one. (~1580 tokens)
 - [The freeform canvas](canvas.md) — When hand-writing elements: every element type and what each accepts. (~1370 tokens)
 - [The NDJSON scene format](scene.md) — When emitting or editing NDJSON directly, and for the record format a patch addresses. (~250 tokens)
 - [Diagrams and systems](diagrams.md) — When the relationship between things is the point of a slide. (~260 tokens)

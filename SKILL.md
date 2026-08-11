@@ -58,7 +58,7 @@ Prompt-only mode produces a structural draft with placeholders. It is scaffoldin
 
 The rest of the guide is below as separate pages. Load a section when its
 moment arrives rather than all of them up front: the whole guide is about
-9300 tokens, a demanding deck needs about half of it, and no deck needs
+9400 tokens, a demanding deck needs about half of it, and no deck needs
 all of it before the first slide exists.
 
 Read a section with `slide-agent contract --section <id>`, from
@@ -71,7 +71,7 @@ Read a section with `slide-agent contract --section <id>`, from
 | [`planning`](references/planning.md) | Before you write coordinates, to commit to a sequence and a silhouette per slide. | 380 |
 | [`narrative`](references/narrative.md) | When the order of the slides is still open, or the deck has no single sentence it is trying to land. | 260 |
 | [`composition`](references/composition.md) | When placing elements on a slide and deciding what carries the eye. | 380 |
-| [`build-script`](references/build-script.md) | Before authoring anything substantial. This is the recommended path and the cheapest one. | 1470 |
+| [`build-script`](references/build-script.md) | Before authoring anything substantial. This is the recommended path and the cheapest one. | 1580 |
 | [`canvas`](references/canvas.md) | When hand-writing elements: every element type and what each accepts. | 1370 |
 | [`scene`](references/scene.md) | When emitting or editing NDJSON directly, and for the record format a patch addresses. | 250 |
 | [`diagrams`](references/diagrams.md) | When the relationship between things is the point of a slide. | 260 |

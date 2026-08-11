@@ -65,6 +65,21 @@ function frameOf(block: string): { x: number; y: number; w: number; h: number } 
   };
 }
 
+/**
+ * The preset geometry and, for a rounded rectangle, the radius it is drawn
+ * with. OOXML states the radius as a fraction of the shorter side, so it is
+ * only meaningful next to the frame — and an absent `adj` is the preset's own
+ * default rather than a square corner, which the validator resolves for itself.
+ */
+function geometryOf(block: string, frame: { w: number; h: number }): { shape?: string; radius?: number } {
+  const preset = block.match(/<a:prstGeom\b[^>]*\bprst="([^"]+)"/)?.[1];
+  if (!preset || preset === "rect") return {};
+  const adjustment = block.match(/<a:gd\b[^>]*\bname="adj"[^>]*\bfmla="val (-?\d+)"/)?.[1];
+  if (preset !== "roundRect" || adjustment === undefined) return { shape: preset };
+  const shortest = Math.min(Math.abs(frame.w), Math.abs(frame.h));
+  return { shape: preset, radius: (Number(adjustment) / 100000) * shortest };
+}
+
 function textOf(block: string): string {
   return [...block.matchAll(/<a:t(?:\s[^>]*)?>([\s\S]*?)<\/a:t>/g)].map((match) => decodeXml(match[1] ?? "")).join(" ").trim();
 }
@@ -207,13 +222,15 @@ export class PptxInspector {
         const role = roleFor(name, detectedType);
         const detectedTextColor = textColor(block);
         const detectedFillColor = shapeFillColor(block);
+        const frame = frameOf(block);
         return {
           ...(altText ? { altText } : {}),
           id: `s${index + 1}-e${elementIndex + 1}`,
           name,
           type: detectedType,
           role,
-          ...frameOf(block),
+          ...frame,
+          ...(detectedType === "shape" ? geometryOf(block, frame) : {}),
           ...(text ? { text } : {}),
           ...(fontSize ? { fontSize } : {}),
           ...(fontFace ? { fontFace } : {}),

@@ -3,6 +3,74 @@
 All notable public changes are recorded here, newest first. Versions follow
 semantic versioning.
 
+## 0.14.0 — 2026-08-11
+
+The deck can now be wrong in a way the manifest can see. 0.13 made looking at a
+deck cheap; this release is about the defects that survive being looked at,
+because the record the checks read did not contain the property that was wrong.
+
+The case that started it: a card built the way every deck builds one — a rounded
+panel with a coloured bar laid flush along its edge. The bar is a plain
+rectangle, so its square corner sits outside the panel's curve and pokes past
+it. It is obvious in the render and it shipped anyway, because no check could
+be written for it: `ElementRecord` recorded geometry and colour but never
+recorded that a shape *was* a rounded rectangle, or what radius it was drawn
+with. Both were set on the native shape and dropped one line later. Every route
+by which the pair could otherwise have been reported already exempts it — a bar
+is `role: "decorative"`, and a shape wholly inside an earlier shape counts as
+layering rather than collision.
+
+The general lesson is the one worth keeping: a property the writer sets but the
+manifest does not record is a property nothing can ever check, including a host's
+own `QualityCheck`. Three of those are closed here.
+
+### Added
+
+- **`rounded-corner-overhang`.** A new built-in check reporting anything with a
+  hard corner drawn into the notch a rounded card cuts from its own — an accent
+  bar, a status stripe, a thumbnail docked into a corner. It names both elements
+  and the inset that would fix it. Warning-level and `fixable: false`: the
+  correct inset differs for an edge bar and a corner badge, so `--repair safe`
+  will not quietly move anything.
+- **`style.radius` on canvas shapes.** Corner radius in inches was already
+  honoured end to end — through the build script, the emitted scene, and a
+  round-trip rebuild — but was absent from `CanvasShapeElement` and from the
+  published schema, so TypeScript rejected it and `capabilities().canvas` never
+  mentioned it. It is now a declared, documented property rather than one that
+  worked only because the schema was loose.
+- **`shape`, `radius`, and `maskShape` on `ElementRecord`.** What a shape's
+  preset is, the radius it was authored with, and the outline a picture was
+  masked into. `shape` is omitted for the default rectangle. `radius` records
+  only what the author stated, because absence means "unstated", not "square".
+
+### Changed
+
+- **The inspector recovers preset geometry.** `validate` run against a `.pptx`
+  with no manifest beside it reads `prstGeom` and its `adj` back out of the
+  OOXML, so a deck that was edited in PowerPoint, or was never built here at
+  all, is checked for this defect on the same terms as one we wrote.
+- **The authoring guide states the rule.** The `build-script` section, and the
+  worked card example every deck copies, now inset the bar by the card's radius.
+
+### Fixed
+
+- **A `roundRect` with no stated radius is no longer treated as square.** OOXML
+  emits an empty `avLst` and PowerPoint rounds by 16.667% of the shorter side.
+  Reading that as an unrounded corner would have made the new check miss the
+  exact defect it was written for, since the idiom that produces it rarely
+  states a radius at all. The rendered radius is derived, and pinned to half the
+  shorter side the way OOXML pins it — so a bar too narrow to carry the radius
+  it asked for is still reported.
+
+### Compatibility
+
+- Contract `0.11`, unchanged. Existing scenes, outlines, and requests build
+  unchanged, and `style.radius` was already accepted at runtime.
+- `ElementRecord` gains three optional fields. A reader that ignores unknown
+  keys is unaffected.
+- Decks that already carried this defect will now report a new warning. It does
+  not gate `presentationReadiness`.
+
 ## 0.13.0 — 2026-08-11
 
 Looking at the deck stops being the expensive part. 0.11 gave the model an

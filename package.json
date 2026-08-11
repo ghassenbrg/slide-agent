@@ -1,6 +1,6 @@
 {
   "name": "@slide-agent/core",
-  "version": "0.13.0",
+  "version": "0.14.0",
   "description": "Portable AI-agent skill and TypeScript toolkit for creating, editing, rendering, and validating editable PowerPoint presentations.",
   "keywords": [
     "powerpoint",

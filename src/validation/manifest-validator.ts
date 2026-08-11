@@ -13,7 +13,7 @@ import { pathCrossings } from "../design/routing.js";
 import { repeatedSilhouettes } from "../evaluation/visual-signature.js";
 import { words } from "../utils/text.js";
 import { blendHex, colorContrast as contrastRatio, requiredContrast } from "../utils/color.js";
-import { area, contains, intersectionArea, normalizedBox } from "./geometry.js";
+import { area, contains, cornerOverhang, effectiveCornerRadius, intersectionArea, normalizedBox } from "./geometry.js";
 
 function issue(code: string, severity: ValidationIssue["severity"], message: string, fixable: boolean, options: Partial<ValidationIssue> = {}): ValidationIssue {
   return { code, severity, message, fixable, ...options };
@@ -134,6 +134,26 @@ function overlapAllowed(left: ElementRecord, right: ElementRecord): boolean {
   if (left.type === "shape" && (right.type === "shape" || right.type === "image") && contains(left, right)) return true;
   if (left.role === "decorative" || right.role === "decorative") return true;
   return false;
+}
+
+/**
+ * A square-cornered element drawn flush against a rounded card is a common
+ * hand-built composite — an accent bar on a card, a status stripe on a panel,
+ * a thumbnail docked into a corner. The square corner sits outside the card's
+ * curve unless it was deliberately inset by the radius.
+ *
+ * This needs its own pass because every route by which the pair could have
+ * been reported already exempts it: a bar is usually `role: "decorative"`,
+ * and a wholly contained shape counts as layering rather than collision.
+ */
+function roundedCornerOverhangs(card: ElementRecord, elements: ElementRecord[]): ElementRecord[] {
+  if (effectiveCornerRadius(card) <= 0 || card.intentionalOverlap) return [];
+  return elements.filter((bar) =>
+    bar.id !== card.id
+    && !bar.intentionalOverlap
+    && !bar.allowOverlapWith?.includes(card.id)
+    && !card.allowOverlapWith?.includes(bar.id)
+    && cornerOverhang(card, bar));
 }
 
 function validateChart(chart: ChartSpec): string[] {
@@ -402,6 +422,18 @@ export class ManifestValidator {
             slide: slide.number,
             elementIds: [connector.id, struck.id],
             details: { text: struck.text?.slice(0, 80) },
+          }));
+        }
+      }
+
+      for (const card of slide.elements) {
+        const radius = effectiveCornerRadius(card);
+        for (const bar of roundedCornerOverhangs(card, slide.elements)) {
+          const inset = Math.round(radius * 1000) / 1000;
+          issues.push(issue("rounded-corner-overhang", "warning", `${bar.name} has a square corner that pokes past the rounded corner of ${card.name} on slide ${slide.number}. Inset it by ${inset}in — the radius ${card.name} is drawn with — on its corner-adjacent edges.`, false, {
+            slide: slide.number,
+            elementIds: [card.id, bar.id],
+            details: { radius: inset, radiusStated: card.radius !== undefined },
           }));
         }
       }

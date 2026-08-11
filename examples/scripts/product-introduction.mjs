@@ -92,12 +92,14 @@ function title(s, text, dark = true) {
 
 /** A component card: surface, status bar, label, sub-label. */
 function node(s, id, frame, label, sub, accent, dark = true) {
+  const radius = 0.08;
   s.shape(`${id}-box`, "roundRect", {
     ...frame,
-    style: { fill: dark ? C.panel : "FFFFFF", lineColor: dark ? C.rule : "D5E0E5", lineWidth: 1 },
+    style: { fill: dark ? C.panel : "FFFFFF", lineColor: dark ? C.rule : "D5E0E5", lineWidth: 1, radius },
     role: "diagram-node",
   });
-  s.shape(`${id}-bar`, "rect", { x: frame.x, y: frame.y, w: 0.07, h: frame.h, style: { fill: accent, lineWidth: 0 }, role: "decorative" });
+  // Inset the bar within the box's straight edge so its square corners never cross the box's rounded ones.
+  s.shape(`${id}-bar`, "rect", { x: frame.x, y: frame.y + radius, w: 0.07, h: frame.h - radius * 2, style: { fill: accent, lineWidth: 0 }, role: "decorative" });
   s.text(`${id}-label`, label, {
     x: frame.x + 0.26, y: frame.y + 0.14, w: frame.w - 0.44, h: 0.34,
     style: { fontSize: 20, bold: true, color: dark ? C.ink : C.paperInk },

@@ -207,4 +207,41 @@ describe("golden defect fixtures", () => {
     expect(await readFile(outputLayout(first).inspect, "utf8")).toContain("First deck");
     expect(await readFile(outputLayout(second).inspect, "utf8")).toContain("Second deck");
   });
+
+  it("reports an accent bar poking past a rounded card, radius stated or not", async () => {
+    // The card idiom every deck reinvents: a rounded panel with a coloured bar
+    // laid flush along one edge. The bar is a plain rectangle, so its corner
+    // sits outside the panel's curve — and every route by which the pair could
+    // have been reported already exempts it, the bar being decorative and the
+    // panel containing it. A deck shipped this way for as long as it went
+    // unchecked, because a `roundRect` that states no radius is rounded anyway.
+    const output = path.join(workspace, "corners", "deck.pptx");
+    const result = await new SlideAgent(silentLogger).create({
+      command: "create",
+      outline: outline([{
+        id: "one",
+        kind: "statement",
+        title: "Cards",
+        canvas: [
+          { id: "stated-box", type: "shape", shape: "roundRect", x: 1, y: 1, w: 3, h: 1.2, style: { fill: "141C2F", radius: 0.1 } },
+          { id: "stated-bar", type: "shape", x: 1, y: 1, w: 0.07, h: 1.2, role: "decorative", style: { fill: "35D0BA" } },
+          { id: "default-box", type: "shape", shape: "roundRect", x: 5, y: 1, w: 3, h: 1.2, style: { fill: "141C2F" } },
+          { id: "default-bar", type: "shape", x: 5, y: 1, w: 3, h: 0.06, role: "decorative", style: { fill: "35D0BA" } },
+          // Inset by the radius it is drawn with: the same idiom, done right.
+          { id: "clean-box", type: "shape", shape: "roundRect", x: 9, y: 1, w: 3, h: 1.2, style: { fill: "141C2F", radius: 0.1 } },
+          { id: "clean-bar", type: "shape", x: 9, y: 1.1, w: 0.07, h: 1.0, role: "decorative", style: { fill: "35D0BA" } },
+        ] as CanvasElementSpec[],
+      }]),
+      output,
+    });
+
+    const overhangs = (result.validation?.issues ?? []).filter((issue) => issue.code === "rounded-corner-overhang");
+    const flagged = overhangs.map((issue) => issue.elementIds?.[1]?.replace(/^\d+-/, "")).sort();
+    expect(flagged).toEqual(["default-bar", "stated-bar"]);
+    // The advice has to carry the radius the card is *drawn* with, which for an
+    // unstated one is PowerPoint's own default rather than nothing at all.
+    const unstated = overhangs.find((issue) => issue.elementIds?.[1]?.endsWith("default-bar"));
+    expect(unstated?.details).toMatchObject({ radius: 0.2, radiusStated: false });
+    expect(unstated?.message).toContain("0.2in");
+  });
 });

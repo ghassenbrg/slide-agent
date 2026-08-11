@@ -779,6 +779,10 @@
                     }
                   ]
                 },
+                "radius": {
+                  "description": "Corner radius in inches for a roundRect. Unstated, PowerPoint rounds by 16.667% of the shorter side.",
+                  "$ref": "#/$defs/__schema88"
+                },
                 "rotate": {
                   "anyOf": [
                     {
@@ -814,16 +818,16 @@
               "description": "Unique within the slide; used by validation and revision."
             },
             "x": {
-              "$ref": "#/$defs/__schema88"
-            },
-            "y": {
               "$ref": "#/$defs/__schema89"
             },
-            "w": {
+            "y": {
               "$ref": "#/$defs/__schema90"
             },
-            "h": {
+            "w": {
               "$ref": "#/$defs/__schema91"
+            },
+            "h": {
+              "$ref": "#/$defs/__schema92"
             },
             "zIndex": {
               "$ref": "#/$defs/__schema31"
@@ -857,25 +861,25 @@
               "const": "connector"
             },
             "from": {
-              "$ref": "#/$defs/__schema93"
+              "$ref": "#/$defs/__schema94"
             },
             "to": {
-              "$ref": "#/$defs/__schema98"
-            },
-            "route": {
               "$ref": "#/$defs/__schema99"
             },
+            "route": {
+              "$ref": "#/$defs/__schema100"
+            },
             "clearance": {
-              "$ref": "#/$defs/__schema101"
+              "$ref": "#/$defs/__schema102"
             },
             "stub": {
-              "$ref": "#/$defs/__schema103"
+              "$ref": "#/$defs/__schema104"
             },
             "mayCross": {
-              "$ref": "#/$defs/__schema105"
+              "$ref": "#/$defs/__schema106"
             },
             "style": {
-              "$ref": "#/$defs/__schema107"
+              "$ref": "#/$defs/__schema108"
             }
           },
           "required": [
@@ -953,19 +957,19 @@
               "type": "object",
               "properties": {
                 "source": {
-                  "$ref": "#/$defs/__schema108"
+                  "$ref": "#/$defs/__schema109"
                 },
                 "credit": {
-                  "$ref": "#/$defs/__schema110"
+                  "$ref": "#/$defs/__schema111"
                 },
                 "license": {
-                  "$ref": "#/$defs/__schema112"
+                  "$ref": "#/$defs/__schema113"
                 },
                 "generated": {
-                  "$ref": "#/$defs/__schema114"
+                  "$ref": "#/$defs/__schema115"
                 },
                 "generator": {
-                  "$ref": "#/$defs/__schema116"
+                  "$ref": "#/$defs/__schema117"
                 }
               },
               "additionalProperties": {},
@@ -980,7 +984,7 @@
                   "description": "Path to the .svg. It is packaged with the deck and declared in the manifest."
                 },
                 "editable": {
-                  "$ref": "#/$defs/__schema120"
+                  "$ref": "#/$defs/__schema121"
                 },
                 "source": {
                   "type": "string"
@@ -1000,22 +1004,22 @@
               "type": "object",
               "properties": {
                 "focalPoint": {
-                  "$ref": "#/$defs/__schema127"
+                  "$ref": "#/$defs/__schema128"
                 },
                 "crop": {
-                  "$ref": "#/$defs/__schema129"
+                  "$ref": "#/$defs/__schema130"
                 },
                 "maskShape": {
-                  "$ref": "#/$defs/__schema131"
+                  "$ref": "#/$defs/__schema132"
                 },
                 "tint": {
-                  "$ref": "#/$defs/__schema133"
-                },
-                "duotone": {
                   "$ref": "#/$defs/__schema134"
                 },
-                "grayscale": {
+                "duotone": {
                   "$ref": "#/$defs/__schema135"
+                },
+                "grayscale": {
+                  "$ref": "#/$defs/__schema136"
                 }
               },
               "additionalProperties": {},
@@ -1310,13 +1314,13 @@
               "minLength": 1
             },
             "data": {
-              "$ref": "#/$defs/__schema139"
+              "$ref": "#/$defs/__schema140"
             },
             "alt": {
               "type": "string"
             },
             "options": {
-              "$ref": "#/$defs/__schema142"
+              "$ref": "#/$defs/__schema143"
             }
           },
           "required": [
@@ -1387,10 +1391,10 @@
               "const": "diagram"
             },
             "grammar": {
-              "$ref": "#/$defs/__schema144"
+              "$ref": "#/$defs/__schema145"
             },
             "spec": {
-              "$ref": "#/$defs/__schema145"
+              "$ref": "#/$defs/__schema146"
             },
             "alt": {
               "type": "string"
@@ -1467,7 +1471,7 @@
               "minItems": 1,
               "type": "array",
               "items": {
-                "$ref": "#/$defs/__schema149"
+                "$ref": "#/$defs/__schema150"
               },
               "description": "Child elements. Their x/y are offsets from the group's x/y, in inches."
             },
@@ -1567,7 +1571,7 @@
                 },
                 "color": {
                   "description": "Child element id → replacement colour.",
-                  "$ref": "#/$defs/__schema152"
+                  "$ref": "#/$defs/__schema153"
                 },
                 "style": {
                   "type": "object",
@@ -1921,6 +1925,17 @@
       ],
       "description": "A hyperlink. Only http, https, and mailto are accepted; anything else is refused and reported."
     },
+    "__schema88": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0
+        },
+        {
+          "$ref": "#/$defs/__schema25"
+        }
+      ]
+    },
     "__schema70": {
       "type": "object",
       "propertyNames": {
@@ -1928,10 +1943,6 @@
       },
       "additionalProperties": {},
       "description": "Advanced PptxGenJS options passed through unchanged. Verify the render. A `hyperlink` here is held to the same scheme allowlist as `link`."
-    },
-    "__schema88": {
-      "type": "number",
-      "description": "Inches on the slide canvas."
     },
     "__schema89": {
       "type": "number",
@@ -1945,13 +1956,17 @@
       "type": "number",
       "description": "Inches on the slide canvas."
     },
-    "__schema93": {
-      "$ref": "#/$defs/__schema94"
+    "__schema92": {
+      "type": "number",
+      "description": "Inches on the slide canvas."
     },
-    "__schema98": {
-      "$ref": "#/$defs/__schema94"
+    "__schema94": {
+      "$ref": "#/$defs/__schema95"
     },
     "__schema99": {
+      "$ref": "#/$defs/__schema95"
+    },
+    "__schema100": {
       "type": "string",
       "enum": [
         "straight",
@@ -1959,21 +1974,21 @@
         "curved"
       ]
     },
-    "__schema101": {
+    "__schema102": {
       "type": "number",
       "minimum": 0
     },
-    "__schema103": {
+    "__schema104": {
       "type": "number",
       "minimum": 0
     },
-    "__schema105": {
+    "__schema106": {
       "type": "array",
       "items": {
         "type": "string"
       }
     },
-    "__schema107": {
+    "__schema108": {
       "type": "object",
       "properties": {
         "color": {
@@ -2035,22 +2050,22 @@
       },
       "additionalProperties": {}
     },
-    "__schema108": {
+    "__schema109": {
       "type": "string"
     },
-    "__schema110": {
+    "__schema111": {
       "type": "string"
     },
-    "__schema112": {
+    "__schema113": {
       "type": "string"
     },
-    "__schema114": {
+    "__schema115": {
       "type": "boolean"
     },
-    "__schema116": {
+    "__schema117": {
       "type": "string"
     },
-    "__schema120": {
+    "__schema121": {
       "anyOf": [
         {
           "type": "boolean",
@@ -2067,7 +2082,7 @@
       ],
       "description": "false: scalable artwork only. \"partial\": some parts are separable. true: fully shape-editable after ungrouping."
     },
-    "__schema127": {
+    "__schema128": {
       "type": "object",
       "properties": {
         "x": {
@@ -2086,15 +2101,15 @@
         "y"
       ]
     },
-    "__schema129": {
+    "__schema130": {
       "description": "Explicit crop as a fraction of the source, per edge.",
-      "$ref": "#/$defs/__schema130"
+      "$ref": "#/$defs/__schema131"
     },
-    "__schema131": {
+    "__schema132": {
       "description": "A PowerPoint shape name used as the picture's outline, e.g. \"ellipse\".",
-      "$ref": "#/$defs/__schema132"
+      "$ref": "#/$defs/__schema133"
     },
-    "__schema133": {
+    "__schema134": {
       "type": "object",
       "properties": {
         "color": {
@@ -2127,7 +2142,7 @@
       ],
       "additionalProperties": {}
     },
-    "__schema134": {
+    "__schema135": {
       "type": "object",
       "properties": {
         "shadow": {
@@ -2161,7 +2176,7 @@
       ],
       "additionalProperties": {}
     },
-    "__schema135": {
+    "__schema136": {
       "anyOf": [
         {
           "type": "boolean"
@@ -2171,7 +2186,7 @@
         }
       ]
     },
-    "__schema139": {
+    "__schema140": {
       "minItems": 1,
       "type": "array",
       "items": {
@@ -2182,15 +2197,15 @@
         "additionalProperties": {}
       }
     },
-    "__schema142": {
+    "__schema143": {
       "$ref": "#/$defs/__schema70"
     },
-    "__schema144": {
+    "__schema145": {
       "type": "string",
       "minLength": 1,
       "description": "A named diagram form; Slide Agent handles routing, spacing, and label placement. Built in: layered, swimlane, sequence, hierarchy, quadrant. A host can register more — ask for capabilities. An unknown name fails the build with the list of what is available."
     },
-    "__schema145": {
+    "__schema146": {
       "type": "object",
       "propertyNames": {
         "type": "string"
@@ -2198,10 +2213,10 @@
       "additionalProperties": {},
       "description": "The grammar's own payload. Fetch its schema from the contract."
     },
-    "__schema149": {
+    "__schema150": {
       "$ref": "#/$defs/__schema29"
     },
-    "__schema152": {
+    "__schema153": {
       "type": "object",
       "propertyNames": {
         "type": "string"
@@ -2332,19 +2347,19 @@
         "slide"
       ]
     },
-    "__schema94": {
+    "__schema95": {
       "anyOf": [
         {
           "type": "string",
           "minLength": 1
         },
         {
-          "$ref": "#/$defs/__schema96"
+          "$ref": "#/$defs/__schema97"
         }
       ],
       "description": "An element id on the same slide, optionally with the side to use."
     },
-    "__schema130": {
+    "__schema131": {
       "type": "object",
       "properties": {
         "left": {
@@ -2370,7 +2385,7 @@
       },
       "additionalProperties": {}
     },
-    "__schema132": {
+    "__schema133": {
       "anyOf": [
         {
           "type": "string"
@@ -2440,7 +2455,7 @@
         }
       ]
     },
-    "__schema96": {
+    "__schema97": {
       "type": "object",
       "properties": {
         "id": {

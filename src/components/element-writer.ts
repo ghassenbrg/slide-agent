@@ -273,6 +273,8 @@ export class ElementWriter {
       ...(style.transparency ? { fillTransparency: style.transparency } : {}),
       editability: "native",
       ...this.context(style),
+      ...(shape !== Shapes.rect ? { shape } : {}),
+      ...(style.radius !== undefined ? { radius: style.radius } : {}),
       ...(link ? { link: link.url ?? `slide:${link.slide}` } : {}),
       intentionalOverlap: style.intentionalOverlap ?? false,
     });
@@ -411,6 +413,7 @@ export class ElementWriter {
         ? (style.vector.editable === true ? "grouped-native" : "embedded-vector")
         : "embedded-raster",
       ...this.context(style),
+      ...(treatment?.maskShape ? { maskShape: treatment.maskShape } : {}),
       ...(link ? { link: link.url ?? `slide:${link.slide}` } : {}),
       ...(style.vector || treatment
         ? { metadata: { ...(style.vector ? { vector: style.vector } : {}), ...(treatment ? { treatment } : {}) } }

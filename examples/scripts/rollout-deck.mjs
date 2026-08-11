@@ -93,13 +93,15 @@ const PAGE = { x: 0.72, y: 1.9, w: 11.9, h: 4.8 };
 
 /** This deck's stage card: a surface, a status bar, a label, a sub-label. */
 function stage(slide, id, frame, label, sub, accent) {
+  const radius = 0.08;
   slide.shape(`${id}-box`, "roundRect", {
     ...frame,
-    style: { fill: C.panel, lineColor: C.rule, lineWidth: 1 },
+    style: { fill: C.panel, lineColor: C.rule, lineWidth: 1, radius },
     role: "diagram-node",
   });
+  // Inset the bar within the box's straight edge so its square corners never cross the box's rounded ones.
   slide.shape(`${id}-bar`, "rect", {
-    x: frame.x, y: frame.y, w: 0.07, h: frame.h,
+    x: frame.x, y: frame.y + radius, w: 0.07, h: frame.h - radius * 2,
     style: { fill: accent, lineWidth: 0 },
     role: "decorative",
   });
@@ -262,8 +264,10 @@ function title(slide, text, dark = true) {
   const cells = grid({ x: PAGE.x, y: 2.4, w: PAGE.w, h: 3.6 }, { columns: 2, rows: 2, gap: 0.4, rowGap: 0.4 });
   asks.forEach(([label, what, why, accent], index) => {
     const cell = cells[index];
-    s.shape(`ask${index}`, "roundRect", { ...cell, style: { fill: C.panel, lineColor: C.rule, lineWidth: 1 } });
-    s.shape(`ask${index}-bar`, "rect", { x: cell.x, y: cell.y, w: 0.07, h: cell.h, style: { fill: accent, lineWidth: 0 }, role: "decorative" });
+    const radius = 0.08;
+    s.shape(`ask${index}`, "roundRect", { ...cell, style: { fill: C.panel, lineColor: C.rule, lineWidth: 1, radius } });
+    // Inset the bar within the box's straight edge so its square corners never cross the box's rounded ones.
+    s.shape(`ask${index}-bar`, "rect", { x: cell.x, y: cell.y + radius, w: 0.07, h: cell.h - radius * 2, style: { fill: accent, lineWidth: 0 }, role: "decorative" });
     s.text(`ask${index}-label`, label, {
       x: cell.x + 0.3, y: cell.y + 0.26, w: cell.w - 0.6, h: 0.3,
       style: { fontSize: 11, bold: true, color: accent, fontFace: "Menlo", charSpacing: 0.8 },

@@ -192,6 +192,8 @@ export const canvasShapeSchema = z.object({
     transparency: orVar(z.number().min(0).max(100)).optional(),
     lineColor: orVar(hex).optional(),
     lineWidth: orVar(z.number().nonnegative()).optional(),
+    radius: orVar(z.number().nonnegative()).optional()
+      .describe("Corner radius in inches for a roundRect. Unstated, PowerPoint rounds by 16.667% of the shorter side."),
     rotate: orVar(z.number()).optional(),
     options: nativeOptions.optional(),
   }).optional(),

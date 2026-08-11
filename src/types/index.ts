@@ -368,6 +368,12 @@ export interface CanvasShapeElement extends CanvasElementBase {
     transparency?: number;
     lineColor?: string;
     lineWidth?: number;
+    /**
+     * Corner radius in inches for a `roundRect`. Left unstated, PowerPoint
+     * rounds by 16.667% of the shorter side — which is not a square corner,
+     * and is what anything drawn flush to the corner has to be inset by.
+     */
+    radius?: number;
     rotate?: number;
     options?: Record<string, unknown>;
   };
@@ -835,6 +841,16 @@ export interface ElementRecord {
   /** PowerPoint autofit mode; `shrink` lets the viewer reduce text to fit. */
   fit?: "none" | "shrink" | "resize";
   bold?: boolean;
+  /** The PptxGenJS shape name, recorded only when it isn't the plain-rectangle default. */
+  shape?: string;
+  /**
+   * Corner radius in inches, when the author set one explicitly. A `roundRect`
+   * without one is still rounded — PowerPoint applies its own preset default —
+   * so absence here means "unstated", not "square".
+   */
+  radius?: number;
+  /** The outline a picture was masked into, when it is not a plain rectangle. */
+  maskShape?: string;
   imagePath?: string;
   /** Alternative text for images and charts; drives accessibility checks. */
   altText?: string;
