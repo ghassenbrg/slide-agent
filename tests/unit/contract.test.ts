@@ -57,14 +57,37 @@ describe("contract descriptor", () => {
   });
 
   it("publishes a discriminated canvas-element schema rather than an opaque object", () => {
-    const schema = contractJsonSchema("canvasElement") as { oneOf?: unknown[]; anyOf?: unknown[] };
-    const variants = (schema.oneOf ?? schema.anyOf ?? []) as Array<{ properties?: { type?: { const?: string } } }>;
+    type Node = { properties?: { type?: { const?: string } }; $ref?: string };
+    const schema = contractJsonSchema("canvasElement") as {
+      oneOf?: Node[];
+      anyOf?: Node[];
+      $defs?: Record<string, Node>;
+    };
+    // Shared subschemas are published by name rather than repeated, so a branch
+    // may arrive as a reference. Resolving one is what any consumer does.
+    const definitions = schema.$defs ?? {};
+    const resolve = (node: Node): Node => {
+      const name = node.$ref?.split("/").pop();
+      return name && definitions[name] ? resolve(definitions[name]) : node;
+    };
+    const variants = (schema.oneOf ?? schema.anyOf ?? []).map(resolve);
     // Assert the element types by name; a bare count silently drifts whenever a
     // new element type is added, which is the change most worth noticing.
     expect(variants.map((variant) => variant.properties?.type?.const).sort()).toEqual([
       "chart", "connector", "diagram", "group", "image",
       "native-chart", "shape", "symbol-instance", "table", "text",
     ]);
+  });
+
+  it("publishes shared subschemas by reference instead of repeating them", () => {
+    // Inlined, one read of the scene schema cost roughly 64,000 tokens. The
+    // ceiling is what stops that regressing; the $defs assertion is what stops
+    // it being met by deleting content instead of by naming it.
+    const scene = contractJsonSchema("sceneRecord");
+    expect(Object.keys((scene as { $defs?: object }).$defs ?? {}).length).toBeGreaterThan(20);
+    for (const name of contractDescriptor().schemas) {
+      expect(JSON.stringify(contractJsonSchema(name)).length, name).toBeLessThan(120_000);
+    }
   });
 });
 

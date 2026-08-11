@@ -14,27 +14,19 @@
       "minLength": 1
     },
     "kind": {
-      "description": "fact, number, quote, recommendation, illustrative, or your own term.",
-      "type": "string"
+      "$ref": "#/$defs/__schema3"
     },
     "sourceIds": {
-      "description": "Ids from sourceLedger.",
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
+      "$ref": "#/$defs/__schema5"
     },
     "asOf": {
-      "description": "The date this claim was true, when that matters.",
-      "type": "string"
+      "$ref": "#/$defs/__schema7"
     },
     "calculation": {
-      "description": "How a derived number was produced.",
-      "type": "string"
+      "$ref": "#/$defs/__schema9"
     },
     "status": {
-      "description": "verified, needs-review, or illustrative.",
-      "type": "string"
+      "$ref": "#/$defs/__schema11"
     }
   },
   "required": [
@@ -42,5 +34,25 @@
     "claim"
   ],
   "additionalProperties": {},
-  "description": "One claim and what backs it. Lets revision checks catch orphaned sources and unsupported precision."
+  "description": "One claim and what backs it. Lets revision checks catch orphaned sources and unsupported precision.",
+  "$defs": {
+    "__schema3": {
+      "type": "string"
+    },
+    "__schema5": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "__schema7": {
+      "type": "string"
+    },
+    "__schema9": {
+      "type": "string"
+    },
+    "__schema11": {
+      "type": "string"
+    }
+  }
 }

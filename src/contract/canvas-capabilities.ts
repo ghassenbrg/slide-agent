@@ -1,6 +1,4 @@
-import { z } from "zod";
-
-import { canvasElementSchema } from "./schemas.js";
+import { publishedCanvasElementSchema } from "./json-schema.js";
 
 /**
  * What the canvas can actually express, in a form a model can read before it
@@ -106,29 +104,49 @@ type JsonSchemaNode = {
   $defs?: Record<string, JsonSchemaNode>;
 };
 
-/** The variants of the published canvas-element schema, resolved through $refs. */
-function elementVariants(): JsonSchemaNode[] {
-  const schema = z.toJSONSchema(canvasElementSchema, { io: "input", unrepresentable: "any" }) as JsonSchemaNode;
-  const definitions = schema.$defs ?? {};
-  const resolve = (node: JsonSchemaNode | undefined): JsonSchemaNode => {
+/**
+ * A reader for the published canvas-element schema.
+ *
+ * The schema names its shared subschemas rather than repeating them, which is
+ * what keeps it small enough to read. Capability extraction wants the opposite
+ * — the whole shape of one element type in one place — so this follows `$ref`
+ * as it walks, with the definition table captured once instead of threaded
+ * through every step.
+ */
+function schemaReader() {
+  // The published form, not a separately generated one: capabilities that
+  // described a schema hosts are not served would be a second contract nobody
+  // agreed to.
+  const root = publishedCanvasElementSchema() as JsonSchemaNode;
+  const definitions = root.$defs ?? {};
+
+  /**
+   * Follows a `$ref` to the node it names.
+   *
+   * `seen` breaks the recursion a group's children introduce: a definition
+   * already open on this path resolves to an empty node, which is right here
+   * because the property names it would contribute were collected higher up.
+   */
+  const deref = (node: JsonSchemaNode | undefined, seen: ReadonlySet<string> = new Set()): JsonSchemaNode => {
     if (!node) return {};
     const name = node.$ref?.split("/").pop();
-    return name && definitions[name] ? resolve(definitions[name]) : node;
+    if (!name) return node;
+    if (seen.has(name) || !definitions[name]) return {};
+    return deref(definitions[name], new Set([...seen, name]));
   };
-  const root = resolve(schema);
-  return (root.anyOf ?? root.oneOf ?? []).map(resolve);
-}
 
-function propertyNames(node: JsonSchemaNode | undefined): string[] {
-  return Object.keys(resolveInline(node).properties ?? {});
-}
+  /** The object behind a node, past any `$ref` and any `literal | {$var}` union. */
+  const objectAt = (node: JsonSchemaNode | undefined): JsonSchemaNode => {
+    const resolved = deref(node);
+    if (resolved.properties) return resolved;
+    const branches = (resolved.anyOf ?? resolved.oneOf ?? resolved.allOf ?? []).map((branch) => deref(branch));
+    return branches.find((branch) => branch.properties) ?? resolved;
+  };
 
-/** Unwraps the `anyOf` a `literal | {$var}` union produces. */
-function resolveInline(node: JsonSchemaNode | undefined): JsonSchemaNode {
-  if (!node) return {};
-  if (node.properties) return node;
-  const branches = node.anyOf ?? node.oneOf ?? node.allOf ?? [];
-  return branches.find((branch) => branch.properties) ?? node;
+  return {
+    variants: (deref(root).anyOf ?? deref(root).oneOf ?? []).map((variant) => deref(variant)),
+    propertyNames: (node: JsonSchemaNode | undefined): string[] => Object.keys(objectAt(node).properties ?? {}),
+  };
 }
 
 const ELEMENT_NOTES: Record<string, { description: string; editability: EditabilityClass; origin?: "core" | "extension"; notes?: string[] }> = {
@@ -185,7 +203,7 @@ const ELEMENT_NOTES: Record<string, { description: string; editability: Editabil
 };
 
 export function canvasCapabilities(): CanvasCapabilities {
-  const variants = elementVariants();
+  const { variants, propertyNames } = schemaReader();
   const elements: CanvasElementCapability[] = variants.map((variant) => {
     const properties = variant.properties ?? {};
     const type = properties.type?.const ?? "unknown";

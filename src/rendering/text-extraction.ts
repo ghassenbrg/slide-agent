@@ -5,6 +5,7 @@ import path from "node:path";
 
 import { findExecutable, runProcess } from "../utils/process.js";
 import { exists } from "../utils/files.js";
+import { isPreviewFile, previewMimeType, previewSlideNumber } from "./preview-delivery.js";
 
 /**
  * Reading the words back off the render.
@@ -63,7 +64,10 @@ async function extractFromPdf(pdfPath: string): Promise<ExtractedText | undefine
 }
 
 /** Recognises text from the preview images, when a local OCR engine exists. */
-async function extractFromImages(previewFiles: string[]): Promise<ExtractedText | undefined> {
+async function extractFromImages(candidates: string[]): Promise<ExtractedText | undefined> {
+  // OCR reads rasters. A schematic SVG preview is in the list because the
+  // review packet needs it; Tesseract has nothing to do with it.
+  const previewFiles = candidates.filter((file) => previewMimeType(file) === "image/png");
   const tesseract = await findExecutable(["tesseract"], process.env.SLIDE_AGENT_TESSERACT);
   if (!tesseract || previewFiles.length === 0) return undefined;
   const temporary = await mkdtemp(path.join(tmpdir(), "slide-agent-ocr-"));
@@ -116,11 +120,21 @@ export async function extractRenderedText(options: {
   };
 }
 
-/** Every preview image in a directory, in slide order. */
+/**
+ * Every preview in a directory, in slide order.
+ *
+ * Includes the schematic SVGs drawn when LibreOffice is absent. This used to
+ * match `.png` only, which was harmless while the sole caller was OCR — which
+ * cannot read an SVG anyway — and stopped being harmless the moment the review
+ * packet used the same list to decide what to show. On a machine without
+ * LibreOffice every slide reported no preview at all, so a reviewer was handed
+ * a deck with nothing to look at rather than the schematic it did have. OCR
+ * narrows to rasters at its own call site instead.
+ */
 export async function previewFilesIn(directory: string): Promise<string[]> {
   const entries = await readdir(directory).catch(() => []);
   return entries
-    .filter((name) => /^slide-\d+\.png$/i.test(name))
-    .sort((left, right) => Number(left.match(/\d+/)?.[0] ?? 0) - Number(right.match(/\d+/)?.[0] ?? 0))
+    .filter(isPreviewFile)
+    .sort((left, right) => previewSlideNumber(left) - previewSlideNumber(right))
     .map((name) => path.join(directory, name));
 }

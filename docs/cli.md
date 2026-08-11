@@ -33,8 +33,9 @@ holds together; readiness says whether the deck is finished, and
 
 ```bash
 slide-agent review --input deck.pptx
+slide-agent review --input deck.pptx --contact-sheet sheet.png
 slide-agent review --input deck.pptx --slide 4
-slide-agent review --input deck.pptx --from 3 --to 8 --output review.json
+slide-agent review --input deck.pptx --from 3 --to 8 --detail full --output review.json
 ```
 
 The deterministic review packet for the exact PPTX: artifact hashes, per-slide
@@ -47,12 +48,26 @@ issues, and questions worth asking.
 | `--input <file>` | Required. Its scene, manifest, report, and previews are discovered beside it |
 | `--slide <n>` / `--from <n>` / `--to <n>` | Which slides to review |
 | `--max-slides <n>` | Cap on slides per packet |
+| `--detail <level>` | `defects` (default) lists the elements a check names; `full` lists every element |
+| `--contact-sheet <file>` | Also write every slide render as one numbered grid image |
 | `--scene/--manifest/--report <file>` | Override a discovered path |
 | `--output <file>` | Write the packet here instead of stdout |
 
+At `defects` detail the packet names the elements something is measurably wrong
+with and counts the rest under `elementCensus`. It is not withholding anything:
+`--detail full` lists every element's geometry and text, and asking for one
+slide by number is always full. What the default leaves out is the part the
+author already knows, which on a healthy deck is nearly all of it.
+
+The contact sheet is for reading the deck as a sequence — whether the pacing has
+a shape, which two slides came out as the same drawing. Those are comparisons,
+and a comparison wants the slides side by side.
+
 It contains no aesthetic verdict. `observations.heuristics` are engine proxies,
 `observations.issues` are measured facts, and `observations.visualFindings` are
-somebody's judgement — kept apart on purpose.
+somebody's judgement — kept apart on purpose. An issue that names a slide is
+reported on that slide; `observations.issues` carries the deck-wide ones and
+`observations.issueCount` is the total either way.
 
 ## `patch`
 

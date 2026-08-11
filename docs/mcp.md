@@ -76,26 +76,35 @@ configuration currently references the server.
 It is not prompt → deck. It is build → see → critique → patch, and skipping the
 seeing is the single most common reason output looks generic.
 
-**1. Read what is possible.** Fetch `slide-agent://capabilities` — its `canvas`
-block is the expressive surface, derived from the schemas the engine enforces —
-and `slide-agent://contract/guide` for how to author. Call `get_capabilities`
-and `get_authoring_contract` if your client cannot read resources.
+**1. Read what is possible.** Call `get_capabilities`. Its default answer is a
+summary — what renders here, and whether this installation can source a picture
+at all. Ask for `include: ["canvas"]` before you design: that block is the
+expressive surface, derived from the schemas the engine enforces. Then read the
+guide sections the deck actually needs with `get_authoring_contract`; the whole
+guide is about 8,900 tokens and the router in `SKILL.md` says which sections
+matter when.
 
 **2. Plan before you place coordinates.** Write two visual theses that differ
 structurally, choose one, and record a `sequencePlan` — one entry per slide with
 its narrative job and intended silhouette. If you researched, write the `claims`
 and `sourceLedger` too.
 
-**3. Design the deck yourself.** Fetch
-`slide-agent://contract/schema/outline` (or `.../sceneRecord` for the
-line-oriented format) and author against it. Palette, typography, composition,
-diagrams, and every element's coordinates are your decisions.
+**3. Design the deck yourself.** Palette, typography, composition, diagrams, and
+every element's coordinates are your decisions. For anything substantial, write
+a build script — the same deck as a program runs about a third the length of its
+NDJSON, and output tokens cost several times what input tokens cost. The full
+JSON Schemas at `slide-agent://contract/schema/<name>` are there for validators;
+the `canvas` capability block is the cheaper way to learn what you may author.
 
 **4. Build it** with `slide_agent_run`, with `render` on.
 
-**5. Look at it** with `review_presentation`. It returns the renders as images,
-the words read back off them compared against the deck's own text, the geometry,
-your declared intent, and questions worth asking.
+**5. Look at it** with `review_presentation`. Start with `images: "overview"`:
+one contact sheet, every slide in order and numbered, which is what makes the
+deck-level questions answerable — whether the sequence has a shape, whether two
+slides came out as the same drawing. It costs about one image instead of one per
+slide. Then open the slides that looked wrong with `images: [n], imageDetail: "full"`.
+The packet also carries the words read back off the render compared against the
+deck's own text, the geometry, your declared intent, and questions worth asking.
 
 **6. Fix exactly what is wrong** with `patch_presentation`, addressing elements
 by id. Regenerating the deck to fix a caption discards every decision you are
@@ -150,24 +159,28 @@ whether the deck is finished, and `readinessReasons` says why.
 
 | Tool | Required | Optional |
 |---|---|---|
-| `slide_agent_run` | `request` | — |
-| `get_capabilities` | — | — |
-| `get_authoring_contract` | — | `section`, `schema` |
-| `plan_presentation` | `prompt` | `slideCount` |
-| `create_presentation` | `prompt`, `output` | `render`, `validate`, `autoFix`, `maxRetries`, `includeImages` |
-| `revise_presentation` | `input`, `output`, `slide`, `sceneNdjson` | `scene`, `validate`, `render`, `includeImages` |
-| `edit_presentation` | `input`, `output`, `operations` | `render`, `validate`, `includeImages` |
-| `render_presentation` | `input`, `output` | `width`, `height`, `includeImages` |
-| `validate_presentation` | `input` | `report`, `manifest`, `previewsDir`, `render`, `roundTrip`, `includeImages` |
-| `review_presentation` | `input` | `scene`, `manifest`, `slide`, `from`, `to`, `maxSlides`, `includeImages` |
-| `patch_presentation` | `input`, `output`, `operations` | `scene`, `dryRun`, `render`, `roundTrip`, `validate`, `includeImages` |
-| `slide_agent_doctor` | — | — |
+| Tool | Required | Optional | Default `images` |
+|---|---|---|---|
+| `slide_agent_run` | `request` | `images`, `imageDetail` | `all` |
+| `get_capabilities` | — | `include` | — |
+| `get_authoring_contract` | — | `section`, `schema` | — |
+| `plan_presentation` | `prompt` | `slideCount` | — |
+| `create_presentation` | `prompt`, `output` | `render`, `validate`, `autoFix`, `maxRetries`, `images`, `imageDetail` | `all` |
+| `revise_presentation` | `input`, `output`, `slide`, `sceneNdjson` | `scene`, `validate`, `render`, `images`, `imageDetail` | `changed` |
+| `edit_presentation` | `input`, `output`, `operations` | `render`, `validate`, `images`, `imageDetail` | `changed` |
+| `render_presentation` | `input`, `output` | `width`, `height`, `images`, `imageDetail` | `all` |
+| `validate_presentation` | `input` | `report`, `manifest`, `previewsDir`, `render`, `images`, `imageDetail` | `none` |
+| `review_presentation` | `input` | `scene`, `manifest`, `slide`, `from`, `to`, `maxSlides`, `detail`, `images`, `imageDetail` | `all` |
+| `patch_presentation` | `input`, `output`, `operations` | `scene`, `dryRun`, `render`, `roundTrip`, `validate`, `images`, `imageDetail` | `changed` |
+| `slide_agent_doctor` | — | — | — |
 
 ### Knowing what is possible before you design
 
 `get_capabilities` and `slide-agent://capabilities` report what this
-installation can do. The `images` block is the one to read before planning a
-photo-led deck:
+installation can do. The tool answers with a summary by default and returns any
+facet in full on request — `canvas`, `images`, `fonts`, `rendering`, `diagrams`,
+`charts`, `layouts`, `checks`, or `all`. The `images` block is never summarised
+away, because it is the one to read before planning a photo-led deck:
 
 ```json
 { "localPaths": true, "remoteUrls": false, "provider": null,
@@ -184,16 +197,43 @@ asset library, an image generator. Slide Agent ships none of these on purpose
 
 ### Seeing what you built
 
-Every tool that can render returns the slide previews as image content
-alongside its JSON result, so a host with no filesystem access of its own can
-still look at the deck. Ask for `render`, look at the images, and fix what
-reads badly with `revise_presentation` — a model that cannot see its output can
-only revise from its own assumptions.
+Every tool that can render returns slide previews as image content alongside its
+JSON result, so a host with no filesystem access of its own can still look at
+the deck. A model that cannot see its output can only revise from its own
+assumptions.
+
+What comes back is a choice, and the default is the cheapest correct one:
+
+- **`images`** takes `"all"`, `"changed"`, `"none"`, `"overview"`, or a list of
+  slide numbers. `"changed"` returns only the slides the command altered —
+  `patch` knows this from its own diff, `revise` from its target. When a command
+  cannot tell, it returns everything and says so rather than returning nothing.
+  `"overview"` composes every slide into one numbered contact sheet.
+- **`imageDetail`** is `"review"` (default, 1024px) or `"full"` (1568px). The review
+  tier costs roughly half and is sized to judge composition; text fidelity is
+  read from the PDF's text layer, exactly, and never off the image, so the
+  smaller preview costs you nothing there.
+- **`includeImages`** still works with its old meaning: `true` is `"all"`,
+  `false` is `"none"`.
 
 Up to 20 previews and 12 MB are returned; the text block says how many were
-withheld. Pass `includeImages: false` to turn them off. Where LibreOffice is
-not installed the previews are schematic SVGs of the deck's geometry rather
-than rendered slides, and the result says so.
+withheld, what the call cost, and what the richer option would cost. Where
+LibreOffice is not installed the previews are schematic SVGs of the deck's
+geometry rather than rendered slides, and the result says so.
+
+### What a call costs
+
+Every result carries a `tokenBudget`:
+
+```json
+{ "text": 2840, "images": 787, "imageCount": 1, "total": 3627,
+  "sessionTotal": 28104, "basis": "estimate" }
+```
+
+The figures are estimates and say so: characters ÷ 4 for text, and
+`(width × height) ÷ 750` after the downscale to 1,568px for images. They exist
+so an option that saves tokens can be weighed against the one that spends them,
+which is not a judgement a model can make against an unpublished price list.
 
 **`slide_agent_run`** is the one that matters. `request.command` is `create`,
 `edit`, `render`, `validate`, or `revise`; the rest of the object follows the

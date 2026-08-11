@@ -12,16 +12,13 @@
       "description": "What this slide has to accomplish for the audience."
     },
     "dominantArtifact": {
-      "description": "The one thing the eye should land on.",
-      "type": "string"
+      "$ref": "#/$defs/__schema2"
     },
     "silhouette": {
-      "description": "The intended shape of the composition, in your own words.",
-      "type": "string"
+      "$ref": "#/$defs/__schema4"
     },
     "energy": {
-      "description": "quiet, medium, loud, or your own term.",
-      "type": "string"
+      "$ref": "#/$defs/__schema6"
     },
     "transition": {
       "type": "string"
@@ -32,5 +29,16 @@
     "narrativeJob"
   ],
   "additionalProperties": {},
-  "description": "One slide's declared job and intended silhouette. Later critique compares the render against this."
+  "description": "One slide's declared job and intended silhouette. Later critique compares the render against this.",
+  "$defs": {
+    "__schema2": {
+      "type": "string"
+    },
+    "__schema4": {
+      "type": "string"
+    },
+    "__schema6": {
+      "type": "string"
+    }
+  }
 }

@@ -8,13 +8,20 @@ Contract version 0.11 · scene schema `slide-agent.scene/1`
 
 `slide-agent review` returns a deterministic packet for the exact PPTX: artifact hashes, per-slide renders, the words read back off the render compared with the deck's own text, element geometry, your declared intent and sequence plan, current issues, and questions worth asking. Every artifact is bound by hash, so the packet cannot describe one build while showing another.
 
-The text comparison is the check nothing else can do. A title that autofit shrank until its last word fell off, a footnote left behind after its sentence was deleted, a word broken by a wrap you never saw — none of those are visible in the scene, the manifest, or the package. They are only visible in the render.
+Read the deck as a sequence before you read any slide. Ask for the contact sheet — every slide on one page, in order, numbered — and the deck-level questions become answerable: whether the sequence has a shape, whether anything gets quieter or louder, which two slides came out as the same drawing. Those are comparisons, and a comparison needs the things side by side. It also costs about one image rather than one per slide, so looking at the whole deck stops being the expensive option.
+
+Then open the slides that looked wrong, by number, at full detail. That is the loop: read the sheet, pick two or three, look closely, patch.
+
+The text comparison is the check nothing else can do. A title that autofit shrank until its last word fell off, a footnote left behind after its sentence was deleted, a word broken by a wrap you never saw — none of those are visible in the scene, the manifest, or the package. They are only visible in the render. It is read from the PDF's text layer rather than off the image, so it is exact, and so a smaller preview costs you nothing in text fidelity.
+
+By default the packet lists the elements a check names and counts the rest under `elementCensus`. It is not hiding anything: `detail: "full"` lists every element's geometry and text, and a packet asked for one slide is always full. What the default leaves out is the part you wrote yourself and already know.
 
 The packet contains no aesthetic verdict, and its questions are questions. `observations.heuristics` are engine proxies, labelled as such; `observations.issues` are measured facts; `observations.visualFindings` are somebody's judgement. Do not read the first as the third.
 
 Then patch what is wrong with `slide-agent patch`, which changes named elements on named slides and leaves everything else exactly as it was. Regenerating the deck to fix a caption throws away every decision you are not currently thinking about.
 
 - Look at the renders. A deck you have not seen is a deck you cannot vouch for.
+- Start with the contact sheet, then look closely at what it flagged. Reading twelve slides one at a time answers the slide questions and none of the deck ones.
 - Compare each slide against its own `sequencePlan` entry: did it do the job you gave it?
 - Patch by element id. There is no fuzzy matching and no "make it nicer" operation — taste is yours, and a deterministic engine guessing at it would just be a house style.
 - Use `--dry-run` to see a patch's semantic diff before applying it.

@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 import { realpathSync } from "node:fs";
-import { readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -12,14 +11,30 @@ import {
   CONTRACT_VERSION,
   SCENE_SCHEMA_ID,
   authoringGuide,
+  capabilityFacets,
+  capabilitySummary,
   contractDescriptor,
   contractJsonSchema,
   guideAsMarkdown,
   guideAsPrompt,
   guideSectionIds,
+  CAPABILITY_FACETS,
   type ContractSchemaName,
   type GuideSectionId,
 } from "./contract/index.js";
+import { TokenAccount } from "./evaluation/token-budget.js";
+import {
+  deliverPreviews,
+  isPreviewFile,
+  previewNote,
+  previewSlideNumber,
+  resolveSelection,
+  selectPreviews,
+  IMAGE_SELECTIONS,
+  PREVIEW_TIERS,
+  type ImageSelection,
+  type ImageDetail,
+} from "./rendering/preview-delivery.js";
 import { runDoctor } from "./doctor.js";
 import { SlideAgent } from "./pipeline.js";
 import { planOutline } from "./planner/index.js";
@@ -27,96 +42,132 @@ import { parseStructuredRequest } from "./types/schemas.js";
 import type { AgentResult } from "./types/index.js";
 import { VERSION } from "./version.js";
 
-function toolResult(result: AgentResult | unknown, isError = false) {
-  return {
-    content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
-    isError,
-  };
-}
-
 /**
- * A model that cannot see what it built can only revise from its own
- * assumptions. Slide previews already exist on disk after a render; returning
- * them as MCP image content is what closes render → look → revise for a host
- * that has no filesystem access of its own.
+ * Results are serialized compactly.
+ *
+ * Indentation was costing roughly 40% of every packet — 56,558 characters
+ * against 34,037 for the same ten-slide review — and buying nothing a model
+ * reads better for. The one place it is kept is nowhere: JSON is not prose,
+ * and this is the payload the release exists to shrink.
  */
-export const PREVIEW_IMAGE_LIMITS = {
-  /** Beyond this a long deck costs more context than the look is worth. */
-  maximumImages: 20,
-  /** Total decoded bytes across all returned previews. */
-  maximumTotalBytes: 12 * 1024 * 1024,
-};
-
-const PREVIEW_PATTERN = /^slide-(\d+)\.(png|svg)$/i;
-
-function slideOrdinal(file: string): number {
-  return Number(PREVIEW_PATTERN.exec(path.basename(file))?.[1] ?? Number.MAX_SAFE_INTEGER);
-}
-
-function previewMimeType(file: string): string {
-  return file.toLowerCase().endsWith(".svg") ? "image/svg+xml" : "image/png";
+function serialize(value: unknown): string {
+  return JSON.stringify(value);
 }
 
 /**
- * The slide previews a render wrote, in slide order. `render` and `validate`
- * report previews only under `generatedFiles`, while `create` splits them out
- * into `artifacts`, so both lists are consulted. SVG previews are the
- * schematic fallback drawn when LibreOffice is not installed.
+ * This server's running token total.
+ *
+ * One server is one session, which is what makes a running total meaningful;
+ * two servers in one host process each keep their own.
+ */
+const account = new TokenAccount();
+
+/** Attaches the price of a text-only result and returns it as tool content. */
+function toolResult(result: AgentResult | unknown, isError = false, note?: string) {
+  const budget = account.accountFor({ text: result, ...(note ? { note } : {}) });
+  const withBudget = typeof result === "object" && result !== null && !Array.isArray(result)
+    ? { ...result as Record<string, unknown>, tokenBudget: budget }
+    : result;
+  return { content: [{ type: "text" as const, text: serialize(withBudget) }], isError };
+}
+
+/**
+ * Every preview a run wrote, in slide order.
+ *
+ * `render` and `validate` report previews only under `generatedFiles`, while
+ * `create` splits them into `artifacts`, so both lists are consulted.
  */
 export function previewImagePaths(result: AgentResult): string[] {
   const candidates = new Set([...(result.artifacts ?? []), ...(result.generatedFiles ?? [])]);
   return [...candidates]
-    .filter((file) => PREVIEW_PATTERN.test(path.basename(file)))
-    .sort((left, right) => slideOrdinal(left) - slideOrdinal(right));
+    .filter(isPreviewFile)
+    .sort((left, right) => previewSlideNumber(left) - previewSlideNumber(right));
 }
 
-type ImageContent = { type: "image"; data: string; mimeType: string };
-
-export async function previewImageContent(
-  result: AgentResult,
-  limits = PREVIEW_IMAGE_LIMITS,
-): Promise<{ images: ImageContent[]; omitted: number }> {
-  const paths = previewImagePaths(result);
-  const images: ImageContent[] = [];
-  let budget = limits.maximumTotalBytes;
-
-  for (const file of paths.slice(0, limits.maximumImages)) {
-    // A preview is written by this process into its own artifacts directory,
-    // but a caller can point `previewsDir` anywhere, so size is checked before
-    // the bytes are read rather than after.
-    const size = await stat(file).then((entry) => entry.size).catch(() => undefined);
-    if (size === undefined || size > budget) break;
-    const bytes = await readFile(file).catch(() => undefined);
-    if (!bytes) break;
-    budget -= bytes.byteLength;
-    images.push({ type: "image", data: bytes.toString("base64"), mimeType: previewMimeType(file) });
-  }
-
-  return { images, omitted: paths.length - images.length };
+/** The preview parameters every rendering tool accepts. */
+export interface PreviewOptions {
+  images?: ImageSelection;
+  imageDetail?: ImageDetail;
+  /** Deprecated. `true` means `"all"`, `false` means `"none"`. */
+  includeImages?: boolean;
 }
 
 /**
- * The JSON result plus every slide preview the run produced. `includeImages`
- * defaults to true: a host that cannot display images ignores the blocks, and
- * one that can no longer has to guess what the deck looks like.
+ * The JSON result plus the previews the caller actually asked for.
+ *
+ * The old behaviour was to return every render on every call, which on a
+ * twelve-slide deck is 22,128 image tokens whether the call changed one label
+ * or rebuilt the deck. What replaces it is a selection the command can usually
+ * make for itself, at a resolution chosen for judging composition rather than
+ * for reading words — the words are checked off the PDF text layer, exactly,
+ * and never read off an image.
  */
-async function toolResultWithPreviews(result: AgentResult, includeImages = true) {
-  const isError = result.status === "error";
-  if (!includeImages) return toolResult(result, isError);
+async function toolResultWithPreviews(
+  payload: unknown,
+  evidence: { previews: string[]; changed?: number[] },
+  options: PreviewOptions,
+  fallback: ImageSelection,
+) {
+  const isError = (payload as { status?: string }).status === "error";
+  const selection = resolveSelection(options.images, options.includeImages, fallback);
+  const { previews, changed } = evidence;
+  const chosen = selectPreviews({
+    previews,
+    selection,
+    ...(changed ? { changed } : {}),
+  });
 
-  const { images, omitted } = await previewImageContent(result);
-  if (images.length === 0) return toolResult(result, isError);
+  const detail = options.imageDetail ?? "review";
+  const delivered = await deliverPreviews(chosen.files, {
+    detail,
+    overview: selection === "overview",
+  });
+  if (delivered.images.length === 0) {
+    return toolResult(payload, isError, previews.length > 0 ? 'No previews returned. images:"all" returns them.' : undefined);
+  }
 
-  const note = omitted > 0
-    ? `\n\n${images.length} of ${images.length + omitted} slide previews follow. The rest are on disk under the artifacts directory.`
-    : `\n\n${images.length} slide preview${images.length === 1 ? "" : "s"} follow, in slide order.`;
-
+  const note = previewNote(delivered, {
+    totalPreviews: previews.length,
+    detail,
+    selection,
+    ...(chosen.degradedFrom ? { degradedFrom: chosen.degradedFrom } : {}),
+  });
+  const budget = account.accountFor({ text: payload, images: delivered.sizes, note });
   return {
     content: [
-      { type: "text" as const, text: `${JSON.stringify(result, null, 2)}${note}` },
-      ...images,
+      { type: "text" as const, text: `${serialize({ ...payload as object, tokenBudget: budget })}\n\n${note}` },
+      ...delivered.images,
     ],
     isError,
+  };
+}
+
+/** What an `AgentResult` knows about its own renders. */
+function evidenceOf(result: AgentResult): { previews: string[]; changed?: number[] } {
+  return {
+    previews: previewImagePaths(result),
+    ...(result.changedSlides ? { changed: result.changedSlides } : {}),
+  };
+}
+
+/**
+ * The `images` and `detail` parameters, plus the default they document.
+ *
+ * The default is returned alongside the schema rather than written out twice,
+ * because the description is what the model reads and the argument is what
+ * actually runs — and a documented default that has drifted from the real one
+ * is worse than no documentation.
+ */
+function previewParameters(fallback: ImageSelection, why: string) {
+  return {
+    fallback,
+    schema: {
+      images: z.union([z.enum(IMAGE_SELECTIONS), z.array(z.number().int().positive())]).optional()
+        .describe(`Which renders to return: "${IMAGE_SELECTIONS.join('", "')}", or a list of slide numbers. Default "${fallback}" — ${why}. "overview" returns every slide as one contact sheet, which costs about one image instead of one per slide.`),
+      imageDetail: z.enum(["review", "full"]).optional()
+        .describe(`Returned image size. "review" (default, ${PREVIEW_TIERS.review}px) is sized to judge composition and costs roughly half of "full" (${PREVIEW_TIERS.full}px). Text is checked off the PDF text layer either way, so ask for "full" only when the composition itself is in question.`),
+      includeImages: z.boolean().optional().describe("Deprecated: use `images`. true means \"all\", false means \"none\"."),
+    },
   };
 }
 
@@ -124,27 +175,33 @@ const INSTRUCTIONS = `Slide Agent gives you an expressive PowerPoint canvas, pre
 as editable objects, and shows you the render so you can finish well. You design
 the deck; it does not supply taste and will not impose a house style.
 
-Read slide-agent://capabilities first — its \`canvas\` block is the expressive
-surface, and its \`images\` block says whether this installation can source a
-picture at all. Then slide-agent://contract/guide for how to author.
+Call get_capabilities first. Its default answer is a summary: what this machine
+can render, and — read this before planning imagery — whether it can source a
+picture at all. Ask for include:["canvas"] before you design; that block is the
+expressive surface and the answer to "can I build this idea?".
 
 The workflow that produces good decks is not prompt → deck. It is:
 
-  1. read capabilities and the contract
+  1. read capabilities, then the guide sections you need
   2. research, and write a claim/source ledger
   3. invent at least two visual theses that differ structurally, not in palette
   4. choose one and write a sequence/silhouette plan
-  5. author a freeform scene
+  5. author the deck — a build script for anything substantial, NDJSON for short
+     decks and patches
   6. build with render enabled
-  7. call review_presentation and look at every slide
-  8. patch specific defects with patch_presentation
-  9. rerun readiness and the round-trip check
- 10. deliver the package
+  7. call review_presentation with images:"overview" and read the contact sheet
+  8. look closely at the slides that look wrong: images:[n], imageDetail:"full"
+  9. patch specific defects with patch_presentation
+ 10. rerun readiness and the round-trip check, then deliver the package
 
 Read \`presentationReadiness\`, not just \`status\`. \`packageStatus\` says the file
 holds together; readiness says whether it is finished. Repairs default to
 \`suggest\` on a model-authored canvas: the engine reports what it would change
 and changes nothing, because your values are not its to overwrite.
+
+Every result carries a \`tokenBudget\`: what the call cost you and what the
+richer option would cost. Defaults are the cheapest correct answer, never a
+reduced one — images:"all" and imageDetail:"full" return everything there is.
 
 create_presentation takes only a prompt and returns a structural draft full of
 bracketed placeholders. Use it to start, never to finish.`;
@@ -169,7 +226,7 @@ export function buildMcpServer(): McpServer {
       mimeType: "application/json",
     },
     async (uri: URL) => ({
-      contents: [{ uri: uri.href, mimeType: "application/json", text: JSON.stringify(contractDescriptor(), null, 2) }],
+      contents: [{ uri: uri.href, mimeType: "application/json", text: serialize(contractDescriptor()) }],
     }),
   );
 
@@ -201,20 +258,25 @@ export function buildMcpServer(): McpServer {
     );
   }
 
+  // The full schemas are what a validator needs, and they are large: the scene
+  // schema is roughly 12,000 tokens even after the shared subschemas are named
+  // rather than repeated. Nothing routes a model here — `get_capabilities` with
+  // include:["canvas"] answers "what can I author?" for a quarter of the price
+  // — but a host building a structured-output request needs the real thing.
   for (const name of contractDescriptor().schemas) {
     server.registerResource(
       `schema-${name}`,
       `slide-agent://contract/schema/${name}`,
       {
         title: `JSON Schema: ${name}`,
-        description: `The ${name} schema a host must satisfy. Contract version ${CONTRACT_VERSION}.`,
+        description: `The ${name} schema, for validators and structured-output requests. Contract version ${CONTRACT_VERSION}. To learn what the canvas can express, read capabilities instead — it is derived from these and far smaller.`,
         mimeType: "application/schema+json",
       },
       async (uri: URL) => ({
         contents: [{
           uri: uri.href,
           mimeType: "application/schema+json",
-          text: JSON.stringify(contractJsonSchema(name), null, 2),
+          text: serialize(contractJsonSchema(name)),
         }],
       }),
     );
@@ -263,19 +325,28 @@ export function buildMcpServer(): McpServer {
 
   // -------------------------------------------------------------------- tools
 
+  const runPreviews = previewParameters("all", "a build is the first sight of the deck");
+  const createPreviews = previewParameters("all", "a build is the first sight of the deck");
+  const revisePreviews = previewParameters("changed", "a revise names its slide, so only that slide comes back");
+  const editPreviews = previewParameters("changed", "in-place operations name their slides; anything that renumbers the deck returns all of them and says so");
+  const renderPreviews = previewParameters("all", "seeing the deck is the purpose of this call");
+  const validatePreviews = previewParameters("none", "the report is what this call is for; review_presentation is where you look");
+  const reviewPreviews = previewParameters("all", "the renders are the evidence this call exists to supply");
+  const patchPreviews = previewParameters("changed", "the engine knows which slides it touched, so only those come back");
+
   server.registerTool("slide_agent_run", {
     title: "Run Slide Agent",
-    description: "Execute a complete structured request: a model-authored outline, creative direction, freeform canvas, native charts, or NDJSON scene. Read slide-agent://contract/schema/outline first.",
+    description: "Execute a complete structured request: a model-authored outline, creative direction, freeform canvas, native charts, or NDJSON scene. Call get_capabilities with include:[\"canvas\"] first — it says what the canvas can express and is derived from the schemas. The full JSON Schemas are at slide-agent://contract/schema/<name> for validators.",
     inputSchema: z.object({
       request: z.looseObject({
         command: z.enum(["create", "edit", "render", "validate", "revise"]),
       }).describe("A structured request. slide-agent://contract carries the full schema for each command."),
-      includeImages: z.boolean().optional().describe("Return the rendered slide previews as images. Default true. Requires render."),
+      ...runPreviews.schema,
     }),
     annotations: { destructiveHint: false, idempotentHint: false },
-  }, async ({ request, includeImages }: { request: Record<string, unknown>; includeImages?: boolean }) => {
+  }, async ({ images, imageDetail, includeImages, request }: PreviewOptions & { request: Record<string, unknown> }) => {
     const result = await new SlideAgent().execute(parseStructuredRequest(request));
-    return toolResultWithPreviews(result, includeImages);
+    return toolResultWithPreviews(result, evidenceOf(result), { images, imageDetail, includeImages }, runPreviews.fallback);
   });
 
   // A model that designs a photo-led deck and only then discovers this
@@ -293,17 +364,27 @@ export function buildMcpServer(): McpServer {
       contents: [{
         uri: uri.href,
         mimeType: "application/json",
-        text: JSON.stringify({ contractVersion: CONTRACT_VERSION, version: VERSION, ...await new SlideAgent().capabilityReport() }, null, 2),
+        text: serialize({ contractVersion: CONTRACT_VERSION, version: VERSION, ...await new SlideAgent().capabilityReport() }),
       }],
     }),
   );
 
   server.registerTool("get_capabilities", {
     title: "Get Slide Agent capabilities",
-    description: "What this installation can do. Read the `canvas` block before you simplify an idea into boxes: it lists every element type, property, and treatment the medium supports. Also reports installed fonts, render-backend limitations, and — read this before planning imagery — whether images can be fetched, generated, or only read from local paths.",
-    inputSchema: z.object({}),
+    description: `What this installation can do. The default answer is a summary: what renders here, and — read this before planning imagery — whether images can be fetched, generated, or only read from local paths. Name facets in \`include\` for the full block: ${CAPABILITY_FACETS.join(", ")}, or "all". Ask for "canvas" before you simplify an idea into boxes; it lists every element type, property, and treatment the medium supports.`,
+    inputSchema: z.object({
+      include: z.array(z.string()).optional()
+        .describe(`Facets to return in full: ${CAPABILITY_FACETS.join(", ")}, or "all". Omit for a summary of roughly a tenth the size.`),
+    }),
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-  }, async () => toolResult({ contractVersion: CONTRACT_VERSION, version: VERSION, ...await new SlideAgent().capabilityReport() }));
+  }, async ({ include }: { include?: string[] }) => {
+    const report = await new SlideAgent().capabilityReport();
+    const meta = { contractVersion: CONTRACT_VERSION, version: VERSION };
+    if (!include || include.length === 0) {
+      return toolResult(capabilitySummary(report, meta), false, 'A summary. include:["canvas"] returns the expressive surface in full; include:["all"] returns everything.');
+    }
+    return toolResult(capabilityFacets(report, include, meta));
+  });
 
   server.registerTool("get_authoring_contract", {
     title: "Get the Slide Agent authoring contract",
@@ -357,17 +438,17 @@ export function buildMcpServer(): McpServer {
       validate: z.boolean().optional(),
       autoFix: z.boolean().optional(),
       maxRetries: z.number().int().min(0).max(10).optional(),
-      includeImages: z.boolean().optional().describe("Return the rendered slide previews as images. Default true. Requires render."),
+      ...createPreviews.schema,
     }),
     annotations: { destructiveHint: false, idempotentHint: false },
-  }, async ({ includeImages, ...input }: { prompt: string; output: string; render?: boolean; validate?: boolean; autoFix?: boolean; maxRetries?: number; includeImages?: boolean }) => {
+  }, async ({ images, imageDetail, includeImages, ...input }: PreviewOptions & { prompt: string; output: string; render?: boolean; validate?: boolean; autoFix?: boolean; maxRetries?: number }) => {
     const result = await new SlideAgent().create({ command: "create", ...input });
-    return toolResultWithPreviews(result, includeImages);
+    return toolResultWithPreviews(result, evidenceOf(result), { images, imageDetail, includeImages }, createPreviews.fallback);
   });
 
   server.registerTool("revise_presentation", {
     title: "Revise one slide of an existing deck",
-    description: "Replace a single slide from the deck's own scene, leaving every other slide unchanged. Pair with the revise_presentation_scene prompt.",
+    description: "Replace a single slide from the deck's own scene, leaving every other slide unchanged. Pair with the revise_presentation_scene prompt. Costs roughly one slide's worth of authoring output; patch_presentation costs a fraction of that again when the defect is a named element rather than the whole slide.",
     inputSchema: z.object({
       input: z.string().min(1).describe("The existing .pptx. Its scene blueprint is discovered beside it."),
       output: z.string().min(1),
@@ -376,12 +457,12 @@ export function buildMcpServer(): McpServer {
       scene: z.string().optional().describe("Override the scene path when it is not beside the deck."),
       validate: z.boolean().optional(),
       render: z.boolean().optional(),
-      includeImages: z.boolean().optional().describe("Return the rendered slide previews as images. Default true. Requires render."),
+      ...revisePreviews.schema,
     }),
     annotations: { destructiveHint: false, idempotentHint: false },
-  }, async ({ includeImages, ...input }: { input: string; output: string; slide: number; sceneNdjson: string; scene?: string; validate?: boolean; render?: boolean; includeImages?: boolean }) => {
-    const result = await new SlideAgent().revise({ command: "revise", ...input });
-    return toolResultWithPreviews(result, includeImages);
+  }, async ({ images, imageDetail, includeImages, ...request }: PreviewOptions & { input: string; output: string; slide: number; sceneNdjson: string; scene?: string; validate?: boolean; render?: boolean }) => {
+    const result = await new SlideAgent().revise({ command: "revise", ...request });
+    return toolResultWithPreviews(result, evidenceOf(result), { images, imageDetail, includeImages }, revisePreviews.fallback);
   });
 
   server.registerTool("edit_presentation", {
@@ -394,51 +475,50 @@ export function buildMcpServer(): McpServer {
         .describe("replace-text, remove-slide, duplicate-slide, add-slide, import-slide, reorder-slides, apply-theme, replace-image, update-table, or update-chart."),
       render: z.boolean().optional(),
       validate: z.boolean().optional(),
-      includeImages: z.boolean().optional().describe("Return the rendered slide previews as images. Default true. Requires render."),
+      ...editPreviews.schema,
     }),
     annotations: { destructiveHint: false, idempotentHint: false },
-  }, async ({ includeImages, ...input }: Record<string, unknown> & { includeImages?: boolean }) => {
-    const request = parseStructuredRequest({ command: "edit", ...input });
-    const result = await new SlideAgent().execute(request);
-    return toolResultWithPreviews(result, includeImages);
+  }, async ({ images, imageDetail, includeImages, ...input }: PreviewOptions & Record<string, unknown>) => {
+    const result = await new SlideAgent().execute(parseStructuredRequest({ command: "edit", ...input }));
+    return toolResultWithPreviews(result, evidenceOf(result), { images, imageDetail, includeImages }, editPreviews.fallback);
   });
 
   server.registerTool("render_presentation", {
     title: "Render PowerPoint presentation",
-    description: "Render every slide to PNG previews and a PDF, and return those previews as images so you can see what you built. Look at them before reporting success.",
+    description: "Render every slide to PNG previews and a PDF, and return those previews as images so you can see what you built. Look at them before reporting success. For a whole deck, images:\"overview\" returns one contact sheet — enough to judge pacing and spot the slides worth opening properly.",
     inputSchema: z.object({
       input: z.string().min(1),
       output: z.string().min(1),
       width: z.number().int().positive().optional(),
       height: z.number().int().positive().optional(),
-      includeImages: z.boolean().optional().describe("Return the slide previews as images. Default true."),
+      ...renderPreviews.schema,
     }),
     annotations: { destructiveHint: false, idempotentHint: true },
-  }, async ({ includeImages, ...input }: { input: string; output: string; width?: number; height?: number; includeImages?: boolean }) => {
-    const result = await new SlideAgent().render({ command: "render", ...input });
-    return toolResultWithPreviews(result, includeImages);
+  }, async ({ images, imageDetail, includeImages, ...request }: PreviewOptions & { input: string; output: string; width?: number; height?: number }) => {
+    const result = await new SlideAgent().render({ command: "render", ...request });
+    return toolResultWithPreviews(result, evidenceOf(result), { images, imageDetail, includeImages }, renderPreviews.fallback);
   });
 
   server.registerTool("validate_presentation", {
     title: "Validate PowerPoint presentation",
-    description: "Validate package integrity, ECMA-376 conformance, geometry, legibility, and accessibility; optionally render; write a structured JSON report.",
+    description: "Validate package integrity, ECMA-376 conformance, geometry, legibility, and accessibility; optionally render; write a structured JSON report. The report is the answer here, so no previews are returned by default — ask for them with images if you want to look as well as read.",
     inputSchema: z.object({
       input: z.string().min(1),
       report: z.string().min(1).optional(),
       manifest: z.string().optional(),
       previewsDir: z.string().optional(),
       render: z.boolean().optional(),
-      includeImages: z.boolean().optional().describe("Return the rendered slide previews as images. Default true. Requires render."),
+      ...validatePreviews.schema,
     }),
     annotations: { destructiveHint: false, idempotentHint: true },
-  }, async ({ includeImages, ...input }: { input: string; report?: string; manifest?: string; previewsDir?: string; render?: boolean; includeImages?: boolean }) => {
-    const result = await new SlideAgent().validate({ command: "validate", ...input });
-    return toolResultWithPreviews(result, includeImages);
+  }, async ({ images, imageDetail, includeImages, ...request }: PreviewOptions & { input: string; report?: string; manifest?: string; previewsDir?: string; render?: boolean }) => {
+    const result = await new SlideAgent().validate({ command: "validate", ...request });
+    return toolResultWithPreviews(result, evidenceOf(result), { images, imageDetail, includeImages }, validatePreviews.fallback);
   });
 
   server.registerTool("review_presentation", {
     title: "Review a presentation you built",
-    description: "Return the deterministic review packet for the exact PPTX: artifact hashes, per-slide renders, the words read back off the render compared with the deck's own text, element geometry, the author's declared intent, current issues, and questions worth asking. Look at the images before you judge the deck.",
+    description: "Return the deterministic review packet for the exact PPTX: artifact hashes, per-slide renders, the words read back off the render compared with the deck's own text, element geometry, the author's declared intent, current issues, and questions worth asking. Look at the images before you judge the deck. Start with images:\"overview\" — one contact sheet answers pacing, variety, and which slides repeat each other, for about the price of a single slide. Then open the suspicious ones with images:[n] and imageDetail:\"full\".",
     inputSchema: z.object({
       input: z.string().min(1).describe("The .pptx to review. Its scene, manifest, report, and previews are discovered beside it."),
       scene: z.string().optional(),
@@ -447,11 +527,14 @@ export function buildMcpServer(): McpServer {
       from: z.number().int().positive().optional(),
       to: z.number().int().positive().optional(),
       maxSlides: z.number().int().positive().max(40).optional(),
-      includeImages: z.boolean().optional().describe("Return the slide renders as images. Default true."),
+      detail: z.enum(["defects", "full"]).optional()
+        .describe("How much of each slide's element list to include. \"defects\" (default) reports the elements something is measurably wrong with and summarises the rest; \"full\" reports every element's geometry and text. A named slide always gets full detail. Not to be confused with `imageDetail`, which is the size of the returned renders."),
+      ...reviewPreviews.schema,
     }),
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-  }, async ({ input, scene, manifest, slide, from, to, maxSlides, includeImages }: {
-    input: string; scene?: string; manifest?: string; slide?: number; from?: number; to?: number; maxSlides?: number; includeImages?: boolean;
+  }, async ({ images, imageDetail, includeImages, input, scene, manifest, slide, from, to, maxSlides, detail }: PreviewOptions & {
+    input: string; scene?: string; manifest?: string; slide?: number; from?: number; to?: number; maxSlides?: number;
+    detail?: "defects" | "full";
   }) => {
     const packet = await new SlideAgent().review(input, {
       ...(scene ? { scene } : {}),
@@ -460,25 +543,17 @@ export function buildMcpServer(): McpServer {
       ...(from === undefined ? {} : { from }),
       ...(to === undefined ? {} : { to }),
       ...(maxSlides === undefined ? {} : { maximumSlides: maxSlides }),
+      ...(detail === undefined ? {} : { detail }),
     });
-    if (includeImages === false) return toolResult(packet);
+    // The packet knows its own previews, so it does not have to be pretended
+    // into the shape of an `AgentResult` to have them found.
     const previews = packet.slides.map((entry) => entry.preview).filter((file): file is string => Boolean(file));
-    const { images, omitted } = await previewImageContent(
-      { artifacts: previews, generatedFiles: [] } as unknown as AgentResult,
-    );
-    if (images.length === 0) return toolResult(packet);
-    const note = omitted > 0
-      ? `\n\n${images.length} of ${images.length + omitted} slide renders follow, in slide order.`
-      : `\n\n${images.length} slide render${images.length === 1 ? "" : "s"} follow, in slide order. These are what the audience will see.`;
-    return {
-      content: [{ type: "text" as const, text: `${JSON.stringify(packet, null, 2)}${note}` }, ...images],
-      isError: false,
-    };
+    return toolResultWithPreviews(packet, { previews }, { images, imageDetail, includeImages }, reviewPreviews.fallback);
   });
 
   server.registerTool("patch_presentation", {
     title: "Patch specific elements of a deck",
-    description: "Change named elements on named slides and rebuild, leaving every other element exactly as it was. Use this after review_presentation instead of regenerating the deck: a regeneration discards every decision you are not currently thinking about. Every operation names its slide and element id; there is no fuzzy matching.",
+    description: "Change named elements on named slides and rebuild, leaving every other element exactly as it was. Use this after review_presentation instead of regenerating the deck: a regeneration discards every decision you are not currently thinking about, and costs the whole deck's authoring output to do it — a patch costs the elements it names. Every operation names its slide and element id; there is no fuzzy matching. Only the slides the patch touched come back as renders.",
     inputSchema: z.object({
       input: z.string().min(1),
       output: z.string().min(1).describe("Must differ from input. Ignored with dryRun."),
@@ -489,12 +564,12 @@ export function buildMcpServer(): McpServer {
       render: z.boolean().optional(),
       roundTrip: z.boolean().optional(),
       validate: z.boolean().optional(),
-      includeImages: z.boolean().optional(),
+      ...patchPreviews.schema,
     }),
     annotations: { destructiveHint: false, idempotentHint: false },
-  }, async ({ includeImages, ...input }: Record<string, unknown> & { includeImages?: boolean }) => {
+  }, async ({ images, imageDetail, includeImages, ...input }: PreviewOptions & Record<string, unknown>) => {
     const result = await new SlideAgent().execute(parseStructuredRequest({ command: "patch", ...input }));
-    return toolResultWithPreviews(result, includeImages);
+    return toolResultWithPreviews(result, evidenceOf(result), { images, imageDetail, includeImages }, patchPreviews.fallback);
   });
 
   server.registerResource(
@@ -509,7 +584,7 @@ export function buildMcpServer(): McpServer {
       contents: [{
         uri: uri.href,
         mimeType: "application/json",
-        text: JSON.stringify(new SlideAgent().capabilities().canvas, null, 2),
+        text: serialize(new SlideAgent().capabilities().canvas),
       }],
     }),
   );
@@ -519,7 +594,14 @@ export function buildMcpServer(): McpServer {
     description: "Check Node.js, agent skill registrations, MCP registration, and optional preview-tool availability.",
     inputSchema: z.object({}),
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-  }, async () => toolResult(await runDoctor()));
+    // Wrapped in an object rather than returned as a bare array, so it can
+    // carry its budget like every other result. A tool that quietly opted out
+    // of the price list would make "every result is priced" untrue in exactly
+    // the place nobody checks.
+  }, async () => {
+    const checks = await runDoctor();
+    return toolResult({ checks });
+  });
 
   return server;
 }

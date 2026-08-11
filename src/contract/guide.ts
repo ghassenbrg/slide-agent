@@ -1,3 +1,4 @@
+import { estimateTextTokens } from "../evaluation/token-budget.js";
 import { CONTRACT_VERSION, SCENE_SCHEMA_ID } from "./version.js";
 
 /**
@@ -31,6 +32,21 @@ export type GuideSectionId =
 export interface GuideSection {
   id: GuideSectionId;
   title: string;
+  /**
+   * When to read this section, for the router.
+   *
+   * Phrased as the moment it becomes relevant rather than as a précis of its
+   * contents: an index exists to answer "do I need this now?", and a summary
+   * of the section answers a different question at greater length.
+   */
+  when: string;
+  /**
+   * Always loaded, because the deck cannot be authored without it.
+   *
+   * Deliberately two sections. Everything else earns its place at the moment a
+   * model needs it, and the router says what that moment is.
+   */
+  core?: true;
   /** Paragraphs, rendered in order. */
   body: string[];
   /** Imperative rules a conforming host must follow. */
@@ -47,10 +63,12 @@ export interface GuideDocument {
 const SECTIONS: GuideSection[] = [
   {
     id: "role",
+    when: "Always. It is who you are on this job and what the engine will not do for you.",
+    core: true,
     title: "Your role",
     body: [
       "You are the creative director, information architect, and PowerPoint craftsperson. Slide Agent supplies an expressive canvas, faithful translation into editable PowerPoint objects, and the evidence you need to judge the result. It does not supply taste, and it will not normalize your work into a house style.",
-      "Read `capabilities().canvas` before you design. It lists every element type, property, and treatment the medium supports, derived from the schemas the engine actually enforces. The question it exists to answer is \"can I build this idea?\" — ask it before you simplify the idea into boxes.",
+      "Read the `canvas` capabilities before you design — `capabilities().canvas`, or `include: [\"canvas\"]` where capabilities are served in facets. It lists every element type, property, and treatment the medium supports, derived from the schemas the engine actually enforces. The question it exists to answer is \"can I build this idea?\" — ask it before you simplify the idea into boxes.",
       "The toolkit's `config/` files and built-in layouts are prompt-only fallbacks. They are drafts, not a design system, and matching them is not a goal.",
     ],
     rules: [
@@ -62,6 +80,7 @@ const SECTIONS: GuideSection[] = [
   },
   {
     id: "creative-direction",
+    when: "Before you choose a palette, a typeface, or a shape language — that is, before any coordinate exists.",
     title: "Invent the deck's visual thesis",
     body: [
       "Populate `creativeDirection` with a system specific enough that another designer could recognise the deck, yet loose enough that slides do not become repeated templates. Derive the choices from meaning: stratigraphy can shape an excavation report, the margin of a working chart can shape a navigation briefing, a specimen sheet can shape a launch.",
@@ -152,6 +171,7 @@ const SECTIONS: GuideSection[] = [
   },
   {
     id: "visual-system",
+    when: "When the deck needs its own named variables and styles rather than values repeated per element.",
     title: "Your own variables, styles, and motifs",
     body: [
       "`creativeDirection.visualSystem` is where the deck's design language lives, in the deck's own words. Slide Agent reserves no names: `excavation-note`, `signal-fog`, `runway-crop`, and `ink-bleed` are as valid as `title`. It never renames a style, substitutes a value, or adds one you did not write.",
@@ -184,6 +204,7 @@ const SECTIONS: GuideSection[] = [
   },
   {
     id: "planning",
+    when: "Before you write coordinates, to commit to a sequence and a silhouette per slide.",
     title: "Commit to a plan before you write coordinates",
     body: [
       "Author two or more visual theses in `exploration.alternatives` and say which one you chose. They must differ structurally — different silhouettes, different dominant masses, a different reading path — not in palette. A palette swap over the same geometry is one design, and the structural signature will say so.",
@@ -199,6 +220,7 @@ const SECTIONS: GuideSection[] = [
   },
   {
     id: "narrative",
+    when: "When the order of the slides is still open, or the deck has no single sentence it is trying to land.",
     title: "Plan the story before styling it",
     body: [
       "Express the job as: by the end, [audience] should [outcome] because [central takeaway]. Choose a cumulative structure that fits the objective — context to stakes to evidence to action, question to analysis to answer, problem to options to recommendation, or one you invent for the material.",
@@ -212,6 +234,7 @@ const SECTIONS: GuideSection[] = [
   },
   {
     id: "composition",
+    when: "When placing elements on a slide and deciding what carries the eye.",
     title: "Compose from first principles",
     body: [
       "Vary silhouette and scale across the sequence while keeping the deck's underlying visual logic. Contrast dense against sparse, quiet against loud, diagrammatic against photographic, to create pacing.",
@@ -227,10 +250,12 @@ const SECTIONS: GuideSection[] = [
   },
   {
     id: "build-script",
+    when: "Before authoring anything substantial. This is the recommended path and the cheapest one.",
     title: "Author the deck as a program",
     body: [
-      "For any deck whose quality matters, write a JavaScript module that composes it and run `slide-agent build --script deck.mjs --output deck.pptx`. The module imports `defineDeck` from `@slide-agent/core` and exports the deck; the engine turns it into the same scene file every other path produces, so patching, revising, and the clean-directory round-trip all work exactly as they do for hand-authored NDJSON.",
+      "This is the recommended path. For any deck whose quality matters, write a JavaScript module that composes it and run `slide-agent build --script deck.mjs --output deck.pptx`. The module imports `defineDeck` from `@slide-agent/core` and exports the deck; the engine turns it into the same scene file every other path produces, so patching, revising, and the clean-directory round-trip all work exactly as they do for hand-authored NDJSON.",
       "This exists because hand-writing every element as a separate JSON record with coordinates you worked out yourself sets a price on design, and the price is paid in the wrong currency. A card with a title, a sub-label and an accent bar is four records; a bare floating label is one. Nothing in the guidance asks for bare floating labels, but that is what economising produces. In a program you name the card once, as an ordinary function, and place six of them in a loop.",
+      "It is also, by a wide margin, the cheapest thing you will write. A script that builds a deck runs a third of the length of the NDJSON for the same deck, and every character you emit costs several times what a character you read costs. Hand-written NDJSON is for short decks, for hosts that cannot execute a module, and for patches.",
       "Slide Agent supplies no components and no house style here. `node()`, `header()`, `footer()`, `statCard()` are functions *you* write in *your* script, drawing whatever this deck's visual thesis calls for. What the engine supplies is arithmetic: `columns`, `rows`, `grid`, `split`, `distribute`, and `inset` return rectangles, and `measureText` tells you how tall a string will actually set before you commit to a frame.",
       "`slide.graph(id, { nodes, edges, direction, frame }, draw)` goes further: the engine ranks the nodes, orders each rank so edges cross as little as possible, places them, and routes the connectors — and calls your `draw` for each one with a rectangle. What a node looks like stays yours; where it sits stops being your arithmetic. A rank that cannot fit its frame is refused with what it needed and what it was given, rather than being placed off the slide.",
       "The script imports `@slide-agent/core`, so the package has to be resolvable from the script's own directory. It is then imported and run in the engine's process with your privileges — the same decision as running it with `node`. Slide Agent never discovers, downloads, or executes a script it was not handed.",
@@ -284,9 +309,11 @@ export default deck;`,
   },
   {
     id: "canvas",
+    when: "When hand-writing elements: every element type and what each accepts.",
     title: "The freeform canvas",
     body: [
       "`slide.canvas` is an array of editable native elements at coordinates you choose, in inches, on a slide whose size the deck declares. Its presence bypasses the layout registry completely, so `layout` is ignored and `kind` becomes free-form metadata.",
+      "This is what a build script emits, and what a patch addresses. Writing it by hand is right for a short deck or a single slide; for anything longer, read `build-script` first — the same deck expressed as a program is about a third the length, and loops enforce a rhythm that hand-placed coordinates do not.",
       "Element types are `text`, `shape`, `connector`, `image`, `table`, `chart`, `native-chart`, `diagram`, `group`, and `symbol-instance`. Shape names and advanced PptxGenJS options are open-ended: pass them through `style.options`. `capabilities().canvas` lists every property each type accepts, derived from the schemas themselves.",
       "Text is not limited to a size and a colour: `runs`, `lineSpacingMultiple`, `charSpacing`, `indent`, `columns`, `bullet`, and `noBreak` are all in the schema. `noBreak` is how you stop \"40 N·m\" from wrapping between the number and its unit.",
       "Pictures support `fit`, an explicit `crop`, a `focalPoint` so a `cover` crop keeps the subject, a `maskShape`, `duotone`, `grayscale`, and `tint`. A tint is drawn as a real editable shape rather than baked into the pixels, so anyone can change or remove it.",
@@ -322,6 +349,7 @@ export default deck;`,
   },
   {
     id: "scene",
+    when: "When emitting or editing NDJSON directly, and for the record format a patch addresses.",
     title: "The NDJSON scene format",
     body: [
       `For long or highly designed decks, author the line-oriented scene instead of a nested outline. One JSON object per line, schema \`${SCENE_SCHEMA_ID}\`.`,
@@ -337,6 +365,7 @@ export default deck;`,
   },
   {
     id: "diagrams",
+    when: "When the relationship between things is the point of a slide.",
     title: "Diagrams and systems",
     body: [
       "A diagram earns its place when the relationship between things is the point. Give nodes meaning, route edges deliberately, and label both. A box-and-arrow row that restates a bulleted list is worse than the list.",
@@ -351,6 +380,7 @@ export default deck;`,
   },
   {
     id: "data",
+    when: "When a slide carries numbers, a chart, or a table.",
     title: "Charts, tables, and data",
     body: [
       "Use a native chart when the data relationship is the argument, a native table when precise lookup is the argument, and editable shapes when the honest visual form is not a standard chart.",
@@ -364,6 +394,7 @@ export default deck;`,
   },
   {
     id: "accessibility",
+    when: "Before delivery, and whenever contrast, alt text, or reading order is in question.",
     title: "Accessibility",
     body: [
       "Slide Agent checks contrast, alt text, reading order, and type size, and reports what it cannot repair. Meeting the floor is the minimum, not the design goal.",
@@ -377,6 +408,7 @@ export default deck;`,
   },
   {
     id: "imagery",
+    when: "Before planning any photography or artwork — it says where a picture may come from.",
     title: "Where pictures come from",
     body: [
       "A slide can only show a picture that already exists as a file this machine can read. Slide Agent does not search for images and does not generate them: choosing imagery is your judgement, not the renderer's, and a stock API or a generation service inside the build tool would mean credentials and licence terms in a package whose whole posture is that it does not fetch things.",
@@ -404,6 +436,7 @@ export default deck;`,
   },
   {
     id: "honesty",
+    when: "When labelling drafts, schematic previews, and anything the deck asserts but cannot evidence.",
     title: "Honesty",
     body: [
       "The deck will be presented by a person who has to stand behind it.",
@@ -418,15 +451,20 @@ export default deck;`,
   },
   {
     id: "review",
+    when: "After the first render, to know what to look for and what the packet is telling you.",
     title: "Look at what you built",
     body: [
       "`slide-agent review` returns a deterministic packet for the exact PPTX: artifact hashes, per-slide renders, the words read back off the render compared with the deck's own text, element geometry, your declared intent and sequence plan, current issues, and questions worth asking. Every artifact is bound by hash, so the packet cannot describe one build while showing another.",
-      "The text comparison is the check nothing else can do. A title that autofit shrank until its last word fell off, a footnote left behind after its sentence was deleted, a word broken by a wrap you never saw — none of those are visible in the scene, the manifest, or the package. They are only visible in the render.",
+      "Read the deck as a sequence before you read any slide. Ask for the contact sheet — every slide on one page, in order, numbered — and the deck-level questions become answerable: whether the sequence has a shape, whether anything gets quieter or louder, which two slides came out as the same drawing. Those are comparisons, and a comparison needs the things side by side. It also costs about one image rather than one per slide, so looking at the whole deck stops being the expensive option.",
+      "Then open the slides that looked wrong, by number, at full detail. That is the loop: read the sheet, pick two or three, look closely, patch.",
+      "The text comparison is the check nothing else can do. A title that autofit shrank until its last word fell off, a footnote left behind after its sentence was deleted, a word broken by a wrap you never saw — none of those are visible in the scene, the manifest, or the package. They are only visible in the render. It is read from the PDF's text layer rather than off the image, so it is exact, and so a smaller preview costs you nothing in text fidelity.",
+      "By default the packet lists the elements a check names and counts the rest under `elementCensus`. It is not hiding anything: `detail: \"full\"` lists every element's geometry and text, and a packet asked for one slide is always full. What the default leaves out is the part you wrote yourself and already know.",
       "The packet contains no aesthetic verdict, and its questions are questions. `observations.heuristics` are engine proxies, labelled as such; `observations.issues` are measured facts; `observations.visualFindings` are somebody's judgement. Do not read the first as the third.",
       "Then patch what is wrong with `slide-agent patch`, which changes named elements on named slides and leaves everything else exactly as it was. Regenerating the deck to fix a caption throws away every decision you are not currently thinking about.",
     ],
     rules: [
       "Look at the renders. A deck you have not seen is a deck you cannot vouch for.",
+      "Start with the contact sheet, then look closely at what it flagged. Reading twelve slides one at a time answers the slide questions and none of the deck ones.",
       "Compare each slide against its own `sequencePlan` entry: did it do the job you gave it?",
       "Patch by element id. There is no fuzzy matching and no \"make it nicer\" operation — taste is yours, and a deterministic engine guessing at it would just be a house style.",
       "Use `--dry-run` to see a patch's semantic diff before applying it.",
@@ -441,19 +479,21 @@ slide-agent patch --input deck.pptx --operations fix.json --output revised.pptx 
   },
   {
     id: "workflow",
+    when: "Always. It is the loop, and skipping it is how a deck ships unlooked-at.",
+    core: true,
     title: "The loop that produces good decks",
     body: [
       "It is not prompt → deck. A deck nobody looked at is a draft, whatever the report says.",
-      "1. Read `capabilities` — the canvas block first — and the contract.",
+      "1. Read `capabilities`, then the guide sections the deck actually needs.",
       "2. Research, and write the claim and source ledgers.",
       "3. Invent at least two visual theses that differ structurally.",
       "4. Choose one and write the sequence and silhouette plan.",
-      "5. Author a freeform scene.",
+      "5. Author the deck. Write a build script for anything substantial; hand-written NDJSON is for short decks and for patches.",
       "6. Build with rendering enabled.",
-      "7. Call `review` and inspect every slide.",
-      "8. Patch the specific defects you found.",
-      "9. Rerun readiness and the clean-directory round-trip check.",
-      "10. Deliver the canonical package.",
+      "7. Call `review` with the contact sheet and read the deck as a sequence.",
+      "8. Open the slides that looked wrong, one at a time, at full detail.",
+      "9. Patch the specific defects you found.",
+      "10. Rerun readiness and the clean-directory round-trip check, then deliver the canonical package.",
       "Prompt-only mode produces a structural draft with placeholders. It is scaffolding, it labels itself as such, and it is never the finished design.",
     ],
     rules: [
@@ -476,6 +516,111 @@ export function authoringGuide(section?: GuideSectionId): GuideDocument {
 
 export function guideSectionIds(): GuideSectionId[] {
   return SECTIONS.map((section) => section.id);
+}
+
+/**
+ * Roughly what a section costs to read, for the router's index.
+ *
+ * Uses the same estimator that prices every result, so the column a model reads
+ * when choosing a section and the budget it reads after the call cannot drift.
+ */
+function sectionTokens(section: GuideSection): number {
+  return Math.round(estimateTextTokens(guideAsMarkdown(section.id)) / 10) * 10;
+}
+
+export interface GuideSectionIndexEntry {
+  id: GuideSectionId;
+  title: string;
+  when: string;
+  core: boolean;
+  /** An estimate, to the nearest ten. */
+  approximateTokens: number;
+}
+
+/** What each section is for and what it costs, without its contents. */
+export function guideSectionIndex(): GuideSectionIndexEntry[] {
+  return SECTIONS.map((section) => ({
+    id: section.id,
+    title: section.title,
+    when: section.when,
+    core: section.core === true,
+    approximateTokens: sectionTokens(section),
+  }));
+}
+
+/**
+ * The guide as an index over its own sections, with the two that are always
+ * needed written out in full.
+ *
+ * The whole guide is roughly 8,400 tokens and was being loaded in its entirety
+ * before a model knew whether the deck had a chart in it. Worse, `SKILL.md`
+ * carried a second copy — 94% of its substantive lines also appeared in the
+ * guide — so a host with both the skill and the MCP server registered paid for
+ * the same paragraphs twice.
+ *
+ * A typical deck needs the two core sections plus three or four others, which
+ * is around 2,600 tokens. The index is what makes choosing them possible: it
+ * says when each section becomes relevant and what it costs, so the choice is
+ * informed rather than a guess between "read everything" and "read nothing".
+ */
+export function guideAsRouter(): string {
+  const index = guideSectionIndex();
+  const lines = [
+    `# Slide Agent`,
+    ``,
+    `Contract version ${CONTRACT_VERSION} · scene schema \`${SCENE_SCHEMA_ID}\``,
+    ``,
+  ];
+
+  for (const section of SECTIONS.filter((entry) => entry.core)) {
+    lines.push(`## ${section.title}`, ``);
+    for (const paragraph of section.body) lines.push(paragraph, ``);
+    if (section.rules?.length) {
+      for (const rule of section.rules) lines.push(`- ${rule}`);
+      lines.push(``);
+    }
+  }
+
+  lines.push(
+    `## Read the section you need, when you need it`,
+    ``,
+    `The rest of the guide is below as separate pages. Load a section when its`,
+    `moment arrives rather than all of them up front: the whole guide is about`,
+    `${Math.round(index.reduce((sum, entry) => sum + entry.approximateTokens, 0) / 100) * 100} tokens, a demanding deck needs about half of it, and no deck needs`,
+    `all of it before the first slide exists.`,
+    ``,
+    `Read a section with \`slide-agent contract --section <id>\`, from`,
+    `\`references/<id>.md\`, or through the \`get_authoring_contract\` tool.`,
+    ``,
+    `| Section | Read it when | ~Tokens |`,
+    `| --- | --- | --- |`,
+  );
+  for (const entry of index.filter((section) => !section.core)) {
+    lines.push(`| [\`${entry.id}\`](references/${entry.id}.md) | ${entry.when} | ${entry.approximateTokens} |`);
+  }
+  lines.push(
+    ``,
+    `Start with \`build-script\` for anything substantial and \`canvas\` if you are`,
+    `hand-writing elements. \`creative-direction\` comes before either.`,
+    ``,
+    `## What a call costs you`,
+    ``,
+    `Every result carries a \`tokenBudget\`: what this call cost and what the`,
+    `richer option would have cost. The defaults are the cheapest correct`,
+    `answer, never a reduced one — \`images:"all"\` and \`imageDetail:"full"\``,
+    `return everything there is.`,
+    ``,
+    `- Review a deck with \`images:"overview"\` first. One contact sheet answers`,
+    `  pacing, variety, and which slides repeat each other for roughly a`,
+    `  fifteenth of what the same slides cost sent separately.`,
+    `- Then open only the slides that looked wrong, by number, at`,
+    `  \`imageDetail:"full"\`.`,
+    `- A patch returns the slides it changed. A regeneration costs the whole`,
+    `  deck's authoring output and discards every decision you are not currently`,
+    `  thinking about.`,
+    ``,
+  );
+  return `${lines.join("\n").trimEnd()}\n`;
 }
 
 /** Renders the guide as Markdown, for docs and skill files. */

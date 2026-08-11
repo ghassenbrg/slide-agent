@@ -6,9 +6,11 @@ Contract version 0.11 · scene schema `slide-agent.scene/1`
 
 ## Author the deck as a program
 
-For any deck whose quality matters, write a JavaScript module that composes it and run `slide-agent build --script deck.mjs --output deck.pptx`. The module imports `defineDeck` from `@slide-agent/core` and exports the deck; the engine turns it into the same scene file every other path produces, so patching, revising, and the clean-directory round-trip all work exactly as they do for hand-authored NDJSON.
+This is the recommended path. For any deck whose quality matters, write a JavaScript module that composes it and run `slide-agent build --script deck.mjs --output deck.pptx`. The module imports `defineDeck` from `@slide-agent/core` and exports the deck; the engine turns it into the same scene file every other path produces, so patching, revising, and the clean-directory round-trip all work exactly as they do for hand-authored NDJSON.
 
 This exists because hand-writing every element as a separate JSON record with coordinates you worked out yourself sets a price on design, and the price is paid in the wrong currency. A card with a title, a sub-label and an accent bar is four records; a bare floating label is one. Nothing in the guidance asks for bare floating labels, but that is what economising produces. In a program you name the card once, as an ordinary function, and place six of them in a loop.
+
+It is also, by a wide margin, the cheapest thing you will write. A script that builds a deck runs a third of the length of the NDJSON for the same deck, and every character you emit costs several times what a character you read costs. Hand-written NDJSON is for short decks, for hosts that cannot execute a module, and for patches.
 
 Slide Agent supplies no components and no house style here. `node()`, `header()`, `footer()`, `statCard()` are functions *you* write in *your* script, drawing whatever this deck's visual thesis calls for. What the engine supplies is arithmetic: `columns`, `rows`, `grid`, `split`, `distribute`, and `inset` return rectangles, and `measureText` tells you how tall a string will actually set before you commit to a frame.
 

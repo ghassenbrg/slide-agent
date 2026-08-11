@@ -229,6 +229,36 @@ async function updateEmbeddedWorkbook(state: PackageState, chartPath: string, la
   return true;
 }
 
+/**
+ * The slides an edit altered, or `undefined` when it cannot be known.
+ *
+ * Only the in-place operations qualify, and only when every operation in the
+ * batch is one of them. `remove-slide`, `reorder-slides`, `duplicate-slide`,
+ * `import-slide`, and `apply-theme` either renumber the deck or touch all of
+ * it, so any of them present makes the whole answer unknowable — and a wrong
+ * subset here would mean showing the model the wrong renders, which is worse
+ * than showing it all of them.
+ */
+export function editedSlides(operations: readonly EditOperation[]): number[] | undefined {
+  const slides = new Set<number>();
+  for (const operation of operations) {
+    switch (operation.type) {
+      case "replace-image":
+      case "update-table":
+      case "update-chart":
+        slides.add(operation.slide);
+        break;
+      case "replace-text":
+        if (operation.slide === undefined) return undefined;
+        slides.add(operation.slide);
+        break;
+      default:
+        return undefined;
+    }
+  }
+  return slides.size > 0 ? [...slides].sort((left, right) => left - right) : undefined;
+}
+
 export class PptxEditor {
   public async edit(inputPath: string, outputPath: string, operations: EditOperation[]): Promise<PptxEditResult> {
     const input = path.resolve(inputPath);

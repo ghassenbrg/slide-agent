@@ -1,7 +1,9 @@
 import type { VisualReviewFinding } from "../review/types.js";
 import type { RelativeFrame } from "../design/relations.js";
+import type { TokenBudget } from "../evaluation/token-budget.js";
 
 export type { ReviewPacket, VisualReviewFinding, VisualFindingSeverity } from "../review/types.js";
+export type { TokenBudget } from "../evaluation/token-budget.js";
 export type { FrameRelation, FrameValue, RelativeFrame } from "../design/relations.js";
 
 export type SlideKind =
@@ -1121,8 +1123,31 @@ export interface AgentResult {
     untouched: Array<{ slide: number; elementIds: string[] }>;
     diff: string;
     applied: boolean;
+    /**
+     * The slides this patch altered, absent when it altered the deck as a
+     * whole. What lets a one-element patch return one render rather than every
+     * render the rebuild produced.
+     */
+    changedSlides?: number[];
   };
+  /**
+   * Slides this command is known to have altered, 1-based.
+   *
+   * Set by the commands that can know — `patch` from its own diff, `revise`
+   * from its target, `edit` from the slides its operations name. Absent means
+   * "not determinable", which is a different answer from "none" and is treated
+   * as such: a preview selection of `changed` returns everything and says why.
+   */
+  changedSlides?: number[];
   errors: Array<{ code: string; message: string; details?: Record<string, unknown> }>;
+  /**
+   * What this result cost the reader, and what the richer option would cost.
+   *
+   * Attached at the boundary that serializes the result, because that is the
+   * only place the images are known. A caller reading an `AgentResult` straight
+   * off the TypeScript API pays no image cost and sees no budget.
+   */
+  tokenBudget?: TokenBudget;
   metadata: ExecutionMetadata;
 }
 

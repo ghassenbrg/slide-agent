@@ -8,7 +8,7 @@ Contract version 0.11 · scene schema `slide-agent.scene/1`
 
 It is not prompt → deck. A deck nobody looked at is a draft, whatever the report says.
 
-1. Read `capabilities` — the canvas block first — and the contract.
+1. Read `capabilities`, then the guide sections the deck actually needs.
 
 2. Research, and write the claim and source ledgers.
 
@@ -16,17 +16,17 @@ It is not prompt → deck. A deck nobody looked at is a draft, whatever the repo
 
 4. Choose one and write the sequence and silhouette plan.
 
-5. Author a freeform scene.
+5. Author the deck. Write a build script for anything substantial; hand-written NDJSON is for short decks and for patches.
 
 6. Build with rendering enabled.
 
-7. Call `review` and inspect every slide.
+7. Call `review` with the contact sheet and read the deck as a sequence.
 
-8. Patch the specific defects you found.
+8. Open the slides that looked wrong, one at a time, at full detail.
 
-9. Rerun readiness and the clean-directory round-trip check.
+9. Patch the specific defects you found.
 
-10. Deliver the canonical package.
+10. Rerun readiness and the clean-directory round-trip check, then deliver the canonical package.
 
 Prompt-only mode produces a structural draft with placeholders. It is scaffolding, it labels itself as such, and it is never the finished design.
 

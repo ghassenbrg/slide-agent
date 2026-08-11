@@ -7,7 +7,7 @@ export { installManaged, PACKAGE_NAME, PACKAGE_VERSION, type ManagedInstallOptio
 export { VERSION } from "./version.js";
 export { findExecutable, runProcess, type ProcessResult } from "./utils/process.js";
 export { outputLayout } from "./output/output-layout.js";
-export { PptxEditor, type PptxEditResult } from "./editing/pptx-editor.js";
+export { PptxEditor, editedSlides, type PptxEditResult } from "./editing/pptx-editor.js";
 export { PptxInspector } from "./editing/pptx-inspector.js";
 export { parseEditPrompt } from "./editing/parse-edit-prompt.js";
 export { LayoutRegistry, type LayoutRenderer } from "./layouts/layout-registry.js";
@@ -85,6 +85,45 @@ export {
 } from "./design/font-availability.js";
 export { renderSchematic, slideToSvg, type SchematicResult } from "./rendering/schematic.js";
 export {
+  TokenAccount,
+  estimateImageTokens,
+  estimateTextTokens,
+  priceOf,
+  savingNote,
+  CHARACTERS_PER_TOKEN,
+  IMAGE_LONG_EDGE_LIMIT,
+  PIXELS_PER_IMAGE_TOKEN,
+  type BudgetInput,
+  type TokenBudget,
+} from "./evaluation/token-budget.js";
+export {
+  contactSheet,
+  decodePng,
+  encodePng,
+  fitWithin,
+  pngSize,
+  resize,
+  type ContactSheetOptions,
+  type RasterImage,
+} from "./rendering/png.js";
+export {
+  deliverPreviews,
+  isPreviewFile,
+  previewMimeType,
+  previewNote,
+  previewSlideNumber,
+  resolveSelection,
+  selectPreviews,
+  writeContactSheet,
+  IMAGE_SELECTIONS,
+  MAXIMUM_IMAGES,
+  MAXIMUM_TOTAL_BYTES,
+  PREVIEW_TIERS,
+  type DeliveredImages,
+  type ImageSelection,
+  type ImageDetail,
+} from "./rendering/preview-delivery.js";
+export {
   measureTextWidth,
   resolveFont,
   textBlockHeight,
@@ -109,7 +148,7 @@ export { Grid, SLIDE_FORMATS, slideFormat, type Rect, type SlideFormat } from ".
 export { densityBudget, resolveTokens, type DeckTokens, type Density, type Geometry } from "./design/tokens.js";
 export { VisualSystem, applyVisualSystem, isVariableReference, VARIABLE_REFERENCE_KEY } from "./design/visual-system.js";
 export { buildReviewPacket, type ReviewOptions } from "./review/packet.js";
-export { formatPatchDiff, patchOutline, type PatchChange, type PatchOperation, type PatchResult } from "./editing/patch-scene.js";
+export { changedSlides, formatPatchDiff, patchOutline, type PatchChange, type PatchOperation, type PatchResult } from "./editing/patch-scene.js";
 export {
   buildArtifactGraph,
   identify,

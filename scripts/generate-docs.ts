@@ -11,11 +11,12 @@ import { fileURLToPath } from "node:url";
 import {
   CONTRACT_VERSION,
   SCENE_SCHEMA_ID,
-  authoringGuide,
   contractDescriptor,
   contractJsonSchema,
   guideAsMarkdown,
+  guideAsRouter,
   guideSectionIds,
+  guideSectionIndex,
   type ContractSchemaName,
 } from "../src/contract/index.js";
 import { GRAMMAR_SCHEMAS } from "../src/diagrams/grammars.js";
@@ -51,8 +52,10 @@ function buildDocs(): Map<string, string> {
     "## Commands",
     "",
     "```bash",
-    "slide-agent contract --format prompt        # the full authoring guide",
-    "slide-agent contract --schema outline       # JSON Schema for what you author",
+    "slide-agent contract --format markdown --section canvas   # one guide section",
+    "slide-agent contract --format prompt        # the whole guide, as a system prompt",
+    "slide-agent contract --schema outline       # JSON Schema, for validators",
+    "slide-agent build --script deck.mjs --output deck.pptx    # the recommended path",
     "slide-agent run --request request.json      # build from an outline or scene",
     "slide-agent create --prompt brief.md --output deck.pptx   # structural draft only",
     "slide-agent revise --input deck.pptx --slide 4 --records slide4.ndjson --output revised.pptx",
@@ -67,14 +70,22 @@ function buildDocs(): Map<string, string> {
     "",
   ].join("\n");
 
+  // The router, not the whole guide. Inlining every section here made SKILL.md
+  // a second copy of `references/` — 94% of its substantive lines appeared in
+  // both — which a host with the skill and the MCP server registered paid for
+  // twice, before knowing whether the deck had a chart in it.
   files.set("SKILL.md", [
     skillFrontmatter(SKILL_DESCRIPTION),
     GENERATED_NOTICE,
     "",
-    guideAsMarkdown().replace(/^# Slide Agent authoring guide\n/, "# Slide Agent\n"),
+    guideAsRouter(),
     "",
     commands,
   ].join("\n"));
+
+  // The whole guide stays available as one page for hosts that want it, and
+  // for anyone reading the contract end to end.
+  files.set("references/guide.md", `${GENERATED_NOTICE}\n\n${guideAsMarkdown()}`);
 
   for (const section of guideSectionIds()) {
     files.set(`references/${section}.md`, `${GENERATED_NOTICE}\n\n${guideAsMarkdown(section)}`);
@@ -98,9 +109,13 @@ function buildDocs(): Map<string, string> {
     "Every page here is generated from `src/contract`. Change the contract, run",
     "`npm run docs`, and the prose, the schemas, and the engine stay in step.",
     "",
+    "Read a section when its moment arrives rather than all of them up front;",
+    "`SKILL.md` is the router and says when each one becomes relevant. The whole",
+    "guide as one page is [`guide.md`](guide.md).",
+    "",
     "## Guide",
     "",
-    ...authoringGuide().sections.map((section) => `- [${section.title}](${section.id}.md) — ${section.body[0] ?? ""}`),
+    ...guideSectionIndex().map((section) => `- [${section.title}](${section.id}.md) — ${section.when} (~${section.approximateTokens} tokens)`),
     "",
     "## Schemas",
     "",

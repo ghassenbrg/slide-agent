@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import path from "node:path";
 
 import { loadConfig } from "./config/load-config.js";
-import { PptxEditor } from "./editing/pptx-editor.js";
+import { PptxEditor, editedSlides } from "./editing/pptx-editor.js";
 import { DeckBuilder, type BuiltDeck } from "./export/deck-builder.js";
 import { PptxExporter } from "./export/pptx-exporter.js";
 import { JsonLogger, type Logger } from "./logging/logger.js";
@@ -15,7 +15,7 @@ import { PresentationRenderer } from "./rendering/renderer.js";
 import { runBuildScript } from "./authoring/run-script.js";
 import { parseSceneNdjson, readSceneNdjson, serializeSceneNdjson, writeSceneNdjson } from "./serialization/scene-ndjson.js";
 import { reviseScene } from "./serialization/revise-scene.js";
-import { formatPatchDiff, patchOutline, type PatchOperation } from "./editing/patch-scene.js";
+import { changedSlides, formatPatchDiff, patchOutline, type PatchOperation } from "./editing/patch-scene.js";
 import { buildReviewPacket, type ReviewOptions } from "./review/packet.js";
 import type { ReviewPacket } from "./review/types.js";
 import { patchOperationSchema } from "./types/schemas.js";
@@ -270,10 +270,14 @@ export class SlideAgent {
       const operations = request.operations.map((operation) => patchOperationSchema.parse(operation)) as PatchOperation[];
       const patched = patchOutline(parseSceneNdjson(await readUtf8(scenePath)), operations);
       const diff = formatPatchDiff(patched);
+      // What the rebuild is allowed to show. A patch rebuilds the whole deck,
+      // so without this every render comes back however small the change was.
+      const touched = changedSlides(patched.changes);
       this.logger.info("patch.applied", "Applied scene patch", {
         requestId,
         operations: operations.length,
         changes: patched.changes.length,
+        ...(touched ? { slides: touched } : {}),
       });
 
       const execution = metadata("patch", requestId, startedAt, 0, "model-authored");
@@ -283,7 +287,8 @@ export class SlideAgent {
           generatedFiles: [],
           slideCount: patched.outline.slides.length,
           warnings: [],
-          patch: { changes: patched.changes, untouched: patched.untouched, diff, applied: false },
+          patch: { changes: patched.changes, untouched: patched.untouched, diff, applied: false, ...(touched ? { changedSlides: touched } : {}) },
+          ...(touched ? { changedSlides: touched } : {}),
           errors: [],
           metadata: execution,
         };
@@ -304,7 +309,8 @@ export class SlideAgent {
       });
       return {
         ...result,
-        patch: { changes: patched.changes, untouched: patched.untouched, diff, applied: true },
+        patch: { changes: patched.changes, untouched: patched.untouched, diff, applied: true, ...(touched ? { changedSlides: touched } : {}) },
+        ...(touched ? { changedSlides: touched } : {}),
         metadata: { ...result.metadata, command: "patch", requestId, provenance: "model-authored" },
       };
     } catch (error) {
@@ -360,6 +366,8 @@ export class SlideAgent {
       });
       return {
         ...result,
+        // A revise names its slide, so it never has to return the whole deck.
+        changedSlides: [request.slide],
         metadata: { ...result.metadata, command: "revise", requestId, provenance: "model-authored" },
       };
     } catch (error) {
@@ -725,6 +733,7 @@ export class SlideAgent {
         if (report.render?.pdfPath) generatedFiles.push(report.render.pdfPath);
       }
       const execution = metadata("edit", requestId, startedAt, 0);
+      const touched = editedSlides(request.operations);
       const deliverables = unique([edited.output, ...generatedFiles.filter((file) => path.resolve(file) === path.resolve(layout.pdf))]);
       return {
         status: resultStatus(report, warnings),
@@ -734,6 +743,7 @@ export class SlideAgent {
         generatedFiles: unique(generatedFiles),
         slideCount: edited.slideCount,
         warnings,
+        ...(touched ? { changedSlides: touched } : {}),
         ...(report ? { validation: report } : {}),
         errors: report?.issues.filter((item) => item.severity === "error").map((item) => ({ code: item.code, message: item.message })) ?? [],
         metadata: execution,

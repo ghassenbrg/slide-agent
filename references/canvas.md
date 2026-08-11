@@ -8,6 +8,8 @@ Contract version 0.11 · scene schema `slide-agent.scene/1`
 
 `slide.canvas` is an array of editable native elements at coordinates you choose, in inches, on a slide whose size the deck declares. Its presence bypasses the layout registry completely, so `layout` is ignored and `kind` becomes free-form metadata.
 
+This is what a build script emits, and what a patch addresses. Writing it by hand is right for a short deck or a single slide; for anything longer, read `build-script` first — the same deck expressed as a program is about a third the length, and loops enforce a rhythm that hand-placed coordinates do not.
+
 Element types are `text`, `shape`, `connector`, `image`, `table`, `chart`, `native-chart`, `diagram`, `group`, and `symbol-instance`. Shape names and advanced PptxGenJS options are open-ended: pass them through `style.options`. `capabilities().canvas` lists every property each type accepts, derived from the schemas themselves.
 
 Text is not limited to a size and a colour: `runs`, `lineSpacingMultiple`, `charSpacing`, `indent`, `columns`, `bullet`, and `noBreak` are all in the schema. `noBreak` is how you stop "40 N·m" from wrapping between the number and its unit.

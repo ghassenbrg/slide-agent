@@ -49,6 +49,20 @@ export interface PatchResult {
   untouched: Array<{ slide: number; elementIds: string[] }>;
 }
 
+/**
+ * The slides a patch altered, or `undefined` when it altered the deck as a
+ * whole.
+ *
+ * This is what lets a patch return one render instead of twelve. A deck-wide
+ * `apply-style-system` genuinely changes every slide, and reporting a subset
+ * for it would hide the change most worth looking at — so the answer in that
+ * case is honestly "no subset", not an empty list.
+ */
+export function changedSlides(changes: readonly PatchChange[]): number[] | undefined {
+  if (changes.some((change) => change.slide === undefined)) return undefined;
+  return [...new Set(changes.map((change) => change.slide!))].sort((left, right) => left - right);
+}
+
 function slideAt(outline: PresentationOutline, number: number): SlideSpec {
   const slide = outline.slides[number - 1];
   if (!slide) {

@@ -26,38 +26,22 @@
           "description": "Inches on the slide canvas."
         },
         "zIndex": {
-          "description": "Paint order. Lower values sit behind.",
-          "type": "number"
+          "$ref": "#/$defs/__schema2"
         },
         "role": {
-          "description": "Semantic role, e.g. title, body, caption, decorative.",
-          "type": "string"
+          "$ref": "#/$defs/__schema4"
         },
         "styleRef": {
-          "description": "Named styles from creativeDirection.visualSystem.styles, applied in order. This element's own `style` is the final override.",
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          ]
+          "$ref": "#/$defs/__schema6"
         },
         "layer": {
-          "description": "A named layer, for review and z-order grouping. Never a visual style.",
-          "type": "string"
+          "$ref": "#/$defs/__schema8"
         },
         "allowBleed": {
-          "description": "This element is meant to run past the slide edge. Without it, anything outside the slide is reported as a defect.",
-          "type": "boolean"
+          "$ref": "#/$defs/__schema10"
         },
         "intentionalOverlap": {
-          "description": "Marks a deliberate collision so QA does not report it.",
-          "type": "boolean"
+          "$ref": "#/$defs/__schema12"
         },
         "allowOverlapWith": {
           "type": "array",
@@ -66,266 +50,7 @@
           }
         },
         "place": {
-          "description": "Placement stated against elements already on this slide. Any axis given here wins over the literal x/y/w/h, and is solved into inches before the slide is composed.",
-          "type": "object",
-          "properties": {
-            "x": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "description": "Inches on the slide canvas."
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "alignLeft": {
-                      "type": "string"
-                    },
-                    "alignRight": {
-                      "type": "string"
-                    },
-                    "alignTop": {
-                      "type": "string"
-                    },
-                    "alignBottom": {
-                      "type": "string"
-                    },
-                    "centerX": {
-                      "type": "string"
-                    },
-                    "centerY": {
-                      "type": "string"
-                    },
-                    "below": {
-                      "type": "string"
-                    },
-                    "above": {
-                      "type": "string"
-                    },
-                    "rightOf": {
-                      "type": "string"
-                    },
-                    "leftOf": {
-                      "type": "string"
-                    },
-                    "sameAs": {
-                      "description": "Take the referenced element's width or height.",
-                      "type": "string"
-                    },
-                    "spanFrom": {
-                      "description": "With spanTo, stretch from one element's near edge to another's far edge.",
-                      "type": "string"
-                    },
-                    "spanTo": {
-                      "type": "string"
-                    },
-                    "gap": {
-                      "description": "Distance held from the referenced element, in inches.",
-                      "type": "number"
-                    },
-                    "offset": {
-                      "description": "Added after everything else, in inches.",
-                      "type": "number"
-                    }
-                  },
-                  "additionalProperties": {},
-                  "description": "A relation to an element declared earlier on the same slide."
-                }
-              ]
-            },
-            "y": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "description": "Inches on the slide canvas."
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "alignLeft": {
-                      "type": "string"
-                    },
-                    "alignRight": {
-                      "type": "string"
-                    },
-                    "alignTop": {
-                      "type": "string"
-                    },
-                    "alignBottom": {
-                      "type": "string"
-                    },
-                    "centerX": {
-                      "type": "string"
-                    },
-                    "centerY": {
-                      "type": "string"
-                    },
-                    "below": {
-                      "type": "string"
-                    },
-                    "above": {
-                      "type": "string"
-                    },
-                    "rightOf": {
-                      "type": "string"
-                    },
-                    "leftOf": {
-                      "type": "string"
-                    },
-                    "sameAs": {
-                      "description": "Take the referenced element's width or height.",
-                      "type": "string"
-                    },
-                    "spanFrom": {
-                      "description": "With spanTo, stretch from one element's near edge to another's far edge.",
-                      "type": "string"
-                    },
-                    "spanTo": {
-                      "type": "string"
-                    },
-                    "gap": {
-                      "description": "Distance held from the referenced element, in inches.",
-                      "type": "number"
-                    },
-                    "offset": {
-                      "description": "Added after everything else, in inches.",
-                      "type": "number"
-                    }
-                  },
-                  "additionalProperties": {},
-                  "description": "A relation to an element declared earlier on the same slide."
-                }
-              ]
-            },
-            "w": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "description": "Inches on the slide canvas."
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "alignLeft": {
-                      "type": "string"
-                    },
-                    "alignRight": {
-                      "type": "string"
-                    },
-                    "alignTop": {
-                      "type": "string"
-                    },
-                    "alignBottom": {
-                      "type": "string"
-                    },
-                    "centerX": {
-                      "type": "string"
-                    },
-                    "centerY": {
-                      "type": "string"
-                    },
-                    "below": {
-                      "type": "string"
-                    },
-                    "above": {
-                      "type": "string"
-                    },
-                    "rightOf": {
-                      "type": "string"
-                    },
-                    "leftOf": {
-                      "type": "string"
-                    },
-                    "sameAs": {
-                      "description": "Take the referenced element's width or height.",
-                      "type": "string"
-                    },
-                    "spanFrom": {
-                      "description": "With spanTo, stretch from one element's near edge to another's far edge.",
-                      "type": "string"
-                    },
-                    "spanTo": {
-                      "type": "string"
-                    },
-                    "gap": {
-                      "description": "Distance held from the referenced element, in inches.",
-                      "type": "number"
-                    },
-                    "offset": {
-                      "description": "Added after everything else, in inches.",
-                      "type": "number"
-                    }
-                  },
-                  "additionalProperties": {},
-                  "description": "A relation to an element declared earlier on the same slide."
-                }
-              ]
-            },
-            "h": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "description": "Inches on the slide canvas."
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "alignLeft": {
-                      "type": "string"
-                    },
-                    "alignRight": {
-                      "type": "string"
-                    },
-                    "alignTop": {
-                      "type": "string"
-                    },
-                    "alignBottom": {
-                      "type": "string"
-                    },
-                    "centerX": {
-                      "type": "string"
-                    },
-                    "centerY": {
-                      "type": "string"
-                    },
-                    "below": {
-                      "type": "string"
-                    },
-                    "above": {
-                      "type": "string"
-                    },
-                    "rightOf": {
-                      "type": "string"
-                    },
-                    "leftOf": {
-                      "type": "string"
-                    },
-                    "sameAs": {
-                      "description": "Take the referenced element's width or height.",
-                      "type": "string"
-                    },
-                    "spanFrom": {
-                      "description": "With spanTo, stretch from one element's near edge to another's far edge.",
-                      "type": "string"
-                    },
-                    "spanTo": {
-                      "type": "string"
-                    },
-                    "gap": {
-                      "description": "Distance held from the referenced element, in inches.",
-                      "type": "number"
-                    },
-                    "offset": {
-                      "description": "Added after everything else, in inches.",
-                      "type": "number"
-                    }
-                  },
-                  "additionalProperties": {},
-                  "description": "A relation to an element declared earlier on the same slide."
-                }
-              ]
-            }
-          }
+          "$ref": "#/$defs/__schema15"
         },
         "type": {
           "type": "string",
@@ -335,604 +60,13 @@
           "type": "string"
         },
         "runs": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "text": {
-                "type": "string"
-              },
-              "options": {
-                "type": "object",
-                "propertyNames": {
-                  "type": "string"
-                },
-                "additionalProperties": {},
-                "description": "Advanced PptxGenJS options passed through unchanged. Verify the render. A `hyperlink` here is held to the same scheme allowlist as `link`."
-              }
-            },
-            "required": [
-              "text"
-            ]
-          }
+          "$ref": "#/$defs/__schema40"
         },
         "link": {
-          "anyOf": [
-            {
-              "type": "string",
-              "minLength": 1,
-              "description": "An http(s) or mailto URL. A bare host is read as https."
-            },
-            {
-              "type": "object",
-              "properties": {
-                "url": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "tooltip": {
-                  "description": "What the link does. Screen readers announce it.",
-                  "type": "string"
-                }
-              },
-              "required": [
-                "url"
-              ]
-            },
-            {
-              "type": "object",
-              "properties": {
-                "slide": {
-                  "type": "integer",
-                  "exclusiveMinimum": 0,
-                  "maximum": 9007199254740991,
-                  "description": "A 1-based slide in this deck."
-                },
-                "tooltip": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "slide"
-              ]
-            }
-          ],
-          "description": "A hyperlink. Only http, https, and mailto are accepted; anything else is refused and reported."
+          "$ref": "#/$defs/__schema44"
         },
         "style": {
-          "type": "object",
-          "properties": {
-            "fontSize": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "exclusiveMinimum": 0
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "$var": {
-                      "type": "string",
-                      "minLength": 1,
-                      "description": "A name from creativeDirection.visualSystem.variables."
-                    }
-                  },
-                  "required": [
-                    "$var"
-                  ],
-                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
-                }
-              ]
-            },
-            "fontFace": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "$var": {
-                      "type": "string",
-                      "minLength": 1,
-                      "description": "A name from creativeDirection.visualSystem.variables."
-                    }
-                  },
-                  "required": [
-                    "$var"
-                  ],
-                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
-                }
-              ]
-            },
-            "color": {
-              "anyOf": [
-                {
-                  "type": "string",
-                  "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
-                  "description": "Hex color, with or without a leading #."
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "$var": {
-                      "type": "string",
-                      "minLength": 1,
-                      "description": "A name from creativeDirection.visualSystem.variables."
-                    }
-                  },
-                  "required": [
-                    "$var"
-                  ],
-                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
-                }
-              ]
-            },
-            "bold": {
-              "anyOf": [
-                {
-                  "type": "boolean"
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "$var": {
-                      "type": "string",
-                      "minLength": 1,
-                      "description": "A name from creativeDirection.visualSystem.variables."
-                    }
-                  },
-                  "required": [
-                    "$var"
-                  ],
-                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
-                }
-              ]
-            },
-            "italic": {
-              "anyOf": [
-                {
-                  "type": "boolean"
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "$var": {
-                      "type": "string",
-                      "minLength": 1,
-                      "description": "A name from creativeDirection.visualSystem.variables."
-                    }
-                  },
-                  "required": [
-                    "$var"
-                  ],
-                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
-                }
-              ]
-            },
-            "underline": {
-              "anyOf": [
-                {
-                  "type": "boolean"
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "$var": {
-                      "type": "string",
-                      "minLength": 1,
-                      "description": "A name from creativeDirection.visualSystem.variables."
-                    }
-                  },
-                  "required": [
-                    "$var"
-                  ],
-                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
-                }
-              ]
-            },
-            "align": {
-              "anyOf": [
-                {
-                  "type": "string",
-                  "enum": [
-                    "left",
-                    "center",
-                    "right",
-                    "justify"
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "$var": {
-                      "type": "string",
-                      "minLength": 1,
-                      "description": "A name from creativeDirection.visualSystem.variables."
-                    }
-                  },
-                  "required": [
-                    "$var"
-                  ],
-                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
-                }
-              ]
-            },
-            "valign": {
-              "anyOf": [
-                {
-                  "type": "string",
-                  "enum": [
-                    "top",
-                    "middle",
-                    "bottom"
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "$var": {
-                      "type": "string",
-                      "minLength": 1,
-                      "description": "A name from creativeDirection.visualSystem.variables."
-                    }
-                  },
-                  "required": [
-                    "$var"
-                  ],
-                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
-                }
-              ]
-            },
-            "margin": {
-              "anyOf": [
-                {
-                  "type": "number"
-                },
-                {
-                  "type": "array",
-                  "prefixItems": [
-                    {
-                      "type": "number"
-                    },
-                    {
-                      "type": "number"
-                    },
-                    {
-                      "type": "number"
-                    },
-                    {
-                      "type": "number"
-                    }
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "$var": {
-                      "type": "string",
-                      "minLength": 1,
-                      "description": "A name from creativeDirection.visualSystem.variables."
-                    }
-                  },
-                  "required": [
-                    "$var"
-                  ],
-                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
-                }
-              ]
-            },
-            "fit": {
-              "anyOf": [
-                {
-                  "type": "string",
-                  "enum": [
-                    "none",
-                    "shrink",
-                    "resize"
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "$var": {
-                      "type": "string",
-                      "minLength": 1,
-                      "description": "A name from creativeDirection.visualSystem.variables."
-                    }
-                  },
-                  "required": [
-                    "$var"
-                  ],
-                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
-                }
-              ]
-            },
-            "fill": {
-              "anyOf": [
-                {
-                  "type": "string",
-                  "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
-                  "description": "Hex color, with or without a leading #."
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "$var": {
-                      "type": "string",
-                      "minLength": 1,
-                      "description": "A name from creativeDirection.visualSystem.variables."
-                    }
-                  },
-                  "required": [
-                    "$var"
-                  ],
-                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
-                }
-              ]
-            },
-            "transparency": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "minimum": 0,
-                  "maximum": 100
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "$var": {
-                      "type": "string",
-                      "minLength": 1,
-                      "description": "A name from creativeDirection.visualSystem.variables."
-                    }
-                  },
-                  "required": [
-                    "$var"
-                  ],
-                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
-                }
-              ]
-            },
-            "lineColor": {
-              "anyOf": [
-                {
-                  "type": "string",
-                  "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
-                  "description": "Hex color, with or without a leading #."
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "$var": {
-                      "type": "string",
-                      "minLength": 1,
-                      "description": "A name from creativeDirection.visualSystem.variables."
-                    }
-                  },
-                  "required": [
-                    "$var"
-                  ],
-                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
-                }
-              ]
-            },
-            "lineWidth": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "minimum": 0
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "$var": {
-                      "type": "string",
-                      "minLength": 1,
-                      "description": "A name from creativeDirection.visualSystem.variables."
-                    }
-                  },
-                  "required": [
-                    "$var"
-                  ],
-                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
-                }
-              ]
-            },
-            "rotate": {
-              "anyOf": [
-                {
-                  "type": "number"
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "$var": {
-                      "type": "string",
-                      "minLength": 1,
-                      "description": "A name from creativeDirection.visualSystem.variables."
-                    }
-                  },
-                  "required": [
-                    "$var"
-                  ],
-                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
-                }
-              ]
-            },
-            "lineSpacingMultiple": {
-              "description": "Line spacing as a multiple of the font size, e.g. 1.35.",
-              "anyOf": [
-                {
-                  "type": "number",
-                  "exclusiveMinimum": 0
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "$var": {
-                      "type": "string",
-                      "minLength": 1,
-                      "description": "A name from creativeDirection.visualSystem.variables."
-                    }
-                  },
-                  "required": [
-                    "$var"
-                  ],
-                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
-                }
-              ]
-            },
-            "lineSpacing": {
-              "description": "Absolute line spacing in points. Wins over lineSpacingMultiple.",
-              "anyOf": [
-                {
-                  "type": "number",
-                  "exclusiveMinimum": 0
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "$var": {
-                      "type": "string",
-                      "minLength": 1,
-                      "description": "A name from creativeDirection.visualSystem.variables."
-                    }
-                  },
-                  "required": [
-                    "$var"
-                  ],
-                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
-                }
-              ]
-            },
-            "charSpacing": {
-              "description": "Tracking in points; negative tightens.",
-              "anyOf": [
-                {
-                  "type": "number"
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "$var": {
-                      "type": "string",
-                      "minLength": 1,
-                      "description": "A name from creativeDirection.visualSystem.variables."
-                    }
-                  },
-                  "required": [
-                    "$var"
-                  ],
-                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
-                }
-              ]
-            },
-            "indent": {
-              "description": "First-line indent in inches.",
-              "anyOf": [
-                {
-                  "type": "number"
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "$var": {
-                      "type": "string",
-                      "minLength": 1,
-                      "description": "A name from creativeDirection.visualSystem.variables."
-                    }
-                  },
-                  "required": [
-                    "$var"
-                  ],
-                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
-                }
-              ]
-            },
-            "columns": {
-              "description": "Newspaper-style columns inside this one text box.",
-              "anyOf": [
-                {
-                  "type": "integer",
-                  "minimum": 1,
-                  "maximum": 16
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "$var": {
-                      "type": "string",
-                      "minLength": 1,
-                      "description": "A name from creativeDirection.visualSystem.variables."
-                    }
-                  },
-                  "required": [
-                    "$var"
-                  ],
-                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
-                }
-              ]
-            },
-            "noBreak": {
-              "description": "Replaces spaces with non-breaking spaces so the string never wraps mid-phrase.",
-              "anyOf": [
-                {
-                  "type": "boolean"
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "$var": {
-                      "type": "string",
-                      "minLength": 1,
-                      "description": "A name from creativeDirection.visualSystem.variables."
-                    }
-                  },
-                  "required": [
-                    "$var"
-                  ],
-                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
-                }
-              ]
-            },
-            "bullet": {
-              "anyOf": [
-                {
-                  "type": "boolean"
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "enum": [
-                        "bullet",
-                        "number"
-                      ]
-                    },
-                    "code": {
-                      "description": "A Unicode code point in hex, e.g. \"2022\".",
-                      "type": "string"
-                    },
-                    "indent": {
-                      "type": "number"
-                    }
-                  },
-                  "additionalProperties": {}
-                }
-              ]
-            },
-            "options": {
-              "type": "object",
-              "propertyNames": {
-                "type": "string"
-              },
-              "additionalProperties": {},
-              "description": "Advanced PptxGenJS options passed through unchanged. Verify the render. A `hyperlink` here is held to the same scheme allowlist as `link`."
-            }
-          },
-          "additionalProperties": {}
+          "$ref": "#/$defs/__schema50"
         }
       },
       "required": [
@@ -969,38 +103,22 @@
           "description": "Inches on the slide canvas."
         },
         "zIndex": {
-          "description": "Paint order. Lower values sit behind.",
-          "type": "number"
+          "$ref": "#/$defs/__schema2"
         },
         "role": {
-          "description": "Semantic role, e.g. title, body, caption, decorative.",
-          "type": "string"
+          "$ref": "#/$defs/__schema4"
         },
         "styleRef": {
-          "description": "Named styles from creativeDirection.visualSystem.styles, applied in order. This element's own `style` is the final override.",
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          ]
+          "$ref": "#/$defs/__schema6"
         },
         "layer": {
-          "description": "A named layer, for review and z-order grouping. Never a visual style.",
-          "type": "string"
+          "$ref": "#/$defs/__schema8"
         },
         "allowBleed": {
-          "description": "This element is meant to run past the slide edge. Without it, anything outside the slide is reported as a defect.",
-          "type": "boolean"
+          "$ref": "#/$defs/__schema10"
         },
         "intentionalOverlap": {
-          "description": "Marks a deliberate collision so QA does not report it.",
-          "type": "boolean"
+          "$ref": "#/$defs/__schema12"
         },
         "allowOverlapWith": {
           "type": "array",
@@ -1009,317 +127,17 @@
           }
         },
         "place": {
-          "description": "Placement stated against elements already on this slide. Any axis given here wins over the literal x/y/w/h, and is solved into inches before the slide is composed.",
-          "type": "object",
-          "properties": {
-            "x": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "description": "Inches on the slide canvas."
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "alignLeft": {
-                      "type": "string"
-                    },
-                    "alignRight": {
-                      "type": "string"
-                    },
-                    "alignTop": {
-                      "type": "string"
-                    },
-                    "alignBottom": {
-                      "type": "string"
-                    },
-                    "centerX": {
-                      "type": "string"
-                    },
-                    "centerY": {
-                      "type": "string"
-                    },
-                    "below": {
-                      "type": "string"
-                    },
-                    "above": {
-                      "type": "string"
-                    },
-                    "rightOf": {
-                      "type": "string"
-                    },
-                    "leftOf": {
-                      "type": "string"
-                    },
-                    "sameAs": {
-                      "description": "Take the referenced element's width or height.",
-                      "type": "string"
-                    },
-                    "spanFrom": {
-                      "description": "With spanTo, stretch from one element's near edge to another's far edge.",
-                      "type": "string"
-                    },
-                    "spanTo": {
-                      "type": "string"
-                    },
-                    "gap": {
-                      "description": "Distance held from the referenced element, in inches.",
-                      "type": "number"
-                    },
-                    "offset": {
-                      "description": "Added after everything else, in inches.",
-                      "type": "number"
-                    }
-                  },
-                  "additionalProperties": {},
-                  "description": "A relation to an element declared earlier on the same slide."
-                }
-              ]
-            },
-            "y": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "description": "Inches on the slide canvas."
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "alignLeft": {
-                      "type": "string"
-                    },
-                    "alignRight": {
-                      "type": "string"
-                    },
-                    "alignTop": {
-                      "type": "string"
-                    },
-                    "alignBottom": {
-                      "type": "string"
-                    },
-                    "centerX": {
-                      "type": "string"
-                    },
-                    "centerY": {
-                      "type": "string"
-                    },
-                    "below": {
-                      "type": "string"
-                    },
-                    "above": {
-                      "type": "string"
-                    },
-                    "rightOf": {
-                      "type": "string"
-                    },
-                    "leftOf": {
-                      "type": "string"
-                    },
-                    "sameAs": {
-                      "description": "Take the referenced element's width or height.",
-                      "type": "string"
-                    },
-                    "spanFrom": {
-                      "description": "With spanTo, stretch from one element's near edge to another's far edge.",
-                      "type": "string"
-                    },
-                    "spanTo": {
-                      "type": "string"
-                    },
-                    "gap": {
-                      "description": "Distance held from the referenced element, in inches.",
-                      "type": "number"
-                    },
-                    "offset": {
-                      "description": "Added after everything else, in inches.",
-                      "type": "number"
-                    }
-                  },
-                  "additionalProperties": {},
-                  "description": "A relation to an element declared earlier on the same slide."
-                }
-              ]
-            },
-            "w": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "description": "Inches on the slide canvas."
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "alignLeft": {
-                      "type": "string"
-                    },
-                    "alignRight": {
-                      "type": "string"
-                    },
-                    "alignTop": {
-                      "type": "string"
-                    },
-                    "alignBottom": {
-                      "type": "string"
-                    },
-                    "centerX": {
-                      "type": "string"
-                    },
-                    "centerY": {
-                      "type": "string"
-                    },
-                    "below": {
-                      "type": "string"
-                    },
-                    "above": {
-                      "type": "string"
-                    },
-                    "rightOf": {
-                      "type": "string"
-                    },
-                    "leftOf": {
-                      "type": "string"
-                    },
-                    "sameAs": {
-                      "description": "Take the referenced element's width or height.",
-                      "type": "string"
-                    },
-                    "spanFrom": {
-                      "description": "With spanTo, stretch from one element's near edge to another's far edge.",
-                      "type": "string"
-                    },
-                    "spanTo": {
-                      "type": "string"
-                    },
-                    "gap": {
-                      "description": "Distance held from the referenced element, in inches.",
-                      "type": "number"
-                    },
-                    "offset": {
-                      "description": "Added after everything else, in inches.",
-                      "type": "number"
-                    }
-                  },
-                  "additionalProperties": {},
-                  "description": "A relation to an element declared earlier on the same slide."
-                }
-              ]
-            },
-            "h": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "description": "Inches on the slide canvas."
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "alignLeft": {
-                      "type": "string"
-                    },
-                    "alignRight": {
-                      "type": "string"
-                    },
-                    "alignTop": {
-                      "type": "string"
-                    },
-                    "alignBottom": {
-                      "type": "string"
-                    },
-                    "centerX": {
-                      "type": "string"
-                    },
-                    "centerY": {
-                      "type": "string"
-                    },
-                    "below": {
-                      "type": "string"
-                    },
-                    "above": {
-                      "type": "string"
-                    },
-                    "rightOf": {
-                      "type": "string"
-                    },
-                    "leftOf": {
-                      "type": "string"
-                    },
-                    "sameAs": {
-                      "description": "Take the referenced element's width or height.",
-                      "type": "string"
-                    },
-                    "spanFrom": {
-                      "description": "With spanTo, stretch from one element's near edge to another's far edge.",
-                      "type": "string"
-                    },
-                    "spanTo": {
-                      "type": "string"
-                    },
-                    "gap": {
-                      "description": "Distance held from the referenced element, in inches.",
-                      "type": "number"
-                    },
-                    "offset": {
-                      "description": "Added after everything else, in inches.",
-                      "type": "number"
-                    }
-                  },
-                  "additionalProperties": {},
-                  "description": "A relation to an element declared earlier on the same slide."
-                }
-              ]
-            }
-          }
+          "$ref": "#/$defs/__schema15"
         },
         "type": {
           "type": "string",
           "const": "shape"
         },
         "shape": {
-          "description": "Any PptxGenJS shape name. Not a whitelist.",
           "type": "string"
         },
         "link": {
-          "anyOf": [
-            {
-              "type": "string",
-              "minLength": 1,
-              "description": "An http(s) or mailto URL. A bare host is read as https."
-            },
-            {
-              "type": "object",
-              "properties": {
-                "url": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "tooltip": {
-                  "description": "What the link does. Screen readers announce it.",
-                  "type": "string"
-                }
-              },
-              "required": [
-                "url"
-              ]
-            },
-            {
-              "type": "object",
-              "properties": {
-                "slide": {
-                  "type": "integer",
-                  "exclusiveMinimum": 0,
-                  "maximum": 9007199254740991,
-                  "description": "A 1-based slide in this deck."
-                },
-                "tooltip": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "slide"
-              ]
-            }
-          ],
-          "description": "A hyperlink. Only http, https, and mailto are accepted; anything else is refused and reported."
+          "$ref": "#/$defs/__schema45"
         },
         "style": {
           "type": "object",
@@ -1332,18 +150,7 @@
                   "description": "Hex color, with or without a leading #."
                 },
                 {
-                  "type": "object",
-                  "properties": {
-                    "$var": {
-                      "type": "string",
-                      "minLength": 1,
-                      "description": "A name from creativeDirection.visualSystem.variables."
-                    }
-                  },
-                  "required": [
-                    "$var"
-                  ],
-                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                  "$ref": "#/$defs/__schema51"
                 }
               ]
             },
@@ -1355,18 +162,7 @@
                   "maximum": 100
                 },
                 {
-                  "type": "object",
-                  "properties": {
-                    "$var": {
-                      "type": "string",
-                      "minLength": 1,
-                      "description": "A name from creativeDirection.visualSystem.variables."
-                    }
-                  },
-                  "required": [
-                    "$var"
-                  ],
-                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                  "$ref": "#/$defs/__schema51"
                 }
               ]
             },
@@ -1378,18 +174,7 @@
                   "description": "Hex color, with or without a leading #."
                 },
                 {
-                  "type": "object",
-                  "properties": {
-                    "$var": {
-                      "type": "string",
-                      "minLength": 1,
-                      "description": "A name from creativeDirection.visualSystem.variables."
-                    }
-                  },
-                  "required": [
-                    "$var"
-                  ],
-                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                  "$ref": "#/$defs/__schema51"
                 }
               ]
             },
@@ -1400,18 +185,7 @@
                   "minimum": 0
                 },
                 {
-                  "type": "object",
-                  "properties": {
-                    "$var": {
-                      "type": "string",
-                      "minLength": 1,
-                      "description": "A name from creativeDirection.visualSystem.variables."
-                    }
-                  },
-                  "required": [
-                    "$var"
-                  ],
-                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                  "$ref": "#/$defs/__schema51"
                 }
               ]
             },
@@ -1421,28 +195,12 @@
                   "type": "number"
                 },
                 {
-                  "type": "object",
-                  "properties": {
-                    "$var": {
-                      "type": "string",
-                      "minLength": 1,
-                      "description": "A name from creativeDirection.visualSystem.variables."
-                    }
-                  },
-                  "required": [
-                    "$var"
-                  ],
-                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                  "$ref": "#/$defs/__schema51"
                 }
               ]
             },
             "options": {
-              "type": "object",
-              "propertyNames": {
-                "type": "string"
-              },
-              "additionalProperties": {},
-              "description": "Advanced PptxGenJS options passed through unchanged. Verify the render. A `hyperlink` here is held to the same scheme allowlist as `link`."
+              "$ref": "#/$defs/__schema41"
             }
           },
           "additionalProperties": {}
@@ -1466,54 +224,34 @@
           "description": "Unique within the slide; used by validation and revision."
         },
         "x": {
-          "type": "number",
-          "description": "Inches on the slide canvas."
+          "$ref": "#/$defs/__schema62"
         },
         "y": {
-          "type": "number",
-          "description": "Inches on the slide canvas."
+          "$ref": "#/$defs/__schema63"
         },
         "w": {
-          "type": "number",
-          "description": "Inches on the slide canvas."
+          "$ref": "#/$defs/__schema64"
         },
         "h": {
-          "type": "number",
-          "description": "Inches on the slide canvas."
+          "$ref": "#/$defs/__schema65"
         },
         "zIndex": {
-          "description": "Paint order. Lower values sit behind.",
-          "type": "number"
+          "$ref": "#/$defs/__schema2"
         },
         "role": {
-          "description": "Semantic role, e.g. title, body, caption, decorative.",
-          "type": "string"
+          "$ref": "#/$defs/__schema4"
         },
         "styleRef": {
-          "description": "Named styles from creativeDirection.visualSystem.styles, applied in order. This element's own `style` is the final override.",
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          ]
+          "$ref": "#/$defs/__schema6"
         },
         "layer": {
-          "description": "A named layer, for review and z-order grouping. Never a visual style.",
-          "type": "string"
+          "$ref": "#/$defs/__schema8"
         },
         "allowBleed": {
-          "description": "This element is meant to run past the slide edge. Without it, anything outside the slide is reported as a defect.",
-          "type": "boolean"
+          "$ref": "#/$defs/__schema10"
         },
         "intentionalOverlap": {
-          "description": "Marks a deliberate collision so QA does not report it.",
-          "type": "boolean"
+          "$ref": "#/$defs/__schema12"
         },
         "allowOverlapWith": {
           "type": "array",
@@ -1522,482 +260,32 @@
           }
         },
         "place": {
-          "description": "Placement stated against elements already on this slide. Any axis given here wins over the literal x/y/w/h, and is solved into inches before the slide is composed.",
-          "type": "object",
-          "properties": {
-            "x": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "description": "Inches on the slide canvas."
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "alignLeft": {
-                      "type": "string"
-                    },
-                    "alignRight": {
-                      "type": "string"
-                    },
-                    "alignTop": {
-                      "type": "string"
-                    },
-                    "alignBottom": {
-                      "type": "string"
-                    },
-                    "centerX": {
-                      "type": "string"
-                    },
-                    "centerY": {
-                      "type": "string"
-                    },
-                    "below": {
-                      "type": "string"
-                    },
-                    "above": {
-                      "type": "string"
-                    },
-                    "rightOf": {
-                      "type": "string"
-                    },
-                    "leftOf": {
-                      "type": "string"
-                    },
-                    "sameAs": {
-                      "description": "Take the referenced element's width or height.",
-                      "type": "string"
-                    },
-                    "spanFrom": {
-                      "description": "With spanTo, stretch from one element's near edge to another's far edge.",
-                      "type": "string"
-                    },
-                    "spanTo": {
-                      "type": "string"
-                    },
-                    "gap": {
-                      "description": "Distance held from the referenced element, in inches.",
-                      "type": "number"
-                    },
-                    "offset": {
-                      "description": "Added after everything else, in inches.",
-                      "type": "number"
-                    }
-                  },
-                  "additionalProperties": {},
-                  "description": "A relation to an element declared earlier on the same slide."
-                }
-              ]
-            },
-            "y": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "description": "Inches on the slide canvas."
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "alignLeft": {
-                      "type": "string"
-                    },
-                    "alignRight": {
-                      "type": "string"
-                    },
-                    "alignTop": {
-                      "type": "string"
-                    },
-                    "alignBottom": {
-                      "type": "string"
-                    },
-                    "centerX": {
-                      "type": "string"
-                    },
-                    "centerY": {
-                      "type": "string"
-                    },
-                    "below": {
-                      "type": "string"
-                    },
-                    "above": {
-                      "type": "string"
-                    },
-                    "rightOf": {
-                      "type": "string"
-                    },
-                    "leftOf": {
-                      "type": "string"
-                    },
-                    "sameAs": {
-                      "description": "Take the referenced element's width or height.",
-                      "type": "string"
-                    },
-                    "spanFrom": {
-                      "description": "With spanTo, stretch from one element's near edge to another's far edge.",
-                      "type": "string"
-                    },
-                    "spanTo": {
-                      "type": "string"
-                    },
-                    "gap": {
-                      "description": "Distance held from the referenced element, in inches.",
-                      "type": "number"
-                    },
-                    "offset": {
-                      "description": "Added after everything else, in inches.",
-                      "type": "number"
-                    }
-                  },
-                  "additionalProperties": {},
-                  "description": "A relation to an element declared earlier on the same slide."
-                }
-              ]
-            },
-            "w": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "description": "Inches on the slide canvas."
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "alignLeft": {
-                      "type": "string"
-                    },
-                    "alignRight": {
-                      "type": "string"
-                    },
-                    "alignTop": {
-                      "type": "string"
-                    },
-                    "alignBottom": {
-                      "type": "string"
-                    },
-                    "centerX": {
-                      "type": "string"
-                    },
-                    "centerY": {
-                      "type": "string"
-                    },
-                    "below": {
-                      "type": "string"
-                    },
-                    "above": {
-                      "type": "string"
-                    },
-                    "rightOf": {
-                      "type": "string"
-                    },
-                    "leftOf": {
-                      "type": "string"
-                    },
-                    "sameAs": {
-                      "description": "Take the referenced element's width or height.",
-                      "type": "string"
-                    },
-                    "spanFrom": {
-                      "description": "With spanTo, stretch from one element's near edge to another's far edge.",
-                      "type": "string"
-                    },
-                    "spanTo": {
-                      "type": "string"
-                    },
-                    "gap": {
-                      "description": "Distance held from the referenced element, in inches.",
-                      "type": "number"
-                    },
-                    "offset": {
-                      "description": "Added after everything else, in inches.",
-                      "type": "number"
-                    }
-                  },
-                  "additionalProperties": {},
-                  "description": "A relation to an element declared earlier on the same slide."
-                }
-              ]
-            },
-            "h": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "description": "Inches on the slide canvas."
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "alignLeft": {
-                      "type": "string"
-                    },
-                    "alignRight": {
-                      "type": "string"
-                    },
-                    "alignTop": {
-                      "type": "string"
-                    },
-                    "alignBottom": {
-                      "type": "string"
-                    },
-                    "centerX": {
-                      "type": "string"
-                    },
-                    "centerY": {
-                      "type": "string"
-                    },
-                    "below": {
-                      "type": "string"
-                    },
-                    "above": {
-                      "type": "string"
-                    },
-                    "rightOf": {
-                      "type": "string"
-                    },
-                    "leftOf": {
-                      "type": "string"
-                    },
-                    "sameAs": {
-                      "description": "Take the referenced element's width or height.",
-                      "type": "string"
-                    },
-                    "spanFrom": {
-                      "description": "With spanTo, stretch from one element's near edge to another's far edge.",
-                      "type": "string"
-                    },
-                    "spanTo": {
-                      "type": "string"
-                    },
-                    "gap": {
-                      "description": "Distance held from the referenced element, in inches.",
-                      "type": "number"
-                    },
-                    "offset": {
-                      "description": "Added after everything else, in inches.",
-                      "type": "number"
-                    }
-                  },
-                  "additionalProperties": {},
-                  "description": "A relation to an element declared earlier on the same slide."
-                }
-              ]
-            }
-          }
+          "$ref": "#/$defs/__schema15"
         },
         "type": {
           "type": "string",
           "const": "connector"
         },
         "from": {
-          "anyOf": [
-            {
-              "type": "string",
-              "minLength": 1
-            },
-            {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "side": {
-                  "description": "Which edge to leave from or arrive at. Defaults to the edge facing the other element.",
-                  "type": "string",
-                  "enum": [
-                    "top",
-                    "right",
-                    "bottom",
-                    "left",
-                    "auto"
-                  ]
-                }
-              },
-              "required": [
-                "id"
-              ]
-            }
-          ],
-          "description": "An element id on the same slide, optionally with the side to use."
+          "$ref": "#/$defs/__schema67"
         },
         "to": {
-          "anyOf": [
-            {
-              "type": "string",
-              "minLength": 1
-            },
-            {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "side": {
-                  "description": "Which edge to leave from or arrive at. Defaults to the edge facing the other element.",
-                  "type": "string",
-                  "enum": [
-                    "top",
-                    "right",
-                    "bottom",
-                    "left",
-                    "auto"
-                  ]
-                }
-              },
-              "required": [
-                "id"
-              ]
-            }
-          ],
-          "description": "An element id on the same slide, optionally with the side to use."
+          "$ref": "#/$defs/__schema72"
         },
         "route": {
-          "description": "How the path is drawn between the two anchors. Defaults to elbow when the connector is anchored.",
-          "type": "string",
-          "enum": [
-            "straight",
-            "elbow",
-            "curved"
-          ]
+          "$ref": "#/$defs/__schema73"
         },
         "clearance": {
-          "description": "Gap held from elements the route is not joining, in inches.",
-          "type": "number",
-          "minimum": 0
+          "$ref": "#/$defs/__schema75"
         },
         "stub": {
-          "description": "How far the route runs straight out of an anchor before it may turn, in inches.",
-          "type": "number",
-          "minimum": 0
+          "$ref": "#/$defs/__schema77"
         },
         "mayCross": {
-          "description": "Ids this route may cross without it being reported as a collision.",
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
+          "$ref": "#/$defs/__schema79"
         },
         "style": {
-          "type": "object",
-          "properties": {
-            "color": {
-              "anyOf": [
-                {
-                  "type": "string",
-                  "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
-                  "description": "Hex color, with or without a leading #."
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "$var": {
-                      "type": "string",
-                      "minLength": 1,
-                      "description": "A name from creativeDirection.visualSystem.variables."
-                    }
-                  },
-                  "required": [
-                    "$var"
-                  ],
-                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
-                }
-              ]
-            },
-            "width": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "minimum": 0
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "$var": {
-                      "type": "string",
-                      "minLength": 1,
-                      "description": "A name from creativeDirection.visualSystem.variables."
-                    }
-                  },
-                  "required": [
-                    "$var"
-                  ],
-                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
-                }
-              ]
-            },
-            "arrow": {
-              "anyOf": [
-                {
-                  "type": "boolean"
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "$var": {
-                      "type": "string",
-                      "minLength": 1,
-                      "description": "A name from creativeDirection.visualSystem.variables."
-                    }
-                  },
-                  "required": [
-                    "$var"
-                  ],
-                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
-                }
-              ]
-            },
-            "beginArrow": {
-              "anyOf": [
-                {
-                  "type": "boolean"
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "$var": {
-                      "type": "string",
-                      "minLength": 1,
-                      "description": "A name from creativeDirection.visualSystem.variables."
-                    }
-                  },
-                  "required": [
-                    "$var"
-                  ],
-                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
-                }
-              ]
-            },
-            "dashed": {
-              "anyOf": [
-                {
-                  "type": "boolean"
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "$var": {
-                      "type": "string",
-                      "minLength": 1,
-                      "description": "A name from creativeDirection.visualSystem.variables."
-                    }
-                  },
-                  "required": [
-                    "$var"
-                  ],
-                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
-                }
-              ]
-            },
-            "options": {
-              "type": "object",
-              "propertyNames": {
-                "type": "string"
-              },
-              "additionalProperties": {},
-              "description": "Advanced PptxGenJS options passed through unchanged. Verify the render. A `hyperlink` here is held to the same scheme allowlist as `link`."
-            }
-          },
-          "additionalProperties": {}
+          "$ref": "#/$defs/__schema81"
         }
       },
       "required": [
@@ -2031,38 +319,22 @@
           "description": "Inches on the slide canvas."
         },
         "zIndex": {
-          "description": "Paint order. Lower values sit behind.",
-          "type": "number"
+          "$ref": "#/$defs/__schema2"
         },
         "role": {
-          "description": "Semantic role, e.g. title, body, caption, decorative.",
-          "type": "string"
+          "$ref": "#/$defs/__schema4"
         },
         "styleRef": {
-          "description": "Named styles from creativeDirection.visualSystem.styles, applied in order. This element's own `style` is the final override.",
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          ]
+          "$ref": "#/$defs/__schema6"
         },
         "layer": {
-          "description": "A named layer, for review and z-order grouping. Never a visual style.",
-          "type": "string"
+          "$ref": "#/$defs/__schema8"
         },
         "allowBleed": {
-          "description": "This element is meant to run past the slide edge. Without it, anything outside the slide is reported as a defect.",
-          "type": "boolean"
+          "$ref": "#/$defs/__schema10"
         },
         "intentionalOverlap": {
-          "description": "Marks a deliberate collision so QA does not report it.",
-          "type": "boolean"
+          "$ref": "#/$defs/__schema12"
         },
         "allowOverlapWith": {
           "type": "array",
@@ -2071,266 +343,7 @@
           }
         },
         "place": {
-          "description": "Placement stated against elements already on this slide. Any axis given here wins over the literal x/y/w/h, and is solved into inches before the slide is composed.",
-          "type": "object",
-          "properties": {
-            "x": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "description": "Inches on the slide canvas."
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "alignLeft": {
-                      "type": "string"
-                    },
-                    "alignRight": {
-                      "type": "string"
-                    },
-                    "alignTop": {
-                      "type": "string"
-                    },
-                    "alignBottom": {
-                      "type": "string"
-                    },
-                    "centerX": {
-                      "type": "string"
-                    },
-                    "centerY": {
-                      "type": "string"
-                    },
-                    "below": {
-                      "type": "string"
-                    },
-                    "above": {
-                      "type": "string"
-                    },
-                    "rightOf": {
-                      "type": "string"
-                    },
-                    "leftOf": {
-                      "type": "string"
-                    },
-                    "sameAs": {
-                      "description": "Take the referenced element's width or height.",
-                      "type": "string"
-                    },
-                    "spanFrom": {
-                      "description": "With spanTo, stretch from one element's near edge to another's far edge.",
-                      "type": "string"
-                    },
-                    "spanTo": {
-                      "type": "string"
-                    },
-                    "gap": {
-                      "description": "Distance held from the referenced element, in inches.",
-                      "type": "number"
-                    },
-                    "offset": {
-                      "description": "Added after everything else, in inches.",
-                      "type": "number"
-                    }
-                  },
-                  "additionalProperties": {},
-                  "description": "A relation to an element declared earlier on the same slide."
-                }
-              ]
-            },
-            "y": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "description": "Inches on the slide canvas."
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "alignLeft": {
-                      "type": "string"
-                    },
-                    "alignRight": {
-                      "type": "string"
-                    },
-                    "alignTop": {
-                      "type": "string"
-                    },
-                    "alignBottom": {
-                      "type": "string"
-                    },
-                    "centerX": {
-                      "type": "string"
-                    },
-                    "centerY": {
-                      "type": "string"
-                    },
-                    "below": {
-                      "type": "string"
-                    },
-                    "above": {
-                      "type": "string"
-                    },
-                    "rightOf": {
-                      "type": "string"
-                    },
-                    "leftOf": {
-                      "type": "string"
-                    },
-                    "sameAs": {
-                      "description": "Take the referenced element's width or height.",
-                      "type": "string"
-                    },
-                    "spanFrom": {
-                      "description": "With spanTo, stretch from one element's near edge to another's far edge.",
-                      "type": "string"
-                    },
-                    "spanTo": {
-                      "type": "string"
-                    },
-                    "gap": {
-                      "description": "Distance held from the referenced element, in inches.",
-                      "type": "number"
-                    },
-                    "offset": {
-                      "description": "Added after everything else, in inches.",
-                      "type": "number"
-                    }
-                  },
-                  "additionalProperties": {},
-                  "description": "A relation to an element declared earlier on the same slide."
-                }
-              ]
-            },
-            "w": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "description": "Inches on the slide canvas."
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "alignLeft": {
-                      "type": "string"
-                    },
-                    "alignRight": {
-                      "type": "string"
-                    },
-                    "alignTop": {
-                      "type": "string"
-                    },
-                    "alignBottom": {
-                      "type": "string"
-                    },
-                    "centerX": {
-                      "type": "string"
-                    },
-                    "centerY": {
-                      "type": "string"
-                    },
-                    "below": {
-                      "type": "string"
-                    },
-                    "above": {
-                      "type": "string"
-                    },
-                    "rightOf": {
-                      "type": "string"
-                    },
-                    "leftOf": {
-                      "type": "string"
-                    },
-                    "sameAs": {
-                      "description": "Take the referenced element's width or height.",
-                      "type": "string"
-                    },
-                    "spanFrom": {
-                      "description": "With spanTo, stretch from one element's near edge to another's far edge.",
-                      "type": "string"
-                    },
-                    "spanTo": {
-                      "type": "string"
-                    },
-                    "gap": {
-                      "description": "Distance held from the referenced element, in inches.",
-                      "type": "number"
-                    },
-                    "offset": {
-                      "description": "Added after everything else, in inches.",
-                      "type": "number"
-                    }
-                  },
-                  "additionalProperties": {},
-                  "description": "A relation to an element declared earlier on the same slide."
-                }
-              ]
-            },
-            "h": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "description": "Inches on the slide canvas."
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "alignLeft": {
-                      "type": "string"
-                    },
-                    "alignRight": {
-                      "type": "string"
-                    },
-                    "alignTop": {
-                      "type": "string"
-                    },
-                    "alignBottom": {
-                      "type": "string"
-                    },
-                    "centerX": {
-                      "type": "string"
-                    },
-                    "centerY": {
-                      "type": "string"
-                    },
-                    "below": {
-                      "type": "string"
-                    },
-                    "above": {
-                      "type": "string"
-                    },
-                    "rightOf": {
-                      "type": "string"
-                    },
-                    "leftOf": {
-                      "type": "string"
-                    },
-                    "sameAs": {
-                      "description": "Take the referenced element's width or height.",
-                      "type": "string"
-                    },
-                    "spanFrom": {
-                      "description": "With spanTo, stretch from one element's near edge to another's far edge.",
-                      "type": "string"
-                    },
-                    "spanTo": {
-                      "type": "string"
-                    },
-                    "gap": {
-                      "description": "Distance held from the referenced element, in inches.",
-                      "type": "number"
-                    },
-                    "offset": {
-                      "description": "Added after everything else, in inches.",
-                      "type": "number"
-                    }
-                  },
-                  "additionalProperties": {},
-                  "description": "A relation to an element declared earlier on the same slide."
-                }
-              ]
-            }
-          }
+          "$ref": "#/$defs/__schema15"
         },
         "type": {
           "type": "string",
@@ -2350,24 +363,19 @@
           "type": "object",
           "properties": {
             "source": {
-              "description": "Where it came from: a URL, a library reference, or the prompt that produced it.",
-              "type": "string"
+              "$ref": "#/$defs/__schema82"
             },
             "credit": {
-              "description": "The attribution line the licence requires, e.g. \"Photo by A. Name on Unsplash\".",
-              "type": "string"
+              "$ref": "#/$defs/__schema84"
             },
             "license": {
-              "description": "The licence you are relying on, e.g. \"CC BY 4.0\", \"Unsplash License\", \"© Acme, used with permission\".",
-              "type": "string"
+              "$ref": "#/$defs/__schema86"
             },
             "generated": {
-              "description": "True when a model produced this image rather than a camera or a person.",
-              "type": "boolean"
+              "$ref": "#/$defs/__schema88"
             },
             "generator": {
-              "description": "What generated it, when `generated` is true.",
-              "type": "string"
+              "$ref": "#/$defs/__schema90"
             }
           },
           "additionalProperties": {},
@@ -2382,21 +390,7 @@
               "description": "Path to the .svg. It is packaged with the deck and declared in the manifest."
             },
             "editable": {
-              "anyOf": [
-                {
-                  "type": "boolean",
-                  "const": false
-                },
-                {
-                  "type": "boolean",
-                  "const": true
-                },
-                {
-                  "type": "string",
-                  "const": "partial"
-                }
-              ],
-              "description": "false: scalable artwork only. \"partial\": some parts are separable. true: fully shape-editable after ungrouping."
+              "$ref": "#/$defs/__schema94"
             },
             "source": {
               "type": "string"
@@ -2416,252 +410,29 @@
           "type": "object",
           "properties": {
             "focalPoint": {
-              "description": "Where the subject sits, 0–1 in each axis. Drives `cover` cropping so the subject survives the crop.",
-              "type": "object",
-              "properties": {
-                "x": {
-                  "type": "number",
-                  "minimum": 0,
-                  "maximum": 1
-                },
-                "y": {
-                  "type": "number",
-                  "minimum": 0,
-                  "maximum": 1
-                }
-              },
-              "required": [
-                "x",
-                "y"
-              ]
+              "$ref": "#/$defs/__schema101"
             },
             "crop": {
-              "description": "Explicit crop as a fraction of the source, per edge.",
-              "type": "object",
-              "properties": {
-                "left": {
-                  "type": "number",
-                  "minimum": 0,
-                  "maximum": 1
-                },
-                "right": {
-                  "type": "number",
-                  "minimum": 0,
-                  "maximum": 1
-                },
-                "top": {
-                  "type": "number",
-                  "minimum": 0,
-                  "maximum": 1
-                },
-                "bottom": {
-                  "type": "number",
-                  "minimum": 0,
-                  "maximum": 1
-                }
-              },
-              "additionalProperties": {}
+              "$ref": "#/$defs/__schema103"
             },
             "maskShape": {
-              "description": "A PowerPoint shape name used as the picture's outline, e.g. \"ellipse\".",
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "$var": {
-                      "type": "string",
-                      "minLength": 1,
-                      "description": "A name from creativeDirection.visualSystem.variables."
-                    }
-                  },
-                  "required": [
-                    "$var"
-                  ],
-                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
-                }
-              ]
+              "$ref": "#/$defs/__schema105"
             },
             "tint": {
-              "type": "object",
-              "properties": {
-                "color": {
-                  "anyOf": [
-                    {
-                      "type": "string",
-                      "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
-                      "description": "Hex color, with or without a leading #."
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "$var": {
-                          "type": "string",
-                          "minLength": 1,
-                          "description": "A name from creativeDirection.visualSystem.variables."
-                        }
-                      },
-                      "required": [
-                        "$var"
-                      ],
-                      "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
-                    }
-                  ]
-                },
-                "amount": {
-                  "anyOf": [
-                    {
-                      "type": "number",
-                      "minimum": 0,
-                      "maximum": 1
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "$var": {
-                          "type": "string",
-                          "minLength": 1,
-                          "description": "A name from creativeDirection.visualSystem.variables."
-                        }
-                      },
-                      "required": [
-                        "$var"
-                      ],
-                      "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
-                    }
-                  ]
-                }
-              },
-              "required": [
-                "color"
-              ],
-              "additionalProperties": {}
+              "$ref": "#/$defs/__schema107"
             },
             "duotone": {
-              "type": "object",
-              "properties": {
-                "shadow": {
-                  "anyOf": [
-                    {
-                      "type": "string",
-                      "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
-                      "description": "Hex color, with or without a leading #."
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "$var": {
-                          "type": "string",
-                          "minLength": 1,
-                          "description": "A name from creativeDirection.visualSystem.variables."
-                        }
-                      },
-                      "required": [
-                        "$var"
-                      ],
-                      "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
-                    }
-                  ]
-                },
-                "highlight": {
-                  "anyOf": [
-                    {
-                      "type": "string",
-                      "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
-                      "description": "Hex color, with or without a leading #."
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "$var": {
-                          "type": "string",
-                          "minLength": 1,
-                          "description": "A name from creativeDirection.visualSystem.variables."
-                        }
-                      },
-                      "required": [
-                        "$var"
-                      ],
-                      "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
-                    }
-                  ]
-                }
-              },
-              "required": [
-                "shadow",
-                "highlight"
-              ],
-              "additionalProperties": {}
+              "$ref": "#/$defs/__schema108"
             },
             "grayscale": {
-              "anyOf": [
-                {
-                  "type": "boolean"
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "$var": {
-                      "type": "string",
-                      "minLength": 1,
-                      "description": "A name from creativeDirection.visualSystem.variables."
-                    }
-                  },
-                  "required": [
-                    "$var"
-                  ],
-                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
-                }
-              ]
+              "$ref": "#/$defs/__schema109"
             }
           },
           "additionalProperties": {},
           "description": "Deterministic, opt-in picture treatment. Applied on write; the source file is never modified."
         },
         "link": {
-          "anyOf": [
-            {
-              "type": "string",
-              "minLength": 1,
-              "description": "An http(s) or mailto URL. A bare host is read as https."
-            },
-            {
-              "type": "object",
-              "properties": {
-                "url": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "tooltip": {
-                  "description": "What the link does. Screen readers announce it.",
-                  "type": "string"
-                }
-              },
-              "required": [
-                "url"
-              ]
-            },
-            {
-              "type": "object",
-              "properties": {
-                "slide": {
-                  "type": "integer",
-                  "exclusiveMinimum": 0,
-                  "maximum": 9007199254740991,
-                  "description": "A 1-based slide in this deck."
-                },
-                "tooltip": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "slide"
-              ]
-            }
-          ],
-          "description": "A hyperlink. Only http, https, and mailto are accepted; anything else is refused and reported."
+          "$ref": "#/$defs/__schema45"
         },
         "fit": {
           "type": "string",
@@ -2680,18 +451,7 @@
                   "type": "number"
                 },
                 {
-                  "type": "object",
-                  "properties": {
-                    "$var": {
-                      "type": "string",
-                      "minLength": 1,
-                      "description": "A name from creativeDirection.visualSystem.variables."
-                    }
-                  },
-                  "required": [
-                    "$var"
-                  ],
-                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                  "$ref": "#/$defs/__schema51"
                 }
               ]
             },
@@ -2703,28 +463,12 @@
                   "maximum": 100
                 },
                 {
-                  "type": "object",
-                  "properties": {
-                    "$var": {
-                      "type": "string",
-                      "minLength": 1,
-                      "description": "A name from creativeDirection.visualSystem.variables."
-                    }
-                  },
-                  "required": [
-                    "$var"
-                  ],
-                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                  "$ref": "#/$defs/__schema51"
                 }
               ]
             },
             "options": {
-              "type": "object",
-              "propertyNames": {
-                "type": "string"
-              },
-              "additionalProperties": {},
-              "description": "Advanced PptxGenJS options passed through unchanged. Verify the render. A `hyperlink` here is held to the same scheme allowlist as `link`."
+              "$ref": "#/$defs/__schema41"
             }
           },
           "additionalProperties": {}
@@ -2766,38 +510,22 @@
           "description": "Inches on the slide canvas."
         },
         "zIndex": {
-          "description": "Paint order. Lower values sit behind.",
-          "type": "number"
+          "$ref": "#/$defs/__schema2"
         },
         "role": {
-          "description": "Semantic role, e.g. title, body, caption, decorative.",
-          "type": "string"
+          "$ref": "#/$defs/__schema4"
         },
         "styleRef": {
-          "description": "Named styles from creativeDirection.visualSystem.styles, applied in order. This element's own `style` is the final override.",
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          ]
+          "$ref": "#/$defs/__schema6"
         },
         "layer": {
-          "description": "A named layer, for review and z-order grouping. Never a visual style.",
-          "type": "string"
+          "$ref": "#/$defs/__schema8"
         },
         "allowBleed": {
-          "description": "This element is meant to run past the slide edge. Without it, anything outside the slide is reported as a defect.",
-          "type": "boolean"
+          "$ref": "#/$defs/__schema10"
         },
         "intentionalOverlap": {
-          "description": "Marks a deliberate collision so QA does not report it.",
-          "type": "boolean"
+          "$ref": "#/$defs/__schema12"
         },
         "allowOverlapWith": {
           "type": "array",
@@ -2806,266 +534,7 @@
           }
         },
         "place": {
-          "description": "Placement stated against elements already on this slide. Any axis given here wins over the literal x/y/w/h, and is solved into inches before the slide is composed.",
-          "type": "object",
-          "properties": {
-            "x": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "description": "Inches on the slide canvas."
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "alignLeft": {
-                      "type": "string"
-                    },
-                    "alignRight": {
-                      "type": "string"
-                    },
-                    "alignTop": {
-                      "type": "string"
-                    },
-                    "alignBottom": {
-                      "type": "string"
-                    },
-                    "centerX": {
-                      "type": "string"
-                    },
-                    "centerY": {
-                      "type": "string"
-                    },
-                    "below": {
-                      "type": "string"
-                    },
-                    "above": {
-                      "type": "string"
-                    },
-                    "rightOf": {
-                      "type": "string"
-                    },
-                    "leftOf": {
-                      "type": "string"
-                    },
-                    "sameAs": {
-                      "description": "Take the referenced element's width or height.",
-                      "type": "string"
-                    },
-                    "spanFrom": {
-                      "description": "With spanTo, stretch from one element's near edge to another's far edge.",
-                      "type": "string"
-                    },
-                    "spanTo": {
-                      "type": "string"
-                    },
-                    "gap": {
-                      "description": "Distance held from the referenced element, in inches.",
-                      "type": "number"
-                    },
-                    "offset": {
-                      "description": "Added after everything else, in inches.",
-                      "type": "number"
-                    }
-                  },
-                  "additionalProperties": {},
-                  "description": "A relation to an element declared earlier on the same slide."
-                }
-              ]
-            },
-            "y": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "description": "Inches on the slide canvas."
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "alignLeft": {
-                      "type": "string"
-                    },
-                    "alignRight": {
-                      "type": "string"
-                    },
-                    "alignTop": {
-                      "type": "string"
-                    },
-                    "alignBottom": {
-                      "type": "string"
-                    },
-                    "centerX": {
-                      "type": "string"
-                    },
-                    "centerY": {
-                      "type": "string"
-                    },
-                    "below": {
-                      "type": "string"
-                    },
-                    "above": {
-                      "type": "string"
-                    },
-                    "rightOf": {
-                      "type": "string"
-                    },
-                    "leftOf": {
-                      "type": "string"
-                    },
-                    "sameAs": {
-                      "description": "Take the referenced element's width or height.",
-                      "type": "string"
-                    },
-                    "spanFrom": {
-                      "description": "With spanTo, stretch from one element's near edge to another's far edge.",
-                      "type": "string"
-                    },
-                    "spanTo": {
-                      "type": "string"
-                    },
-                    "gap": {
-                      "description": "Distance held from the referenced element, in inches.",
-                      "type": "number"
-                    },
-                    "offset": {
-                      "description": "Added after everything else, in inches.",
-                      "type": "number"
-                    }
-                  },
-                  "additionalProperties": {},
-                  "description": "A relation to an element declared earlier on the same slide."
-                }
-              ]
-            },
-            "w": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "description": "Inches on the slide canvas."
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "alignLeft": {
-                      "type": "string"
-                    },
-                    "alignRight": {
-                      "type": "string"
-                    },
-                    "alignTop": {
-                      "type": "string"
-                    },
-                    "alignBottom": {
-                      "type": "string"
-                    },
-                    "centerX": {
-                      "type": "string"
-                    },
-                    "centerY": {
-                      "type": "string"
-                    },
-                    "below": {
-                      "type": "string"
-                    },
-                    "above": {
-                      "type": "string"
-                    },
-                    "rightOf": {
-                      "type": "string"
-                    },
-                    "leftOf": {
-                      "type": "string"
-                    },
-                    "sameAs": {
-                      "description": "Take the referenced element's width or height.",
-                      "type": "string"
-                    },
-                    "spanFrom": {
-                      "description": "With spanTo, stretch from one element's near edge to another's far edge.",
-                      "type": "string"
-                    },
-                    "spanTo": {
-                      "type": "string"
-                    },
-                    "gap": {
-                      "description": "Distance held from the referenced element, in inches.",
-                      "type": "number"
-                    },
-                    "offset": {
-                      "description": "Added after everything else, in inches.",
-                      "type": "number"
-                    }
-                  },
-                  "additionalProperties": {},
-                  "description": "A relation to an element declared earlier on the same slide."
-                }
-              ]
-            },
-            "h": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "description": "Inches on the slide canvas."
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "alignLeft": {
-                      "type": "string"
-                    },
-                    "alignRight": {
-                      "type": "string"
-                    },
-                    "alignTop": {
-                      "type": "string"
-                    },
-                    "alignBottom": {
-                      "type": "string"
-                    },
-                    "centerX": {
-                      "type": "string"
-                    },
-                    "centerY": {
-                      "type": "string"
-                    },
-                    "below": {
-                      "type": "string"
-                    },
-                    "above": {
-                      "type": "string"
-                    },
-                    "rightOf": {
-                      "type": "string"
-                    },
-                    "leftOf": {
-                      "type": "string"
-                    },
-                    "sameAs": {
-                      "description": "Take the referenced element's width or height.",
-                      "type": "string"
-                    },
-                    "spanFrom": {
-                      "description": "With spanTo, stretch from one element's near edge to another's far edge.",
-                      "type": "string"
-                    },
-                    "spanTo": {
-                      "type": "string"
-                    },
-                    "gap": {
-                      "description": "Distance held from the referenced element, in inches.",
-                      "type": "number"
-                    },
-                    "offset": {
-                      "description": "Added after everything else, in inches.",
-                      "type": "number"
-                    }
-                  },
-                  "additionalProperties": {},
-                  "description": "A relation to an element declared earlier on the same slide."
-                }
-              ]
-            }
-          }
+          "$ref": "#/$defs/__schema15"
         },
         "type": {
           "type": "string",
@@ -3119,12 +588,7 @@
           ]
         },
         "options": {
-          "type": "object",
-          "propertyNames": {
-            "type": "string"
-          },
-          "additionalProperties": {},
-          "description": "Advanced PptxGenJS options passed through unchanged. Verify the render. A `hyperlink` here is held to the same scheme allowlist as `link`."
+          "$ref": "#/$defs/__schema41"
         }
       },
       "required": [
@@ -3162,38 +626,22 @@
           "description": "Inches on the slide canvas."
         },
         "zIndex": {
-          "description": "Paint order. Lower values sit behind.",
-          "type": "number"
+          "$ref": "#/$defs/__schema2"
         },
         "role": {
-          "description": "Semantic role, e.g. title, body, caption, decorative.",
-          "type": "string"
+          "$ref": "#/$defs/__schema4"
         },
         "styleRef": {
-          "description": "Named styles from creativeDirection.visualSystem.styles, applied in order. This element's own `style` is the final override.",
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          ]
+          "$ref": "#/$defs/__schema6"
         },
         "layer": {
-          "description": "A named layer, for review and z-order grouping. Never a visual style.",
-          "type": "string"
+          "$ref": "#/$defs/__schema8"
         },
         "allowBleed": {
-          "description": "This element is meant to run past the slide edge. Without it, anything outside the slide is reported as a defect.",
-          "type": "boolean"
+          "$ref": "#/$defs/__schema10"
         },
         "intentionalOverlap": {
-          "description": "Marks a deliberate collision so QA does not report it.",
-          "type": "boolean"
+          "$ref": "#/$defs/__schema12"
         },
         "allowOverlapWith": {
           "type": "array",
@@ -3202,266 +650,7 @@
           }
         },
         "place": {
-          "description": "Placement stated against elements already on this slide. Any axis given here wins over the literal x/y/w/h, and is solved into inches before the slide is composed.",
-          "type": "object",
-          "properties": {
-            "x": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "description": "Inches on the slide canvas."
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "alignLeft": {
-                      "type": "string"
-                    },
-                    "alignRight": {
-                      "type": "string"
-                    },
-                    "alignTop": {
-                      "type": "string"
-                    },
-                    "alignBottom": {
-                      "type": "string"
-                    },
-                    "centerX": {
-                      "type": "string"
-                    },
-                    "centerY": {
-                      "type": "string"
-                    },
-                    "below": {
-                      "type": "string"
-                    },
-                    "above": {
-                      "type": "string"
-                    },
-                    "rightOf": {
-                      "type": "string"
-                    },
-                    "leftOf": {
-                      "type": "string"
-                    },
-                    "sameAs": {
-                      "description": "Take the referenced element's width or height.",
-                      "type": "string"
-                    },
-                    "spanFrom": {
-                      "description": "With spanTo, stretch from one element's near edge to another's far edge.",
-                      "type": "string"
-                    },
-                    "spanTo": {
-                      "type": "string"
-                    },
-                    "gap": {
-                      "description": "Distance held from the referenced element, in inches.",
-                      "type": "number"
-                    },
-                    "offset": {
-                      "description": "Added after everything else, in inches.",
-                      "type": "number"
-                    }
-                  },
-                  "additionalProperties": {},
-                  "description": "A relation to an element declared earlier on the same slide."
-                }
-              ]
-            },
-            "y": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "description": "Inches on the slide canvas."
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "alignLeft": {
-                      "type": "string"
-                    },
-                    "alignRight": {
-                      "type": "string"
-                    },
-                    "alignTop": {
-                      "type": "string"
-                    },
-                    "alignBottom": {
-                      "type": "string"
-                    },
-                    "centerX": {
-                      "type": "string"
-                    },
-                    "centerY": {
-                      "type": "string"
-                    },
-                    "below": {
-                      "type": "string"
-                    },
-                    "above": {
-                      "type": "string"
-                    },
-                    "rightOf": {
-                      "type": "string"
-                    },
-                    "leftOf": {
-                      "type": "string"
-                    },
-                    "sameAs": {
-                      "description": "Take the referenced element's width or height.",
-                      "type": "string"
-                    },
-                    "spanFrom": {
-                      "description": "With spanTo, stretch from one element's near edge to another's far edge.",
-                      "type": "string"
-                    },
-                    "spanTo": {
-                      "type": "string"
-                    },
-                    "gap": {
-                      "description": "Distance held from the referenced element, in inches.",
-                      "type": "number"
-                    },
-                    "offset": {
-                      "description": "Added after everything else, in inches.",
-                      "type": "number"
-                    }
-                  },
-                  "additionalProperties": {},
-                  "description": "A relation to an element declared earlier on the same slide."
-                }
-              ]
-            },
-            "w": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "description": "Inches on the slide canvas."
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "alignLeft": {
-                      "type": "string"
-                    },
-                    "alignRight": {
-                      "type": "string"
-                    },
-                    "alignTop": {
-                      "type": "string"
-                    },
-                    "alignBottom": {
-                      "type": "string"
-                    },
-                    "centerX": {
-                      "type": "string"
-                    },
-                    "centerY": {
-                      "type": "string"
-                    },
-                    "below": {
-                      "type": "string"
-                    },
-                    "above": {
-                      "type": "string"
-                    },
-                    "rightOf": {
-                      "type": "string"
-                    },
-                    "leftOf": {
-                      "type": "string"
-                    },
-                    "sameAs": {
-                      "description": "Take the referenced element's width or height.",
-                      "type": "string"
-                    },
-                    "spanFrom": {
-                      "description": "With spanTo, stretch from one element's near edge to another's far edge.",
-                      "type": "string"
-                    },
-                    "spanTo": {
-                      "type": "string"
-                    },
-                    "gap": {
-                      "description": "Distance held from the referenced element, in inches.",
-                      "type": "number"
-                    },
-                    "offset": {
-                      "description": "Added after everything else, in inches.",
-                      "type": "number"
-                    }
-                  },
-                  "additionalProperties": {},
-                  "description": "A relation to an element declared earlier on the same slide."
-                }
-              ]
-            },
-            "h": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "description": "Inches on the slide canvas."
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "alignLeft": {
-                      "type": "string"
-                    },
-                    "alignRight": {
-                      "type": "string"
-                    },
-                    "alignTop": {
-                      "type": "string"
-                    },
-                    "alignBottom": {
-                      "type": "string"
-                    },
-                    "centerX": {
-                      "type": "string"
-                    },
-                    "centerY": {
-                      "type": "string"
-                    },
-                    "below": {
-                      "type": "string"
-                    },
-                    "above": {
-                      "type": "string"
-                    },
-                    "rightOf": {
-                      "type": "string"
-                    },
-                    "leftOf": {
-                      "type": "string"
-                    },
-                    "sameAs": {
-                      "description": "Take the referenced element's width or height.",
-                      "type": "string"
-                    },
-                    "spanFrom": {
-                      "description": "With spanTo, stretch from one element's near edge to another's far edge.",
-                      "type": "string"
-                    },
-                    "spanTo": {
-                      "type": "string"
-                    },
-                    "gap": {
-                      "description": "Distance held from the referenced element, in inches.",
-                      "type": "number"
-                    },
-                    "offset": {
-                      "description": "Added after everything else, in inches.",
-                      "type": "number"
-                    }
-                  },
-                  "additionalProperties": {},
-                  "description": "A relation to an element declared earlier on the same slide."
-                }
-              ]
-            }
-          }
+          "$ref": "#/$defs/__schema15"
         },
         "type": {
           "type": "string",
@@ -3471,50 +660,13 @@
           "type": "object",
           "properties": {
             "kind": {
-              "type": "string",
-              "enum": [
-                "bar",
-                "bar-stacked",
-                "bar-horizontal",
-                "line",
-                "pie",
-                "doughnut",
-                "area",
-                "scatter",
-                "radar",
-                "waterfall"
-              ],
-              "description": "A native, editable chart. `scatter` reads its labels as x values. For anything else PptxGenJS can draw, use a native-chart element."
+              "$ref": "#/$defs/__schema112"
             },
             "labels": {
-              "minItems": 1,
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "description": "Category labels, one per value in every series. For a scatter chart these are the x values and must be numbers."
+              "$ref": "#/$defs/__schema113"
             },
             "series": {
-              "minItems": 1,
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string"
-                  },
-                  "values": {
-                    "type": "array",
-                    "items": {
-                      "type": "number"
-                    }
-                  }
-                },
-                "required": [
-                  "name",
-                  "values"
-                ]
-              }
+              "$ref": "#/$defs/__schema115"
             },
             "unit": {
               "type": "string"
@@ -3550,45 +702,18 @@
                         "description": "Hex color, with or without a leading #."
                       },
                       {
-                        "type": "object",
-                        "properties": {
-                          "$var": {
-                            "type": "string",
-                            "minLength": 1,
-                            "description": "A name from creativeDirection.visualSystem.variables."
-                          }
-                        },
-                        "required": [
-                          "$var"
-                        ],
-                        "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                        "$ref": "#/$defs/__schema51"
                       }
                     ]
                   }
                 },
                 {
-                  "type": "object",
-                  "properties": {
-                    "$var": {
-                      "type": "string",
-                      "minLength": 1,
-                      "description": "A name from creativeDirection.visualSystem.variables."
-                    }
-                  },
-                  "required": [
-                    "$var"
-                  ],
-                  "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+                  "$ref": "#/$defs/__schema51"
                 }
               ]
             },
             "options": {
-              "type": "object",
-              "propertyNames": {
-                "type": "string"
-              },
-              "additionalProperties": {},
-              "description": "Advanced PptxGenJS options passed through unchanged. Verify the render. A `hyperlink` here is held to the same scheme allowlist as `link`."
+              "$ref": "#/$defs/__schema41"
             }
           },
           "additionalProperties": {}
@@ -3629,38 +754,22 @@
           "description": "Inches on the slide canvas."
         },
         "zIndex": {
-          "description": "Paint order. Lower values sit behind.",
-          "type": "number"
+          "$ref": "#/$defs/__schema2"
         },
         "role": {
-          "description": "Semantic role, e.g. title, body, caption, decorative.",
-          "type": "string"
+          "$ref": "#/$defs/__schema4"
         },
         "styleRef": {
-          "description": "Named styles from creativeDirection.visualSystem.styles, applied in order. This element's own `style` is the final override.",
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          ]
+          "$ref": "#/$defs/__schema6"
         },
         "layer": {
-          "description": "A named layer, for review and z-order grouping. Never a visual style.",
-          "type": "string"
+          "$ref": "#/$defs/__schema8"
         },
         "allowBleed": {
-          "description": "This element is meant to run past the slide edge. Without it, anything outside the slide is reported as a defect.",
-          "type": "boolean"
+          "$ref": "#/$defs/__schema10"
         },
         "intentionalOverlap": {
-          "description": "Marks a deliberate collision so QA does not report it.",
-          "type": "boolean"
+          "$ref": "#/$defs/__schema12"
         },
         "allowOverlapWith": {
           "type": "array",
@@ -3669,266 +778,7 @@
           }
         },
         "place": {
-          "description": "Placement stated against elements already on this slide. Any axis given here wins over the literal x/y/w/h, and is solved into inches before the slide is composed.",
-          "type": "object",
-          "properties": {
-            "x": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "description": "Inches on the slide canvas."
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "alignLeft": {
-                      "type": "string"
-                    },
-                    "alignRight": {
-                      "type": "string"
-                    },
-                    "alignTop": {
-                      "type": "string"
-                    },
-                    "alignBottom": {
-                      "type": "string"
-                    },
-                    "centerX": {
-                      "type": "string"
-                    },
-                    "centerY": {
-                      "type": "string"
-                    },
-                    "below": {
-                      "type": "string"
-                    },
-                    "above": {
-                      "type": "string"
-                    },
-                    "rightOf": {
-                      "type": "string"
-                    },
-                    "leftOf": {
-                      "type": "string"
-                    },
-                    "sameAs": {
-                      "description": "Take the referenced element's width or height.",
-                      "type": "string"
-                    },
-                    "spanFrom": {
-                      "description": "With spanTo, stretch from one element's near edge to another's far edge.",
-                      "type": "string"
-                    },
-                    "spanTo": {
-                      "type": "string"
-                    },
-                    "gap": {
-                      "description": "Distance held from the referenced element, in inches.",
-                      "type": "number"
-                    },
-                    "offset": {
-                      "description": "Added after everything else, in inches.",
-                      "type": "number"
-                    }
-                  },
-                  "additionalProperties": {},
-                  "description": "A relation to an element declared earlier on the same slide."
-                }
-              ]
-            },
-            "y": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "description": "Inches on the slide canvas."
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "alignLeft": {
-                      "type": "string"
-                    },
-                    "alignRight": {
-                      "type": "string"
-                    },
-                    "alignTop": {
-                      "type": "string"
-                    },
-                    "alignBottom": {
-                      "type": "string"
-                    },
-                    "centerX": {
-                      "type": "string"
-                    },
-                    "centerY": {
-                      "type": "string"
-                    },
-                    "below": {
-                      "type": "string"
-                    },
-                    "above": {
-                      "type": "string"
-                    },
-                    "rightOf": {
-                      "type": "string"
-                    },
-                    "leftOf": {
-                      "type": "string"
-                    },
-                    "sameAs": {
-                      "description": "Take the referenced element's width or height.",
-                      "type": "string"
-                    },
-                    "spanFrom": {
-                      "description": "With spanTo, stretch from one element's near edge to another's far edge.",
-                      "type": "string"
-                    },
-                    "spanTo": {
-                      "type": "string"
-                    },
-                    "gap": {
-                      "description": "Distance held from the referenced element, in inches.",
-                      "type": "number"
-                    },
-                    "offset": {
-                      "description": "Added after everything else, in inches.",
-                      "type": "number"
-                    }
-                  },
-                  "additionalProperties": {},
-                  "description": "A relation to an element declared earlier on the same slide."
-                }
-              ]
-            },
-            "w": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "description": "Inches on the slide canvas."
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "alignLeft": {
-                      "type": "string"
-                    },
-                    "alignRight": {
-                      "type": "string"
-                    },
-                    "alignTop": {
-                      "type": "string"
-                    },
-                    "alignBottom": {
-                      "type": "string"
-                    },
-                    "centerX": {
-                      "type": "string"
-                    },
-                    "centerY": {
-                      "type": "string"
-                    },
-                    "below": {
-                      "type": "string"
-                    },
-                    "above": {
-                      "type": "string"
-                    },
-                    "rightOf": {
-                      "type": "string"
-                    },
-                    "leftOf": {
-                      "type": "string"
-                    },
-                    "sameAs": {
-                      "description": "Take the referenced element's width or height.",
-                      "type": "string"
-                    },
-                    "spanFrom": {
-                      "description": "With spanTo, stretch from one element's near edge to another's far edge.",
-                      "type": "string"
-                    },
-                    "spanTo": {
-                      "type": "string"
-                    },
-                    "gap": {
-                      "description": "Distance held from the referenced element, in inches.",
-                      "type": "number"
-                    },
-                    "offset": {
-                      "description": "Added after everything else, in inches.",
-                      "type": "number"
-                    }
-                  },
-                  "additionalProperties": {},
-                  "description": "A relation to an element declared earlier on the same slide."
-                }
-              ]
-            },
-            "h": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "description": "Inches on the slide canvas."
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "alignLeft": {
-                      "type": "string"
-                    },
-                    "alignRight": {
-                      "type": "string"
-                    },
-                    "alignTop": {
-                      "type": "string"
-                    },
-                    "alignBottom": {
-                      "type": "string"
-                    },
-                    "centerX": {
-                      "type": "string"
-                    },
-                    "centerY": {
-                      "type": "string"
-                    },
-                    "below": {
-                      "type": "string"
-                    },
-                    "above": {
-                      "type": "string"
-                    },
-                    "rightOf": {
-                      "type": "string"
-                    },
-                    "leftOf": {
-                      "type": "string"
-                    },
-                    "sameAs": {
-                      "description": "Take the referenced element's width or height.",
-                      "type": "string"
-                    },
-                    "spanFrom": {
-                      "description": "With spanTo, stretch from one element's near edge to another's far edge.",
-                      "type": "string"
-                    },
-                    "spanTo": {
-                      "type": "string"
-                    },
-                    "gap": {
-                      "description": "Distance held from the referenced element, in inches.",
-                      "type": "number"
-                    },
-                    "offset": {
-                      "description": "Added after everything else, in inches.",
-                      "type": "number"
-                    }
-                  },
-                  "additionalProperties": {},
-                  "description": "A relation to an element declared earlier on the same slide."
-                }
-              ]
-            }
-          }
+          "$ref": "#/$defs/__schema15"
         },
         "type": {
           "type": "string",
@@ -3939,26 +789,13 @@
           "minLength": 1
         },
         "data": {
-          "minItems": 1,
-          "type": "array",
-          "items": {
-            "type": "object",
-            "propertyNames": {
-              "type": "string"
-            },
-            "additionalProperties": {}
-          }
+          "$ref": "#/$defs/__schema122"
         },
         "alt": {
           "type": "string"
         },
         "options": {
-          "type": "object",
-          "propertyNames": {
-            "type": "string"
-          },
-          "additionalProperties": {},
-          "description": "Advanced PptxGenJS options passed through unchanged. Verify the render. A `hyperlink` here is held to the same scheme allowlist as `link`."
+          "$ref": "#/$defs/__schema125"
         }
       },
       "required": [
@@ -3998,38 +835,22 @@
           "description": "Inches on the slide canvas."
         },
         "zIndex": {
-          "description": "Paint order. Lower values sit behind.",
-          "type": "number"
+          "$ref": "#/$defs/__schema2"
         },
         "role": {
-          "description": "Semantic role, e.g. title, body, caption, decorative.",
-          "type": "string"
+          "$ref": "#/$defs/__schema4"
         },
         "styleRef": {
-          "description": "Named styles from creativeDirection.visualSystem.styles, applied in order. This element's own `style` is the final override.",
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          ]
+          "$ref": "#/$defs/__schema6"
         },
         "layer": {
-          "description": "A named layer, for review and z-order grouping. Never a visual style.",
-          "type": "string"
+          "$ref": "#/$defs/__schema8"
         },
         "allowBleed": {
-          "description": "This element is meant to run past the slide edge. Without it, anything outside the slide is reported as a defect.",
-          "type": "boolean"
+          "$ref": "#/$defs/__schema10"
         },
         "intentionalOverlap": {
-          "description": "Marks a deliberate collision so QA does not report it.",
-          "type": "boolean"
+          "$ref": "#/$defs/__schema12"
         },
         "allowOverlapWith": {
           "type": "array",
@@ -4038,283 +859,17 @@
           }
         },
         "place": {
-          "description": "Placement stated against elements already on this slide. Any axis given here wins over the literal x/y/w/h, and is solved into inches before the slide is composed.",
-          "type": "object",
-          "properties": {
-            "x": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "description": "Inches on the slide canvas."
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "alignLeft": {
-                      "type": "string"
-                    },
-                    "alignRight": {
-                      "type": "string"
-                    },
-                    "alignTop": {
-                      "type": "string"
-                    },
-                    "alignBottom": {
-                      "type": "string"
-                    },
-                    "centerX": {
-                      "type": "string"
-                    },
-                    "centerY": {
-                      "type": "string"
-                    },
-                    "below": {
-                      "type": "string"
-                    },
-                    "above": {
-                      "type": "string"
-                    },
-                    "rightOf": {
-                      "type": "string"
-                    },
-                    "leftOf": {
-                      "type": "string"
-                    },
-                    "sameAs": {
-                      "description": "Take the referenced element's width or height.",
-                      "type": "string"
-                    },
-                    "spanFrom": {
-                      "description": "With spanTo, stretch from one element's near edge to another's far edge.",
-                      "type": "string"
-                    },
-                    "spanTo": {
-                      "type": "string"
-                    },
-                    "gap": {
-                      "description": "Distance held from the referenced element, in inches.",
-                      "type": "number"
-                    },
-                    "offset": {
-                      "description": "Added after everything else, in inches.",
-                      "type": "number"
-                    }
-                  },
-                  "additionalProperties": {},
-                  "description": "A relation to an element declared earlier on the same slide."
-                }
-              ]
-            },
-            "y": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "description": "Inches on the slide canvas."
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "alignLeft": {
-                      "type": "string"
-                    },
-                    "alignRight": {
-                      "type": "string"
-                    },
-                    "alignTop": {
-                      "type": "string"
-                    },
-                    "alignBottom": {
-                      "type": "string"
-                    },
-                    "centerX": {
-                      "type": "string"
-                    },
-                    "centerY": {
-                      "type": "string"
-                    },
-                    "below": {
-                      "type": "string"
-                    },
-                    "above": {
-                      "type": "string"
-                    },
-                    "rightOf": {
-                      "type": "string"
-                    },
-                    "leftOf": {
-                      "type": "string"
-                    },
-                    "sameAs": {
-                      "description": "Take the referenced element's width or height.",
-                      "type": "string"
-                    },
-                    "spanFrom": {
-                      "description": "With spanTo, stretch from one element's near edge to another's far edge.",
-                      "type": "string"
-                    },
-                    "spanTo": {
-                      "type": "string"
-                    },
-                    "gap": {
-                      "description": "Distance held from the referenced element, in inches.",
-                      "type": "number"
-                    },
-                    "offset": {
-                      "description": "Added after everything else, in inches.",
-                      "type": "number"
-                    }
-                  },
-                  "additionalProperties": {},
-                  "description": "A relation to an element declared earlier on the same slide."
-                }
-              ]
-            },
-            "w": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "description": "Inches on the slide canvas."
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "alignLeft": {
-                      "type": "string"
-                    },
-                    "alignRight": {
-                      "type": "string"
-                    },
-                    "alignTop": {
-                      "type": "string"
-                    },
-                    "alignBottom": {
-                      "type": "string"
-                    },
-                    "centerX": {
-                      "type": "string"
-                    },
-                    "centerY": {
-                      "type": "string"
-                    },
-                    "below": {
-                      "type": "string"
-                    },
-                    "above": {
-                      "type": "string"
-                    },
-                    "rightOf": {
-                      "type": "string"
-                    },
-                    "leftOf": {
-                      "type": "string"
-                    },
-                    "sameAs": {
-                      "description": "Take the referenced element's width or height.",
-                      "type": "string"
-                    },
-                    "spanFrom": {
-                      "description": "With spanTo, stretch from one element's near edge to another's far edge.",
-                      "type": "string"
-                    },
-                    "spanTo": {
-                      "type": "string"
-                    },
-                    "gap": {
-                      "description": "Distance held from the referenced element, in inches.",
-                      "type": "number"
-                    },
-                    "offset": {
-                      "description": "Added after everything else, in inches.",
-                      "type": "number"
-                    }
-                  },
-                  "additionalProperties": {},
-                  "description": "A relation to an element declared earlier on the same slide."
-                }
-              ]
-            },
-            "h": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "description": "Inches on the slide canvas."
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "alignLeft": {
-                      "type": "string"
-                    },
-                    "alignRight": {
-                      "type": "string"
-                    },
-                    "alignTop": {
-                      "type": "string"
-                    },
-                    "alignBottom": {
-                      "type": "string"
-                    },
-                    "centerX": {
-                      "type": "string"
-                    },
-                    "centerY": {
-                      "type": "string"
-                    },
-                    "below": {
-                      "type": "string"
-                    },
-                    "above": {
-                      "type": "string"
-                    },
-                    "rightOf": {
-                      "type": "string"
-                    },
-                    "leftOf": {
-                      "type": "string"
-                    },
-                    "sameAs": {
-                      "description": "Take the referenced element's width or height.",
-                      "type": "string"
-                    },
-                    "spanFrom": {
-                      "description": "With spanTo, stretch from one element's near edge to another's far edge.",
-                      "type": "string"
-                    },
-                    "spanTo": {
-                      "type": "string"
-                    },
-                    "gap": {
-                      "description": "Distance held from the referenced element, in inches.",
-                      "type": "number"
-                    },
-                    "offset": {
-                      "description": "Added after everything else, in inches.",
-                      "type": "number"
-                    }
-                  },
-                  "additionalProperties": {},
-                  "description": "A relation to an element declared earlier on the same slide."
-                }
-              ]
-            }
-          }
+          "$ref": "#/$defs/__schema15"
         },
         "type": {
           "type": "string",
           "const": "diagram"
         },
         "grammar": {
-          "type": "string",
-          "minLength": 1,
-          "description": "A named diagram form; Slide Agent handles routing, spacing, and label placement. Built in: layered, swimlane, sequence, hierarchy, quadrant. A host can register more — ask for capabilities. An unknown name fails the build with the list of what is available."
+          "$ref": "#/$defs/__schema127"
         },
         "spec": {
-          "type": "object",
-          "propertyNames": {
-            "type": "string"
-          },
-          "additionalProperties": {},
-          "description": "The grammar's own payload. Fetch its schema from the contract."
+          "$ref": "#/$defs/__schema128"
         },
         "alt": {
           "type": "string"
@@ -4357,38 +912,22 @@
           "description": "Inches on the slide canvas."
         },
         "zIndex": {
-          "description": "Paint order. Lower values sit behind.",
-          "type": "number"
+          "$ref": "#/$defs/__schema2"
         },
         "role": {
-          "description": "Semantic role, e.g. title, body, caption, decorative.",
-          "type": "string"
+          "$ref": "#/$defs/__schema4"
         },
         "styleRef": {
-          "description": "Named styles from creativeDirection.visualSystem.styles, applied in order. This element's own `style` is the final override.",
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          ]
+          "$ref": "#/$defs/__schema6"
         },
         "layer": {
-          "description": "A named layer, for review and z-order grouping. Never a visual style.",
-          "type": "string"
+          "$ref": "#/$defs/__schema8"
         },
         "allowBleed": {
-          "description": "This element is meant to run past the slide edge. Without it, anything outside the slide is reported as a defect.",
-          "type": "boolean"
+          "$ref": "#/$defs/__schema10"
         },
         "intentionalOverlap": {
-          "description": "Marks a deliberate collision so QA does not report it.",
-          "type": "boolean"
+          "$ref": "#/$defs/__schema12"
         },
         "allowOverlapWith": {
           "type": "array",
@@ -4397,266 +936,7 @@
           }
         },
         "place": {
-          "description": "Placement stated against elements already on this slide. Any axis given here wins over the literal x/y/w/h, and is solved into inches before the slide is composed.",
-          "type": "object",
-          "properties": {
-            "x": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "description": "Inches on the slide canvas."
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "alignLeft": {
-                      "type": "string"
-                    },
-                    "alignRight": {
-                      "type": "string"
-                    },
-                    "alignTop": {
-                      "type": "string"
-                    },
-                    "alignBottom": {
-                      "type": "string"
-                    },
-                    "centerX": {
-                      "type": "string"
-                    },
-                    "centerY": {
-                      "type": "string"
-                    },
-                    "below": {
-                      "type": "string"
-                    },
-                    "above": {
-                      "type": "string"
-                    },
-                    "rightOf": {
-                      "type": "string"
-                    },
-                    "leftOf": {
-                      "type": "string"
-                    },
-                    "sameAs": {
-                      "description": "Take the referenced element's width or height.",
-                      "type": "string"
-                    },
-                    "spanFrom": {
-                      "description": "With spanTo, stretch from one element's near edge to another's far edge.",
-                      "type": "string"
-                    },
-                    "spanTo": {
-                      "type": "string"
-                    },
-                    "gap": {
-                      "description": "Distance held from the referenced element, in inches.",
-                      "type": "number"
-                    },
-                    "offset": {
-                      "description": "Added after everything else, in inches.",
-                      "type": "number"
-                    }
-                  },
-                  "additionalProperties": {},
-                  "description": "A relation to an element declared earlier on the same slide."
-                }
-              ]
-            },
-            "y": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "description": "Inches on the slide canvas."
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "alignLeft": {
-                      "type": "string"
-                    },
-                    "alignRight": {
-                      "type": "string"
-                    },
-                    "alignTop": {
-                      "type": "string"
-                    },
-                    "alignBottom": {
-                      "type": "string"
-                    },
-                    "centerX": {
-                      "type": "string"
-                    },
-                    "centerY": {
-                      "type": "string"
-                    },
-                    "below": {
-                      "type": "string"
-                    },
-                    "above": {
-                      "type": "string"
-                    },
-                    "rightOf": {
-                      "type": "string"
-                    },
-                    "leftOf": {
-                      "type": "string"
-                    },
-                    "sameAs": {
-                      "description": "Take the referenced element's width or height.",
-                      "type": "string"
-                    },
-                    "spanFrom": {
-                      "description": "With spanTo, stretch from one element's near edge to another's far edge.",
-                      "type": "string"
-                    },
-                    "spanTo": {
-                      "type": "string"
-                    },
-                    "gap": {
-                      "description": "Distance held from the referenced element, in inches.",
-                      "type": "number"
-                    },
-                    "offset": {
-                      "description": "Added after everything else, in inches.",
-                      "type": "number"
-                    }
-                  },
-                  "additionalProperties": {},
-                  "description": "A relation to an element declared earlier on the same slide."
-                }
-              ]
-            },
-            "w": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "description": "Inches on the slide canvas."
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "alignLeft": {
-                      "type": "string"
-                    },
-                    "alignRight": {
-                      "type": "string"
-                    },
-                    "alignTop": {
-                      "type": "string"
-                    },
-                    "alignBottom": {
-                      "type": "string"
-                    },
-                    "centerX": {
-                      "type": "string"
-                    },
-                    "centerY": {
-                      "type": "string"
-                    },
-                    "below": {
-                      "type": "string"
-                    },
-                    "above": {
-                      "type": "string"
-                    },
-                    "rightOf": {
-                      "type": "string"
-                    },
-                    "leftOf": {
-                      "type": "string"
-                    },
-                    "sameAs": {
-                      "description": "Take the referenced element's width or height.",
-                      "type": "string"
-                    },
-                    "spanFrom": {
-                      "description": "With spanTo, stretch from one element's near edge to another's far edge.",
-                      "type": "string"
-                    },
-                    "spanTo": {
-                      "type": "string"
-                    },
-                    "gap": {
-                      "description": "Distance held from the referenced element, in inches.",
-                      "type": "number"
-                    },
-                    "offset": {
-                      "description": "Added after everything else, in inches.",
-                      "type": "number"
-                    }
-                  },
-                  "additionalProperties": {},
-                  "description": "A relation to an element declared earlier on the same slide."
-                }
-              ]
-            },
-            "h": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "description": "Inches on the slide canvas."
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "alignLeft": {
-                      "type": "string"
-                    },
-                    "alignRight": {
-                      "type": "string"
-                    },
-                    "alignTop": {
-                      "type": "string"
-                    },
-                    "alignBottom": {
-                      "type": "string"
-                    },
-                    "centerX": {
-                      "type": "string"
-                    },
-                    "centerY": {
-                      "type": "string"
-                    },
-                    "below": {
-                      "type": "string"
-                    },
-                    "above": {
-                      "type": "string"
-                    },
-                    "rightOf": {
-                      "type": "string"
-                    },
-                    "leftOf": {
-                      "type": "string"
-                    },
-                    "sameAs": {
-                      "description": "Take the referenced element's width or height.",
-                      "type": "string"
-                    },
-                    "spanFrom": {
-                      "description": "With spanTo, stretch from one element's near edge to another's far edge.",
-                      "type": "string"
-                    },
-                    "spanTo": {
-                      "type": "string"
-                    },
-                    "gap": {
-                      "description": "Distance held from the referenced element, in inches.",
-                      "type": "number"
-                    },
-                    "offset": {
-                      "description": "Added after everything else, in inches.",
-                      "type": "number"
-                    }
-                  },
-                  "additionalProperties": {},
-                  "description": "A relation to an element declared earlier on the same slide."
-                }
-              ]
-            }
-          }
+          "$ref": "#/$defs/__schema15"
         },
         "type": {
           "type": "string",
@@ -4666,12 +946,11 @@
           "minItems": 1,
           "type": "array",
           "items": {
-            "$ref": "#"
+            "$ref": "#/$defs/__schema132"
           },
           "description": "Child elements. Their x/y are offsets from the group's x/y, in inches."
         },
         "scale": {
-          "description": "Uniform scale applied to every child offset and size. Defaults to 1.",
           "type": "number",
           "exclusiveMinimum": 0
         },
@@ -4714,38 +993,22 @@
           "description": "Inches on the slide canvas."
         },
         "zIndex": {
-          "description": "Paint order. Lower values sit behind.",
-          "type": "number"
+          "$ref": "#/$defs/__schema2"
         },
         "role": {
-          "description": "Semantic role, e.g. title, body, caption, decorative.",
-          "type": "string"
+          "$ref": "#/$defs/__schema4"
         },
         "styleRef": {
-          "description": "Named styles from creativeDirection.visualSystem.styles, applied in order. This element's own `style` is the final override.",
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          ]
+          "$ref": "#/$defs/__schema6"
         },
         "layer": {
-          "description": "A named layer, for review and z-order grouping. Never a visual style.",
-          "type": "string"
+          "$ref": "#/$defs/__schema8"
         },
         "allowBleed": {
-          "description": "This element is meant to run past the slide edge. Without it, anything outside the slide is reported as a defect.",
-          "type": "boolean"
+          "$ref": "#/$defs/__schema10"
         },
         "intentionalOverlap": {
-          "description": "Marks a deliberate collision so QA does not report it.",
-          "type": "boolean"
+          "$ref": "#/$defs/__schema12"
         },
         "allowOverlapWith": {
           "type": "array",
@@ -4754,266 +1017,7 @@
           }
         },
         "place": {
-          "description": "Placement stated against elements already on this slide. Any axis given here wins over the literal x/y/w/h, and is solved into inches before the slide is composed.",
-          "type": "object",
-          "properties": {
-            "x": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "description": "Inches on the slide canvas."
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "alignLeft": {
-                      "type": "string"
-                    },
-                    "alignRight": {
-                      "type": "string"
-                    },
-                    "alignTop": {
-                      "type": "string"
-                    },
-                    "alignBottom": {
-                      "type": "string"
-                    },
-                    "centerX": {
-                      "type": "string"
-                    },
-                    "centerY": {
-                      "type": "string"
-                    },
-                    "below": {
-                      "type": "string"
-                    },
-                    "above": {
-                      "type": "string"
-                    },
-                    "rightOf": {
-                      "type": "string"
-                    },
-                    "leftOf": {
-                      "type": "string"
-                    },
-                    "sameAs": {
-                      "description": "Take the referenced element's width or height.",
-                      "type": "string"
-                    },
-                    "spanFrom": {
-                      "description": "With spanTo, stretch from one element's near edge to another's far edge.",
-                      "type": "string"
-                    },
-                    "spanTo": {
-                      "type": "string"
-                    },
-                    "gap": {
-                      "description": "Distance held from the referenced element, in inches.",
-                      "type": "number"
-                    },
-                    "offset": {
-                      "description": "Added after everything else, in inches.",
-                      "type": "number"
-                    }
-                  },
-                  "additionalProperties": {},
-                  "description": "A relation to an element declared earlier on the same slide."
-                }
-              ]
-            },
-            "y": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "description": "Inches on the slide canvas."
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "alignLeft": {
-                      "type": "string"
-                    },
-                    "alignRight": {
-                      "type": "string"
-                    },
-                    "alignTop": {
-                      "type": "string"
-                    },
-                    "alignBottom": {
-                      "type": "string"
-                    },
-                    "centerX": {
-                      "type": "string"
-                    },
-                    "centerY": {
-                      "type": "string"
-                    },
-                    "below": {
-                      "type": "string"
-                    },
-                    "above": {
-                      "type": "string"
-                    },
-                    "rightOf": {
-                      "type": "string"
-                    },
-                    "leftOf": {
-                      "type": "string"
-                    },
-                    "sameAs": {
-                      "description": "Take the referenced element's width or height.",
-                      "type": "string"
-                    },
-                    "spanFrom": {
-                      "description": "With spanTo, stretch from one element's near edge to another's far edge.",
-                      "type": "string"
-                    },
-                    "spanTo": {
-                      "type": "string"
-                    },
-                    "gap": {
-                      "description": "Distance held from the referenced element, in inches.",
-                      "type": "number"
-                    },
-                    "offset": {
-                      "description": "Added after everything else, in inches.",
-                      "type": "number"
-                    }
-                  },
-                  "additionalProperties": {},
-                  "description": "A relation to an element declared earlier on the same slide."
-                }
-              ]
-            },
-            "w": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "description": "Inches on the slide canvas."
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "alignLeft": {
-                      "type": "string"
-                    },
-                    "alignRight": {
-                      "type": "string"
-                    },
-                    "alignTop": {
-                      "type": "string"
-                    },
-                    "alignBottom": {
-                      "type": "string"
-                    },
-                    "centerX": {
-                      "type": "string"
-                    },
-                    "centerY": {
-                      "type": "string"
-                    },
-                    "below": {
-                      "type": "string"
-                    },
-                    "above": {
-                      "type": "string"
-                    },
-                    "rightOf": {
-                      "type": "string"
-                    },
-                    "leftOf": {
-                      "type": "string"
-                    },
-                    "sameAs": {
-                      "description": "Take the referenced element's width or height.",
-                      "type": "string"
-                    },
-                    "spanFrom": {
-                      "description": "With spanTo, stretch from one element's near edge to another's far edge.",
-                      "type": "string"
-                    },
-                    "spanTo": {
-                      "type": "string"
-                    },
-                    "gap": {
-                      "description": "Distance held from the referenced element, in inches.",
-                      "type": "number"
-                    },
-                    "offset": {
-                      "description": "Added after everything else, in inches.",
-                      "type": "number"
-                    }
-                  },
-                  "additionalProperties": {},
-                  "description": "A relation to an element declared earlier on the same slide."
-                }
-              ]
-            },
-            "h": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "description": "Inches on the slide canvas."
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "alignLeft": {
-                      "type": "string"
-                    },
-                    "alignRight": {
-                      "type": "string"
-                    },
-                    "alignTop": {
-                      "type": "string"
-                    },
-                    "alignBottom": {
-                      "type": "string"
-                    },
-                    "centerX": {
-                      "type": "string"
-                    },
-                    "centerY": {
-                      "type": "string"
-                    },
-                    "below": {
-                      "type": "string"
-                    },
-                    "above": {
-                      "type": "string"
-                    },
-                    "rightOf": {
-                      "type": "string"
-                    },
-                    "leftOf": {
-                      "type": "string"
-                    },
-                    "sameAs": {
-                      "description": "Take the referenced element's width or height.",
-                      "type": "string"
-                    },
-                    "spanFrom": {
-                      "description": "With spanTo, stretch from one element's near edge to another's far edge.",
-                      "type": "string"
-                    },
-                    "spanTo": {
-                      "type": "string"
-                    },
-                    "gap": {
-                      "description": "Distance held from the referenced element, in inches.",
-                      "type": "number"
-                    },
-                    "offset": {
-                      "description": "Added after everything else, in inches.",
-                      "type": "number"
-                    }
-                  },
-                  "additionalProperties": {},
-                  "description": "A relation to an element declared earlier on the same slide."
-                }
-              ]
-            }
-          }
+          "$ref": "#/$defs/__schema15"
         },
         "type": {
           "type": "string",
@@ -5032,7 +1036,6 @@
           "type": "object",
           "properties": {
             "text": {
-              "description": "Child element id → replacement text.",
               "type": "object",
               "propertyNames": {
                 "type": "string"
@@ -5043,36 +1046,9 @@
             },
             "color": {
               "description": "Child element id → replacement colour.",
-              "type": "object",
-              "propertyNames": {
-                "type": "string"
-              },
-              "additionalProperties": {
-                "anyOf": [
-                  {
-                    "type": "string",
-                    "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
-                    "description": "Hex color, with or without a leading #."
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "$var": {
-                        "type": "string",
-                        "minLength": 1,
-                        "description": "A name from creativeDirection.visualSystem.variables."
-                      }
-                    },
-                    "required": [
-                      "$var"
-                    ],
-                    "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
-                  }
-                ]
-              }
+              "$ref": "#/$defs/__schema135"
             },
             "style": {
-              "description": "Child element id → style overrides.",
               "type": "object",
               "propertyNames": {
                 "type": "string"
@@ -5102,5 +1078,940 @@
         "symbol"
       ]
     }
-  ]
+  ],
+  "$defs": {
+    "__schema2": {
+      "type": "number"
+    },
+    "__schema4": {
+      "type": "string"
+    },
+    "__schema6": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "__schema8": {
+      "type": "string"
+    },
+    "__schema10": {
+      "type": "boolean"
+    },
+    "__schema12": {
+      "type": "boolean"
+    },
+    "__schema15": {
+      "description": "Placement stated against elements already on this slide. Any axis given here wins over the literal x/y/w/h, and is solved into inches before the slide is composed.",
+      "$ref": "#/$defs/__schema16"
+    },
+    "__schema40": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string"
+          },
+          "options": {
+            "$ref": "#/$defs/__schema41"
+          }
+        },
+        "required": [
+          "text"
+        ]
+      }
+    },
+    "__schema44": {
+      "$ref": "#/$defs/__schema45"
+    },
+    "__schema50": {
+      "type": "object",
+      "properties": {
+        "fontSize": {
+          "anyOf": [
+            {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            {
+              "$ref": "#/$defs/__schema51"
+            }
+          ]
+        },
+        "fontFace": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/__schema51"
+            }
+          ]
+        },
+        "color": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+              "description": "Hex color, with or without a leading #."
+            },
+            {
+              "$ref": "#/$defs/__schema51"
+            }
+          ]
+        },
+        "bold": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/__schema51"
+            }
+          ]
+        },
+        "italic": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/__schema51"
+            }
+          ]
+        },
+        "underline": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/__schema51"
+            }
+          ]
+        },
+        "align": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "left",
+                "center",
+                "right",
+                "justify"
+              ]
+            },
+            {
+              "$ref": "#/$defs/__schema51"
+            }
+          ]
+        },
+        "valign": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "top",
+                "middle",
+                "bottom"
+              ]
+            },
+            {
+              "$ref": "#/$defs/__schema51"
+            }
+          ]
+        },
+        "margin": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ]
+            },
+            {
+              "$ref": "#/$defs/__schema51"
+            }
+          ]
+        },
+        "fit": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "none",
+                "shrink",
+                "resize"
+              ]
+            },
+            {
+              "$ref": "#/$defs/__schema51"
+            }
+          ]
+        },
+        "fill": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+              "description": "Hex color, with or without a leading #."
+            },
+            {
+              "$ref": "#/$defs/__schema51"
+            }
+          ]
+        },
+        "transparency": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            {
+              "$ref": "#/$defs/__schema51"
+            }
+          ]
+        },
+        "lineColor": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+              "description": "Hex color, with or without a leading #."
+            },
+            {
+              "$ref": "#/$defs/__schema51"
+            }
+          ]
+        },
+        "lineWidth": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "$ref": "#/$defs/__schema51"
+            }
+          ]
+        },
+        "rotate": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/__schema51"
+            }
+          ]
+        },
+        "lineSpacingMultiple": {
+          "description": "Line spacing as a multiple of the font size, e.g. 1.35.",
+          "$ref": "#/$defs/__schema54"
+        },
+        "lineSpacing": {
+          "description": "Absolute line spacing in points. Wins over lineSpacingMultiple.",
+          "$ref": "#/$defs/__schema55"
+        },
+        "charSpacing": {
+          "description": "Tracking in points; negative tightens.",
+          "$ref": "#/$defs/__schema56"
+        },
+        "indent": {
+          "description": "First-line indent in inches.",
+          "$ref": "#/$defs/__schema57"
+        },
+        "columns": {
+          "description": "Newspaper-style columns inside this one text box.",
+          "$ref": "#/$defs/__schema58"
+        },
+        "noBreak": {
+          "description": "Replaces spaces with non-breaking spaces so the string never wraps mid-phrase.",
+          "$ref": "#/$defs/__schema59"
+        },
+        "bullet": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "bullet",
+                    "number"
+                  ]
+                },
+                "code": {
+                  "type": "string"
+                },
+                "indent": {
+                  "type": "number"
+                }
+              },
+              "additionalProperties": {}
+            }
+          ]
+        },
+        "options": {
+          "$ref": "#/$defs/__schema41"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "__schema45": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "description": "An http(s) or mailto URL. A bare host is read as https."
+        },
+        {
+          "$ref": "#/$defs/__schema47"
+        },
+        {
+          "$ref": "#/$defs/__schema49"
+        }
+      ],
+      "description": "A hyperlink. Only http, https, and mailto are accepted; anything else is refused and reported."
+    },
+    "__schema51": {
+      "type": "object",
+      "properties": {
+        "$var": {
+          "type": "string",
+          "minLength": 1,
+          "description": "A name from creativeDirection.visualSystem.variables."
+        }
+      },
+      "required": [
+        "$var"
+      ],
+      "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+    },
+    "__schema41": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {},
+      "description": "Advanced PptxGenJS options passed through unchanged. Verify the render. A `hyperlink` here is held to the same scheme allowlist as `link`."
+    },
+    "__schema62": {
+      "type": "number",
+      "description": "Inches on the slide canvas."
+    },
+    "__schema63": {
+      "type": "number",
+      "description": "Inches on the slide canvas."
+    },
+    "__schema64": {
+      "type": "number",
+      "description": "Inches on the slide canvas."
+    },
+    "__schema65": {
+      "type": "number",
+      "description": "Inches on the slide canvas."
+    },
+    "__schema67": {
+      "$ref": "#/$defs/__schema68"
+    },
+    "__schema72": {
+      "$ref": "#/$defs/__schema68"
+    },
+    "__schema73": {
+      "type": "string",
+      "enum": [
+        "straight",
+        "elbow",
+        "curved"
+      ]
+    },
+    "__schema75": {
+      "type": "number",
+      "minimum": 0
+    },
+    "__schema77": {
+      "type": "number",
+      "minimum": 0
+    },
+    "__schema79": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "__schema81": {
+      "type": "object",
+      "properties": {
+        "color": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+              "description": "Hex color, with or without a leading #."
+            },
+            {
+              "$ref": "#/$defs/__schema51"
+            }
+          ]
+        },
+        "width": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "$ref": "#/$defs/__schema51"
+            }
+          ]
+        },
+        "arrow": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/__schema51"
+            }
+          ]
+        },
+        "beginArrow": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/__schema51"
+            }
+          ]
+        },
+        "dashed": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/__schema51"
+            }
+          ]
+        },
+        "options": {
+          "$ref": "#/$defs/__schema41"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "__schema82": {
+      "type": "string"
+    },
+    "__schema84": {
+      "type": "string"
+    },
+    "__schema86": {
+      "type": "string"
+    },
+    "__schema88": {
+      "type": "boolean"
+    },
+    "__schema90": {
+      "type": "string"
+    },
+    "__schema94": {
+      "anyOf": [
+        {
+          "type": "boolean",
+          "const": false
+        },
+        {
+          "type": "boolean",
+          "const": true
+        },
+        {
+          "type": "string",
+          "const": "partial"
+        }
+      ],
+      "description": "false: scalable artwork only. \"partial\": some parts are separable. true: fully shape-editable after ungrouping."
+    },
+    "__schema101": {
+      "type": "object",
+      "properties": {
+        "x": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "y": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      },
+      "required": [
+        "x",
+        "y"
+      ]
+    },
+    "__schema103": {
+      "description": "Explicit crop as a fraction of the source, per edge.",
+      "$ref": "#/$defs/__schema104"
+    },
+    "__schema105": {
+      "description": "A PowerPoint shape name used as the picture's outline, e.g. \"ellipse\".",
+      "$ref": "#/$defs/__schema106"
+    },
+    "__schema107": {
+      "type": "object",
+      "properties": {
+        "color": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+              "description": "Hex color, with or without a leading #."
+            },
+            {
+              "$ref": "#/$defs/__schema51"
+            }
+          ]
+        },
+        "amount": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            {
+              "$ref": "#/$defs/__schema51"
+            }
+          ]
+        }
+      },
+      "required": [
+        "color"
+      ],
+      "additionalProperties": {}
+    },
+    "__schema108": {
+      "type": "object",
+      "properties": {
+        "shadow": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+              "description": "Hex color, with or without a leading #."
+            },
+            {
+              "$ref": "#/$defs/__schema51"
+            }
+          ]
+        },
+        "highlight": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+              "description": "Hex color, with or without a leading #."
+            },
+            {
+              "$ref": "#/$defs/__schema51"
+            }
+          ]
+        }
+      },
+      "required": [
+        "shadow",
+        "highlight"
+      ],
+      "additionalProperties": {}
+    },
+    "__schema109": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "$ref": "#/$defs/__schema51"
+        }
+      ]
+    },
+    "__schema112": {
+      "type": "string",
+      "enum": [
+        "bar",
+        "bar-stacked",
+        "bar-horizontal",
+        "line",
+        "pie",
+        "doughnut",
+        "area",
+        "scatter",
+        "radar",
+        "waterfall"
+      ],
+      "description": "A native, editable chart. `scatter` reads its labels as x values. For anything else PptxGenJS can draw, use a native-chart element."
+    },
+    "__schema113": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Category labels, one per value in every series. For a scatter chart these are the x values and must be numbers."
+    },
+    "__schema115": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "values"
+        ]
+      }
+    },
+    "__schema122": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "propertyNames": {
+          "type": "string"
+        },
+        "additionalProperties": {}
+      }
+    },
+    "__schema125": {
+      "$ref": "#/$defs/__schema41"
+    },
+    "__schema127": {
+      "type": "string",
+      "minLength": 1,
+      "description": "A named diagram form; Slide Agent handles routing, spacing, and label placement. Built in: layered, swimlane, sequence, hierarchy, quadrant. A host can register more — ask for capabilities. An unknown name fails the build with the list of what is available."
+    },
+    "__schema128": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {},
+      "description": "The grammar's own payload. Fetch its schema from the contract."
+    },
+    "__schema132": {
+      "$ref": "#"
+    },
+    "__schema135": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "anyOf": [
+          {
+            "type": "string",
+            "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+            "description": "Hex color, with or without a leading #."
+          },
+          {
+            "$ref": "#/$defs/__schema51"
+          }
+        ]
+      }
+    },
+    "__schema16": {
+      "type": "object",
+      "properties": {
+        "x": {
+          "$ref": "#/$defs/__schema17"
+        },
+        "y": {
+          "$ref": "#/$defs/__schema17"
+        },
+        "w": {
+          "$ref": "#/$defs/__schema17"
+        },
+        "h": {
+          "$ref": "#/$defs/__schema17"
+        }
+      }
+    },
+    "__schema54": {
+      "anyOf": [
+        {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        {
+          "$ref": "#/$defs/__schema51"
+        }
+      ]
+    },
+    "__schema55": {
+      "anyOf": [
+        {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        {
+          "$ref": "#/$defs/__schema51"
+        }
+      ]
+    },
+    "__schema56": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "$ref": "#/$defs/__schema51"
+        }
+      ]
+    },
+    "__schema57": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "$ref": "#/$defs/__schema51"
+        }
+      ]
+    },
+    "__schema58": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16
+        },
+        {
+          "$ref": "#/$defs/__schema51"
+        }
+      ]
+    },
+    "__schema59": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "$ref": "#/$defs/__schema51"
+        }
+      ]
+    },
+    "__schema47": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "minLength": 1
+        },
+        "tooltip": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "url"
+      ]
+    },
+    "__schema49": {
+      "type": "object",
+      "properties": {
+        "slide": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991,
+          "description": "A 1-based slide in this deck."
+        },
+        "tooltip": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "slide"
+      ]
+    },
+    "__schema68": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "$ref": "#/$defs/__schema70"
+        }
+      ],
+      "description": "An element id on the same slide, optionally with the side to use."
+    },
+    "__schema104": {
+      "type": "object",
+      "properties": {
+        "left": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "right": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "top": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "bottom": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      },
+      "additionalProperties": {}
+    },
+    "__schema106": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "$ref": "#/$defs/__schema51"
+        }
+      ]
+    },
+    "__schema17": {
+      "anyOf": [
+        {
+          "type": "number",
+          "description": "Inches on the slide canvas."
+        },
+        {
+          "type": "object",
+          "properties": {
+            "alignLeft": {
+              "type": "string"
+            },
+            "alignRight": {
+              "type": "string"
+            },
+            "alignTop": {
+              "type": "string"
+            },
+            "alignBottom": {
+              "type": "string"
+            },
+            "centerX": {
+              "type": "string"
+            },
+            "centerY": {
+              "type": "string"
+            },
+            "below": {
+              "type": "string"
+            },
+            "above": {
+              "type": "string"
+            },
+            "rightOf": {
+              "type": "string"
+            },
+            "leftOf": {
+              "type": "string"
+            },
+            "sameAs": {
+              "$ref": "#/$defs/__schema28"
+            },
+            "spanFrom": {
+              "$ref": "#/$defs/__schema30"
+            },
+            "spanTo": {
+              "type": "string"
+            },
+            "gap": {
+              "$ref": "#/$defs/__schema33"
+            },
+            "offset": {
+              "$ref": "#/$defs/__schema35"
+            }
+          },
+          "additionalProperties": {},
+          "description": "A relation to an element declared earlier on the same slide."
+        }
+      ]
+    },
+    "__schema70": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "side": {
+          "type": "string",
+          "enum": [
+            "top",
+            "right",
+            "bottom",
+            "left",
+            "auto"
+          ]
+        }
+      },
+      "required": [
+        "id"
+      ]
+    },
+    "__schema28": {
+      "type": "string"
+    },
+    "__schema30": {
+      "type": "string"
+    },
+    "__schema33": {
+      "type": "number"
+    },
+    "__schema35": {
+      "type": "number"
+    }
+  }
 }

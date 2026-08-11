@@ -16,12 +16,22 @@ import {
   tableSpecSchema,
 } from "./schemas.js";
 import { sceneRecordSchema } from "./scene.js";
+import { publishedJsonSchema } from "./json-schema.js";
 import { CONTRACT_VERSION, SCENE_SCHEMA_ID } from "./version.js";
 
 export * from "./schemas.js";
 export * from "./scene.js";
 export * from "./guide.js";
 export * from "./canvas-capabilities.js";
+export { INLINE_DEFINITION_LIMIT, inlineSmallDefinitions, publishedJsonSchema, type SchemaNode } from "./json-schema.js";
+export {
+  CAPABILITY_FACETS,
+  capabilityFacets,
+  capabilitySummary,
+  isCapabilityFacet,
+  type CapabilityFacet,
+  type CapabilitySummary,
+} from "./capability-facets.js";
 export { CONTRACT_VERSION, SCENE_SCHEMA_ID, SUPPORTED_CONTRACT_VERSIONS, supportsContractVersion } from "./version.js";
 
 /** Every schema a host may need, addressable by name. */
@@ -48,9 +58,12 @@ export type ContractSchemaName = keyof typeof contractSchemas;
  * JSON Schema for a named contract schema. This is what an MCP client, an
  * OpenAPI surface, or a structured-output request needs; a model fills in a
  * described schema far better than it guesses at an opaque object.
+ *
+ * See `json-schema.ts` for why the published form names its shared subschemas
+ * and inlines its small ones.
  */
 export function contractJsonSchema(name: ContractSchemaName): Record<string, unknown> {
-  return z.toJSONSchema(contractSchemas[name], { io: "input", unrepresentable: "any" }) as Record<string, unknown>;
+  return publishedJsonSchema(contractSchemas[name]);
 }
 
 export function allContractJsonSchemas(): Record<ContractSchemaName, Record<string, unknown>> {

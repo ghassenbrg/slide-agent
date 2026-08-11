@@ -101,6 +101,58 @@ describe("Slide Agent MCP server", () => {
     expect(JSON.stringify(result.content)).toContain("contrast");
   });
 
+  it("answers capabilities with a summary, and the canvas in full on request", async () => {
+    client = await connect();
+
+    const summary = await client.callTool({ name: "get_capabilities", arguments: {} });
+    expect(summary.isError).not.toBe(true);
+    const summarised = JSON.parse((summary.content as Array<{ text: string }>)[0]!.text);
+    // The one question a summary must never defer: a model that plans a
+    // photo-led deck and only then learns it cannot source a picture has
+    // wasted the design.
+    expect(summarised.images).toBeDefined();
+    expect(summarised.canvas.elementTypes).toContain("text");
+    expect(summarised.canvas.properties).toBeUndefined();
+    expect(summarised.tokenBudget.total).toBeLessThan(1_000);
+
+    const full = await client.callTool({ name: "get_capabilities", arguments: { include: ["canvas"] } });
+    const expanded = JSON.parse((full.content as Array<{ text: string }>)[0]!.text);
+    expect(expanded.canvas.elements.length).toBeGreaterThan(5);
+    expect(expanded.tokenBudget.total).toBeGreaterThan(summarised.tokenBudget.total);
+  });
+
+  it("prices every result, and names the option that costs more", async () => {
+    client = await connect();
+    const result = await client.callTool({ name: "slide_agent_doctor", arguments: {} });
+    const body = JSON.parse((result.content as Array<{ text: string }>)[0]!.text);
+    expect(body.tokenBudget).toMatchObject({ basis: "estimate", imageCount: 0 });
+    expect(body.tokenBudget.total).toBeGreaterThan(0);
+  });
+
+  it("offers the preview-selection parameters on every tool that renders", async () => {
+    client = await connect();
+    const tools = await client.listTools();
+    const rendering = ["slide_agent_run", "create_presentation", "revise_presentation",
+      "edit_presentation", "render_presentation", "validate_presentation",
+      "review_presentation", "patch_presentation"];
+    for (const name of rendering) {
+      const tool = tools.tools.find((candidate) => candidate.name === name)!;
+      const properties = (tool.inputSchema as { properties?: Record<string, unknown> }).properties ?? {};
+      expect(Object.keys(properties), name).toEqual(expect.arrayContaining(["images", "imageDetail", "includeImages"]));
+    }
+  });
+
+  it("does not route a model to a schema it cannot afford to read", async () => {
+    client = await connect();
+    const tools = await client.listTools();
+    // The old `slide_agent_run` description opened with "read
+    // slide-agent://contract/schema/outline first" — an instruction worth
+    // 57,245 tokens at the time it was written.
+    for (const tool of tools.tools) {
+      expect(tool.description ?? "", tool.name).not.toMatch(/read\s+slide-agent:\/\/contract\/schema/i);
+    }
+  });
+
   it("serves stdio when launched through a bin-style symlink", async () => {
     // npm and npx expose bin entries as symlinks on macOS and Linux; the
     // direct-execution guard must compare realpaths or the server exits

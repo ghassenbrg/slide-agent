@@ -16,6 +16,7 @@ import { checkFontAvailability, fontAvailabilityAdvice } from "./design/font-ava
 import { measureText } from "./authoring/index.js";
 import { planOutline } from "./planner/index.js";
 import { writeUtf8 } from "./utils/files.js";
+import { writeContactSheet } from "./rendering/preview-delivery.js";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { spawn } from "node:child_process";
@@ -291,8 +292,13 @@ program.command("review")
   .option("--scene <file>", "Scene blueprint path when it does not sit beside the deck")
   .option("--manifest <file>", "Manifest path when it does not sit beside the deck")
   .option("--report <file>", "Validation report path when it does not sit beside the deck")
+  .option("--detail <level>", "defects (default) lists the elements a check names; full lists every element")
+  .option("--contact-sheet <file>", "Also write every slide render as one numbered grid image")
   .option("--output <file>", "Write the packet here instead of stdout")
   .action(async (options) => {
+    if (options.detail && !["defects", "full"].includes(options.detail)) {
+      throw new Error(`Unknown detail level: ${options.detail}. Use defects or full.`);
+    }
     const packet = await new SlideAgent().review(options.input, {
       ...(options.slide === undefined ? {} : { slide: options.slide }),
       ...(options.from === undefined ? {} : { from: options.from }),
@@ -301,7 +307,15 @@ program.command("review")
       ...(options.scene ? { scene: options.scene } : {}),
       ...(options.manifest ? { manifest: options.manifest } : {}),
       ...(options.report ? { report: options.report } : {}),
+      ...(options.detail ? { detail: options.detail as "defects" | "full" } : {}),
     });
+    if (options.contactSheet) {
+      const written = await writeContactSheet(
+        packet.slides.map((slide) => slide.preview).filter((file): file is string => Boolean(file)),
+        options.contactSheet,
+      );
+      if (!written) process.stderr.write("No slide renders were found, so no contact sheet was written.\n");
+    }
     const json = `${JSON.stringify(packet, null, 2)}\n`;
     if (!options.output) { process.stdout.write(json); return; }
     await writeUtf8(options.output, json);

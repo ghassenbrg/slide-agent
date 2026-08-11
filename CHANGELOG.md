@@ -3,6 +3,141 @@
 All notable public changes are recorded here, newest first. Versions follow
 semantic versioning.
 
+## 0.13.0 — 2026-08-11
+
+Looking at the deck stops being the expensive part. 0.11 gave the model an
+uncaged canvas and 0.12 stopped charging it for composition; both were about the
+price of authoring, and neither looked at the price of the conversation the
+authoring happens inside.
+
+That price had become the largest cost in the system, and almost none of it
+bought information. A build → review → patch → verify cycle on a twelve-slide
+deck returned the same twelve renders four times over, at a resolution above the
+point where extra pixels buy anything. Discovery could cost 57,000 tokens for one
+resource read. The review packet spent 15,930 characters reciting element
+geometry the model had written itself, and 20 characters on the words the
+renderer actually failed to draw.
+
+A twelve-slide deck now costs **40,819 tokens end to end against 168,205** — and
+the cheaper loop contains a phase the expensive one did not: looking closely at
+the slides the contact sheet flagged. Nothing was removed. Every default is the
+cheapest correct answer, and `images: "all"` with `imageDetail: "full"` returns
+exactly what 0.12 returned.
+
+Contract `0.11`, unchanged — nothing a host *authors* is different. The review
+packet's own `schemaVersion` moves to `2.0`.
+
+### Added
+
+- **Every slide on one page.** `review_presentation` and `render_presentation`
+  take `images: "overview"`, which composes every render into one numbered
+  contact sheet: 1,550 tokens for twelve slides against 22,128 sent separately.
+  This is the change most likely to improve the deck rather than merely cheapen
+  it. The deck-level questions the packet has always asked — does the sequence
+  have a shape, does anything get quieter or louder, which two slides came out
+  as the same drawing — are comparisons, and a comparison needs the things side
+  by side. Twelve images seen one at a time answer the slide questions and none
+  of the deck ones. `slide-agent review --contact-sheet sheet.png` writes the
+  same image for a human.
+- **Previews you chose.** `images` takes `"all"`, `"changed"`, `"none"`,
+  `"overview"`, or a list of slide numbers. `patch` resolves `"changed"` from its
+  own diff and `revise` from its target, so a one-element patch returns one
+  render instead of twelve. A command that cannot tell what changed returns
+  everything and says so — silently returning nothing would read as "nothing to
+  see", which is a different claim.
+- **Two preview resolutions.** `imageDetail` is `"review"` (1024px, the default) or
+  `"full"` (1568px). The review tier costs 787 tokens against 1,844 and is sized
+  to judge composition; text fidelity is read from the PDF's text layer, exactly,
+  and never off the image, so the smaller preview costs nothing in what can
+  actually be checked. Renders on disk stay 1600×900 — they are the deliverable.
+- **A price on every result.** `tokenBudget` reports what a call cost, split into
+  text and images, plus the session running total and what the richer option
+  would have cost. Labelled an estimate, with the method published: characters ÷
+  4 for text, `(w × h) ÷ 750` after downscale for images. A model cannot
+  economise against a price list it cannot see.
+- **Capabilities in facets.** `get_capabilities` answers with a 290-token summary
+  by default and returns any facet in full on request — `canvas`, `images`,
+  `fonts`, `rendering`, `diagrams`, `charts`, `layouts`, `checks`, or `all`. The
+  `images` block is never summarised away: a model that plans a photo-led deck
+  and only then learns this installation cannot source a picture has wasted the
+  design.
+- **A defect-first review packet.** By default each slide lists the elements a
+  check names and counts the rest under `elementCensus`. `detail: "full"`
+  lists every element, and a packet asked for one slide is always full. What the
+  default leaves out is the part the author wrote and already knows.
+- **Budget gates in CI.** Ceilings for the review packet, every published schema,
+  each capability facet, `SKILL.md`, each guide section, and the returned preview
+  payload. The 0.12 costs did not arrive in one bad commit — they accumulated,
+  one reasonable addition at a time, with nothing watching the total.
+
+### Changed
+
+- **Published schemas name their shared subschemas.** `z.toJSONSchema` inlined
+  every reused object, so `canvasElement`'s style block appeared once per element
+  type and `sceneRecord` repeated the whole of `canvasElement` per record kind.
+  The scene schema goes from 63,734 tokens to 12,294, `outline` from 57,245 to
+  10,573, `canvasElement` from 42,883 to 6,281. Subschemas small enough that a
+  reference would cost more than the repetition — a bare `{"const":"text"}`
+  discriminant — are put back where they were used, so a union stays skimmable;
+  and where reference reuse would make a schema *larger*, the inlined form is
+  published instead.
+- **Nothing routes a model to a mega-schema.** `slide_agent_run` no longer opens
+  with "read `slide-agent://contract/schema/outline` first", an instruction that
+  was worth 57,245 tokens. The schemas are described as what they are — the input
+  to a validator — and capability discovery leads with the `canvas` block, which
+  is derived from the same schemas and a quarter of the size.
+- **`SKILL.md` is a router, not a second copy of the guide.** It shared 94% of
+  its substantive lines with the authoring guide, so a host with both the skill
+  and the MCP server registered paid for the same paragraphs twice, before
+  knowing whether the deck had a chart in it. The unconditional load drops from
+  8,734 tokens to 2,060: the two sections no deck can skip, plus an index saying
+  when each other section becomes relevant and what it costs. `references/`
+  already held the sections as files; now something points at them.
+- **The build-script path is the recommendation, not one of three peers.** A deck
+  as a program runs about a third the length of its NDJSON — 11,571 characters
+  against 25,925–42,673 — and output tokens cost several times input. 0.12's own
+  release notes argued it also composes better, because a loop enforces a rhythm
+  hand-placed coordinates do not. Hand-written NDJSON is documented for short
+  decks, for hosts that cannot execute a module, and for patches.
+- **Results are serialized compactly.** Indentation was 40% of every packet and
+  bought nothing a model reads better for.
+- **The review packet stops repeating itself.** How the words were read back is
+  stated once as `textExtraction` rather than on every slide; an issue that names
+  a slide is reported on that slide and not again at the top, with
+  `observations.issueCount` carrying the total; `text.intended` and
+  `text.observed` appear when the comparison found a disagreement and at full
+  detail; the generic per-slide question is asked once for the deck. A ten-slide
+  packet goes from 14,140 tokens to 3,554.
+- **`validate_presentation` returns no previews by default.** The report is what
+  the call is for; `review_presentation` is where you look.
+
+### Fixed
+
+- **Validation issues can be matched to manifest elements.** An issue cites the
+  OOXML shape name the writer derives (`002-slide-title`); the packet publishes
+  the authored id (`slide-title`). Nothing depended on the two being connected
+  while every element was listed regardless — and the moment the packet started
+  listing only what a check names, the mismatch meant it listed almost nothing:
+  a healthy-looking packet on a deck with eleven flagged elements. The manifest
+  records both identities on the same record, so the join is now exact rather
+  than a prefix stripped off a string and hoped over.
+- **Schematic SVG previews reach the review packet.** Preview discovery matched
+  `.png` only, which was harmless while its sole caller was OCR — which cannot
+  read an SVG anyway — and stopped being harmless when the packet used the same
+  list to decide what to show. On a machine without LibreOffice every slide
+  reported no preview at all, so a reviewer was handed nothing to look at rather
+  than the schematic the deck did have.
+
+### Compatibility
+
+- `includeImages` keeps its 0.12 meaning: `true` is `images: "all"`, `false` is
+  `images: "none"`.
+- Existing scenes, outlines, and requests build unchanged. Contract negotiation
+  still accepts `0.9`, `0.10`, and `0.11`.
+- `previewImagePaths` is unchanged; `PREVIEW_IMAGE_LIMITS` still exports the
+  image and byte caps.
+- A reader of review packet `1.0` should expect the field moves listed above.
+
 ## 0.12.0 — 2026-08-10
 
 Composition stops being expensive. 0.11 gave the model a canvas it could design
