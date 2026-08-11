@@ -2,31 +2,93 @@
 
 # Slide Agent authoring guide
 
-Contract version 0.9 · scene schema `slide-agent.scene/1`
+Contract version 0.11 · scene schema `slide-agent.scene/1`
 
 ## Invent the deck's visual thesis
 
-Populate `creativeDirection` with a system specific enough that another designer could recognise the deck, yet loose enough that slides do not become repeated templates. Derive the choices from meaning: topology can shape an architecture deck, material layers a transformation story, field notes a piece of research.
+Populate `creativeDirection` with a system specific enough that another designer could recognise the deck, yet loose enough that slides do not become repeated templates. Derive the choices from meaning: stratigraphy can shape an excavation report, the margin of a working chart can shape a navigation briefing, a specimen sheet can shape a launch.
 
 Creative freedom is not the same as loud styling. Dense technical manuals, monochrome reports, quiet editorial essays, and archival collages are all valid outcomes. Oversized type, neon accents, and vast negative space are choices, not evidence of creativity.
 
+The three examples below are deliberately unlike each other in structure, not only in palette. Read them as three different answers, not as three variants of one template — and then write a fourth.
+
 - Give concrete hex values for the palette and real font names for the typography. Those are what the renderer consumes.
+- Declare `typography.scale`: the point sizes this deck commits to, largest first. A short ladder reused everywhere is a type system; a size chosen separately for each element is not, and the report will name every element that stepped off it. Unless the subject argues otherwise, a deck title wants roughly 44pt or more, a slide title 32pt or more, subheads and callout titles around 20pt, and body text at least 14pt — and the largest thing on a slide should be at least twice its body.
+- Prefer the open prose fields — `geometryLanguage`, `spatialRhythm`, `materialLanguage` — over the legacy `geometry` and `density` enums. Omitting them is fine: the engine will not choose a shape language on your behalf.
 - State `avoid` when the subject rules something out. The renderer honours it.
 - Do not reuse a palette, font pairing, cover structure, or closing treatment across unrelated decks merely because it worked before.
 
-A direction that commits to something:
+An archival, layered research deck — its own vocabulary, its own motifs:
 
 ```json
 {
-  "name": "Signal through fog",
-  "concept": "Sparse evidence emerging from a deep atmospheric field",
-  "rationale": "The board needs confidence without pretending the uncertainty is gone",
-  "mood": ["measured", "luminous", "quietly technical"],
-  "palette": { "background": "0B1020", "ink": "F5F2E9", "accent": "66E3FF", "accentAlt": "F7C75E" },
-  "typography": { "display": "Georgia", "body": "Aptos", "mono": "Menlo" },
-  "density": "balanced",
-  "geometry": "sharp",
-  "diagramLanguage": "Hairline routes between few, deliberately placed nodes",
-  "avoid": ["rounded corners", "drop shadows", "stock photography"]
+  "name": "Trench section",
+  "concept": "The deck reads downward, the way a trench does: newest at the top, evidence beneath",
+  "rationale": "The committee is being asked to trust a sequence, so the sequence should be visible",
+  "geometryLanguage": "Torn horizontal bands with soft irregular edges; nothing is boxed",
+  "spatialRhythm": "Each slide sits lower on the page than the one before it",
+  "materialLanguage": "Paper stock and ink bleed; the grain is part of the argument",
+  "palette": { "background": "F1EBDD", "ink": "241C15", "accent": "8C5A2B", "rule": "C6B49A" },
+  "typography": { "display": "Iowan Old Style", "body": "Charter", "mono": "Menlo" },
+  "visualSystem": {
+    "variables": { "topsoil": "C6B49A", "midden": "8C5A2B", "bedrock": "241C15", "band-rule": 0.75 },
+    "styles": {
+      "context-number": { "style": { "fontFace": "Menlo", "fontSize": 11, "color": { "$var": "midden" } } },
+      "excavation-note": { "style": { "fontSize": 13, "italic": true, "color": { "$var": "bedrock" } } },
+      "excavation-note-emphatic": { "basedOn": ["excavation-note"], "style": { "italic": false, "bold": true } }
+    },
+    "motifs": {
+      "strata": { "description": "Horizontal bands of unequal depth", "meaning": "Time, read downward", "usage": "One band per claim; never equal heights" }
+    },
+    "constraints": { "hard": ["No band may be a rectangle with four square corners"], "soft": ["Keep the right margin ragged"] }
+  },
+  "avoid": ["card grids", "drop shadows", "centred titles"]
+}
+```
+
+A typographic, image-led cultural deck — type is the composition:
+
+```json
+{
+  "name": "Wall text",
+  "concept": "A gallery wall: enormous type, one plate per room, captions that behave like labels",
+  "geometryLanguage": "Full-bleed plates and a single hairline baseline; no containers at all",
+  "spatialRhythm": "Loud, silent, loud — a plate always follows a page of type",
+  "palette": { "background": "0C0C0C", "ink": "F2F0EA", "accent": "C2452D" },
+  "typography": { "display": "Didot", "body": "Avenir Next", "numeric": "Didot" },
+  "visualSystem": {
+    "variables": { "label-grey": "9A968D", "plate-gutter": 0.32 },
+    "styles": {
+      "wall-title": { "style": { "fontFace": "Didot", "fontSize": 96, "charSpacing": -2, "lineSpacingMultiple": 0.92 } },
+      "plate-label": { "style": { "fontSize": 10, "color": { "$var": "label-grey" }, "charSpacing": 1.4 } },
+      "plate-label-long": { "basedOn": ["plate-label"], "style": { "columns": 2 } }
+    },
+    "motifs": {
+      "plate": { "description": "One image, full bleed, no caption on the same slide", "meaning": "Looking before reading", "avoid": ["Two plates on one slide"] }
+    }
+  }
+}
+```
+
+A dense technical field manual — reference density on purpose:
+
+```json
+{
+  "name": "Bench manual",
+  "concept": "Something an engineer keeps open next to the work, not something they watch",
+  "geometryLanguage": "Ruled columns and hairline dividers; corners are square because tools are square",
+  "spatialRhythm": "Uniformly tight. Whitespace here would read as missing information",
+  "palette": { "background": "FBFBF9", "ink": "17191C", "accent": "0B5FA5", "warning": "B35309", "rule": "D7D9DD" },
+  "typography": { "display": "IBM Plex Sans", "body": "IBM Plex Sans", "mono": "IBM Plex Mono" },
+  "visualSystem": {
+    "variables": { "hairline": 0.5, "caution": "B35309", "mono-size": 10 },
+    "styles": {
+      "procedure-step": { "style": { "fontSize": 11, "lineSpacingMultiple": 1.15, "indent": 0.28 } },
+      "torque-value": { "style": { "fontFace": "IBM Plex Mono", "fontSize": { "$var": "mono-size" }, "noBreak": true } },
+      "caution-note": { "basedOn": ["procedure-step"], "style": { "color": { "$var": "caution" }, "bold": true } }
+    },
+    "constraints": { "hard": ["Every torque figure carries its unit in the same run", "No procedure step spans two slides"] }
+  },
+  "avoid": ["decorative imagery", "gradients", "any slide with fewer than four facts"]
 }
 ```

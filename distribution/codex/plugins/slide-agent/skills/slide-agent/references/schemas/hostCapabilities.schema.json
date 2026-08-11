@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "vision": {
+      "description": "You can look at rendered images.",
+      "type": "boolean"
+    },
+    "webResearch": {
+      "type": "boolean"
+    },
+    "imageGeneration": {
+      "type": "boolean"
+    },
+    "vectorGeneration": {
+      "type": "boolean"
+    },
+    "codeExecution": {
+      "type": "boolean"
+    },
+    "localFileAccess": {
+      "type": "boolean"
+    },
+    "availableAssetProviders": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": {},
+  "description": "What the host AI can do. Planning context only: declaring a capability grants no permission and triggers no call by the core."
+}

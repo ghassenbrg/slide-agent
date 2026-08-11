@@ -2,25 +2,33 @@
 
 # Reference
 
-Authoring contract 0.9 · scene schema `slide-agent.scene/1`
+Authoring contract 0.11 · scene schema `slide-agent.scene/1`
 
 Every page here is generated from `src/contract`. Change the contract, run
 `npm run docs`, and the prose, the schemas, and the engine stay in step.
 
+Read a section when its moment arrives rather than all of them up front;
+`SKILL.md` is the router and says when each one becomes relevant. The whole
+guide as one page is [`guide.md`](guide.md).
+
 ## Guide
 
-- [Your role](role.md) — You are the creative director, information architect, and PowerPoint craftsperson. Slide Agent supplies editable native primitives and a quality floor; it does not supply taste, and it will not impose a house style on you.
-- [Invent the deck's visual thesis](creative-direction.md) — Populate `creativeDirection` with a system specific enough that another designer could recognise the deck, yet loose enough that slides do not become repeated templates. Derive the choices from meaning: topology can shape an architecture deck, material layers a transformation story, field notes a piece of research.
-- [Plan the story before styling it](narrative.md) — Express the job as: by the end, [audience] should [outcome] because [central takeaway]. Choose a cumulative structure that fits the objective — context to stakes to evidence to action, question to analysis to answer, problem to options to recommendation, or one you invent for the material.
-- [Compose from first principles](composition.md) — Vary silhouette and scale across the sequence while keeping the deck's underlying visual logic. Contrast dense against sparse, quiet against loud, diagrammatic against photographic, to create pacing.
-- [The freeform canvas](canvas.md) — `slide.canvas` is an array of editable native elements at coordinates you choose, in inches, on a slide whose size the deck declares. Its presence bypasses the layout registry completely, so `layout` is ignored and `kind` becomes free-form metadata.
-- [The NDJSON scene format](scene.md) — For long or highly designed decks, author the line-oriented scene instead of a nested outline. One JSON object per line, schema `slide-agent.scene/1`.
-- [Diagrams and systems](diagrams.md) — A diagram earns its place when the relationship between things is the point. Give nodes meaning, route edges deliberately, and label both. A box-and-arrow row that restates a bulleted list is worse than the list.
-- [Charts, tables, and data](data.md) — Use a native chart when the data relationship is the argument, a native table when precise lookup is the argument, and editable shapes when the honest visual form is not a standard chart.
-- [Accessibility](accessibility.md) — Slide Agent checks contrast, alt text, reading order, and type size, and reports what it cannot repair. Meeting the floor is the minimum, not the design goal.
-- [Where pictures come from](imagery.md) — A slide can only show a picture that already exists as a file this machine can read. Slide Agent does not search for images and does not generate them: choosing imagery is your judgement, not the renderer's, and a stock API or a generation service inside the build tool would mean credentials and licence terms in a package whose whole posture is that it does not fetch things.
-- [Honesty](honesty.md) — The deck will be presented by a person who has to stand behind it.
-- [Build, inspect, and revise](workflow.md) — Supply a complete outline or scene. Prompt-only mode produces a structural draft with placeholders; it is a starting point, not a substitute for your judgement, and it labels itself as such.
+- [Your role](role.md) — Always. It is who you are on this job and what the engine will not do for you. (~380 tokens)
+- [Invent the deck's visual thesis](creative-direction.md) — Before you choose a palette, a typeface, or a shape language — that is, before any coordinate exists. (~1510 tokens)
+- [Your own variables, styles, and motifs](visual-system.md) — When the deck needs its own named variables and styles rather than values repeated per element. (~580 tokens)
+- [Commit to a plan before you write coordinates](planning.md) — Before you write coordinates, to commit to a sequence and a silhouette per slide. (~380 tokens)
+- [Plan the story before styling it](narrative.md) — When the order of the slides is still open, or the deck has no single sentence it is trying to land. (~260 tokens)
+- [Compose from first principles](composition.md) — When placing elements on a slide and deciding what carries the eye. (~380 tokens)
+- [Author the deck as a program](build-script.md) — Before authoring anything substantial. This is the recommended path and the cheapest one. (~1470 tokens)
+- [The freeform canvas](canvas.md) — When hand-writing elements: every element type and what each accepts. (~1370 tokens)
+- [The NDJSON scene format](scene.md) — When emitting or editing NDJSON directly, and for the record format a patch addresses. (~250 tokens)
+- [Diagrams and systems](diagrams.md) — When the relationship between things is the point of a slide. (~260 tokens)
+- [Charts, tables, and data](data.md) — When a slide carries numbers, a chart, or a table. (~170 tokens)
+- [Accessibility](accessibility.md) — Before delivery, and whenever contrast, alt text, or reading order is in question. (~160 tokens)
+- [Where pictures come from](imagery.md) — Before planning any photography or artwork — it says where a picture may come from. (~610 tokens)
+- [Honesty](honesty.md) — When labelling drafts, schematic previews, and anything the deck asserts but cannot evidence. (~180 tokens)
+- [Look at what you built](review.md) — After the first render, to know what to look for and what the packet is telling you. (~820 tokens)
+- [The loop that produces good decks](workflow.md) — Always. It is the loop, and skipping it is how a deck ships unlooked-at. (~500 tokens)
 
 ## Schemas
 
@@ -29,6 +37,12 @@ Every page here is generated from `src/contract`. Change the contract, run
 - [`slide`](schemas/slide.schema.json)
 - [`canvasElement`](schemas/canvasElement.schema.json)
 - [`creativeDirection`](schemas/creativeDirection.schema.json)
+- [`visualSystem`](schemas/visualSystem.schema.json)
+- [`symbol`](schemas/symbol.schema.json)
+- [`exploration`](schemas/exploration.schema.json)
+- [`sequencePlanItem`](schemas/sequencePlanItem.schema.json)
+- [`claim`](schemas/claim.schema.json)
+- [`hostCapabilities`](schemas/hostCapabilities.schema.json)
 - [`chart`](schemas/chart.schema.json)
 - [`table`](schemas/table.schema.json)
 - [`sceneRecord`](schemas/sceneRecord.schema.json)

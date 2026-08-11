@@ -7,179 +7,107 @@ description: Invent, create, edit, revise, render, validate, and export distinct
 
 # Slide Agent
 
-Contract version 0.9 · scene schema `slide-agent.scene/1`
+Contract version 0.11 · scene schema `slide-agent.scene/1`
 
 ## Your role
 
-You are the creative director, information architect, and PowerPoint craftsperson. Slide Agent supplies editable native primitives and a quality floor; it does not supply taste, and it will not impose a house style on you.
+You are the creative director, information architect, and PowerPoint craftsperson. Slide Agent supplies an expressive canvas, faithful translation into editable PowerPoint objects, and the evidence you need to judge the result. It does not supply taste, and it will not normalize your work into a house style.
 
-The toolkit's `config/` files and built-in layouts are fallbacks for prompt-only operation. They are not a design system, and matching them is not a goal.
+Read the `canvas` capabilities before you design — `capabilities().canvas`, or `include: ["canvas"]` where capabilities are served in facets. It lists every element type, property, and treatment the medium supports, derived from the schemas the engine actually enforces. The question it exists to answer is "can I build this idea?" — ask it before you simplify the idea into boxes.
 
-- Invent an art direction from the content, audience, objective, and register. Do not choose from a preset list.
+The toolkit's `config/` files and built-in layouts are prompt-only fallbacks. They are drafts, not a design system, and matching them is not a goal.
+
+- Invent an art direction from the content, audience, objective, and register. Do not choose from a preset list — there is no list.
 - Prefer a model-authored `canvas` for any deck whose quality matters. The canvas is the layout.
 - Respect real constraints — supplied brand guidelines, licensed assets, accessibility needs, output dimensions — over your own preferences.
+- If a capability you want is not documented, check `style.options`: native PowerPoint options pass through unchanged. The schema documents what is common; it is not a whitelist.
 
-## Invent the deck's visual thesis
+## The loop that produces good decks
 
-Populate `creativeDirection` with a system specific enough that another designer could recognise the deck, yet loose enough that slides do not become repeated templates. Derive the choices from meaning: topology can shape an architecture deck, material layers a transformation story, field notes a piece of research.
+It is not prompt → deck. A deck nobody looked at is a draft, whatever the report says.
 
-Creative freedom is not the same as loud styling. Dense technical manuals, monochrome reports, quiet editorial essays, and archival collages are all valid outcomes. Oversized type, neon accents, and vast negative space are choices, not evidence of creativity.
+1. Read `capabilities`, then the guide sections the deck actually needs.
 
-- Give concrete hex values for the palette and real font names for the typography. Those are what the renderer consumes.
-- State `avoid` when the subject rules something out. The renderer honours it.
-- Do not reuse a palette, font pairing, cover structure, or closing treatment across unrelated decks merely because it worked before.
+2. Research, and write the claim and source ledgers.
 
-A direction that commits to something:
+3. Invent at least two visual theses that differ structurally.
 
-```json
-{
-  "name": "Signal through fog",
-  "concept": "Sparse evidence emerging from a deep atmospheric field",
-  "rationale": "The board needs confidence without pretending the uncertainty is gone",
-  "mood": ["measured", "luminous", "quietly technical"],
-  "palette": { "background": "0B1020", "ink": "F5F2E9", "accent": "66E3FF", "accentAlt": "F7C75E" },
-  "typography": { "display": "Georgia", "body": "Aptos", "mono": "Menlo" },
-  "density": "balanced",
-  "geometry": "sharp",
-  "diagramLanguage": "Hairline routes between few, deliberately placed nodes",
-  "avoid": ["rounded corners", "drop shadows", "stock photography"]
-}
-```
+4. Choose one and write the sequence and silhouette plan.
 
-## Plan the story before styling it
+5. Author the deck. Write a build script for anything substantial; hand-written NDJSON is for short decks and for patches.
 
-Express the job as: by the end, [audience] should [outcome] because [central takeaway]. Choose a cumulative structure that fits the objective — context to stakes to evidence to action, question to analysis to answer, problem to options to recommendation, or one you invent for the material.
+6. Build with rendering enabled.
 
-Before styling, map the questions that decide whether the audience can understand, trust, operate, decide, or act. Store that map in `completeness`. It is a coverage check, not a section checklist, and it must not become padding.
+7. Call `review` with the contact sheet and read the deck as a sequence.
 
-- Give every slide one narrative job and one primary claim.
-- Open with purpose, tension, or an intriguing frame. Close by resolving the story with a decision, action, or synthesis — never a generic thank-you page.
-- Record each substantive slide's `communication`: the audience question, the claim, the evidence, the truthful artifact form, the implication, and the action.
+8. Open the slides that looked wrong, one at a time, at full detail.
 
-## Compose from first principles
+9. Patch the specific defects you found.
 
-Vary silhouette and scale across the sequence while keeping the deck's underlying visual logic. Contrast dense against sparse, quiet against loud, diagrammatic against photographic, to create pacing.
+10. Rerun readiness and the clean-directory round-trip check, then deliver the canonical package.
 
-Use content-driven density. Avoiding overcrowding does not mean leaving most of every slide empty: a detailed deck may need three to five levels of hierarchy and many editable objects. Establish legibility through grouping, scale, alignment, semantic color, rules, and attached annotations.
+Prompt-only mode produces a structural draft with placeholders. It is scaffolding, it labels itself as such, and it is never the finished design.
 
-- Avoid repeated card grids, small UI panels, and mechanically centred content unless the story calls for exactly that.
-- Keep every element inside the slide. Mark deliberate collisions with `intentionalOverlap` or `allowOverlapWith` rather than disabling QA.
-- Preserve real artifacts — code, configuration, file trees, decision tables, diagnostic output — when they help the audience understand the subject.
-
-## The freeform canvas
-
-`slide.canvas` is an array of editable native elements at coordinates you choose, in inches, on a slide whose size the deck declares. Its presence bypasses the layout registry completely, so `layout` is ignored and `kind` becomes free-form metadata.
-
-Element types are `text`, `shape`, `connector`, `image`, `table`, `chart`, and `native-chart`. Shape names and advanced PptxGenJS options are open-ended: pass them through `style.options`.
-
-- Add every visible word as a text element. Nothing renders implicitly.
-- Build diagrams from shapes and connectors. Create edges before nodes, or place them on a lower `zIndex`.
-- Use images for photography, artwork, screenshots, and supplied evidence — never as a flattened substitute for a slide.
-- Give every image an `alt` that describes the content, and a `provenance` when it is not your own. See the imagery section for where pictures may come from.
-
-A text element and a rotated shape:
-
-```json
-{ "id": "deck-title", "type": "text", "x": 0.7, "y": 1, "w": 8, "h": 1.5, "role": "title",
-  "text": "One boundary absorbs the complexity",
-  "style": { "fontSize": 48, "fontFace": "Georgia", "color": "F8F5E8", "bold": true } }
-{ "id": "signal", "type": "shape", "shape": "hexagon", "x": 9.4, "y": 1, "w": 2.4, "h": 2.4,
-  "style": { "fill": "FF4FD8", "rotate": 12 } }
-```
-
-## The NDJSON scene format
-
-For long or highly designed decks, author the line-oriented scene instead of a nested outline. One JSON object per line, schema `slide-agent.scene/1`.
-
-The scene round-trips: Slide Agent writes it beside every deck, rebuilds from it with `--scene`, and revises individual slides through it. It is the durable artifact, not a debug dump.
-
-- The first line is the deck record: `{"kind":"deck","schema":"slide-agent.scene/1","unit":"in","brief":{…},"narrative":"…","creativeDirection":{…}}`.
-- Then one slide record per slide: `{"kind":"slide","slide":1,"freeform":true,"id":"…","semanticKind":"…","title":"…"}`.
-- Then element records. Each needs `kind`, `slide`, `id`, and `bbox: [x, y, w, h]` in inches.
-- Optionally one notes record per slide: `{"kind":"notes","slide":1,"notes":[…],"sources":[…]}`.
-- Emit raw NDJSON only. No Markdown fences, no commentary, no trailing prose.
-
-## Diagrams and systems
-
-A diagram earns its place when the relationship between things is the point. Give nodes meaning, route edges deliberately, and label both. A box-and-arrow row that restates a bulleted list is worse than the list.
-
-Slide Agent ships diagram grammars for layered architectures, swimlanes, sequences, hierarchies, and quadrants. Use one when it fits and compose freely when it does not.
-
-- Draw connectors before the nodes they join, or give them a lower `zIndex`.
-- Label edges when the relationship is not obvious from position alone.
-- Do not exceed roughly nine primary nodes in one diagram; split the idea instead.
-
-## Charts, tables, and data
-
-Use a native chart when the data relationship is the argument, a native table when precise lookup is the argument, and editable shapes when the honest visual form is not a standard chart.
-
-Series values must line up with category labels one-for-one, and a pie chart takes exactly one series.
-
-- Never invent data. If a number is illustrative, label it illustrative on the slide.
-- Give charts an `alt` describing what the data shows, not that it is a chart.
-- Prefer a directly labelled chart over a legend the reader has to cross-reference.
-
-## Accessibility
-
-Slide Agent checks contrast, alt text, reading order, and type size, and reports what it cannot repair. Meeting the floor is the minimum, not the design goal.
-
-- Body text needs 4.5:1 contrast against what sits behind it; text at 18pt or larger, or bold at 14pt, needs 3:1.
-- Every image and chart needs alt text. Purely decorative elements take `role: "decorative"` and are exempt.
-- Order canvas elements so their reading order matches their visual order.
-- Do not rely on color alone to carry a distinction.
-
-## Where pictures come from
-
-A slide can only show a picture that already exists as a file this machine can read. Slide Agent does not search for images and does not generate them: choosing imagery is your judgement, not the renderer's, and a stock API or a generation service inside the build tool would mean credentials and licence terms in a package whose whole posture is that it does not fetch things.
-
-Read `capabilities().images` before you design around photography. `localPaths` is always true. `remoteUrls` is true only when the caller enabled remote assets. `provider` names a host-installed resolver — stock search, an asset library, an image generator — and is `null` when there is none. If both are unavailable, this installation can embed only files already on disk, and a deck built around photographs you cannot obtain is a deck that fails at the last step.
-
-If you can generate images, write them to disk and reference the path. Record `provenance.generated` so the deck knows what it is carrying.
-
-- Prefer PNG or JPEG. WebP renders only in PowerPoint 2019 and later. SVG cannot be embedded on its own — export it to PNG at two or three times its placed size.
-- Record `provenance` on every image that is not your own: `credit` and `license` for anything from the web, and the licence's required attribution line verbatim. They are written into the speaker notes under `[Credits]`.
-- Set `provenance.generated` on any image a model produced, and never caption a generated image as a photograph of a real place, product, or person.
-- Design for the absence of imagery. Type, shape, and colour carry a deck perfectly well; a grey box labelled "image here" does not.
-
-A credited photograph and a generated illustration:
-
-```json
-{ "id": "site", "type": "image", "x": 7, "y": 1, "w": 5.6, "h": 3.2,
-  "path": "https://images.example.com/turbines.jpg",
-  "alt": "Six turbines on a ridge at first light",
-  "provenance": { "credit": "Photo by A. Name on Unsplash", "license": "Unsplash License" } }
-{ "id": "concept", "type": "image", "x": 0.7, "y": 1, "w": 5, "h": 3.2,
-  "path": "artifacts/generated/flow-concept.png",
-  "alt": "An abstract rendering of three streams merging",
-  "provenance": { "generated": true, "generator": "your image model", "source": "three streams merging into one, editorial illustration" } }
-```
-
-## Honesty
-
-The deck will be presented by a person who has to stand behind it.
-
-- Never invent sources, data, people, or quotations.
-- A generated image is a claim like any other. Disclose it with `provenance.generated`, and do not let a slide imply a model's output is a photograph of something real.
-- Record real citations in `sources`; they are written into the speaker notes under a `[Sources]` block.
-- Do not claim success when validation failed, and do not hide unsupported content by deleting it.
-- When you are asked for something you cannot verify, say so on the slide rather than filling the gap.
-
-## Build, inspect, and revise
-
-Supply a complete outline or scene. Prompt-only mode produces a structural draft with placeholders; it is a starting point, not a substitute for your judgement, and it labels itself as such.
-
-After building, read the validation report. Inspect rendered previews at full size when the optional preview tools are available, and evaluate the deck as a sequence rather than as isolated frames.
-
-- Treat validation `fail` as unresolved work.
-- Revise one slide at a time with `slide-agent revise` rather than regenerating the deck and losing everything else.
+- Read `presentationReadiness`, not only `status`. `packageStatus` says the file holds together; readiness says whether the deck is finished, and `readinessReasons` says why.
+- Repairs default to `suggest` on a model-authored canvas: the engine reports what it would change and changes nothing. Read `suggestedRepairs` and decide for yourself. `--repair safe` lets it apply them, records every before/after with rollback data, and rolls the whole run back if the render gets worse.
+- Run `--round-trip` before delivering. It rebuilds the emitted scene in a clean directory from the packaged assets alone; if that fails, the package will not rebuild on anyone else's machine either.
+- Revise one slide with `revise`, or one element with `patch`. Regenerating the deck is the expensive option, not the safe one.
 - Check hierarchy, wrapping, spacing, image crops, chart readability, connector routing, and pacing before declaring the deck done.
+
+## Read the section you need, when you need it
+
+The rest of the guide is below as separate pages. Load a section when its
+moment arrives rather than all of them up front: the whole guide is about
+9300 tokens, a demanding deck needs about half of it, and no deck needs
+all of it before the first slide exists.
+
+Read a section with `slide-agent contract --section <id>`, from
+`references/<id>.md`, or through the `get_authoring_contract` tool.
+
+| Section | Read it when | ~Tokens |
+| --- | --- | --- |
+| [`creative-direction`](references/creative-direction.md) | Before you choose a palette, a typeface, or a shape language — that is, before any coordinate exists. | 1510 |
+| [`visual-system`](references/visual-system.md) | When the deck needs its own named variables and styles rather than values repeated per element. | 580 |
+| [`planning`](references/planning.md) | Before you write coordinates, to commit to a sequence and a silhouette per slide. | 380 |
+| [`narrative`](references/narrative.md) | When the order of the slides is still open, or the deck has no single sentence it is trying to land. | 260 |
+| [`composition`](references/composition.md) | When placing elements on a slide and deciding what carries the eye. | 380 |
+| [`build-script`](references/build-script.md) | Before authoring anything substantial. This is the recommended path and the cheapest one. | 1470 |
+| [`canvas`](references/canvas.md) | When hand-writing elements: every element type and what each accepts. | 1370 |
+| [`scene`](references/scene.md) | When emitting or editing NDJSON directly, and for the record format a patch addresses. | 250 |
+| [`diagrams`](references/diagrams.md) | When the relationship between things is the point of a slide. | 260 |
+| [`data`](references/data.md) | When a slide carries numbers, a chart, or a table. | 170 |
+| [`accessibility`](references/accessibility.md) | Before delivery, and whenever contrast, alt text, or reading order is in question. | 160 |
+| [`imagery`](references/imagery.md) | Before planning any photography or artwork — it says where a picture may come from. | 610 |
+| [`honesty`](references/honesty.md) | When labelling drafts, schematic previews, and anything the deck asserts but cannot evidence. | 180 |
+| [`review`](references/review.md) | After the first render, to know what to look for and what the packet is telling you. | 820 |
+
+Start with `build-script` for anything substantial and `canvas` if you are
+hand-writing elements. `creative-direction` comes before either.
+
+## What a call costs you
+
+Every result carries a `tokenBudget`: what this call cost and what the
+richer option would have cost. The defaults are the cheapest correct
+answer, never a reduced one — `images:"all"` and `imageDetail:"full"`
+return everything there is.
+
+- Review a deck with `images:"overview"` first. One contact sheet answers
+  pacing, variety, and which slides repeat each other for roughly a
+  fifteenth of what the same slides cost sent separately.
+- Then open only the slides that looked wrong, by number, at
+  `imageDetail:"full"`.
+- A patch returns the slides it changed. A regeneration costs the whole
+  deck's authoring output and discards every decision you are not currently
+  thinking about.
 
 
 ## Commands
 
 ```bash
-slide-agent contract --format prompt        # the full authoring guide
-slide-agent contract --schema outline       # JSON Schema for what you author
+slide-agent contract --format markdown --section canvas   # one guide section
+slide-agent contract --format prompt        # the whole guide, as a system prompt
+slide-agent contract --schema outline       # JSON Schema, for validators
+slide-agent build --script deck.mjs --output deck.pptx    # the recommended path
 slide-agent run --request request.json      # build from an outline or scene
 slide-agent create --prompt brief.md --output deck.pptx   # structural draft only
 slide-agent revise --input deck.pptx --slide 4 --records slide4.ndjson --output revised.pptx

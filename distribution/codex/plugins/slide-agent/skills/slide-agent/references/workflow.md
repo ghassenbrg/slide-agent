@@ -2,14 +2,36 @@
 
 # Slide Agent authoring guide
 
-Contract version 0.9 · scene schema `slide-agent.scene/1`
+Contract version 0.11 · scene schema `slide-agent.scene/1`
 
-## Build, inspect, and revise
+## The loop that produces good decks
 
-Supply a complete outline or scene. Prompt-only mode produces a structural draft with placeholders; it is a starting point, not a substitute for your judgement, and it labels itself as such.
+It is not prompt → deck. A deck nobody looked at is a draft, whatever the report says.
 
-After building, read the validation report. Inspect rendered previews at full size when the optional preview tools are available, and evaluate the deck as a sequence rather than as isolated frames.
+1. Read `capabilities`, then the guide sections the deck actually needs.
 
-- Treat validation `fail` as unresolved work.
-- Revise one slide at a time with `slide-agent revise` rather than regenerating the deck and losing everything else.
+2. Research, and write the claim and source ledgers.
+
+3. Invent at least two visual theses that differ structurally.
+
+4. Choose one and write the sequence and silhouette plan.
+
+5. Author the deck. Write a build script for anything substantial; hand-written NDJSON is for short decks and for patches.
+
+6. Build with rendering enabled.
+
+7. Call `review` with the contact sheet and read the deck as a sequence.
+
+8. Open the slides that looked wrong, one at a time, at full detail.
+
+9. Patch the specific defects you found.
+
+10. Rerun readiness and the clean-directory round-trip check, then deliver the canonical package.
+
+Prompt-only mode produces a structural draft with placeholders. It is scaffolding, it labels itself as such, and it is never the finished design.
+
+- Read `presentationReadiness`, not only `status`. `packageStatus` says the file holds together; readiness says whether the deck is finished, and `readinessReasons` says why.
+- Repairs default to `suggest` on a model-authored canvas: the engine reports what it would change and changes nothing. Read `suggestedRepairs` and decide for yourself. `--repair safe` lets it apply them, records every before/after with rollback data, and rolls the whole run back if the render gets worse.
+- Run `--round-trip` before delivering. It rebuilds the emitted scene in a clean directory from the packaged assets alone; if that fails, the package will not rebuild on anyone else's machine either.
+- Revise one slide with `revise`, or one element with `patch`. Regenerating the deck is the expensive option, not the safe one.
 - Check hierarchy, wrapping, spacing, image crops, chart readability, connector routing, and pacing before declaring the deck done.

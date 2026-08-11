@@ -124,6 +124,28 @@
           },
           "additionalProperties": {}
         },
+        "slideChrome": {
+          "type": "object",
+          "properties": {
+            "elements": {
+              "$ref": "#/$defs/__schema0"
+            },
+            "variants": {
+              "$ref": "#/$defs/__schema141"
+            },
+            "skipSlides": {
+              "$ref": "#/$defs/__schema143"
+            },
+            "idPrefix": {
+              "$ref": "#/$defs/__schema145"
+            }
+          },
+          "required": [
+            "elements"
+          ],
+          "additionalProperties": {},
+          "description": "Per-slide furniture the deck declares once. Slide Agent ships none and repeats only what you wrote."
+        },
         "creativeDirection": {
           "type": "object",
           "properties": {
@@ -143,113 +165,13 @@
               }
             },
             "palette": {
-              "type": "object",
-              "properties": {
-                "background": {
-                  "type": "string",
-                  "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
-                  "description": "Hex color, with or without a leading #."
-                },
-                "surface": {
-                  "type": "string",
-                  "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
-                  "description": "Hex color, with or without a leading #."
-                },
-                "ink": {
-                  "type": "string",
-                  "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
-                  "description": "Hex color, with or without a leading #."
-                },
-                "muted": {
-                  "type": "string",
-                  "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
-                  "description": "Hex color, with or without a leading #."
-                },
-                "accent": {
-                  "type": "string",
-                  "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
-                  "description": "Hex color, with or without a leading #."
-                },
-                "accentAlt": {
-                  "type": "string",
-                  "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
-                  "description": "Hex color, with or without a leading #."
-                },
-                "accentSoft": {
-                  "type": "string",
-                  "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
-                  "description": "Hex color, with or without a leading #."
-                },
-                "rule": {
-                  "type": "string",
-                  "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
-                  "description": "Hex color, with or without a leading #."
-                },
-                "positive": {
-                  "type": "string",
-                  "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
-                  "description": "Hex color, with or without a leading #."
-                },
-                "negative": {
-                  "type": "string",
-                  "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
-                  "description": "Hex color, with or without a leading #."
-                },
-                "warning": {
-                  "type": "string",
-                  "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
-                  "description": "Hex color, with or without a leading #."
-                },
-                "colors": {
-                  "description": "Additional unnamed colors, in priority order.",
-                  "type": "array",
-                  "items": {
-                    "type": "string",
-                    "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
-                    "description": "Hex color, with or without a leading #."
-                  }
-                },
-                "custom": {
-                  "description": "Named colors specific to this deck.",
-                  "type": "object",
-                  "propertyNames": {
-                    "type": "string"
-                  },
-                  "additionalProperties": {
-                    "type": "string",
-                    "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
-                    "description": "Hex color, with or without a leading #."
-                  }
-                }
-              },
-              "additionalProperties": {}
+              "$ref": "#/$defs/__schema152"
             },
             "typography": {
-              "type": "object",
-              "properties": {
-                "display": {
-                  "type": "string"
-                },
-                "heading": {
-                  "type": "string"
-                },
-                "body": {
-                  "type": "string"
-                },
-                "mono": {
-                  "type": "string"
-                },
-                "numeric": {
-                  "type": "string"
-                },
-                "fallbacks": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              },
-              "additionalProperties": {}
+              "$ref": "#/$defs/__schema155"
+            },
+            "visualSystem": {
+              "$ref": "#/$defs/__schema158"
             },
             "compositionPrinciples": {
               "type": "array",
@@ -278,32 +200,145 @@
             "motionOrPacing": {
               "type": "string"
             },
+            "geometryLanguage": {
+              "$ref": "#/$defs/__schema182"
+            },
+            "spatialRhythm": {
+              "$ref": "#/$defs/__schema184"
+            },
+            "materialLanguage": {
+              "$ref": "#/$defs/__schema186"
+            },
             "density": {
-              "type": "string",
-              "enum": [
-                "sparse",
-                "balanced",
-                "dense"
-              ]
+              "$ref": "#/$defs/__schema188"
             },
             "geometry": {
-              "type": "string",
-              "enum": [
-                "sharp",
-                "soft",
-                "organic"
-              ]
+              "$ref": "#/$defs/__schema190"
             },
             "avoid": {
-              "description": "Deliberate exclusions. The renderer honours these.",
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
+              "$ref": "#/$defs/__schema192"
             }
           },
           "additionalProperties": {},
           "description": "The deck's visual thesis. Open-ended: add fields that help the model reason."
+        },
+        "exploration": {
+          "type": "object",
+          "properties": {
+            "alternatives": {
+              "$ref": "#/$defs/__schema195"
+            },
+            "chosen": {
+              "$ref": "#/$defs/__schema196"
+            }
+          },
+          "additionalProperties": {},
+          "description": "Visual theses considered before any coordinate was written. Concise authoring metadata, not private reasoning."
+        },
+        "sequencePlan": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "slideId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "narrativeJob": {
+                "type": "string",
+                "minLength": 1,
+                "description": "What this slide has to accomplish for the audience."
+              },
+              "dominantArtifact": {
+                "$ref": "#/$defs/__schema201"
+              },
+              "silhouette": {
+                "$ref": "#/$defs/__schema203"
+              },
+              "energy": {
+                "$ref": "#/$defs/__schema205"
+              },
+              "transition": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "slideId",
+              "narrativeJob"
+            ],
+            "additionalProperties": {},
+            "description": "One slide's declared job and intended silhouette. Later critique compares the render against this."
+          }
+        },
+        "claims": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "slideId": {
+                "type": "string"
+              },
+              "claim": {
+                "type": "string",
+                "minLength": 1
+              },
+              "kind": {
+                "$ref": "#/$defs/__schema212"
+              },
+              "sourceIds": {
+                "$ref": "#/$defs/__schema214"
+              },
+              "asOf": {
+                "$ref": "#/$defs/__schema216"
+              },
+              "calculation": {
+                "$ref": "#/$defs/__schema218"
+              },
+              "status": {
+                "$ref": "#/$defs/__schema220"
+              }
+            },
+            "required": [
+              "id",
+              "claim"
+            ],
+            "additionalProperties": {},
+            "description": "One claim and what backs it. Lets revision checks catch orphaned sources and unsupported precision."
+          }
+        },
+        "sourceLedger": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "note": {
+                "type": "string"
+              },
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Referenced from claims[].sourceIds."
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        "hostCapabilities": {
+          "description": "What the host AI that authored this scene could do. Planning context that survives round-trip.",
+          "$ref": "#/$defs/__schema226"
         },
         "width": {
           "type": "number",
@@ -319,6 +354,45 @@
         "schema",
         "brief",
         "narrative"
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "const": "symbol"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "w": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "h": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "elements": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/__schema1"
+          }
+        },
+        "description": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "w",
+        "h",
+        "elements"
       ],
       "additionalProperties": {}
     },
@@ -356,71 +430,30 @@
           "type": "string"
         },
         "communication": {
-          "type": "object",
-          "properties": {
-            "audienceQuestion": {
-              "type": "string"
-            },
-            "claim": {
-              "type": "string"
-            },
-            "evidence": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            "artifact": {
-              "type": "string"
-            },
-            "explanation": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            "implication": {
-              "type": "string"
-            },
-            "action": {
-              "type": "string"
-            },
-            "secondaryLanguage": {
-              "type": "object",
-              "properties": {
-                "language": {
-                  "type": "string"
-                },
-                "title": {
-                  "type": "string"
-                },
-                "subtitle": {
-                  "type": "string"
-                },
-                "labels": {
-                  "type": "object",
-                  "propertyNames": {
-                    "type": "string"
-                  },
-                  "additionalProperties": {
-                    "type": "string"
-                  }
-                }
-              },
-              "required": [
-                "language"
-              ],
-              "additionalProperties": {}
-            }
-          },
-          "additionalProperties": {},
-          "description": "Planning metadata. Never rendered automatically and never a layout schema."
+          "$ref": "#/$defs/__schema236"
         },
         "designIntent": {
           "type": "string"
         },
         "composition": {
           "type": "string"
+        },
+        "chrome": {
+          "anyOf": [
+            {
+              "type": "boolean",
+              "const": false
+            },
+            {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          ]
         }
       },
       "required": [
@@ -462,7 +495,6 @@
               "description": "Any semantic label. Metadata, not a whitelist."
             },
             "layout": {
-              "description": "A registered fallback layout. Ignored when canvas is present.",
               "type": "string"
             },
             "title": {
@@ -636,116 +668,10 @@
               ]
             },
             "table": {
-              "type": "object",
-              "properties": {
-                "headers": {
-                  "minItems": 1,
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "rows": {
-                  "type": "array",
-                  "items": {
-                    "type": "array",
-                    "items": {
-                      "anyOf": [
-                        {
-                          "type": "string"
-                        },
-                        {
-                          "type": "number"
-                        }
-                      ]
-                    }
-                  }
-                },
-                "columnWidths": {
-                  "type": "array",
-                  "items": {
-                    "type": "number",
-                    "exclusiveMinimum": 0
-                  }
-                },
-                "highlightRows": {
-                  "type": "array",
-                  "items": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 9007199254740991
-                  }
-                }
-              },
-              "required": [
-                "headers",
-                "rows"
-              ]
+              "$ref": "#/$defs/__schema113"
             },
             "chart": {
-              "type": "object",
-              "properties": {
-                "kind": {
-                  "type": "string",
-                  "enum": [
-                    "bar",
-                    "bar-stacked",
-                    "bar-horizontal",
-                    "line",
-                    "pie",
-                    "doughnut",
-                    "area",
-                    "scatter",
-                    "radar",
-                    "waterfall"
-                  ],
-                  "description": "A native, editable chart. `scatter` reads its labels as x values. For anything else PptxGenJS can draw, use a native-chart element."
-                },
-                "labels": {
-                  "minItems": 1,
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  },
-                  "description": "Category labels, one per value in every series. For a scatter chart these are the x values and must be numbers."
-                },
-                "series": {
-                  "minItems": 1,
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "name": {
-                        "type": "string"
-                      },
-                      "values": {
-                        "type": "array",
-                        "items": {
-                          "type": "number"
-                        }
-                      }
-                    },
-                    "required": [
-                      "name",
-                      "values"
-                    ]
-                  }
-                },
-                "unit": {
-                  "type": "string"
-                },
-                "showLegend": {
-                  "type": "boolean"
-                },
-                "showValues": {
-                  "type": "boolean"
-                }
-              },
-              "required": [
-                "kind",
-                "labels",
-                "series"
-              ]
+              "$ref": "#/$defs/__schema115"
             },
             "kpis": {
               "type": "array",
@@ -870,1128 +796,46 @@
               }
             },
             "communication": {
-              "type": "object",
-              "properties": {
-                "audienceQuestion": {
-                  "type": "string"
-                },
-                "claim": {
-                  "type": "string"
-                },
-                "evidence": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "artifact": {
-                  "type": "string"
-                },
-                "explanation": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "implication": {
-                  "type": "string"
-                },
-                "action": {
-                  "type": "string"
-                },
-                "secondaryLanguage": {
-                  "type": "object",
-                  "properties": {
-                    "language": {
-                      "type": "string"
-                    },
-                    "title": {
-                      "type": "string"
-                    },
-                    "subtitle": {
-                      "type": "string"
-                    },
-                    "labels": {
-                      "type": "object",
-                      "propertyNames": {
-                        "type": "string"
-                      },
-                      "additionalProperties": {
-                        "type": "string"
-                      }
-                    }
-                  },
-                  "required": [
-                    "language"
-                  ],
-                  "additionalProperties": {}
-                }
-              },
-              "additionalProperties": {},
-              "description": "Planning metadata. Never rendered automatically and never a layout schema."
+              "$ref": "#/$defs/__schema236"
             },
             "designIntent": {
-              "description": "Why this composition communicates the claim. Never rendered.",
               "type": "string"
             },
             "composition": {
-              "description": "Intended hierarchy, balance, rhythm, and reading path.",
               "type": "string"
             },
             "background": {
-              "type": "string",
-              "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
-              "description": "Hex color, with or without a leading #."
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+                  "description": "Hex color, with or without a leading #."
+                },
+                {
+                  "$ref": "#/$defs/__schema53"
+                }
+              ]
+            },
+            "chrome": {
+              "anyOf": [
+                {
+                  "type": "boolean",
+                  "const": false
+                },
+                {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              ]
             },
             "canvas": {
               "description": "The model's own scene. When present it *is* the layout and the registry is bypassed.",
-              "type": "array",
-              "items": {
-                "oneOf": [
-                  {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "string",
-                        "minLength": 1,
-                        "description": "Unique within the slide; used by validation and revision."
-                      },
-                      "x": {
-                        "type": "number",
-                        "description": "Inches on the slide canvas."
-                      },
-                      "y": {
-                        "type": "number",
-                        "description": "Inches on the slide canvas."
-                      },
-                      "w": {
-                        "type": "number",
-                        "description": "Inches on the slide canvas."
-                      },
-                      "h": {
-                        "type": "number",
-                        "description": "Inches on the slide canvas."
-                      },
-                      "zIndex": {
-                        "description": "Paint order. Lower values sit behind.",
-                        "type": "number"
-                      },
-                      "role": {
-                        "description": "Semantic role, e.g. title, body, caption, decorative.",
-                        "type": "string"
-                      },
-                      "intentionalOverlap": {
-                        "description": "Marks a deliberate collision so QA does not report it.",
-                        "type": "boolean"
-                      },
-                      "allowOverlapWith": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      "type": {
-                        "type": "string",
-                        "const": "text"
-                      },
-                      "text": {
-                        "type": "string"
-                      },
-                      "runs": {
-                        "type": "array",
-                        "items": {
-                          "type": "object",
-                          "properties": {
-                            "text": {
-                              "type": "string"
-                            },
-                            "options": {
-                              "type": "object",
-                              "propertyNames": {
-                                "type": "string"
-                              },
-                              "additionalProperties": {},
-                              "description": "Advanced PptxGenJS options passed through unchanged. Verify the render. A `hyperlink` here is held to the same scheme allowlist as `link`."
-                            }
-                          },
-                          "required": [
-                            "text"
-                          ]
-                        }
-                      },
-                      "link": {
-                        "anyOf": [
-                          {
-                            "type": "string",
-                            "minLength": 1,
-                            "description": "An http(s) or mailto URL. A bare host is read as https."
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "url": {
-                                "type": "string",
-                                "minLength": 1
-                              },
-                              "tooltip": {
-                                "description": "What the link does. Screen readers announce it.",
-                                "type": "string"
-                              }
-                            },
-                            "required": [
-                              "url"
-                            ]
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "slide": {
-                                "type": "integer",
-                                "exclusiveMinimum": 0,
-                                "maximum": 9007199254740991,
-                                "description": "A 1-based slide in this deck."
-                              },
-                              "tooltip": {
-                                "type": "string"
-                              }
-                            },
-                            "required": [
-                              "slide"
-                            ]
-                          }
-                        ],
-                        "description": "A hyperlink. Only http, https, and mailto are accepted; anything else is refused and reported."
-                      },
-                      "style": {
-                        "type": "object",
-                        "properties": {
-                          "fontSize": {
-                            "type": "number",
-                            "exclusiveMinimum": 0
-                          },
-                          "fontFace": {
-                            "type": "string"
-                          },
-                          "color": {
-                            "type": "string",
-                            "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
-                            "description": "Hex color, with or without a leading #."
-                          },
-                          "bold": {
-                            "type": "boolean"
-                          },
-                          "italic": {
-                            "type": "boolean"
-                          },
-                          "align": {
-                            "type": "string",
-                            "enum": [
-                              "left",
-                              "center",
-                              "right",
-                              "justify"
-                            ]
-                          },
-                          "valign": {
-                            "type": "string",
-                            "enum": [
-                              "top",
-                              "middle",
-                              "bottom"
-                            ]
-                          },
-                          "margin": {
-                            "anyOf": [
-                              {
-                                "type": "number"
-                              },
-                              {
-                                "type": "array",
-                                "prefixItems": [
-                                  {
-                                    "type": "number"
-                                  },
-                                  {
-                                    "type": "number"
-                                  },
-                                  {
-                                    "type": "number"
-                                  },
-                                  {
-                                    "type": "number"
-                                  }
-                                ]
-                              }
-                            ]
-                          },
-                          "fit": {
-                            "type": "string",
-                            "enum": [
-                              "none",
-                              "shrink",
-                              "resize"
-                            ]
-                          },
-                          "fill": {
-                            "type": "string",
-                            "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
-                            "description": "Hex color, with or without a leading #."
-                          },
-                          "transparency": {
-                            "type": "number",
-                            "minimum": 0,
-                            "maximum": 100
-                          },
-                          "lineColor": {
-                            "type": "string",
-                            "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
-                            "description": "Hex color, with or without a leading #."
-                          },
-                          "lineWidth": {
-                            "type": "number",
-                            "minimum": 0
-                          },
-                          "rotate": {
-                            "type": "number"
-                          },
-                          "options": {
-                            "type": "object",
-                            "propertyNames": {
-                              "type": "string"
-                            },
-                            "additionalProperties": {},
-                            "description": "Advanced PptxGenJS options passed through unchanged. Verify the render. A `hyperlink` here is held to the same scheme allowlist as `link`."
-                          }
-                        },
-                        "additionalProperties": {}
-                      }
-                    },
-                    "required": [
-                      "id",
-                      "x",
-                      "y",
-                      "w",
-                      "h",
-                      "type"
-                    ]
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "string",
-                        "minLength": 1,
-                        "description": "Unique within the slide; used by validation and revision."
-                      },
-                      "x": {
-                        "type": "number",
-                        "description": "Inches on the slide canvas."
-                      },
-                      "y": {
-                        "type": "number",
-                        "description": "Inches on the slide canvas."
-                      },
-                      "w": {
-                        "type": "number",
-                        "description": "Inches on the slide canvas."
-                      },
-                      "h": {
-                        "type": "number",
-                        "description": "Inches on the slide canvas."
-                      },
-                      "zIndex": {
-                        "description": "Paint order. Lower values sit behind.",
-                        "type": "number"
-                      },
-                      "role": {
-                        "description": "Semantic role, e.g. title, body, caption, decorative.",
-                        "type": "string"
-                      },
-                      "intentionalOverlap": {
-                        "description": "Marks a deliberate collision so QA does not report it.",
-                        "type": "boolean"
-                      },
-                      "allowOverlapWith": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      "type": {
-                        "type": "string",
-                        "const": "shape"
-                      },
-                      "shape": {
-                        "description": "Any PptxGenJS shape name. Not a whitelist.",
-                        "type": "string"
-                      },
-                      "link": {
-                        "anyOf": [
-                          {
-                            "type": "string",
-                            "minLength": 1,
-                            "description": "An http(s) or mailto URL. A bare host is read as https."
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "url": {
-                                "type": "string",
-                                "minLength": 1
-                              },
-                              "tooltip": {
-                                "description": "What the link does. Screen readers announce it.",
-                                "type": "string"
-                              }
-                            },
-                            "required": [
-                              "url"
-                            ]
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "slide": {
-                                "type": "integer",
-                                "exclusiveMinimum": 0,
-                                "maximum": 9007199254740991,
-                                "description": "A 1-based slide in this deck."
-                              },
-                              "tooltip": {
-                                "type": "string"
-                              }
-                            },
-                            "required": [
-                              "slide"
-                            ]
-                          }
-                        ],
-                        "description": "A hyperlink. Only http, https, and mailto are accepted; anything else is refused and reported."
-                      },
-                      "style": {
-                        "type": "object",
-                        "properties": {
-                          "fill": {
-                            "type": "string",
-                            "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
-                            "description": "Hex color, with or without a leading #."
-                          },
-                          "transparency": {
-                            "type": "number",
-                            "minimum": 0,
-                            "maximum": 100
-                          },
-                          "lineColor": {
-                            "type": "string",
-                            "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
-                            "description": "Hex color, with or without a leading #."
-                          },
-                          "lineWidth": {
-                            "type": "number",
-                            "minimum": 0
-                          },
-                          "rotate": {
-                            "type": "number"
-                          },
-                          "options": {
-                            "type": "object",
-                            "propertyNames": {
-                              "type": "string"
-                            },
-                            "additionalProperties": {},
-                            "description": "Advanced PptxGenJS options passed through unchanged. Verify the render. A `hyperlink` here is held to the same scheme allowlist as `link`."
-                          }
-                        },
-                        "additionalProperties": {}
-                      }
-                    },
-                    "required": [
-                      "id",
-                      "x",
-                      "y",
-                      "w",
-                      "h",
-                      "type"
-                    ]
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "string",
-                        "minLength": 1,
-                        "description": "Unique within the slide; used by validation and revision."
-                      },
-                      "x": {
-                        "type": "number",
-                        "description": "Inches on the slide canvas."
-                      },
-                      "y": {
-                        "type": "number",
-                        "description": "Inches on the slide canvas."
-                      },
-                      "w": {
-                        "type": "number",
-                        "description": "Inches on the slide canvas."
-                      },
-                      "h": {
-                        "type": "number",
-                        "description": "Inches on the slide canvas."
-                      },
-                      "zIndex": {
-                        "description": "Paint order. Lower values sit behind.",
-                        "type": "number"
-                      },
-                      "role": {
-                        "description": "Semantic role, e.g. title, body, caption, decorative.",
-                        "type": "string"
-                      },
-                      "intentionalOverlap": {
-                        "description": "Marks a deliberate collision so QA does not report it.",
-                        "type": "boolean"
-                      },
-                      "allowOverlapWith": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      "type": {
-                        "type": "string",
-                        "const": "connector"
-                      },
-                      "style": {
-                        "type": "object",
-                        "properties": {
-                          "color": {
-                            "type": "string",
-                            "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
-                            "description": "Hex color, with or without a leading #."
-                          },
-                          "width": {
-                            "type": "number",
-                            "minimum": 0
-                          },
-                          "arrow": {
-                            "type": "boolean"
-                          },
-                          "beginArrow": {
-                            "type": "boolean"
-                          },
-                          "dashed": {
-                            "type": "boolean"
-                          },
-                          "options": {
-                            "type": "object",
-                            "propertyNames": {
-                              "type": "string"
-                            },
-                            "additionalProperties": {},
-                            "description": "Advanced PptxGenJS options passed through unchanged. Verify the render. A `hyperlink` here is held to the same scheme allowlist as `link`."
-                          }
-                        },
-                        "additionalProperties": {}
-                      }
-                    },
-                    "required": [
-                      "id",
-                      "x",
-                      "y",
-                      "w",
-                      "h",
-                      "type"
-                    ],
-                    "description": "x/y is the start point; w/h is the delta to the end point and may be negative."
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "string",
-                        "minLength": 1,
-                        "description": "Unique within the slide; used by validation and revision."
-                      },
-                      "x": {
-                        "type": "number",
-                        "description": "Inches on the slide canvas."
-                      },
-                      "y": {
-                        "type": "number",
-                        "description": "Inches on the slide canvas."
-                      },
-                      "w": {
-                        "type": "number",
-                        "description": "Inches on the slide canvas."
-                      },
-                      "h": {
-                        "type": "number",
-                        "description": "Inches on the slide canvas."
-                      },
-                      "zIndex": {
-                        "description": "Paint order. Lower values sit behind.",
-                        "type": "number"
-                      },
-                      "role": {
-                        "description": "Semantic role, e.g. title, body, caption, decorative.",
-                        "type": "string"
-                      },
-                      "intentionalOverlap": {
-                        "description": "Marks a deliberate collision so QA does not report it.",
-                        "type": "boolean"
-                      },
-                      "allowOverlapWith": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      "type": {
-                        "type": "string",
-                        "const": "image"
-                      },
-                      "path": {
-                        "type": "string",
-                        "minLength": 1,
-                        "description": "Local path, or an http(s) URL when remote assets are explicitly enabled."
-                      },
-                      "alt": {
-                        "type": "string",
-                        "minLength": 1,
-                        "description": "Required for accessibility. Describe the content, not the file."
-                      },
-                      "provenance": {
-                        "type": "object",
-                        "properties": {
-                          "source": {
-                            "description": "Where it came from: a URL, a library reference, or the prompt that produced it.",
-                            "type": "string"
-                          },
-                          "credit": {
-                            "description": "The attribution line the licence requires, e.g. \"Photo by A. Name on Unsplash\".",
-                            "type": "string"
-                          },
-                          "license": {
-                            "description": "The licence you are relying on, e.g. \"CC BY 4.0\", \"Unsplash License\", \"© Acme, used with permission\".",
-                            "type": "string"
-                          },
-                          "generated": {
-                            "description": "True when a model produced this image rather than a camera or a person.",
-                            "type": "boolean"
-                          },
-                          "generator": {
-                            "description": "What generated it, when `generated` is true.",
-                            "type": "string"
-                          }
-                        },
-                        "additionalProperties": {},
-                        "description": "Attribution and origin. Written into the speaker notes under [Credits]."
-                      },
-                      "link": {
-                        "anyOf": [
-                          {
-                            "type": "string",
-                            "minLength": 1,
-                            "description": "An http(s) or mailto URL. A bare host is read as https."
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "url": {
-                                "type": "string",
-                                "minLength": 1
-                              },
-                              "tooltip": {
-                                "description": "What the link does. Screen readers announce it.",
-                                "type": "string"
-                              }
-                            },
-                            "required": [
-                              "url"
-                            ]
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "slide": {
-                                "type": "integer",
-                                "exclusiveMinimum": 0,
-                                "maximum": 9007199254740991,
-                                "description": "A 1-based slide in this deck."
-                              },
-                              "tooltip": {
-                                "type": "string"
-                              }
-                            },
-                            "required": [
-                              "slide"
-                            ]
-                          }
-                        ],
-                        "description": "A hyperlink. Only http, https, and mailto are accepted; anything else is refused and reported."
-                      },
-                      "fit": {
-                        "type": "string",
-                        "enum": [
-                          "cover",
-                          "contain",
-                          "stretch"
-                        ]
-                      },
-                      "style": {
-                        "type": "object",
-                        "properties": {
-                          "rotate": {
-                            "type": "number"
-                          },
-                          "transparency": {
-                            "type": "number",
-                            "minimum": 0,
-                            "maximum": 100
-                          },
-                          "options": {
-                            "type": "object",
-                            "propertyNames": {
-                              "type": "string"
-                            },
-                            "additionalProperties": {},
-                            "description": "Advanced PptxGenJS options passed through unchanged. Verify the render. A `hyperlink` here is held to the same scheme allowlist as `link`."
-                          }
-                        },
-                        "additionalProperties": {}
-                      }
-                    },
-                    "required": [
-                      "id",
-                      "x",
-                      "y",
-                      "w",
-                      "h",
-                      "type",
-                      "path",
-                      "alt"
-                    ]
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "string",
-                        "minLength": 1,
-                        "description": "Unique within the slide; used by validation and revision."
-                      },
-                      "x": {
-                        "type": "number",
-                        "description": "Inches on the slide canvas."
-                      },
-                      "y": {
-                        "type": "number",
-                        "description": "Inches on the slide canvas."
-                      },
-                      "w": {
-                        "type": "number",
-                        "description": "Inches on the slide canvas."
-                      },
-                      "h": {
-                        "type": "number",
-                        "description": "Inches on the slide canvas."
-                      },
-                      "zIndex": {
-                        "description": "Paint order. Lower values sit behind.",
-                        "type": "number"
-                      },
-                      "role": {
-                        "description": "Semantic role, e.g. title, body, caption, decorative.",
-                        "type": "string"
-                      },
-                      "intentionalOverlap": {
-                        "description": "Marks a deliberate collision so QA does not report it.",
-                        "type": "boolean"
-                      },
-                      "allowOverlapWith": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      "type": {
-                        "type": "string",
-                        "const": "table"
-                      },
-                      "table": {
-                        "type": "object",
-                        "properties": {
-                          "headers": {
-                            "minItems": 1,
-                            "type": "array",
-                            "items": {
-                              "type": "string"
-                            }
-                          },
-                          "rows": {
-                            "type": "array",
-                            "items": {
-                              "type": "array",
-                              "items": {
-                                "anyOf": [
-                                  {
-                                    "type": "string"
-                                  },
-                                  {
-                                    "type": "number"
-                                  }
-                                ]
-                              }
-                            }
-                          },
-                          "columnWidths": {
-                            "type": "array",
-                            "items": {
-                              "type": "number",
-                              "exclusiveMinimum": 0
-                            }
-                          },
-                          "highlightRows": {
-                            "type": "array",
-                            "items": {
-                              "type": "integer",
-                              "minimum": 0,
-                              "maximum": 9007199254740991
-                            }
-                          }
-                        },
-                        "required": [
-                          "headers",
-                          "rows"
-                        ]
-                      },
-                      "options": {
-                        "type": "object",
-                        "propertyNames": {
-                          "type": "string"
-                        },
-                        "additionalProperties": {},
-                        "description": "Advanced PptxGenJS options passed through unchanged. Verify the render. A `hyperlink` here is held to the same scheme allowlist as `link`."
-                      }
-                    },
-                    "required": [
-                      "id",
-                      "x",
-                      "y",
-                      "w",
-                      "h",
-                      "type",
-                      "table"
-                    ]
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "string",
-                        "minLength": 1,
-                        "description": "Unique within the slide; used by validation and revision."
-                      },
-                      "x": {
-                        "type": "number",
-                        "description": "Inches on the slide canvas."
-                      },
-                      "y": {
-                        "type": "number",
-                        "description": "Inches on the slide canvas."
-                      },
-                      "w": {
-                        "type": "number",
-                        "description": "Inches on the slide canvas."
-                      },
-                      "h": {
-                        "type": "number",
-                        "description": "Inches on the slide canvas."
-                      },
-                      "zIndex": {
-                        "description": "Paint order. Lower values sit behind.",
-                        "type": "number"
-                      },
-                      "role": {
-                        "description": "Semantic role, e.g. title, body, caption, decorative.",
-                        "type": "string"
-                      },
-                      "intentionalOverlap": {
-                        "description": "Marks a deliberate collision so QA does not report it.",
-                        "type": "boolean"
-                      },
-                      "allowOverlapWith": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      "type": {
-                        "type": "string",
-                        "const": "chart"
-                      },
-                      "chart": {
-                        "type": "object",
-                        "properties": {
-                          "kind": {
-                            "type": "string",
-                            "enum": [
-                              "bar",
-                              "bar-stacked",
-                              "bar-horizontal",
-                              "line",
-                              "pie",
-                              "doughnut",
-                              "area",
-                              "scatter",
-                              "radar",
-                              "waterfall"
-                            ],
-                            "description": "A native, editable chart. `scatter` reads its labels as x values. For anything else PptxGenJS can draw, use a native-chart element."
-                          },
-                          "labels": {
-                            "minItems": 1,
-                            "type": "array",
-                            "items": {
-                              "type": "string"
-                            },
-                            "description": "Category labels, one per value in every series. For a scatter chart these are the x values and must be numbers."
-                          },
-                          "series": {
-                            "minItems": 1,
-                            "type": "array",
-                            "items": {
-                              "type": "object",
-                              "properties": {
-                                "name": {
-                                  "type": "string"
-                                },
-                                "values": {
-                                  "type": "array",
-                                  "items": {
-                                    "type": "number"
-                                  }
-                                }
-                              },
-                              "required": [
-                                "name",
-                                "values"
-                              ]
-                            }
-                          },
-                          "unit": {
-                            "type": "string"
-                          },
-                          "showLegend": {
-                            "type": "boolean"
-                          },
-                          "showValues": {
-                            "type": "boolean"
-                          }
-                        },
-                        "required": [
-                          "kind",
-                          "labels",
-                          "series"
-                        ]
-                      },
-                      "alt": {
-                        "type": "string"
-                      },
-                      "style": {
-                        "type": "object",
-                        "properties": {
-                          "colors": {
-                            "type": "array",
-                            "items": {
-                              "type": "string",
-                              "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
-                              "description": "Hex color, with or without a leading #."
-                            }
-                          },
-                          "options": {
-                            "type": "object",
-                            "propertyNames": {
-                              "type": "string"
-                            },
-                            "additionalProperties": {},
-                            "description": "Advanced PptxGenJS options passed through unchanged. Verify the render. A `hyperlink` here is held to the same scheme allowlist as `link`."
-                          }
-                        },
-                        "additionalProperties": {}
-                      }
-                    },
-                    "required": [
-                      "id",
-                      "x",
-                      "y",
-                      "w",
-                      "h",
-                      "type",
-                      "chart"
-                    ]
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "string",
-                        "minLength": 1,
-                        "description": "Unique within the slide; used by validation and revision."
-                      },
-                      "x": {
-                        "type": "number",
-                        "description": "Inches on the slide canvas."
-                      },
-                      "y": {
-                        "type": "number",
-                        "description": "Inches on the slide canvas."
-                      },
-                      "w": {
-                        "type": "number",
-                        "description": "Inches on the slide canvas."
-                      },
-                      "h": {
-                        "type": "number",
-                        "description": "Inches on the slide canvas."
-                      },
-                      "zIndex": {
-                        "description": "Paint order. Lower values sit behind.",
-                        "type": "number"
-                      },
-                      "role": {
-                        "description": "Semantic role, e.g. title, body, caption, decorative.",
-                        "type": "string"
-                      },
-                      "intentionalOverlap": {
-                        "description": "Marks a deliberate collision so QA does not report it.",
-                        "type": "boolean"
-                      },
-                      "allowOverlapWith": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      "type": {
-                        "type": "string",
-                        "const": "native-chart"
-                      },
-                      "nativeType": {
-                        "type": "string",
-                        "minLength": 1
-                      },
-                      "data": {
-                        "minItems": 1,
-                        "type": "array",
-                        "items": {
-                          "type": "object",
-                          "propertyNames": {
-                            "type": "string"
-                          },
-                          "additionalProperties": {}
-                        }
-                      },
-                      "alt": {
-                        "type": "string"
-                      },
-                      "options": {
-                        "type": "object",
-                        "propertyNames": {
-                          "type": "string"
-                        },
-                        "additionalProperties": {},
-                        "description": "Advanced PptxGenJS options passed through unchanged. Verify the render. A `hyperlink` here is held to the same scheme allowlist as `link`."
-                      }
-                    },
-                    "required": [
-                      "id",
-                      "x",
-                      "y",
-                      "w",
-                      "h",
-                      "type",
-                      "nativeType",
-                      "data"
-                    ],
-                    "description": "Escape hatch for any chart type or data shape PptxGenJS supports."
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "string",
-                        "minLength": 1,
-                        "description": "Unique within the slide; used by validation and revision."
-                      },
-                      "x": {
-                        "type": "number",
-                        "description": "Inches on the slide canvas."
-                      },
-                      "y": {
-                        "type": "number",
-                        "description": "Inches on the slide canvas."
-                      },
-                      "w": {
-                        "type": "number",
-                        "description": "Inches on the slide canvas."
-                      },
-                      "h": {
-                        "type": "number",
-                        "description": "Inches on the slide canvas."
-                      },
-                      "zIndex": {
-                        "description": "Paint order. Lower values sit behind.",
-                        "type": "number"
-                      },
-                      "role": {
-                        "description": "Semantic role, e.g. title, body, caption, decorative.",
-                        "type": "string"
-                      },
-                      "intentionalOverlap": {
-                        "description": "Marks a deliberate collision so QA does not report it.",
-                        "type": "boolean"
-                      },
-                      "allowOverlapWith": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      "type": {
-                        "type": "string",
-                        "const": "diagram"
-                      },
-                      "grammar": {
-                        "type": "string",
-                        "minLength": 1,
-                        "description": "A named diagram form; Slide Agent handles routing, spacing, and label placement. Built in: layered, swimlane, sequence, hierarchy, quadrant. A host can register more — ask for capabilities. An unknown name fails the build with the list of what is available."
-                      },
-                      "spec": {
-                        "type": "object",
-                        "propertyNames": {
-                          "type": "string"
-                        },
-                        "additionalProperties": {},
-                        "description": "The grammar's own payload. Fetch its schema from the contract."
-                      },
-                      "alt": {
-                        "type": "string"
-                      }
-                    },
-                    "required": [
-                      "id",
-                      "x",
-                      "y",
-                      "w",
-                      "h",
-                      "type",
-                      "grammar",
-                      "spec"
-                    ],
-                    "description": "A diagram expressed as a relationship rather than as hand-placed shapes."
-                  }
-                ]
-              }
+              "$ref": "#/$defs/__schema250"
             },
             "speakerNotes": {
               "type": "array",
@@ -2002,20 +846,7 @@
             "sources": {
               "type": "array",
               "items": {
-                "type": "object",
-                "properties": {
-                  "label": {
-                    "type": "string"
-                  },
-                  "url": {
-                    "type": "string",
-                    "format": "uri"
-                  },
-                  "note": {
-                    "type": "string"
-                  }
-                },
-                "description": "A cited source. Never invent one."
+                "$ref": "#/$defs/__schema251"
               }
             }
           },
@@ -2048,22 +879,7 @@
           "minLength": 1
         },
         "bbox": {
-          "type": "array",
-          "prefixItems": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            }
-          ],
-          "description": "[x, y, w, h] in inches. Connectors may use a negative w or h for direction."
+          "$ref": "#/$defs/__schema254"
         },
         "zIndex": {
           "type": "number"
@@ -2081,9 +897,7 @@
           }
         },
         "mode": {
-          "description": "Read-only inventory row; ignored on import.",
-          "type": "string",
-          "const": "inspection"
+          "$ref": "#/$defs/__schema263"
         },
         "kind": {
           "type": "string",
@@ -2111,22 +925,7 @@
           "minLength": 1
         },
         "bbox": {
-          "type": "array",
-          "prefixItems": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            }
-          ],
-          "description": "[x, y, w, h] in inches. Connectors may use a negative w or h for direction."
+          "$ref": "#/$defs/__schema254"
         },
         "zIndex": {
           "type": "number"
@@ -2144,9 +943,7 @@
           }
         },
         "mode": {
-          "description": "Read-only inventory row; ignored on import.",
-          "type": "string",
-          "const": "inspection"
+          "$ref": "#/$defs/__schema263"
         },
         "kind": {
           "type": "string",
@@ -2174,22 +971,7 @@
           "minLength": 1
         },
         "bbox": {
-          "type": "array",
-          "prefixItems": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            }
-          ],
-          "description": "[x, y, w, h] in inches. Connectors may use a negative w or h for direction."
+          "$ref": "#/$defs/__schema254"
         },
         "zIndex": {
           "type": "number"
@@ -2207,9 +989,7 @@
           }
         },
         "mode": {
-          "description": "Read-only inventory row; ignored on import.",
-          "type": "string",
-          "const": "inspection"
+          "$ref": "#/$defs/__schema263"
         },
         "kind": {
           "type": "string",
@@ -2219,7 +999,6 @@
       "required": [
         "slide",
         "id",
-        "bbox",
         "kind"
       ],
       "additionalProperties": {}
@@ -2237,22 +1016,7 @@
           "minLength": 1
         },
         "bbox": {
-          "type": "array",
-          "prefixItems": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            }
-          ],
-          "description": "[x, y, w, h] in inches. Connectors may use a negative w or h for direction."
+          "$ref": "#/$defs/__schema254"
         },
         "zIndex": {
           "type": "number"
@@ -2270,9 +1034,7 @@
           }
         },
         "mode": {
-          "description": "Read-only inventory row; ignored on import.",
-          "type": "string",
-          "const": "inspection"
+          "$ref": "#/$defs/__schema263"
         },
         "kind": {
           "type": "string",
@@ -2300,22 +1062,7 @@
           "minLength": 1
         },
         "bbox": {
-          "type": "array",
-          "prefixItems": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            }
-          ],
-          "description": "[x, y, w, h] in inches. Connectors may use a negative w or h for direction."
+          "$ref": "#/$defs/__schema254"
         },
         "zIndex": {
           "type": "number"
@@ -2333,60 +1080,14 @@
           }
         },
         "mode": {
-          "description": "Read-only inventory row; ignored on import.",
-          "type": "string",
-          "const": "inspection"
+          "$ref": "#/$defs/__schema263"
         },
         "kind": {
           "type": "string",
           "const": "table"
         },
         "table": {
-          "type": "object",
-          "properties": {
-            "headers": {
-              "minItems": 1,
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            "rows": {
-              "type": "array",
-              "items": {
-                "type": "array",
-                "items": {
-                  "anyOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "number"
-                    }
-                  ]
-                }
-              }
-            },
-            "columnWidths": {
-              "type": "array",
-              "items": {
-                "type": "number",
-                "exclusiveMinimum": 0
-              }
-            },
-            "highlightRows": {
-              "type": "array",
-              "items": {
-                "type": "integer",
-                "minimum": 0,
-                "maximum": 9007199254740991
-              }
-            }
-          },
-          "required": [
-            "headers",
-            "rows"
-          ]
+          "$ref": "#/$defs/__schema113"
         }
       },
       "required": [
@@ -2410,22 +1111,7 @@
           "minLength": 1
         },
         "bbox": {
-          "type": "array",
-          "prefixItems": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            }
-          ],
-          "description": "[x, y, w, h] in inches. Connectors may use a negative w or h for direction."
+          "$ref": "#/$defs/__schema254"
         },
         "zIndex": {
           "type": "number"
@@ -2443,78 +1129,14 @@
           }
         },
         "mode": {
-          "description": "Read-only inventory row; ignored on import.",
-          "type": "string",
-          "const": "inspection"
+          "$ref": "#/$defs/__schema263"
         },
         "kind": {
           "type": "string",
           "const": "chart"
         },
         "chart": {
-          "type": "object",
-          "properties": {
-            "kind": {
-              "type": "string",
-              "enum": [
-                "bar",
-                "bar-stacked",
-                "bar-horizontal",
-                "line",
-                "pie",
-                "doughnut",
-                "area",
-                "scatter",
-                "radar",
-                "waterfall"
-              ],
-              "description": "A native, editable chart. `scatter` reads its labels as x values. For anything else PptxGenJS can draw, use a native-chart element."
-            },
-            "labels": {
-              "minItems": 1,
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "description": "Category labels, one per value in every series. For a scatter chart these are the x values and must be numbers."
-            },
-            "series": {
-              "minItems": 1,
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string"
-                  },
-                  "values": {
-                    "type": "array",
-                    "items": {
-                      "type": "number"
-                    }
-                  }
-                },
-                "required": [
-                  "name",
-                  "values"
-                ]
-              }
-            },
-            "unit": {
-              "type": "string"
-            },
-            "showLegend": {
-              "type": "boolean"
-            },
-            "showValues": {
-              "type": "boolean"
-            }
-          },
-          "required": [
-            "kind",
-            "labels",
-            "series"
-          ]
+          "$ref": "#/$defs/__schema115"
         }
       },
       "required": [
@@ -2538,22 +1160,7 @@
           "minLength": 1
         },
         "bbox": {
-          "type": "array",
-          "prefixItems": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            }
-          ],
-          "description": "[x, y, w, h] in inches. Connectors may use a negative w or h for direction."
+          "$ref": "#/$defs/__schema254"
         },
         "zIndex": {
           "type": "number"
@@ -2571,9 +1178,7 @@
           }
         },
         "mode": {
-          "description": "Read-only inventory row; ignored on import.",
-          "type": "string",
-          "const": "inspection"
+          "$ref": "#/$defs/__schema263"
         },
         "kind": {
           "type": "string",
@@ -2601,22 +1206,7 @@
           "minLength": 1
         },
         "bbox": {
-          "type": "array",
-          "prefixItems": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            }
-          ],
-          "description": "[x, y, w, h] in inches. Connectors may use a negative w or h for direction."
+          "$ref": "#/$defs/__schema254"
         },
         "zIndex": {
           "type": "number"
@@ -2634,9 +1224,7 @@
           }
         },
         "mode": {
-          "description": "Read-only inventory row; ignored on import.",
-          "type": "string",
-          "const": "inspection"
+          "$ref": "#/$defs/__schema263"
         },
         "kind": {
           "type": "string",
@@ -2666,6 +1254,111 @@
     {
       "type": "object",
       "properties": {
+        "slide": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "bbox": {
+          "$ref": "#/$defs/__schema254"
+        },
+        "zIndex": {
+          "type": "number"
+        },
+        "role": {
+          "type": "string"
+        },
+        "intentionalOverlap": {
+          "type": "boolean"
+        },
+        "allowOverlapWith": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "mode": {
+          "$ref": "#/$defs/__schema263"
+        },
+        "kind": {
+          "type": "string",
+          "const": "group"
+        },
+        "children": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/__schema1"
+          }
+        }
+      },
+      "required": [
+        "slide",
+        "id",
+        "bbox",
+        "kind",
+        "children"
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "type": "object",
+      "properties": {
+        "slide": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "bbox": {
+          "$ref": "#/$defs/__schema254"
+        },
+        "zIndex": {
+          "type": "number"
+        },
+        "role": {
+          "type": "string"
+        },
+        "intentionalOverlap": {
+          "type": "boolean"
+        },
+        "allowOverlapWith": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "mode": {
+          "$ref": "#/$defs/__schema263"
+        },
+        "kind": {
+          "type": "string",
+          "const": "symbol-instance"
+        },
+        "symbol": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "slide",
+        "id",
+        "bbox",
+        "kind",
+        "symbol"
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "type": "object",
+      "properties": {
         "kind": {
           "type": "string",
           "const": "notes"
@@ -2684,20 +1377,7 @@
         "sources": {
           "type": "array",
           "items": {
-            "type": "object",
-            "properties": {
-              "label": {
-                "type": "string"
-              },
-              "url": {
-                "type": "string",
-                "format": "uri"
-              },
-              "note": {
-                "type": "string"
-              }
-            },
-            "description": "A cited source. Never invent one."
+            "$ref": "#/$defs/__schema251"
           }
         }
       },
@@ -2707,5 +1387,2581 @@
       ],
       "additionalProperties": {}
     }
-  ]
+  ],
+  "$defs": {
+    "__schema0": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema1"
+      },
+      "description": "Elements repeated on every model-authored slide. Any string may interpolate {{slideNumber}}, {{slideNumberPadded}}, {{slideCount}}, {{slideTitle}}, {{deckTitle}}, or a key the slide supplies in its own `chrome`."
+    },
+    "__schema141": {
+      "description": "Style overrides per named variant, keyed by variant then by element id. A slide selects one with chrome: { variant: \"paper\" }. Only style properties change.",
+      "$ref": "#/$defs/__schema142"
+    },
+    "__schema143": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "__schema145": {
+      "type": "string",
+      "minLength": 1
+    },
+    "__schema152": {
+      "type": "object",
+      "properties": {
+        "background": {
+          "type": "string",
+          "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+          "description": "Hex color, with or without a leading #."
+        },
+        "surface": {
+          "type": "string",
+          "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+          "description": "Hex color, with or without a leading #."
+        },
+        "ink": {
+          "type": "string",
+          "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+          "description": "Hex color, with or without a leading #."
+        },
+        "muted": {
+          "type": "string",
+          "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+          "description": "Hex color, with or without a leading #."
+        },
+        "accent": {
+          "type": "string",
+          "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+          "description": "Hex color, with or without a leading #."
+        },
+        "accentAlt": {
+          "type": "string",
+          "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+          "description": "Hex color, with or without a leading #."
+        },
+        "accentSoft": {
+          "type": "string",
+          "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+          "description": "Hex color, with or without a leading #."
+        },
+        "rule": {
+          "type": "string",
+          "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+          "description": "Hex color, with or without a leading #."
+        },
+        "positive": {
+          "type": "string",
+          "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+          "description": "Hex color, with or without a leading #."
+        },
+        "negative": {
+          "type": "string",
+          "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+          "description": "Hex color, with or without a leading #."
+        },
+        "warning": {
+          "type": "string",
+          "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+          "description": "Hex color, with or without a leading #."
+        },
+        "colors": {
+          "description": "Additional unnamed colors, in priority order.",
+          "$ref": "#/$defs/__schema153"
+        },
+        "custom": {
+          "description": "Named colors specific to this deck.",
+          "$ref": "#/$defs/__schema154"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "__schema155": {
+      "type": "object",
+      "properties": {
+        "display": {
+          "type": "string"
+        },
+        "heading": {
+          "type": "string"
+        },
+        "body": {
+          "type": "string"
+        },
+        "mono": {
+          "type": "string"
+        },
+        "numeric": {
+          "type": "string"
+        },
+        "fallbacks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "scale": {
+          "description": "The point sizes this deck commits to, largest first. Elements that step off it are reported, never refused.",
+          "$ref": "#/$defs/__schema156"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "__schema158": {
+      "type": "object",
+      "properties": {
+        "variables": {
+          "$ref": "#/$defs/__schema159"
+        },
+        "styles": {
+          "$ref": "#/$defs/__schema163"
+        },
+        "motifs": {
+          "$ref": "#/$defs/__schema168"
+        },
+        "constraints": {
+          "$ref": "#/$defs/__schema170"
+        }
+      },
+      "additionalProperties": {},
+      "description": "The deck's own variables, named styles, motifs, and rules. Names are arbitrary; Slide Agent reserves none."
+    },
+    "__schema182": {
+      "type": "string"
+    },
+    "__schema184": {
+      "type": "string"
+    },
+    "__schema186": {
+      "type": "string"
+    },
+    "__schema188": {
+      "type": "string",
+      "enum": [
+        "sparse",
+        "balanced",
+        "dense"
+      ]
+    },
+    "__schema190": {
+      "type": "string",
+      "enum": [
+        "sharp",
+        "soft",
+        "organic"
+      ]
+    },
+    "__schema192": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "__schema195": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "thesis": {
+            "type": "string"
+          },
+          "differentiator": {
+            "type": "string",
+            "description": "What makes this thesis structurally different from the others, not just differently coloured."
+          },
+          "rejectedBecause": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "thesis",
+          "differentiator"
+        ],
+        "additionalProperties": {}
+      }
+    },
+    "__schema196": {
+      "type": "string"
+    },
+    "__schema201": {
+      "type": "string"
+    },
+    "__schema203": {
+      "type": "string"
+    },
+    "__schema205": {
+      "type": "string"
+    },
+    "__schema212": {
+      "type": "string"
+    },
+    "__schema214": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "__schema216": {
+      "type": "string"
+    },
+    "__schema218": {
+      "type": "string"
+    },
+    "__schema220": {
+      "type": "string"
+    },
+    "__schema226": {
+      "type": "object",
+      "properties": {
+        "vision": {
+          "$ref": "#/$defs/__schema227"
+        },
+        "webResearch": {
+          "type": "boolean"
+        },
+        "imageGeneration": {
+          "type": "boolean"
+        },
+        "vectorGeneration": {
+          "type": "boolean"
+        },
+        "codeExecution": {
+          "type": "boolean"
+        },
+        "localFileAccess": {
+          "type": "boolean"
+        },
+        "availableAssetProviders": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": {},
+      "description": "What the host AI can do. Planning context only: declaring a capability grants no permission and triggers no call by the core."
+    },
+    "__schema1": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Unique within the slide; used by validation and revision."
+            },
+            "x": {
+              "type": "number",
+              "description": "Inches on the slide canvas."
+            },
+            "y": {
+              "type": "number",
+              "description": "Inches on the slide canvas."
+            },
+            "w": {
+              "type": "number",
+              "description": "Inches on the slide canvas."
+            },
+            "h": {
+              "type": "number",
+              "description": "Inches on the slide canvas."
+            },
+            "zIndex": {
+              "$ref": "#/$defs/__schema4"
+            },
+            "role": {
+              "$ref": "#/$defs/__schema6"
+            },
+            "styleRef": {
+              "$ref": "#/$defs/__schema8"
+            },
+            "layer": {
+              "$ref": "#/$defs/__schema10"
+            },
+            "allowBleed": {
+              "$ref": "#/$defs/__schema12"
+            },
+            "intentionalOverlap": {
+              "$ref": "#/$defs/__schema14"
+            },
+            "allowOverlapWith": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "place": {
+              "$ref": "#/$defs/__schema17"
+            },
+            "type": {
+              "type": "string",
+              "const": "text"
+            },
+            "text": {
+              "type": "string"
+            },
+            "runs": {
+              "$ref": "#/$defs/__schema42"
+            },
+            "link": {
+              "$ref": "#/$defs/__schema46"
+            },
+            "style": {
+              "$ref": "#/$defs/__schema52"
+            }
+          },
+          "required": [
+            "id",
+            "x",
+            "y",
+            "w",
+            "h",
+            "type"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Unique within the slide; used by validation and revision."
+            },
+            "x": {
+              "type": "number",
+              "description": "Inches on the slide canvas."
+            },
+            "y": {
+              "type": "number",
+              "description": "Inches on the slide canvas."
+            },
+            "w": {
+              "type": "number",
+              "description": "Inches on the slide canvas."
+            },
+            "h": {
+              "type": "number",
+              "description": "Inches on the slide canvas."
+            },
+            "zIndex": {
+              "$ref": "#/$defs/__schema4"
+            },
+            "role": {
+              "$ref": "#/$defs/__schema6"
+            },
+            "styleRef": {
+              "$ref": "#/$defs/__schema8"
+            },
+            "layer": {
+              "$ref": "#/$defs/__schema10"
+            },
+            "allowBleed": {
+              "$ref": "#/$defs/__schema12"
+            },
+            "intentionalOverlap": {
+              "$ref": "#/$defs/__schema14"
+            },
+            "allowOverlapWith": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "place": {
+              "$ref": "#/$defs/__schema17"
+            },
+            "type": {
+              "type": "string",
+              "const": "shape"
+            },
+            "shape": {
+              "type": "string"
+            },
+            "link": {
+              "$ref": "#/$defs/__schema47"
+            },
+            "style": {
+              "type": "object",
+              "properties": {
+                "fill": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+                      "description": "Hex color, with or without a leading #."
+                    },
+                    {
+                      "$ref": "#/$defs/__schema53"
+                    }
+                  ]
+                },
+                "transparency": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 100
+                    },
+                    {
+                      "$ref": "#/$defs/__schema53"
+                    }
+                  ]
+                },
+                "lineColor": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+                      "description": "Hex color, with or without a leading #."
+                    },
+                    {
+                      "$ref": "#/$defs/__schema53"
+                    }
+                  ]
+                },
+                "lineWidth": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    {
+                      "$ref": "#/$defs/__schema53"
+                    }
+                  ]
+                },
+                "rotate": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "$ref": "#/$defs/__schema53"
+                    }
+                  ]
+                },
+                "options": {
+                  "$ref": "#/$defs/__schema43"
+                }
+              },
+              "additionalProperties": {}
+            }
+          },
+          "required": [
+            "id",
+            "x",
+            "y",
+            "w",
+            "h",
+            "type"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Unique within the slide; used by validation and revision."
+            },
+            "x": {
+              "$ref": "#/$defs/__schema64"
+            },
+            "y": {
+              "$ref": "#/$defs/__schema65"
+            },
+            "w": {
+              "$ref": "#/$defs/__schema66"
+            },
+            "h": {
+              "$ref": "#/$defs/__schema67"
+            },
+            "zIndex": {
+              "$ref": "#/$defs/__schema4"
+            },
+            "role": {
+              "$ref": "#/$defs/__schema6"
+            },
+            "styleRef": {
+              "$ref": "#/$defs/__schema8"
+            },
+            "layer": {
+              "$ref": "#/$defs/__schema10"
+            },
+            "allowBleed": {
+              "$ref": "#/$defs/__schema12"
+            },
+            "intentionalOverlap": {
+              "$ref": "#/$defs/__schema14"
+            },
+            "allowOverlapWith": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "place": {
+              "$ref": "#/$defs/__schema17"
+            },
+            "type": {
+              "type": "string",
+              "const": "connector"
+            },
+            "from": {
+              "$ref": "#/$defs/__schema69"
+            },
+            "to": {
+              "$ref": "#/$defs/__schema74"
+            },
+            "route": {
+              "$ref": "#/$defs/__schema75"
+            },
+            "clearance": {
+              "$ref": "#/$defs/__schema77"
+            },
+            "stub": {
+              "$ref": "#/$defs/__schema79"
+            },
+            "mayCross": {
+              "$ref": "#/$defs/__schema81"
+            },
+            "style": {
+              "$ref": "#/$defs/__schema83"
+            }
+          },
+          "required": [
+            "id",
+            "type"
+          ],
+          "description": "Anchor it with from/to and the engine routes it around whatever is in the way. Without anchors, x/y is the start point and w/h is the delta to the end point, which may be negative."
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Unique within the slide; used by validation and revision."
+            },
+            "x": {
+              "type": "number",
+              "description": "Inches on the slide canvas."
+            },
+            "y": {
+              "type": "number",
+              "description": "Inches on the slide canvas."
+            },
+            "w": {
+              "type": "number",
+              "description": "Inches on the slide canvas."
+            },
+            "h": {
+              "type": "number",
+              "description": "Inches on the slide canvas."
+            },
+            "zIndex": {
+              "$ref": "#/$defs/__schema4"
+            },
+            "role": {
+              "$ref": "#/$defs/__schema6"
+            },
+            "styleRef": {
+              "$ref": "#/$defs/__schema8"
+            },
+            "layer": {
+              "$ref": "#/$defs/__schema10"
+            },
+            "allowBleed": {
+              "$ref": "#/$defs/__schema12"
+            },
+            "intentionalOverlap": {
+              "$ref": "#/$defs/__schema14"
+            },
+            "allowOverlapWith": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "place": {
+              "$ref": "#/$defs/__schema17"
+            },
+            "type": {
+              "type": "string",
+              "const": "image"
+            },
+            "path": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Local path, or an http(s) URL when remote assets are explicitly enabled."
+            },
+            "alt": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Required for accessibility. Describe the content, not the file."
+            },
+            "provenance": {
+              "type": "object",
+              "properties": {
+                "source": {
+                  "$ref": "#/$defs/__schema84"
+                },
+                "credit": {
+                  "$ref": "#/$defs/__schema86"
+                },
+                "license": {
+                  "$ref": "#/$defs/__schema88"
+                },
+                "generated": {
+                  "$ref": "#/$defs/__schema90"
+                },
+                "generator": {
+                  "$ref": "#/$defs/__schema92"
+                }
+              },
+              "additionalProperties": {},
+              "description": "Attribution and origin. Written into the speaker notes under [Credits]."
+            },
+            "vector": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Path to the .svg. It is packaged with the deck and declared in the manifest."
+                },
+                "editable": {
+                  "$ref": "#/$defs/__schema96"
+                },
+                "source": {
+                  "type": "string"
+                },
+                "license": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "path",
+                "editable"
+              ],
+              "additionalProperties": {},
+              "description": "Scalable artwork carried with the raster image. Declares its own editability."
+            },
+            "treatment": {
+              "type": "object",
+              "properties": {
+                "focalPoint": {
+                  "$ref": "#/$defs/__schema103"
+                },
+                "crop": {
+                  "$ref": "#/$defs/__schema105"
+                },
+                "maskShape": {
+                  "$ref": "#/$defs/__schema107"
+                },
+                "tint": {
+                  "$ref": "#/$defs/__schema109"
+                },
+                "duotone": {
+                  "$ref": "#/$defs/__schema110"
+                },
+                "grayscale": {
+                  "$ref": "#/$defs/__schema111"
+                }
+              },
+              "additionalProperties": {},
+              "description": "Deterministic, opt-in picture treatment. Applied on write; the source file is never modified."
+            },
+            "link": {
+              "$ref": "#/$defs/__schema47"
+            },
+            "fit": {
+              "type": "string",
+              "enum": [
+                "cover",
+                "contain",
+                "stretch"
+              ]
+            },
+            "style": {
+              "type": "object",
+              "properties": {
+                "rotate": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "$ref": "#/$defs/__schema53"
+                    }
+                  ]
+                },
+                "transparency": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 100
+                    },
+                    {
+                      "$ref": "#/$defs/__schema53"
+                    }
+                  ]
+                },
+                "options": {
+                  "$ref": "#/$defs/__schema43"
+                }
+              },
+              "additionalProperties": {}
+            }
+          },
+          "required": [
+            "id",
+            "x",
+            "y",
+            "w",
+            "h",
+            "type",
+            "path",
+            "alt"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Unique within the slide; used by validation and revision."
+            },
+            "x": {
+              "type": "number",
+              "description": "Inches on the slide canvas."
+            },
+            "y": {
+              "type": "number",
+              "description": "Inches on the slide canvas."
+            },
+            "w": {
+              "type": "number",
+              "description": "Inches on the slide canvas."
+            },
+            "h": {
+              "type": "number",
+              "description": "Inches on the slide canvas."
+            },
+            "zIndex": {
+              "$ref": "#/$defs/__schema4"
+            },
+            "role": {
+              "$ref": "#/$defs/__schema6"
+            },
+            "styleRef": {
+              "$ref": "#/$defs/__schema8"
+            },
+            "layer": {
+              "$ref": "#/$defs/__schema10"
+            },
+            "allowBleed": {
+              "$ref": "#/$defs/__schema12"
+            },
+            "intentionalOverlap": {
+              "$ref": "#/$defs/__schema14"
+            },
+            "allowOverlapWith": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "place": {
+              "$ref": "#/$defs/__schema17"
+            },
+            "type": {
+              "type": "string",
+              "const": "table"
+            },
+            "table": {
+              "$ref": "#/$defs/__schema113"
+            },
+            "options": {
+              "$ref": "#/$defs/__schema43"
+            }
+          },
+          "required": [
+            "id",
+            "x",
+            "y",
+            "w",
+            "h",
+            "type",
+            "table"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Unique within the slide; used by validation and revision."
+            },
+            "x": {
+              "type": "number",
+              "description": "Inches on the slide canvas."
+            },
+            "y": {
+              "type": "number",
+              "description": "Inches on the slide canvas."
+            },
+            "w": {
+              "type": "number",
+              "description": "Inches on the slide canvas."
+            },
+            "h": {
+              "type": "number",
+              "description": "Inches on the slide canvas."
+            },
+            "zIndex": {
+              "$ref": "#/$defs/__schema4"
+            },
+            "role": {
+              "$ref": "#/$defs/__schema6"
+            },
+            "styleRef": {
+              "$ref": "#/$defs/__schema8"
+            },
+            "layer": {
+              "$ref": "#/$defs/__schema10"
+            },
+            "allowBleed": {
+              "$ref": "#/$defs/__schema12"
+            },
+            "intentionalOverlap": {
+              "$ref": "#/$defs/__schema14"
+            },
+            "allowOverlapWith": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "place": {
+              "$ref": "#/$defs/__schema17"
+            },
+            "type": {
+              "type": "string",
+              "const": "chart"
+            },
+            "chart": {
+              "$ref": "#/$defs/__schema115"
+            },
+            "alt": {
+              "type": "string"
+            },
+            "style": {
+              "type": "object",
+              "properties": {
+                "colors": {
+                  "anyOf": [
+                    {
+                      "type": "array",
+                      "items": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+                            "description": "Hex color, with or without a leading #."
+                          },
+                          {
+                            "$ref": "#/$defs/__schema53"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "$ref": "#/$defs/__schema53"
+                    }
+                  ]
+                },
+                "options": {
+                  "$ref": "#/$defs/__schema43"
+                }
+              },
+              "additionalProperties": {}
+            }
+          },
+          "required": [
+            "id",
+            "x",
+            "y",
+            "w",
+            "h",
+            "type",
+            "chart"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Unique within the slide; used by validation and revision."
+            },
+            "x": {
+              "type": "number",
+              "description": "Inches on the slide canvas."
+            },
+            "y": {
+              "type": "number",
+              "description": "Inches on the slide canvas."
+            },
+            "w": {
+              "type": "number",
+              "description": "Inches on the slide canvas."
+            },
+            "h": {
+              "type": "number",
+              "description": "Inches on the slide canvas."
+            },
+            "zIndex": {
+              "$ref": "#/$defs/__schema4"
+            },
+            "role": {
+              "$ref": "#/$defs/__schema6"
+            },
+            "styleRef": {
+              "$ref": "#/$defs/__schema8"
+            },
+            "layer": {
+              "$ref": "#/$defs/__schema10"
+            },
+            "allowBleed": {
+              "$ref": "#/$defs/__schema12"
+            },
+            "intentionalOverlap": {
+              "$ref": "#/$defs/__schema14"
+            },
+            "allowOverlapWith": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "place": {
+              "$ref": "#/$defs/__schema17"
+            },
+            "type": {
+              "type": "string",
+              "const": "native-chart"
+            },
+            "nativeType": {
+              "type": "string",
+              "minLength": 1
+            },
+            "data": {
+              "$ref": "#/$defs/__schema126"
+            },
+            "alt": {
+              "type": "string"
+            },
+            "options": {
+              "$ref": "#/$defs/__schema129"
+            }
+          },
+          "required": [
+            "id",
+            "x",
+            "y",
+            "w",
+            "h",
+            "type",
+            "nativeType",
+            "data"
+          ],
+          "description": "Escape hatch for any chart type or data shape PptxGenJS supports."
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Unique within the slide; used by validation and revision."
+            },
+            "x": {
+              "type": "number",
+              "description": "Inches on the slide canvas."
+            },
+            "y": {
+              "type": "number",
+              "description": "Inches on the slide canvas."
+            },
+            "w": {
+              "type": "number",
+              "description": "Inches on the slide canvas."
+            },
+            "h": {
+              "type": "number",
+              "description": "Inches on the slide canvas."
+            },
+            "zIndex": {
+              "$ref": "#/$defs/__schema4"
+            },
+            "role": {
+              "$ref": "#/$defs/__schema6"
+            },
+            "styleRef": {
+              "$ref": "#/$defs/__schema8"
+            },
+            "layer": {
+              "$ref": "#/$defs/__schema10"
+            },
+            "allowBleed": {
+              "$ref": "#/$defs/__schema12"
+            },
+            "intentionalOverlap": {
+              "$ref": "#/$defs/__schema14"
+            },
+            "allowOverlapWith": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "place": {
+              "$ref": "#/$defs/__schema17"
+            },
+            "type": {
+              "type": "string",
+              "const": "diagram"
+            },
+            "grammar": {
+              "$ref": "#/$defs/__schema131"
+            },
+            "spec": {
+              "$ref": "#/$defs/__schema132"
+            },
+            "alt": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "x",
+            "y",
+            "w",
+            "h",
+            "type",
+            "grammar",
+            "spec"
+          ],
+          "description": "A diagram expressed as a relationship rather than as hand-placed shapes."
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Unique within the slide; used by validation and revision."
+            },
+            "x": {
+              "type": "number",
+              "description": "Inches on the slide canvas."
+            },
+            "y": {
+              "type": "number",
+              "description": "Inches on the slide canvas."
+            },
+            "w": {
+              "type": "number",
+              "description": "Inches on the slide canvas."
+            },
+            "h": {
+              "type": "number",
+              "description": "Inches on the slide canvas."
+            },
+            "zIndex": {
+              "$ref": "#/$defs/__schema4"
+            },
+            "role": {
+              "$ref": "#/$defs/__schema6"
+            },
+            "styleRef": {
+              "$ref": "#/$defs/__schema8"
+            },
+            "layer": {
+              "$ref": "#/$defs/__schema10"
+            },
+            "allowBleed": {
+              "$ref": "#/$defs/__schema12"
+            },
+            "intentionalOverlap": {
+              "$ref": "#/$defs/__schema14"
+            },
+            "allowOverlapWith": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "place": {
+              "$ref": "#/$defs/__schema17"
+            },
+            "type": {
+              "type": "string",
+              "const": "group"
+            },
+            "children": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/__schema136"
+              },
+              "description": "Child elements. Their x/y are offsets from the group's x/y, in inches."
+            },
+            "scale": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "alt": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "x",
+            "y",
+            "w",
+            "h",
+            "type",
+            "children"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Unique within the slide; used by validation and revision."
+            },
+            "x": {
+              "type": "number",
+              "description": "Inches on the slide canvas."
+            },
+            "y": {
+              "type": "number",
+              "description": "Inches on the slide canvas."
+            },
+            "w": {
+              "type": "number",
+              "description": "Inches on the slide canvas."
+            },
+            "h": {
+              "type": "number",
+              "description": "Inches on the slide canvas."
+            },
+            "zIndex": {
+              "$ref": "#/$defs/__schema4"
+            },
+            "role": {
+              "$ref": "#/$defs/__schema6"
+            },
+            "styleRef": {
+              "$ref": "#/$defs/__schema8"
+            },
+            "layer": {
+              "$ref": "#/$defs/__schema10"
+            },
+            "allowBleed": {
+              "$ref": "#/$defs/__schema12"
+            },
+            "intentionalOverlap": {
+              "$ref": "#/$defs/__schema14"
+            },
+            "allowOverlapWith": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "place": {
+              "$ref": "#/$defs/__schema17"
+            },
+            "type": {
+              "type": "string",
+              "const": "symbol-instance"
+            },
+            "symbol": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The id of a symbol declared in the scene's symbol records."
+            },
+            "scale": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "overrides": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                },
+                "color": {
+                  "description": "Child element id → replacement colour.",
+                  "$ref": "#/$defs/__schema139"
+                },
+                "style": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {}
+                  }
+                }
+              },
+              "additionalProperties": {}
+            },
+            "alt": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "x",
+            "y",
+            "w",
+            "h",
+            "type",
+            "symbol"
+          ]
+        }
+      ]
+    },
+    "__schema236": {
+      "type": "object",
+      "properties": {
+        "audienceQuestion": {
+          "type": "string"
+        },
+        "claim": {
+          "type": "string"
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "artifact": {
+          "type": "string"
+        },
+        "explanation": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "implication": {
+          "type": "string"
+        },
+        "action": {
+          "type": "string"
+        },
+        "secondaryLanguage": {
+          "$ref": "#/$defs/__schema244"
+        }
+      },
+      "additionalProperties": {},
+      "description": "Planning metadata. Never rendered automatically and never a layout schema."
+    },
+    "__schema113": {
+      "type": "object",
+      "properties": {
+        "headers": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                }
+              ]
+            }
+          }
+        },
+        "columnWidths": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          }
+        },
+        "highlightRows": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        }
+      },
+      "required": [
+        "headers",
+        "rows"
+      ]
+    },
+    "__schema115": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "$ref": "#/$defs/__schema116"
+        },
+        "labels": {
+          "$ref": "#/$defs/__schema117"
+        },
+        "series": {
+          "$ref": "#/$defs/__schema119"
+        },
+        "unit": {
+          "type": "string"
+        },
+        "showLegend": {
+          "type": "boolean"
+        },
+        "showValues": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "kind",
+        "labels",
+        "series"
+      ]
+    },
+    "__schema53": {
+      "type": "object",
+      "properties": {
+        "$var": {
+          "type": "string",
+          "minLength": 1,
+          "description": "A name from creativeDirection.visualSystem.variables."
+        }
+      },
+      "required": [
+        "$var"
+      ],
+      "description": "A deck variable reference, e.g. {\"$var\":\"map-ink\"}."
+    },
+    "__schema250": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema1"
+      }
+    },
+    "__schema251": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "note": {
+          "type": "string"
+        }
+      },
+      "description": "A cited source. Never invent one."
+    },
+    "__schema254": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "description": "[x, y, w, h] in inches. Connectors may use a negative w or h for direction."
+    },
+    "__schema263": {
+      "type": "string",
+      "const": "inspection"
+    },
+    "__schema142": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "propertyNames": {
+          "type": "string"
+        },
+        "additionalProperties": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {}
+        }
+      }
+    },
+    "__schema153": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+        "description": "Hex color, with or without a leading #."
+      }
+    },
+    "__schema154": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+        "description": "Hex color, with or without a leading #."
+      }
+    },
+    "__schema156": {
+      "minItems": 2,
+      "type": "array",
+      "items": {
+        "type": "number",
+        "exclusiveMinimum": 0
+      }
+    },
+    "__schema159": {
+      "description": "Arbitrary named values. Reference one from any style property with {\"$var\":\"name\"}.",
+      "$ref": "#/$defs/__schema160"
+    },
+    "__schema163": {
+      "description": "Arbitrary reusable style names. Reference them from an element with `styleRef`.",
+      "$ref": "#/$defs/__schema164"
+    },
+    "__schema168": {
+      "description": "Subject-derived visual ideas and what they mean. Planning metadata; nothing is rendered from these.",
+      "$ref": "#/$defs/__schema169"
+    },
+    "__schema170": {
+      "description": "The author's own rules, not engine presets.",
+      "$ref": "#/$defs/__schema171"
+    },
+    "__schema227": {
+      "type": "boolean"
+    },
+    "__schema4": {
+      "type": "number"
+    },
+    "__schema6": {
+      "type": "string"
+    },
+    "__schema8": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "__schema10": {
+      "type": "string"
+    },
+    "__schema12": {
+      "type": "boolean"
+    },
+    "__schema14": {
+      "type": "boolean"
+    },
+    "__schema17": {
+      "description": "Placement stated against elements already on this slide. Any axis given here wins over the literal x/y/w/h, and is solved into inches before the slide is composed.",
+      "$ref": "#/$defs/__schema18"
+    },
+    "__schema42": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string"
+          },
+          "options": {
+            "$ref": "#/$defs/__schema43"
+          }
+        },
+        "required": [
+          "text"
+        ]
+      }
+    },
+    "__schema46": {
+      "$ref": "#/$defs/__schema47"
+    },
+    "__schema52": {
+      "type": "object",
+      "properties": {
+        "fontSize": {
+          "anyOf": [
+            {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            {
+              "$ref": "#/$defs/__schema53"
+            }
+          ]
+        },
+        "fontFace": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/__schema53"
+            }
+          ]
+        },
+        "color": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+              "description": "Hex color, with or without a leading #."
+            },
+            {
+              "$ref": "#/$defs/__schema53"
+            }
+          ]
+        },
+        "bold": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/__schema53"
+            }
+          ]
+        },
+        "italic": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/__schema53"
+            }
+          ]
+        },
+        "underline": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/__schema53"
+            }
+          ]
+        },
+        "align": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "left",
+                "center",
+                "right",
+                "justify"
+              ]
+            },
+            {
+              "$ref": "#/$defs/__schema53"
+            }
+          ]
+        },
+        "valign": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "top",
+                "middle",
+                "bottom"
+              ]
+            },
+            {
+              "$ref": "#/$defs/__schema53"
+            }
+          ]
+        },
+        "margin": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ]
+            },
+            {
+              "$ref": "#/$defs/__schema53"
+            }
+          ]
+        },
+        "fit": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "none",
+                "shrink",
+                "resize"
+              ]
+            },
+            {
+              "$ref": "#/$defs/__schema53"
+            }
+          ]
+        },
+        "fill": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+              "description": "Hex color, with or without a leading #."
+            },
+            {
+              "$ref": "#/$defs/__schema53"
+            }
+          ]
+        },
+        "transparency": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            {
+              "$ref": "#/$defs/__schema53"
+            }
+          ]
+        },
+        "lineColor": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+              "description": "Hex color, with or without a leading #."
+            },
+            {
+              "$ref": "#/$defs/__schema53"
+            }
+          ]
+        },
+        "lineWidth": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "$ref": "#/$defs/__schema53"
+            }
+          ]
+        },
+        "rotate": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/__schema53"
+            }
+          ]
+        },
+        "lineSpacingMultiple": {
+          "description": "Line spacing as a multiple of the font size, e.g. 1.35.",
+          "$ref": "#/$defs/__schema56"
+        },
+        "lineSpacing": {
+          "description": "Absolute line spacing in points. Wins over lineSpacingMultiple.",
+          "$ref": "#/$defs/__schema57"
+        },
+        "charSpacing": {
+          "description": "Tracking in points; negative tightens.",
+          "$ref": "#/$defs/__schema58"
+        },
+        "indent": {
+          "description": "First-line indent in inches.",
+          "$ref": "#/$defs/__schema59"
+        },
+        "columns": {
+          "description": "Newspaper-style columns inside this one text box.",
+          "$ref": "#/$defs/__schema60"
+        },
+        "noBreak": {
+          "description": "Replaces spaces with non-breaking spaces so the string never wraps mid-phrase.",
+          "$ref": "#/$defs/__schema61"
+        },
+        "bullet": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "bullet",
+                    "number"
+                  ]
+                },
+                "code": {
+                  "type": "string"
+                },
+                "indent": {
+                  "type": "number"
+                }
+              },
+              "additionalProperties": {}
+            }
+          ]
+        },
+        "options": {
+          "$ref": "#/$defs/__schema43"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "__schema47": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "description": "An http(s) or mailto URL. A bare host is read as https."
+        },
+        {
+          "$ref": "#/$defs/__schema49"
+        },
+        {
+          "$ref": "#/$defs/__schema51"
+        }
+      ],
+      "description": "A hyperlink. Only http, https, and mailto are accepted; anything else is refused and reported."
+    },
+    "__schema43": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {},
+      "description": "Advanced PptxGenJS options passed through unchanged. Verify the render. A `hyperlink` here is held to the same scheme allowlist as `link`."
+    },
+    "__schema64": {
+      "type": "number",
+      "description": "Inches on the slide canvas."
+    },
+    "__schema65": {
+      "type": "number",
+      "description": "Inches on the slide canvas."
+    },
+    "__schema66": {
+      "type": "number",
+      "description": "Inches on the slide canvas."
+    },
+    "__schema67": {
+      "type": "number",
+      "description": "Inches on the slide canvas."
+    },
+    "__schema69": {
+      "$ref": "#/$defs/__schema70"
+    },
+    "__schema74": {
+      "$ref": "#/$defs/__schema70"
+    },
+    "__schema75": {
+      "type": "string",
+      "enum": [
+        "straight",
+        "elbow",
+        "curved"
+      ]
+    },
+    "__schema77": {
+      "type": "number",
+      "minimum": 0
+    },
+    "__schema79": {
+      "type": "number",
+      "minimum": 0
+    },
+    "__schema81": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "__schema83": {
+      "type": "object",
+      "properties": {
+        "color": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+              "description": "Hex color, with or without a leading #."
+            },
+            {
+              "$ref": "#/$defs/__schema53"
+            }
+          ]
+        },
+        "width": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "$ref": "#/$defs/__schema53"
+            }
+          ]
+        },
+        "arrow": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/__schema53"
+            }
+          ]
+        },
+        "beginArrow": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/__schema53"
+            }
+          ]
+        },
+        "dashed": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/__schema53"
+            }
+          ]
+        },
+        "options": {
+          "$ref": "#/$defs/__schema43"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "__schema84": {
+      "type": "string"
+    },
+    "__schema86": {
+      "type": "string"
+    },
+    "__schema88": {
+      "type": "string"
+    },
+    "__schema90": {
+      "type": "boolean"
+    },
+    "__schema92": {
+      "type": "string"
+    },
+    "__schema96": {
+      "anyOf": [
+        {
+          "type": "boolean",
+          "const": false
+        },
+        {
+          "type": "boolean",
+          "const": true
+        },
+        {
+          "type": "string",
+          "const": "partial"
+        }
+      ],
+      "description": "false: scalable artwork only. \"partial\": some parts are separable. true: fully shape-editable after ungrouping."
+    },
+    "__schema103": {
+      "type": "object",
+      "properties": {
+        "x": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "y": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      },
+      "required": [
+        "x",
+        "y"
+      ]
+    },
+    "__schema105": {
+      "description": "Explicit crop as a fraction of the source, per edge.",
+      "$ref": "#/$defs/__schema106"
+    },
+    "__schema107": {
+      "description": "A PowerPoint shape name used as the picture's outline, e.g. \"ellipse\".",
+      "$ref": "#/$defs/__schema108"
+    },
+    "__schema109": {
+      "type": "object",
+      "properties": {
+        "color": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+              "description": "Hex color, with or without a leading #."
+            },
+            {
+              "$ref": "#/$defs/__schema53"
+            }
+          ]
+        },
+        "amount": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            {
+              "$ref": "#/$defs/__schema53"
+            }
+          ]
+        }
+      },
+      "required": [
+        "color"
+      ],
+      "additionalProperties": {}
+    },
+    "__schema110": {
+      "type": "object",
+      "properties": {
+        "shadow": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+              "description": "Hex color, with or without a leading #."
+            },
+            {
+              "$ref": "#/$defs/__schema53"
+            }
+          ]
+        },
+        "highlight": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+              "description": "Hex color, with or without a leading #."
+            },
+            {
+              "$ref": "#/$defs/__schema53"
+            }
+          ]
+        }
+      },
+      "required": [
+        "shadow",
+        "highlight"
+      ],
+      "additionalProperties": {}
+    },
+    "__schema111": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "$ref": "#/$defs/__schema53"
+        }
+      ]
+    },
+    "__schema126": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "propertyNames": {
+          "type": "string"
+        },
+        "additionalProperties": {}
+      }
+    },
+    "__schema129": {
+      "$ref": "#/$defs/__schema43"
+    },
+    "__schema131": {
+      "type": "string",
+      "minLength": 1,
+      "description": "A named diagram form; Slide Agent handles routing, spacing, and label placement. Built in: layered, swimlane, sequence, hierarchy, quadrant. A host can register more — ask for capabilities. An unknown name fails the build with the list of what is available."
+    },
+    "__schema132": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {},
+      "description": "The grammar's own payload. Fetch its schema from the contract."
+    },
+    "__schema136": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "__schema139": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "anyOf": [
+          {
+            "type": "string",
+            "pattern": "^#?(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+            "description": "Hex color, with or without a leading #."
+          },
+          {
+            "$ref": "#/$defs/__schema53"
+          }
+        ]
+      }
+    },
+    "__schema244": {
+      "type": "object",
+      "properties": {
+        "language": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "subtitle": {
+          "type": "string"
+        },
+        "labels": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "language"
+      ],
+      "additionalProperties": {}
+    },
+    "__schema116": {
+      "type": "string",
+      "enum": [
+        "bar",
+        "bar-stacked",
+        "bar-horizontal",
+        "line",
+        "pie",
+        "doughnut",
+        "area",
+        "scatter",
+        "radar",
+        "waterfall"
+      ],
+      "description": "A native, editable chart. `scatter` reads its labels as x values. For anything else PptxGenJS can draw, use a native-chart element."
+    },
+    "__schema117": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Category labels, one per value in every series. For a scatter chart these are the x values and must be numbers."
+    },
+    "__schema119": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "values"
+        ]
+      }
+    },
+    "__schema160": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema161"
+      }
+    },
+    "__schema164": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "basedOn": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "style": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {},
+            "description": "Element style properties. Same shape as an element's own `style`."
+          }
+        },
+        "required": [
+          "style"
+        ],
+        "additionalProperties": {}
+      }
+    },
+    "__schema169": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "meaning": {
+            "type": "string"
+          },
+          "usage": {
+            "type": "string"
+          },
+          "avoid": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "description"
+        ],
+        "additionalProperties": {}
+      }
+    },
+    "__schema171": {
+      "type": "object",
+      "properties": {
+        "hard": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "soft": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": {}
+    },
+    "__schema18": {
+      "type": "object",
+      "properties": {
+        "x": {
+          "$ref": "#/$defs/__schema19"
+        },
+        "y": {
+          "$ref": "#/$defs/__schema19"
+        },
+        "w": {
+          "$ref": "#/$defs/__schema19"
+        },
+        "h": {
+          "$ref": "#/$defs/__schema19"
+        }
+      }
+    },
+    "__schema56": {
+      "anyOf": [
+        {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        {
+          "$ref": "#/$defs/__schema53"
+        }
+      ]
+    },
+    "__schema57": {
+      "anyOf": [
+        {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        {
+          "$ref": "#/$defs/__schema53"
+        }
+      ]
+    },
+    "__schema58": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "$ref": "#/$defs/__schema53"
+        }
+      ]
+    },
+    "__schema59": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "$ref": "#/$defs/__schema53"
+        }
+      ]
+    },
+    "__schema60": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16
+        },
+        {
+          "$ref": "#/$defs/__schema53"
+        }
+      ]
+    },
+    "__schema61": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "$ref": "#/$defs/__schema53"
+        }
+      ]
+    },
+    "__schema49": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "minLength": 1
+        },
+        "tooltip": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "url"
+      ]
+    },
+    "__schema51": {
+      "type": "object",
+      "properties": {
+        "slide": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991,
+          "description": "A 1-based slide in this deck."
+        },
+        "tooltip": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "slide"
+      ]
+    },
+    "__schema70": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "$ref": "#/$defs/__schema72"
+        }
+      ],
+      "description": "An element id on the same slide, optionally with the side to use."
+    },
+    "__schema106": {
+      "type": "object",
+      "properties": {
+        "left": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "right": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "top": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "bottom": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      },
+      "additionalProperties": {}
+    },
+    "__schema108": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "$ref": "#/$defs/__schema53"
+        }
+      ]
+    },
+    "__schema161": {
+      "description": "Any JSON value. Deck variables are deliberately this open.",
+      "$ref": "#/$defs/__schema162"
+    },
+    "__schema19": {
+      "anyOf": [
+        {
+          "type": "number",
+          "description": "Inches on the slide canvas."
+        },
+        {
+          "type": "object",
+          "properties": {
+            "alignLeft": {
+              "type": "string"
+            },
+            "alignRight": {
+              "type": "string"
+            },
+            "alignTop": {
+              "type": "string"
+            },
+            "alignBottom": {
+              "type": "string"
+            },
+            "centerX": {
+              "type": "string"
+            },
+            "centerY": {
+              "type": "string"
+            },
+            "below": {
+              "type": "string"
+            },
+            "above": {
+              "type": "string"
+            },
+            "rightOf": {
+              "type": "string"
+            },
+            "leftOf": {
+              "type": "string"
+            },
+            "sameAs": {
+              "$ref": "#/$defs/__schema30"
+            },
+            "spanFrom": {
+              "$ref": "#/$defs/__schema32"
+            },
+            "spanTo": {
+              "type": "string"
+            },
+            "gap": {
+              "$ref": "#/$defs/__schema35"
+            },
+            "offset": {
+              "$ref": "#/$defs/__schema37"
+            }
+          },
+          "additionalProperties": {},
+          "description": "A relation to an element declared earlier on the same slide."
+        }
+      ]
+    },
+    "__schema72": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "side": {
+          "type": "string",
+          "enum": [
+            "top",
+            "right",
+            "bottom",
+            "left",
+            "auto"
+          ]
+        }
+      },
+      "required": [
+        "id"
+      ]
+    },
+    "__schema162": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/__schema161"
+          }
+        },
+        {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/__schema161"
+          }
+        }
+      ]
+    },
+    "__schema30": {
+      "type": "string"
+    },
+    "__schema32": {
+      "type": "string"
+    },
+    "__schema35": {
+      "type": "number"
+    },
+    "__schema37": {
+      "type": "number"
+    }
+  }
 }

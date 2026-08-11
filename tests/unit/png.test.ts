@@ -1,4 +1,4 @@
-import { readFile, readdir } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 import { inflateSync } from "node:zlib";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -16,7 +16,44 @@ import {
 } from "../../src/rendering/png.js";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
-const showcase = path.join(root, "examples/showcase/output/board-decision/artifacts/board-decision/previews");
+
+/**
+ * A real `pdftoppm -png` render, committed rather than generated.
+ *
+ * The decoder exists to read what Poppler writes, so the fixture has to be
+ * something Poppler wrote. Generated output under `examples/` is gitignored, so
+ * a test that read it passed only on a machine that happened to have built the
+ * examples and failed everywhere else — which is how it reached CI.
+ *
+ * 480×270 keeps it to 17 KB, and it happens to exercise all five scanline
+ * filter types, which is exactly the part of the decoder worth checking.
+ */
+const POPPLER_SLIDE = path.join(root, "tests/fixtures/poppler-slide.png");
+
+/** The distinct scanline filter types a PNG's rows actually use. */
+function filtersUsedBy(bytes: Uint8Array): number[] {
+  const buffer = Buffer.from(bytes);
+  let offset = 8;
+  let width = 0, height = 0, colorType = 0;
+  const idat: Buffer[] = [];
+  while (offset + 8 <= buffer.length) {
+    const length = buffer.readUInt32BE(offset);
+    const type = buffer.toString("ascii", offset + 4, offset + 8);
+    if (type === "IHDR") {
+      width = buffer.readUInt32BE(offset + 8);
+      height = buffer.readUInt32BE(offset + 12);
+      colorType = buffer.readUInt8(offset + 17);
+    } else if (type === "IDAT") idat.push(Buffer.from(buffer.subarray(offset + 8, offset + 8 + length)));
+    else if (type === "IEND") break;
+    offset += 12 + length;
+  }
+  const channels = colorType === 6 ? 4 : colorType === 2 ? 3 : colorType === 4 ? 2 : 1;
+  const raw = Buffer.from(inflateSync(Buffer.concat(idat)));
+  const stride = width * channels;
+  const seen = new Set<number>();
+  for (let row = 0, at = 0; row < height; row += 1, at += stride + 1) seen.add(raw[at]!);
+  return [...seen].sort();
+}
 
 /**
  * A deliberately naive decoder: one branch per byte, straight from the spec.
@@ -111,14 +148,10 @@ describe("PNG encoding", () => {
   });
 
   it("decodes the PNGs Poppler actually writes", async () => {
-    const files = (await readdir(showcase)).filter((file) => file.endsWith(".png")).sort();
-    expect(files.length).toBeGreaterThan(0);
-    for (const file of files) {
-      const image = decodePng(await readFile(path.join(showcase, file)));
-      expect(image.width, file).toBe(1600);
-      expect(image.height, file).toBe(900);
-      expect(image.pixels.length, file).toBe(1600 * 900 * 4);
-    }
+    const image = decodePng(await readFile(POPPLER_SLIDE));
+    expect(image.width).toBe(480);
+    expect(image.height).toBe(270);
+    expect(image.pixels.length).toBe(480 * 270 * 4);
   });
 
   it("undoes every scanline filter Poppler emits", async () => {
@@ -126,7 +159,10 @@ describe("PNG encoding", () => {
     // is a real rewrite of the inner loop — so the decoded pixels are checked
     // against an independent, obviously-correct implementation rather than
     // against the round trip, which only ever exercises filter 0.
-    const bytes = await readFile(path.join(showcase, "slide-3.png"));
+    const bytes = await readFile(POPPLER_SLIDE);
+    // Asserted, not assumed: a fixture that quietly stopped using filters 3 and
+    // 4 would leave the two hardest branches untested while still passing.
+    expect(filtersUsedBy(bytes)).toEqual([0, 1, 2, 3, 4]);
     expect(Buffer.from(decodePng(bytes).pixels)).toEqual(Buffer.from(decodeSlowly(bytes)));
   });
 
@@ -192,14 +228,16 @@ describe("contact sheet", () => {
     expect(() => contactSheet([])).toThrow(/at least one/);
   });
 
-  it("costs far less than the same slides sent separately", async () => {
-    const files = (await readdir(showcase)).filter((file) => file.endsWith(".png")).sort();
-    const images = await Promise.all(files.map(async (file) => decodePng(await readFile(path.join(showcase, file)))));
+  it("costs far less than the same slides sent separately", () => {
+    // Sized like a real render, because the saving is a property of the
+    // arithmetic rather than of any particular picture: a sheet is bounded by
+    // its own longest edge, while separate previews scale with slide count.
+    const images = Array.from({ length: 12 }, () => gradient(1600, 900));
     const sheet = contactSheet(images, { longestEdge: 1568 });
     const sheetPixels = sheet.width * sheet.height;
     const separatePixels = images
       .map((image) => fitWithin(image, 1024))
       .reduce((sum, image) => sum + image.width * image.height, 0);
-    expect(sheetPixels).toBeLessThan(separatePixels / 2);
+    expect(sheetPixels).toBeLessThan(separatePixels / 5);
   });
 });

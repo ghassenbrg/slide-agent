@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "alternatives": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "thesis": {
+            "type": "string"
+          },
+          "differentiator": {
+            "type": "string",
+            "description": "What makes this thesis structurally different from the others, not just differently coloured."
+          },
+          "rejectedBecause": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "thesis",
+          "differentiator"
+        ],
+        "additionalProperties": {}
+      }
+    },
+    "chosen": {
+      "description": "The name of the alternative this deck commits to.",
+      "type": "string"
+    }
+  },
+  "additionalProperties": {},
+  "description": "Visual theses considered before any coordinate was written. Concise authoring metadata, not private reasoning."
+}

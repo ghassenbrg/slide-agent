@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "slideId": {
+      "type": "string"
+    },
+    "claim": {
+      "type": "string",
+      "minLength": 1
+    },
+    "kind": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "sourceIds": {
+      "$ref": "#/$defs/__schema5"
+    },
+    "asOf": {
+      "$ref": "#/$defs/__schema7"
+    },
+    "calculation": {
+      "$ref": "#/$defs/__schema9"
+    },
+    "status": {
+      "$ref": "#/$defs/__schema11"
+    }
+  },
+  "required": [
+    "id",
+    "claim"
+  ],
+  "additionalProperties": {},
+  "description": "One claim and what backs it. Lets revision checks catch orphaned sources and unsupported precision.",
+  "$defs": {
+    "__schema3": {
+      "type": "string"
+    },
+    "__schema5": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "__schema7": {
+      "type": "string"
+    },
+    "__schema9": {
+      "type": "string"
+    },
+    "__schema11": {
+      "type": "string"
+    }
+  }
+}

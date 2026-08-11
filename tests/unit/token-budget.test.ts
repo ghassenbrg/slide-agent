@@ -1,4 +1,5 @@
-import { readFile } from "node:fs/promises";
+import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -23,10 +24,79 @@ import {
 } from "../../src/contract/index.js";
 import { buildReviewPacket } from "../../src/review/packet.js";
 import { SlideAgent } from "../../src/pipeline.js";
+import { silentLogger } from "../../src/logging/logger.js";
 import { PREVIEW_TIERS } from "../../src/rendering/preview-delivery.js";
+import type { CanvasElementSpec, PresentationOutline } from "../../src/types/index.js";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 const tokens = (value: string | unknown): number => estimateTextTokens(value);
+
+/**
+ * A healthy deck of the size the budget is written for.
+ *
+ * Healthy matters. The packet is defect-first, so a deck where everything is
+ * wrong is *supposed* to produce a large packet — a first attempt at this
+ * fixture put twelve identical slides at 14 pt and produced 258 findings and
+ * 27,465 tokens, which measured the fixture rather than the ceiling. So the
+ * type sizes sit on the fallback scale, and every slide gets its own column
+ * count and vertical rhythm so no two read as the same drawing.
+ */
+function healthyDeck(slideCount: number): PresentationOutline {
+  return {
+    brief: {
+      title: "Budget fixture", audience: "Reviewers", objective: "Hold the packet to its ceiling",
+      presentationType: "technical", tone: "plain", visualDirection: "fixture",
+      slideCount, language: "English", outputRequirements: [], keyTopics: [], sourcePrompt: "test",
+    },
+    narrative: "Twelve healthy slides, each dense enough to be worth summarising rather than reciting.",
+    slides: Array.from({ length: slideCount }, (_, slide) => ({
+      id: `slide-${slide + 1}`,
+      kind: "custom" as const,
+      title: `Slide ${slide + 1}: a title long enough to be worth its place in the packet`,
+      designIntent: "Carry one claim, evidenced, and hand the eye to the next slide.",
+      canvas: composition(slide),
+    })),
+  };
+}
+
+/** One slide's elements, shaped by its index so no two slides coincide. */
+function composition(slide: number) {
+  const columns = 1 + (slide % 4);
+  const top = 1.8 + (slide % 5) * 0.25;
+  const gutter = 0.3 + (slide % 3) * 0.15;
+  const width = (12.1 - gutter * (columns - 1)) / columns;
+
+  const elements: CanvasElementSpec[] = [
+    text(`title-${slide}`, `Slide ${slide + 1}: a title long enough to be worth its place`, {
+      x: 0.7, y: 0.5 + (slide % 3) * 0.12, w: 11.9 - (slide % 4) * 0.7, h: 0.9,
+      size: 34 - (slide % 3), role: "title",
+    }),
+  ];
+  for (let column = 0; column < columns; column += 1) {
+    elements.push(text(`cell-${slide}-${column}`, `Point ${column + 1}, in a phrase.`, {
+      x: 0.7 + column * (width + gutter),
+      y: top,
+      w: width,
+      h: 1.4 + (slide % 4) * 0.3,
+      size: 16 + (slide % 3),
+      role: "body",
+    }));
+  }
+  // A rule whose length tracks the slide, so even same-column grids differ.
+  elements.push(shape(`rule-${slide}`, { x: 0.7, y: 6.5 - (slide % 4) * 0.2, w: 2 + (slide % 6) * 1.5, h: 0.04 }));
+  return elements;
+}
+
+function text(id: string, body: string, at: { x: number; y: number; w: number; h: number; size: number; role: string }): CanvasElementSpec {
+  return {
+    id, type: "text", role: at.role, text: body,
+    x: at.x, y: at.y, w: at.w, h: at.h, style: { fontSize: at.size },
+  };
+}
+
+function shape(id: string, at: { x: number; y: number; w: number; h: number }): CanvasElementSpec {
+  return { id, type: "shape", shape: "rect", role: "decorative", ...at, style: { fill: "203A55" } };
+}
 
 describe("token estimation", () => {
   it("prices text by character count and images by pixel count", () => {
@@ -155,9 +225,30 @@ describe("token budget ceilings", () => {
   });
 
   it("keeps a twelve-slide review packet under the review budget", async () => {
-    for (const name of ["quarterly-review", "product-launch", "cloud-migration"]) {
-      const packet = await buildReviewPacket({ input: path.join(root, `examples/output/${name}/${name}.pptx`) });
-      expect(tokens(packet), name).toBeLessThan(4_000);
+    // Built here rather than read from `examples/output`, which is generated
+    // and gitignored: a ceiling that only exists on a machine that happened to
+    // have run `npm run examples` is not a ceiling.
+    const workspace = await mkdtemp(path.join(tmpdir(), "slide-agent-budget-"));
+    try {
+      const output = path.join(workspace, "budget.pptx");
+      const built = await new SlideAgent(silentLogger).create({
+        command: "create", outline: healthyDeck(12), output, validate: true, render: false, roundTrip: false,
+      });
+      expect(built.primaryOutput).toBeDefined();
+
+      const packet = await buildReviewPacket({ input: output });
+      expect(packet.slides).toHaveLength(12);
+      // The fixture is healthy, so a flood of findings would mean the ceiling
+      // was measuring a broken deck rather than the packet.
+      expect(packet.observations.issueCount).toBeLessThan(8);
+      expect(tokens(packet)).toBeLessThan(4_000);
+
+      // Full detail is the escalation, not the default, and it is allowed to
+      // cost more — but the point of the default is that it costs much less.
+      const everything = await buildReviewPacket({ input: output, options: { detail: "full" } });
+      expect(tokens(packet)).toBeLessThan(tokens(everything) * 0.75);
+    } finally {
+      await rm(workspace, { recursive: true, force: true });
     }
   });
 

@@ -1,0 +1,134 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "variables": {
+      "description": "Arbitrary named values. Reference one from any style property with {\"$var\":\"name\"}.",
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema0"
+      }
+    },
+    "styles": {
+      "description": "Arbitrary reusable style names. Reference them from an element with `styleRef`.",
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "basedOn": {
+            "description": "Other style names, merged in order before this style's own values.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "style": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {},
+            "description": "Element style properties. Same shape as an element's own `style`."
+          }
+        },
+        "required": [
+          "style"
+        ],
+        "additionalProperties": {}
+      }
+    },
+    "motifs": {
+      "description": "Subject-derived visual ideas and what they mean. Planning metadata; nothing is rendered from these.",
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "meaning": {
+            "type": "string"
+          },
+          "usage": {
+            "type": "string"
+          },
+          "avoid": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "description"
+        ],
+        "additionalProperties": {}
+      }
+    },
+    "constraints": {
+      "description": "The author's own rules, not engine presets.",
+      "type": "object",
+      "properties": {
+        "hard": {
+          "description": "Rules this deck must not break.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "soft": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": {}
+    }
+  },
+  "additionalProperties": {},
+  "description": "The deck's own variables, named styles, motifs, and rules. Names are arbitrary; Slide Agent reserves none.",
+  "$defs": {
+    "__schema0": {
+      "description": "Any JSON value. Deck variables are deliberately this open.",
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/__schema0"
+          }
+        },
+        {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/__schema0"
+          }
+        }
+      ]
+    }
+  }
+}
