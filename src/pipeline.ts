@@ -695,7 +695,54 @@ export class SlideAgent {
     } catch (error) {
       const details = errorDetails(error);
       this.logger.error("create.failed", details.message, { requestId, code: details.code });
+      await this.supersedeStaleReport(request, details);
       return { status: "error", generatedFiles, slideCount: 0, warnings, errors: [details], metadata: metadata("create", requestId, startedAt, retries) };
+    }
+  }
+
+  /**
+   * Stops a failed build leaving the previous build's verdict on disk.
+   *
+   * The CLI reports the failure on stdout and exits non-zero, which is correct
+   * and is what a shell notices. What a *model* reads is `report.json` — and
+   * after a failed build that file was the last successful run's, unchanged,
+   * still saying `"status": "pass"`. Nothing on it said which build it
+   * described, so the natural next step — build, then read the report — handed
+   * back a green verdict for a build that never happened, alongside a `.pptx`
+   * that no longer matched the script.
+   *
+   * The report is therefore replaced with one that records the failure. The
+   * previous verdict is not worth preserving: it described a deck the author
+   * has already moved on from, and its only remaining use was to mislead.
+   */
+  private async supersedeStaleReport(request: CreateRequest, failure: { code: string; message: string }): Promise<void> {
+    if (request.validate === false) return;
+    const reportPath = request.reportPath ?? (request.output ? outputLayout(request.output).validation : undefined);
+    if (!reportPath || !(await exists(reportPath))) return;
+    try {
+      await writeJson(reportPath, {
+        schemaVersion: "1.0",
+        status: "fail",
+        packageStatus: "fail",
+        presentationReadiness: "not-ready",
+        readinessReasons: [`The build failed, so there is no deck to judge: ${failure.message}`],
+        presentation: request.output ?? "",
+        checkedAt: new Date().toISOString(),
+        slideCount: 0,
+        summary: { errors: 1, warnings: 0, info: 0 },
+        iterations: 0,
+        issueGroups: [{
+          code: failure.code,
+          severity: "error",
+          fixable: false,
+          count: 1,
+          example: failure.message,
+          where: [{}],
+        }],
+      });
+    } catch {
+      // A report we cannot write is not worth failing the failure over; the
+      // error the caller already has is the one that matters.
     }
   }
 
