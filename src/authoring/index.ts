@@ -438,7 +438,14 @@ export class SlideBuilder {
    * @returns the y at the bottom of the last block placed, so a slide can be
    *          composed downward without the caller keeping a cursor.
    */
-  public flow(frame: Rect, blocks: Array<FlowBlock | undefined | null | false>, options: { gap?: number } = {}): number {
+  public flow(
+    // Height is not an input: what a flow is tall is decided by the text in
+    // it, which is the whole reason to reach for one. Accepting it and
+    // ignoring it would be a lie in the signature.
+    frame: Omit<Rect, "h"> & { h?: number },
+    blocks: Array<FlowBlock | undefined | null | false>,
+    options: { gap?: number } = {},
+  ): number {
     let cursor = frame.y;
     for (const block of blocks) {
       // A falsy entry is how a caller writes "this line only when there is
