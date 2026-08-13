@@ -80,7 +80,12 @@ describe("render text fidelity", () => {
       manifest([text("title", "Reading the harbour wall")]),
       extracted(["Re a ding the", "ha rbour wa ll"]),
     );
-    expect(result.report.slides[0]!.splitWords).toEqual([]);
+    // A slide the render matched is now expressed by its absence from
+    // `slides`, with `checked` carrying the count so silence cannot be
+    // mistaken for a check that never ran. Asserting both is what makes the
+    // omission lossless rather than merely smaller.
+    expect(result.report.slides).toEqual([]);
+    expect(result.report.checked).toBe(1);
     expect(result.report.status).toBe("pass");
   });
 

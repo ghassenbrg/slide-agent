@@ -285,12 +285,26 @@ export function compareRenderedText(manifest: DeckManifest, extracted: Extracted
     ? (hasHardMismatch ? "fail" : hasSoftMismatch ? "review" : "pass")
     : (hasHardMismatch || hasSoftMismatch ? "review" : "pass");
 
+  // A slide the render matched exactly is five empty arrays saying nothing
+  // happened, and on a healthy deck that is most of them. What a reader needs
+  // from this section is which slides mismatched and how many were looked at;
+  // `checked` carries the second half, so dropping the clean rows loses no
+  // fact. On a sixteen-slide deck it is the difference between 966 tokens and
+  // about 120.
+  const mismatched = slides.filter((slide) =>
+    slide.missing.length > 0
+    || slide.truncated.length > 0
+    || slide.splitWords.length > 0
+    || slide.repeated.length > 0
+    || slide.unexpected.length > 0);
+
   return {
     report: {
       status,
       method: extracted.method,
       confidence: extracted.confidence,
-      slides,
+      checked: slides.length,
+      slides: mismatched,
       ...(extracted.note ? { note: extracted.note } : {}),
     },
     issues,

@@ -269,6 +269,81 @@ export interface RepeatedPair {
   left: number;
   right: number;
   similarity: number;
+  /**
+   * How close this pair is relative to a typical pair in the same deck.
+   *
+   * `1` is the deck's median pair. Below `RELATIVE_DUPLICATE_RATIO` is what
+   * makes a pair worth naming, and publishing the number is what makes the
+   * verdict auditable rather than a constant nobody can argue with.
+   */
+  relativeDistance: number;
+}
+
+/**
+ * How close a pair must be, against the deck's own median pair, to be named.
+ *
+ * Cosine over a feature vector whose every component is non-negative cannot
+ * fall far below 1, so on a real deck every pair scores 0.98–1.00 and an
+ * absolute 0.93 cut is not a threshold at all — it is a tautology. Measured on
+ * a seventeen-slide deck: minimum observed similarity among *reported* twins
+ * was 0.9815, median 0.9883, and the check fired 19 times on a deck its author
+ * shipped.
+ *
+ * The absolute gate is kept, because it is what carries the meaning of "the
+ * same design"; a deck of genuinely identical slides must still report every
+ * pair, and a relative test alone would report none of them — with every
+ * distance near zero, the median is near zero too. What is added is a second,
+ * self-calibrating gate: a pair must also be much closer than this deck's own
+ * typical pair. A varied deck then yields few pairs, a monotonous one yields
+ * many, and neither answer depends on a constant chosen against one deck.
+ */
+export const RELATIVE_DUPLICATE_RATIO = 0.45;
+
+/** Below this many slides there is no distribution to calibrate against. */
+const MINIMUM_SLIDES_FOR_RELATIVE_GATE = 4;
+
+/** Per-dimension mean and spread across every slide in one deck. */
+function dimensionStats(vectors: number[][]): { mean: number[]; deviation: number[] } {
+  const width = vectors.reduce((widest, vector) => Math.max(widest, vector.length), 0);
+  const mean = new Array<number>(width).fill(0);
+  const deviation = new Array<number>(width).fill(0);
+  for (let index = 0; index < width; index += 1) {
+    let total = 0;
+    for (const vector of vectors) total += vector[index] ?? 0;
+    mean[index] = total / vectors.length;
+    let squared = 0;
+    for (const vector of vectors) squared += ((vector[index] ?? 0) - mean[index]!) ** 2;
+    deviation[index] = Math.sqrt(squared / vectors.length);
+  }
+  return { mean, deviation };
+}
+
+/**
+ * Distance between two slides in units of how much this deck's slides vary.
+ *
+ * Each dimension is divided by its own spread, so a feature that is constant
+ * across the deck contributes nothing and a feature that actually separates
+ * slides contributes fully. That is the step raw cosine skips, and skipping it
+ * is why every pair looked alike.
+ */
+function normalizedDistance(left: number[], right: number[], deviation: number[]): number {
+  let total = 0;
+  let counted = 0;
+  for (let index = 0; index < deviation.length; index += 1) {
+    const spread = deviation[index] ?? 0;
+    // A dimension every slide agrees on says nothing about which two are twins.
+    if (spread < 1e-6) continue;
+    total += (((left[index] ?? 0) - (right[index] ?? 0)) / spread) ** 2;
+    counted += 1;
+  }
+  return counted === 0 ? 0 : Math.sqrt(total / counted);
+}
+
+function median(values: number[]): number {
+  if (values.length === 0) return 0;
+  const sorted = [...values].sort((left, right) => left - right);
+  const middle = Math.floor(sorted.length / 2);
+  return sorted.length % 2 === 0 ? (sorted[middle - 1]! + sorted[middle]!) / 2 : sorted[middle]!;
 }
 
 /** Slides whose geometry is close enough to read as the same composition. */
@@ -278,21 +353,37 @@ export function repeatedSilhouettes(
 ): RepeatedPair[] {
   const signature = signDeck(manifest);
   const kinds = new Map(manifest.slides.map((slide) => [slide.number, slide.kind]));
-  const pairs: RepeatedPair[] = [];
+  const vectors = signature.slides.map((slide) => featureVector(slide));
+  const { deviation } = dimensionStats(vectors);
+
+  type Candidate = RepeatedPair & { distance: number };
+  const candidates: Candidate[] = [];
+  const distances: number[] = [];
   for (let left = 0; left < signature.slides.length; left += 1) {
     for (let right = left + 1; right < signature.slides.length; right += 1) {
       const a = signature.slides[left]!;
       const b = signature.slides[right]!;
-      const similarity = cosine(featureVector(a), featureVector(b));
+      const similarity = cosine(vectors[left]!, vectors[right]!);
+      const distance = normalizedDistance(vectors[left]!, vectors[right]!, deviation);
+      distances.push(distance);
       // Slides the author declared to be the same kind — two section dividers,
       // two closing cards — are meant to rhyme. Only near-identity counts there.
       const sameKind = kinds.get(a.slide) === kinds.get(b.slide);
       if (similarity >= (sameKind ? Math.min(0.985, threshold + 0.05) : threshold)) {
-        pairs.push({ left: a.slide, right: b.slide, similarity: Number(similarity.toFixed(4)) });
+        candidates.push({ left: a.slide, right: b.slide, similarity: Number(similarity.toFixed(4)), relativeDistance: 0, distance });
       }
     }
   }
-  return pairs.sort((left, right) => right.similarity - left.similarity);
+
+  const typical = median(distances);
+  const useRelativeGate = signature.slides.length >= MINIMUM_SLIDES_FOR_RELATIVE_GATE && typical > 1e-6;
+  return candidates
+    .map(({ distance, ...pair }) => ({
+      ...pair,
+      relativeDistance: Number((typical > 1e-6 ? distance / typical : 0).toFixed(3)),
+    }))
+    .filter((pair) => !useRelativeGate || pair.relativeDistance <= RELATIVE_DUPLICATE_RATIO)
+    .sort((left, right) => left.relativeDistance - right.relativeDistance || right.similarity - left.similarity);
 }
 
 export interface SimilarityResult {

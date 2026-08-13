@@ -85,4 +85,72 @@ describe("ManifestValidator", () => {
     const issues = new ManifestValidator(config).validate(manifest([slide([card, bar])]));
     expect(issues.some((item) => item.code === "rounded-corner-overhang")).toBe(false);
   });
+
+  describe("issues that describe something that actually happened", () => {
+    /** A slide the author composed, which is where the type scale is advice. */
+    function authored(elements: ElementRecord[]): DeckManifest {
+      return manifest([{ ...slide(elements), compositionMode: "model-authored" }]);
+    }
+
+    /** Small text in a box large enough to hold it: autofit has nothing to do. */
+    function comfortable(overrides: Partial<ElementRecord> & { id: string }): ElementRecord {
+      return element({ type: "text", role: "body", text: "ok", fontSize: 11, w: 6, h: 1.2, ...overrides });
+    }
+
+    it("does not claim autofit shrank text it never shrank", async () => {
+      const config = await loadConfig(path.join(root, "config"));
+      const issues = new ManifestValidator(config).validate(authored([comfortable({ id: "note" })]));
+      // The old condition was `effectiveFontSize < minimum`, which is what
+      // `font-below-scale` already reports — so every element merely set below
+      // the fallback scale was reported twice, the second time by a sentence
+      // saying autofit "shrinks it from 11pt to 11pt".
+      expect(issues.some((item) => item.code === "autofit-below-scale")).toBe(false);
+    });
+
+    it("still reports autofit when it genuinely shrinks the text", async () => {
+      const config = await loadConfig(path.join(root, "config"));
+      const cramped = element({
+        id: "cramped", type: "text", role: "body", fontSize: 28, w: 1.6, h: 0.4, fit: "shrink",
+        text: "A sentence with rather more words in it than this box was ever going to hold at the size it asked for.",
+      });
+      const issues = new ManifestValidator(config).validate(authored([cramped]));
+      const autofit = issues.find((item) => item.code === "autofit-below-scale");
+      const overflow = issues.find((item) => item.code === "text-overflow");
+      // One of the two must fire: either it shrank below the scale and still
+      // fits, or it could not fit even shrunk. Silence would mean the guard had
+      // turned the check off rather than corrected it.
+      expect(autofit ?? overflow).toBeDefined();
+      if (autofit) {
+        const { declaredFontSize, effectiveFontSize } = autofit.details as { declaredFontSize: number; effectiveFontSize: number };
+        expect(effectiveFontSize).toBeLessThan(declaredFontSize);
+      }
+    });
+
+    it("leaves a decorative slide number and a code block at the size the author chose", async () => {
+      const config = await loadConfig(path.join(root, "config"));
+      const issues = new ManifestValidator(config).validate(authored([
+        comfortable({ id: "chrome-num", role: "decorative", text: "07" }),
+        comfortable({ id: "yaml", role: "code", text: "kind: Service" }),
+      ]));
+      // Both are small on purpose: a slide number that obeyed the body scale
+      // would be the defect, and a code block's size is chosen so a line of
+      // YAML fits without wrapping.
+      expect(issues.some((item) => item.code === "font-below-scale")).toBe(false);
+    });
+
+    it("keeps the hard legibility floor for those roles", async () => {
+      const config = await loadConfig(path.join(root, "config"));
+      const issues = new ManifestValidator(config).validate(authored([
+        comfortable({ id: "chrome-num", role: "decorative", fontSize: 5 }),
+      ]));
+      // Taste is exempt; physics is not.
+      expect(issues.some((item) => item.code === "font-too-small")).toBe(true);
+    });
+
+    it("still advises on body text set below the scale", async () => {
+      const config = await loadConfig(path.join(root, "config"));
+      const issues = new ManifestValidator(config).validate(authored([comfortable({ id: "para" })]));
+      expect(issues.some((item) => item.code === "font-below-scale")).toBe(true);
+    });
+  });
 });

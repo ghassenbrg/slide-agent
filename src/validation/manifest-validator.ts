@@ -115,6 +115,28 @@ function connectorStrikes(connector: ElementRecord, elements: ElementRecord[]): 
   return candidates.filter((element) => struck.has(element.id));
 }
 
+/**
+ * Roles whose point size is a decision, not an oversight.
+ *
+ * `font-below-scale` compares against the fallback type scale, which is written
+ * for prose a room has to read. Two roles are never that, and both are small on
+ * purpose: a slide number, rule, or watermark is `decorative` — it is meant to
+ * sit under the content, and making it 16pt would be the defect — and a code
+ * block is `code`, set in mono at a size chosen so a line of YAML fits without
+ * wrapping, which is the whole reason it is on the slide.
+ *
+ * Measured on a sixteen-slide training deck: 34 of 145 `font-below-scale`
+ * issues were these two roles, every one of them advice against a choice the
+ * author had made deliberately and would make again. The absolute 9pt
+ * legibility floor still applies to both — that one is not a matter of taste,
+ * and it is checked before this exemption is reached.
+ */
+const SIZE_IS_A_DESIGN_DECISION = new Set(["decorative", "code"]);
+
+function sizeIsTheAuthors(element: ElementRecord, authored: boolean): boolean {
+  return authored && SIZE_IS_A_DESIGN_DECISION.has(element.role ?? "");
+}
+
 function overlapAllowed(left: ElementRecord, right: ElementRecord): boolean {
   if (left.intentionalOverlap || right.intentionalOverlap) return true;
   if (left.allowOverlapWith?.includes(right.id) || right.allowOverlapWith?.includes(left.id)) return true;
@@ -313,7 +335,7 @@ export class ManifestValidator {
               elementIds: [element.id],
               details: { fontSize: element.fontSize, minimum: ABSOLUTE_MINIMUM_FONT, floor: "absolute" },
             }));
-          } else if (element.fontSize < minimum) {
+          } else if (element.fontSize < minimum && !sizeIsTheAuthors(element, authoredCanvas.has(slide.number))) {
             // Between the hard floor and the fallback design system's scale.
             // On a model-authored canvas that scale is Slide Agent's opinion,
             // not a rule: a bench manual sets its notes at 11pt deliberately,
@@ -372,10 +394,25 @@ export class ManifestValidator {
               elementIds: [element.id],
               details: { declaredFontSize: element.fontSize, effectiveFontSize: fit.effectiveFontSize, minimum: fitFloor, box: { w: element.w, h: element.h } },
             }));
-          } else if (fit && fit.effectiveFontSize < minimum && authoredCanvas.has(slide.number)) {
+          } else if (
+            fit
+            && fit.effectiveFontSize < element.fontSize
+            && fit.effectiveFontSize < minimum
+            && authoredCanvas.has(slide.number)
+          ) {
             // Still worth saying: autofit will render this smaller than the
             // fallback scale would. That is the author's call, and they should
             // know it is happening.
+            //
+            // `effectiveFontSize < element.fontSize` is the whole check. Without
+            // it the condition is `effectiveFontSize < minimum`, which is what
+            // `font-below-scale` already reports two branches up — so every
+            // element merely set below the fallback scale was reported twice,
+            // the second time by a message claiming autofit "shrinks it from
+            // 11pt to 11pt". The counts gave it away: on a real deck the two
+            // codes came back at exactly 145 each, because one was a copy of
+            // the other wearing a sentence that described an event that had not
+            // happened.
             issues.push(issue("autofit-below-scale", "info", `${element.name} fits only after autofit shrinks it from ${element.fontSize}pt to ${fit.effectiveFontSize}pt. Check it still reads at presentation distance.`, false, {
               slide: slide.number,
               elementIds: [element.id],
@@ -490,7 +527,16 @@ export class ManifestValidator {
           "warning",
           `Slides ${pair.left} and ${pair.right} have near-identical compositions. If they are making different points, they should not look like the same slide twice.`,
           false,
-          { slide: pair.right, details: { slides: [pair.left, pair.right], similarity: pair.similarity } },
+          {
+            slide: pair.right,
+            details: {
+              slides: [pair.left, pair.right],
+              similarity: pair.similarity,
+              // What makes this pair worth naming rather than every pair: it is
+              // this much closer than a typical pair of slides in this deck.
+              relativeDistance: pair.relativeDistance,
+            },
+          },
         ));
       }
     }

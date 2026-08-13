@@ -982,6 +982,14 @@ export interface RenderFidelityReport {
   status: "pass" | "review" | "fail" | "skipped";
   method: "pdf-text" | "ocr" | "none";
   confidence: "high" | "medium" | "low";
+  /**
+   * How many slides were compared.
+   *
+   * `slides` lists only the ones that mismatched, so this is what says the
+   * silence is a clean result rather than a check that never ran.
+   */
+  checked?: number;
+  /** Slides whose render did not match what was authored. Clean slides are omitted. */
   slides: Array<{
     slide: number;
     missing: string[];
