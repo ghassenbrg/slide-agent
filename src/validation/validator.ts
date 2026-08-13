@@ -21,6 +21,7 @@ import { extractRenderedText } from "../rendering/text-extraction.js";
 import { compareRenderedText } from "./fidelity.js";
 import { verifyArtifactGraph } from "../artifacts/package.js";
 import { computeVerdict } from "./readiness.js";
+import { groupIssues, reportForDisk, type IssuesFormat } from "./issue-groups.js";
 import { AccessibilityValidator, type AccessibilityOptions } from "./accessibility.js";
 import { ManifestValidator } from "./manifest-validator.js";
 import { scoreDeck } from "./quality.js";
@@ -42,6 +43,13 @@ export interface ValidationOptions {
   fidelity?: boolean;
   /** Bind the report to the exact artifacts it describes. */
   artifacts?: ArtifactGraph;
+  /**
+   * How the written report carries its findings. Defaults to `grouped`.
+   *
+   * The in-memory report always carries both; this decides only what a reader
+   * of `report.json` is handed.
+   */
+  issuesFormat?: IssuesFormat;
   /** Result of rebuilding the emitted scene in a clean directory. */
   roundTrip?: RoundTripReport;
   /** Findings supplied by a host reviewer, folded into readiness. */
@@ -313,6 +321,7 @@ export class PresentationValidator {
       summary: counts,
       iterations: options.iterations ?? 1,
       issues,
+      issueGroups: groupIssues(issues),
       heuristics,
       quality: heuristics,
       ...(options.artifacts ?? carriedArtifacts ? { artifacts: (options.artifacts ?? carriedArtifacts)! } : {}),
@@ -324,7 +333,7 @@ export class PresentationValidator {
       ...(options.visualFindings?.length ? { reviewed: true } : options.authored ? { reviewed: false } : {}),
       render,
     };
-    if (options.reportPath) await writeJson(options.reportPath, report);
+    if (options.reportPath) await writeJson(options.reportPath, reportForDisk(report, options.issuesFormat));
     this.logger.info("validation.complete", "Validated presentation", {
       status,
       packageStatus: verdict.packageStatus,

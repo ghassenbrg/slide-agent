@@ -8,6 +8,7 @@ import { PptxInspector } from "../editing/pptx-inspector.js";
 import { extractRenderedText, previewFilesIn } from "../rendering/text-extraction.js";
 import { compareRenderedText, intendedText } from "../validation/fidelity.js";
 import { repeatedSilhouettes } from "../evaluation/visual-signature.js";
+import { ungroupIssues } from "../validation/issue-groups.js";
 import { parseSceneNdjson } from "../serialization/scene-ndjson.js";
 import type {
   ArtifactIdentity,
@@ -277,7 +278,15 @@ export async function buildReviewPacket({ input, options = {} }: ReviewPacketInp
     claimsBySlide.set(claim.slideId, [...(claimsBySlide.get(claim.slideId) ?? []), claim]);
   }
 
-  const allIssues: ValidationIssue[] = [...(report?.issues ?? []), ...fidelity.issues];
+  // A written report carries its findings grouped by default, so the flat
+  // array it used to publish may not be there. Both forms hold the same facts;
+  // this takes whichever one the report on disk actually has. Reading only
+  // `issues` would silently produce a packet with no defects in it — which is
+  // exactly what a healthy packet looks like, and therefore the worst possible
+  // way for this to fail.
+  const reportedIssues: ValidationIssue[] = report?.issues
+    ?? (report?.issueGroups ? ungroupIssues(report.issueGroups) : []);
+  const allIssues: ValidationIssue[] = [...reportedIssues, ...fidelity.issues];
   const issuesFor = (slideNumber: number): ValidationIssue[] =>
     allIssues.filter((issue) => issue.slide === slideNumber);
 

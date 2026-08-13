@@ -4,7 +4,7 @@ import { Command } from "commander";
 
 import { parseEditPrompt } from "./editing/parse-edit-prompt.js";
 import { SlideAgent } from "./pipeline.js";
-import type { CreateRequest, StructuredAgentRequest } from "./types/index.js";
+import type { CreateRequest, IssuesFormat, StructuredAgentRequest } from "./types/index.js";
 import { parseStructuredRequest } from "./types/schemas.js";
 import { formatDoctorReport, runDeepCheck, runDoctorReport } from "./doctor.js";
 import { installManaged } from "./installer.js";
@@ -15,7 +15,7 @@ import { brandKitFromTemplate, normalizeKitColors } from "./design/template.js";
 import { checkFontAvailability, fontAvailabilityAdvice } from "./design/font-availability.js";
 import { measureText } from "./authoring/index.js";
 import { planOutline } from "./planner/index.js";
-import { writeUtf8 } from "./utils/files.js";
+import { setJsonIndent, writeUtf8 } from "./utils/files.js";
 import { writeContactSheet } from "./rendering/preview-delivery.js";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
@@ -38,16 +38,41 @@ async function text(filePath: string): Promise<string> {
   return readFile(filePath, "utf8");
 }
 
+function issuesFormat(value: string): IssuesFormat {
+  if (value !== "grouped" && value !== "flat") {
+    throw new Error(`Unknown issue format: ${value}. Use grouped or flat.`);
+  }
+  return value;
+}
+
+/**
+ * How many spaces every JSON this CLI writes is indented by. None, by default.
+ *
+ * Indentation is 27–34% of every artifact written here — measured on a real
+ * deck's `report.json` and its review packet — and it buys nothing for the
+ * reader, which is usually a model. The MCP server has serialised compactly
+ * since 0.13 for exactly this reason; the CLI kept indenting, which is awkward
+ * given the guide calls the build-script CLI path the cheapest one there is.
+ *
+ * `--pretty` restores indentation for a person reading a file in a terminal.
+ */
+let indent: number | undefined;
+
 async function printResult(request: StructuredAgentRequest): Promise<void> {
   const result = await new SlideAgent().execute(request);
-  process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+  process.stdout.write(`${JSON.stringify(result, null, indent)}\n`);
   if (result.status === "error") process.exitCode = 1;
 }
 
 const program = new Command()
   .name("slide-agent")
   .description("Create, edit, render, and validate editable PowerPoint presentations.")
-  .version(VERSION);
+  .version(VERSION)
+  .option("--pretty", "Indent JSON output and written artifacts, for a person reading them")
+  .hook("preAction", (command) => {
+    indent = command.opts().pretty ? 2 : undefined;
+    setJsonIndent(indent);
+  });
 
 program.command("doctor")
   .description("Check installation, agent registration, MCP wiring, and optional preview tools")
@@ -60,7 +85,7 @@ program.command("doctor")
       report.checks.push(deep);
       if (deep.status === "error") report.status = "error";
     }
-    process.stdout.write(options.json ? `${JSON.stringify(report, null, 2)}\n` : `${formatDoctorReport(report)}\n`);
+    process.stdout.write(options.json ? `${JSON.stringify(report, null, indent)}\n` : `${formatDoctorReport(report)}\n`);
     if (report.status === "error") process.exitCode = 1;
   });
 
@@ -81,7 +106,7 @@ program.command("install")
       packageSpecifier: options.package,
       installRenderDependencies: Boolean(options.withRenderDeps),
     });
-    process.stdout.write(`${JSON.stringify({ status: "success", ...result }, null, 2)}\n`);
+    process.stdout.write(`${JSON.stringify({ status: "success", ...result }, null, indent)}\n`);
   });
 
 program.command("uninstall")
@@ -124,7 +149,7 @@ program.command("measure")
       ...(options.bold ? { bold: true } : {}),
       ...(options.lineSpacing === undefined ? {} : { lineSpacingMultiple: options.lineSpacing }),
     });
-    process.stdout.write(`${JSON.stringify(measured, null, 2)}\n`);
+    process.stdout.write(`${JSON.stringify(measured, null, indent)}\n`);
   });
 
 program.command("build")
@@ -144,6 +169,7 @@ program.command("build")
   .option("--repair <mode>", "safe, suggest, or off. Defaults to suggest for a model-authored canvas")
   .option("--no-validate", "Skip validation")
   .option("--no-auto-fix", "Disable automatic repair")
+  .option("--issues <format>", "grouped (default) states each finding once with its call sites; flat writes one object per occurrence")
   .action(async (options) => {
     // The script runs in this process with the privileges of whoever invoked
     // the CLI. That is the same decision as running it with `node`, and it is
@@ -165,6 +191,7 @@ program.command("build")
       validate: options.validate,
       autoFix: options.autoFix,
       maxRetries: options.maxRetries,
+      ...(options.issues ? { issuesFormat: issuesFormat(options.issues) } : {}),
     });
   });
 
@@ -186,6 +213,7 @@ program.command("create")
   .option("--repair <mode>", "safe, suggest, or off. Defaults to suggest for a model-authored canvas")
   .option("--no-validate", "Skip validation")
   .option("--no-auto-fix", "Disable automatic repair")
+  .option("--issues <format>", "grouped (default) states each finding once with its call sites; flat writes one object per occurrence")
   .action(async (options) => {
     if (!options.prompt && !options.scene && !options.script) throw new Error("create requires --prompt, --scene, or --script.");
     if (options.prompt && !options.scene && !options.prompt.endsWith(".json")) {
@@ -231,6 +259,7 @@ program.command("create")
       validate: options.validate === false ? false : base.validate ?? options.validate,
       autoFix: options.autoFix === false ? false : base.autoFix ?? options.autoFix,
       maxRetries: options.maxRetries ?? base.maxRetries,
+      ...(options.issues ? { issuesFormat: issuesFormat(options.issues) } : {}),
     });
   });
 
@@ -316,7 +345,7 @@ program.command("review")
       );
       if (!written) process.stderr.write("No slide renders were found, so no contact sheet was written.\n");
     }
-    const json = `${JSON.stringify(packet, null, 2)}\n`;
+    const json = `${JSON.stringify(packet, null, indent)}\n`;
     if (!options.output) { process.stdout.write(json); return; }
     await writeUtf8(options.output, json);
     process.stdout.write(`${JSON.stringify({
@@ -324,7 +353,7 @@ program.command("review")
       pptxSha256: packet.artifacts.pptx.sha256,
       slides: packet.slides.length,
       renderMode: packet.deck.renderMode,
-    }, null, 2)}\n`);
+    }, null, indent)}\n`);
   });
 
 program.command("patch")
@@ -373,6 +402,7 @@ program.command("validate")
   .option("--render", "Also generate preview images (requires LibreOffice and Poppler)")
   .option("--round-trip", "Rebuild the emitted scene in a clean directory and compare")
   .option("--findings <file>", "JSON array of visual review findings: what you saw in the renders")
+  .option("--issues <format>", "grouped (default) states each finding once with its call sites; flat writes one object per occurrence")
   .action(async (options) => {
     // Recording what a reviewer saw is what lets an authored deck reach
     // `ready`. A single `note` finding saying the slides are sound counts —
@@ -389,6 +419,7 @@ program.command("validate")
       configDir: options.config,
       render: options.render,
       roundTrip: options.roundTrip,
+      ...(options.issues ? { issuesFormat: issuesFormat(options.issues) } : {}),
       ...(findings ? { visualFindings: findings } : {}),
     } as never);
   });
@@ -405,7 +436,7 @@ program.command("contract")
       if (!names.includes(options.schema as ContractSchemaName)) {
         throw new Error(`Unknown contract schema: ${options.schema}. Available: ${names.join(", ")}.`);
       }
-      process.stdout.write(`${JSON.stringify(contractJsonSchema(options.schema as ContractSchemaName), null, 2)}\n`);
+      process.stdout.write(`${JSON.stringify(contractJsonSchema(options.schema as ContractSchemaName), null, indent)}\n`);
       return;
     }
     if (options.format === "prompt") {
@@ -423,7 +454,7 @@ program.command("contract")
       ...contractDescriptor(),
       guide: authoringGuide(options.section as GuideSectionId | undefined),
       jsonSchemas: allContractJsonSchemas(),
-    }, null, 2)}\n`);
+    }, null, indent)}\n`);
   });
 
 program.command("diff")
@@ -437,7 +468,7 @@ program.command("diff")
       new PptxInspector().inspect(options.after),
     ]);
     const result = diffDecks(before.manifest, after.manifest);
-    process.stdout.write(options.json ? `${JSON.stringify(result, null, 2)}\n` : `${formatDiff(result)}\n`);
+    process.stdout.write(options.json ? `${JSON.stringify(result, null, indent)}\n` : `${formatDiff(result)}\n`);
   });
 
 program.command("data")
@@ -464,7 +495,7 @@ program.command("data")
       source: table.source,
       speakerNote: provenanceNote(table),
       rows: table.rows.length,
-    }, null, 2)}\n`);
+    }, null, indent)}\n`);
   });
 
 program.command("capabilities")
@@ -476,7 +507,7 @@ program.command("capabilities")
       contractVersion: CONTRACT_VERSION,
       version: VERSION,
       ...report,
-    }, null, 2)}\n`);
+    }, null, indent)}\n`);
   });
 
 program.command("draft")
@@ -494,7 +525,7 @@ program.command("draft")
       render: true,
       validate: true,
     };
-    const json = `${JSON.stringify(request, null, 2)}\n`;
+    const json = `${JSON.stringify(request, null, indent)}\n`;
     if (!options.output) {
       process.stdout.write(json);
       return;
@@ -506,7 +537,7 @@ program.command("draft")
       slideCount: outline.slides.length,
       nextStep: "Replace every [bracketed placeholder] with real content, add creativeDirection and per-slide canvases, then run `slide-agent run --request " + `${options.output}\`.`,
       guide: "slide-agent contract --format prompt",
-    }, null, 2)}\n`);
+    }, null, indent)}\n`);
   });
 
 program.command("fonts")
@@ -524,7 +555,7 @@ program.command("fonts")
     const results = await checkFontAvailability(families);
     const advice = fontAvailabilityAdvice(results);
     if (options.json) {
-      process.stdout.write(`${JSON.stringify({ fonts: results, ...(advice ? { advice } : {}) }, null, 2)}\n`);
+      process.stdout.write(`${JSON.stringify({ fonts: results, ...(advice ? { advice } : {}) }, null, indent)}\n`);
       return;
     }
     for (const result of results) {
@@ -549,10 +580,10 @@ program.command("template")
       ...(options.name ? { name: options.name } : {}),
       locked: [...locked],
     }));
-    const json = `${JSON.stringify(kit, null, 2)}\n`;
+    const json = `${JSON.stringify(kit, null, indent)}\n`;
     if (options.output) {
       await writeUtf8(options.output, json);
-      process.stdout.write(`${JSON.stringify({ output: path.resolve(options.output), brand: kit.name, locked: kit.locked }, null, 2)}\n`);
+      process.stdout.write(`${JSON.stringify({ output: path.resolve(options.output), brand: kit.name, locked: kit.locked }, null, indent)}\n`);
       return;
     }
     process.stdout.write(json);

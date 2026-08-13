@@ -43,6 +43,7 @@ import { exists, fileSha256, readUtf8, writeJson } from "./utils/files.js";
 import { AutoFixer, type UnfixedIssue } from "./validation/auto-fixer.js";
 import { defaultRepairMode, describeRepairs, detectRenderRegression, planRepairs, type RepairPlan } from "./validation/repair.js";
 import { PresentationValidator } from "./validation/validator.js";
+import { reportForDisk } from "./validation/issue-groups.js";
 import { withPackageEvidence } from "./validation/readiness.js";
 import { buildArtifactGraph, makeOutlinePortable } from "./artifacts/package.js";
 import { verifyRoundTrip } from "./artifacts/round-trip.js";
@@ -673,7 +674,7 @@ export class SlideAgent {
           ...(unresolvedClaimIds(outline).length ? { unresolvedClaims: unresolvedClaimIds(outline) } : {}),
         });
       }
-      if (report && shouldValidate) await writeJson(reportPath, report);
+      if (report && shouldValidate) await writeJson(reportPath, reportForDisk(report, request.issuesFormat));
       const validationWarnings = report?.issues.filter((item) => item.severity !== "error").map((item) => item.message) ?? [];
       warnings.push(...validationWarnings);
       const deliverables = unique([output, ...generatedFiles.filter((file) => path.resolve(file) === path.resolve(layout.pdf))]);
@@ -786,6 +787,7 @@ export class SlideAgent {
         manifest: request.manifest,
         render: request.render ?? false,
         previewsDir: request.previewsDir,
+        ...(request.issuesFormat ? { issuesFormat: request.issuesFormat } : {}),
         ...(request.visualFindings?.length ? { visualFindings: request.visualFindings } : {}),
       });
       if (request.roundTrip) {
@@ -813,7 +815,7 @@ export class SlideAgent {
           },
         });
         report = withPackageEvidence(report, { roundTrip });
-        await writeJson(reportPath, report);
+        await writeJson(reportPath, reportForDisk(report, request.issuesFormat));
       }
       return {
         status: resultStatus(report, []),
