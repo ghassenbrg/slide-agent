@@ -3,6 +3,117 @@
 All notable public changes are recorded here, newest first. Versions follow
 semantic versioning.
 
+## 0.15.0 — 2026-08-13
+
+Repetition is not information. 0.13 cut what a deck costs a host model by
+attacking the two things that were then largest — static surfaces and images —
+and both are now genuinely cheap. What it never measured is the one payload that
+grows with the deck and with every round of review: the issue list. It was
+invisible because the budget fixture was a healthy deck, asserted to stay under
+eight findings so a flood would not pollute the measurement. That is backwards
+for a cost gate. On a real sixteen-slide deck the list was 357 entries and 66% of
+the validation report, and a 40,675-token report sat under a 4,000-token ceiling
+with CI green throughout.
+
+Measured on the same deck built twice, once against 0.14 and once against this
+release, with the two decks checked for equivalence first — identical slide
+count, identical element count, and the same 1,803 words extracted from both
+rendered PDFs: **a review round falls from 55,453 tokens to 16,462**, findings
+from 357 occurrences to 162, and the cost of being told about one occurrence
+from 75.6 tokens to 20.4. Every deck-quality score is unchanged, which is the
+point. `docs/0.15.0-results.md` carries the method and the numbers, including
+where the release fell short of its own projection.
+
+Contract `0.11`, unchanged. Nothing a host authors is different.
+
+### Added
+
+- **Findings said once.** Reports carry `issueGroups`: one entry per code, with
+  `count`, one example message in full, the details that never vary lifted to
+  the group, and every occurrence listed with the numbers that distinguish it.
+  Grouping is not summarising — every `(code, slide, element)` triple survives,
+  which is asserted directly rather than assumed. `--issues flat` writes the old
+  array for tools that parse it, and `ungroupIssues` recovers the flat form from
+  a grouped report so anything reading a report from disk keeps working.
+- **`slide.flow(frame, blocks)`.** The layout primitive the toolkit did not
+  have. `columns`, `rows`, `grid`, `split` and `distribute` all answer "divide
+  this frame into n"; none answered "place these one after another, each as tall
+  as its own text". Two decks written days apart for the same project both wrote
+  it by hand under different names, and between them hand-computed 270
+  coordinates, most of which were a cursor being advanced. It returns the
+  baseline it reached, so a slide composes downward without the caller keeping a
+  cursor.
+- **`slide.card(id, frame, { accent })`.** A rounded panel with an optional
+  accent bar, inset by the panel's own radius. This is the composite that made
+  0.14 write `rounded-corner-overhang`, three new `ElementRecord` fields, and an
+  OOXML preset-geometry reader: a square-cornered bar laid flush against a
+  rounded panel pokes past the curve unless it is inset, and every deck derives
+  that inset again by hand. Drawn this way the defect cannot be expressed. Both
+  primitives ship mechanics only — no fill, radius, gap, or proportion — because
+  the toolkit supplies no taste, and there is a test for that too.
+- **`--pretty`, and compact output by default.** Indentation was 27% of
+  `report.json` and 34% of the review packet, measured. The MCP server stopped
+  paying it in 0.13; the CLI — the path the guide calls the cheapest one — kept
+  indenting every artifact it wrote until now.
+- **Budget gates that measure a deck in trouble.** A defective fixture joins the
+  healthy one, with a ceiling on `report.json` (it never had one) and an
+  invariant expressed per distinct code rather than per occurrence: the 500th
+  occurrence of a known code must not cost what the 5th code costs.
+
+### Changed
+
+- **`autofit-below-scale` requires that autofit actually shrank something.** Its
+  condition was `effectiveFontSize < minimum` — the same test `font-below-scale`
+  makes two branches up — so every element merely set below the fallback type
+  scale was reported twice, the second time by a sentence claiming autofit
+  "shrinks it from 11pt to 11pt". The counts gave it away: 145 and 145, exactly
+  equal, because one code was a copy of the other describing an event that had
+  not happened. All 145 on the measured deck were no-ops.
+- **`font-below-scale` leaves `decorative` and `code` roles alone** on a
+  model-authored canvas. A slide number that obeyed the body minimum would be
+  the defect, and a code block's size is chosen so a line of YAML fits without
+  wrapping. The 9pt legibility floor still applies to both; taste is exempt,
+  physics is not.
+- **`repeated-silhouette` calibrates against the deck it is judging.** Cosine
+  over an all-positive feature vector cannot fall far below 1, so an absolute
+  0.93 cut was not a threshold: every reported pair scored 0.98–1.00 and the
+  check fired 20 times on a deck that was fine. The absolute gate stays — it
+  carries the meaning of "the same design", and a deck of genuinely identical
+  slides must still report every pair — and a pair must now also be much closer
+  than that deck's own median pair. The ratio is published in the issue.
+- **`fidelity.slides` lists only mismatches**, with `checked` carrying the count
+  so silence cannot be read as a check that never ran. It previously listed
+  every slide, five empty arrays each.
+
+### Fixed
+
+- **A failed build no longer leaves the previous build's verdict on disk.** A
+  malformed native chart threw inside the chart writer; the CLI reported it and
+  exited 1, which is correct. But `report.json` was still the last successful
+  run's, unchanged, still saying `"status": "pass"`, with nothing on it to say
+  which build it described. Build, then read the report, is what a model does,
+  and it returned a green verdict for a build that never happened next to a
+  `.pptx` that no longer matched the script. The report is now replaced with one
+  recording the failure and its message. Nothing is written when validation was
+  never requested; the exit code was always right, and this is for the reader
+  that does not check it.
+
+### Compatibility
+
+- Contract `0.11`, unchanged. Existing scenes, outlines, requests, and build
+  scripts build unchanged.
+- **`report.json` carries `issueGroups` instead of `issues` by default.** A
+  reader that parses `issues` should pass `--issues flat`, or read `issueGroups`,
+  which holds the same facts. The in-memory `ValidationReport` still carries
+  both, so nothing using the TypeScript API changes.
+- `ValidationIssue` gains an optional `exemplar`, set only on issues
+  reconstructed from a grouped report, where one message stands in for many.
+- `RenderFidelityReport` gains an optional `checked`, and its `slides` no longer
+  lists clean slides.
+- Decks that reported `autofit-below-scale`, `font-below-scale` on chrome or
+  code, or a long tail of `repeated-silhouette` will report fewer findings. No
+  defect an author can act on was removed.
+
 ## 0.14.0 — 2026-08-11
 
 The deck can now be wrong in a way the manifest can see. 0.13 made looking at a
