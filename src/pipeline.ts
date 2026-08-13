@@ -43,6 +43,7 @@ import { exists, fileSha256, readUtf8, writeJson } from "./utils/files.js";
 import { AutoFixer, type UnfixedIssue } from "./validation/auto-fixer.js";
 import { defaultRepairMode, describeRepairs, detectRenderRegression, planRepairs, type RepairPlan } from "./validation/repair.js";
 import { PresentationValidator } from "./validation/validator.js";
+import { reportForDisk } from "./validation/issue-groups.js";
 import { withPackageEvidence } from "./validation/readiness.js";
 import { buildArtifactGraph, makeOutlinePortable } from "./artifacts/package.js";
 import { verifyRoundTrip } from "./artifacts/round-trip.js";
@@ -673,7 +674,7 @@ export class SlideAgent {
           ...(unresolvedClaimIds(outline).length ? { unresolvedClaims: unresolvedClaimIds(outline) } : {}),
         });
       }
-      if (report && shouldValidate) await writeJson(reportPath, report);
+      if (report && shouldValidate) await writeJson(reportPath, reportForDisk(report, request.issuesFormat));
       const validationWarnings = report?.issues.filter((item) => item.severity !== "error").map((item) => item.message) ?? [];
       warnings.push(...validationWarnings);
       const deliverables = unique([output, ...generatedFiles.filter((file) => path.resolve(file) === path.resolve(layout.pdf))]);
@@ -694,7 +695,54 @@ export class SlideAgent {
     } catch (error) {
       const details = errorDetails(error);
       this.logger.error("create.failed", details.message, { requestId, code: details.code });
+      await this.supersedeStaleReport(request, details);
       return { status: "error", generatedFiles, slideCount: 0, warnings, errors: [details], metadata: metadata("create", requestId, startedAt, retries) };
+    }
+  }
+
+  /**
+   * Stops a failed build leaving the previous build's verdict on disk.
+   *
+   * The CLI reports the failure on stdout and exits non-zero, which is correct
+   * and is what a shell notices. What a *model* reads is `report.json` — and
+   * after a failed build that file was the last successful run's, unchanged,
+   * still saying `"status": "pass"`. Nothing on it said which build it
+   * described, so the natural next step — build, then read the report — handed
+   * back a green verdict for a build that never happened, alongside a `.pptx`
+   * that no longer matched the script.
+   *
+   * The report is therefore replaced with one that records the failure. The
+   * previous verdict is not worth preserving: it described a deck the author
+   * has already moved on from, and its only remaining use was to mislead.
+   */
+  private async supersedeStaleReport(request: CreateRequest, failure: { code: string; message: string }): Promise<void> {
+    if (request.validate === false) return;
+    const reportPath = request.reportPath ?? (request.output ? outputLayout(request.output).validation : undefined);
+    if (!reportPath || !(await exists(reportPath))) return;
+    try {
+      await writeJson(reportPath, {
+        schemaVersion: "1.0",
+        status: "fail",
+        packageStatus: "fail",
+        presentationReadiness: "not-ready",
+        readinessReasons: [`The build failed, so there is no deck to judge: ${failure.message}`],
+        presentation: request.output ?? "",
+        checkedAt: new Date().toISOString(),
+        slideCount: 0,
+        summary: { errors: 1, warnings: 0, info: 0 },
+        iterations: 0,
+        issueGroups: [{
+          code: failure.code,
+          severity: "error",
+          fixable: false,
+          count: 1,
+          example: failure.message,
+          where: [{}],
+        }],
+      });
+    } catch {
+      // A report we cannot write is not worth failing the failure over; the
+      // error the caller already has is the one that matters.
     }
   }
 
@@ -786,6 +834,7 @@ export class SlideAgent {
         manifest: request.manifest,
         render: request.render ?? false,
         previewsDir: request.previewsDir,
+        ...(request.issuesFormat ? { issuesFormat: request.issuesFormat } : {}),
         ...(request.visualFindings?.length ? { visualFindings: request.visualFindings } : {}),
       });
       if (request.roundTrip) {
@@ -813,7 +862,7 @@ export class SlideAgent {
           },
         });
         report = withPackageEvidence(report, { roundTrip });
-        await writeJson(reportPath, report);
+        await writeJson(reportPath, reportForDisk(report, request.issuesFormat));
       }
       return {
         status: resultStatus(report, []),

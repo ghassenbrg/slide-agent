@@ -68,10 +68,12 @@ describe("prompt-only creation across the brief corpus", () => {
     expect(result.metadata.retries).toBeLessThanOrEqual(2);
     const report = JSON.parse(await readFile(outputLayout(path.join(workspace, "07-long-strategy.pptx")).validation, "utf8")) as {
       status: string;
-      issues: Array<{ code: string; severity: string }>;
+      issueGroups: Array<{ code: string; severity: string; count: number }>;
     };
     // The report written to disk is the reconciled one the caller was handed.
-    expect(report.issues.filter((issue) => issue.severity === "error")).toEqual([]);
+    // It carries its findings grouped — one entry per code with its call sites
+    // listed — so an error on disk is an error-severity group, not a row.
+    expect(report.issueGroups.filter((group) => group.severity === "error")).toEqual([]);
   });
 
   it("derives a different deck for a different subject", async () => {

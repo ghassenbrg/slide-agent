@@ -144,6 +144,38 @@ export interface SlideOptions {
   sources?: SourceCitation[];
 }
 
+/** One measured block in a `flow`. */
+export interface FlowBlock {
+  id: string;
+  text: string;
+  style?: CanvasTextStyle;
+  role?: string;
+  /** Space below this block, overriding the flow's own gap. */
+  gap?: number;
+}
+
+/**
+ * A rounded panel and, optionally, the accent bar down one of its edges.
+ *
+ * Everything here is geometry and paint the author chose. There is no default
+ * fill, radius, or bar width worth shipping — those are the design, and a
+ * toolkit that supplied them would be supplying taste.
+ */
+export interface CardOptions {
+  /** Corner radius in inches. The accent bar is inset by exactly this. */
+  radius?: number;
+  style?: CanvasShapeElement["style"];
+  role?: string;
+  /** Defaults to `roundRect`; a `rect` with radius 0 is a legitimate card. */
+  shape?: string;
+  accent?: {
+    color: string;
+    /** Thickness of the bar. */
+    width?: number;
+    side?: "left" | "right" | "top" | "bottom";
+  };
+}
+
 export interface TextOptions extends Partial<Rect> {
   style?: CanvasTextStyle;
   styleRef?: string | string[];
@@ -388,6 +420,103 @@ export class SlideBuilder {
       ...(intentionalOverlap ? { intentionalOverlap } : {}),
       ...(allowOverlapWith ? { allowOverlapWith } : {}),
     });
+  }
+
+  /**
+   * Stacks measured text down a frame and returns the baseline it reached.
+   *
+   * This is the layout primitive the shipped helpers did not have. `columns`,
+   * `rows`, `grid`, `split` and `distribute` all answer "divide this frame into
+   * n"; none answers "put these one after another, each as tall as its own
+   * text". Two decks written days apart for the same project both wrote it by
+   * hand under different names, and between them hand-computed 270
+   * coordinates — most of which were a cursor being advanced.
+   *
+   * It supplies arithmetic and nothing else. Gaps default to zero, because a
+   * default gap would be a proportion and proportions are the author's.
+   *
+   * @returns the y at the bottom of the last block placed, so a slide can be
+   *          composed downward without the caller keeping a cursor.
+   */
+  public flow(
+    // Height is not an input: what a flow is tall is decided by the text in
+    // it, which is the whole reason to reach for one. Accepting it and
+    // ignoring it would be a lie in the signature.
+    frame: Omit<Rect, "h"> & { h?: number },
+    blocks: Array<FlowBlock | undefined | null | false>,
+    options: { gap?: number } = {},
+  ): number {
+    let cursor = frame.y;
+    for (const block of blocks) {
+      // A falsy entry is how a caller writes "this line only when there is
+      // one" inline, without breaking the array around a conditional.
+      if (!block || !block.text) continue;
+      const style = block.style ?? {};
+      const measured = measureText({
+        text: block.text,
+        w: frame.w,
+        fontSize: style.fontSize as number | undefined,
+        fontFace: style.fontFace as string | undefined,
+        bold: style.bold as boolean | undefined,
+        ...(typeof style.lineSpacingMultiple === "number" ? { lineSpacingMultiple: style.lineSpacingMultiple } : {}),
+      });
+      this.text(block.id, block.text, {
+        x: frame.x, y: cursor, w: frame.w, h: measured.height,
+        ...(block.style ? { style: block.style } : {}),
+        ...(block.role ? { role: block.role } : {}),
+      });
+      cursor += measured.height + (block.gap ?? options.gap ?? 0);
+    }
+    return cursor;
+  }
+
+  /**
+   * A rounded panel, optionally with an accent bar along one edge.
+   *
+   * The most rebuilt composite there is, and rebuilding it is how
+   * `rounded-corner-overhang` came to need a check in 0.14: a square-cornered
+   * bar laid flush against a rounded card pokes past the curve unless it is
+   * inset by the radius, and every deck derives that inset again by hand. Here
+   * the inset is arithmetic the caller cannot get wrong, so for cards drawn
+   * this way the defect cannot be expressed at all.
+   *
+   * It has no opinion about fill, stroke, radius, or bar width — those are the
+   * design. What it owns is where the bar goes.
+   */
+  public card(id: string, frame: Rect, options: CardOptions = {}): Handle {
+    const radius = options.radius ?? 0;
+    const panel = this.shape(id, options.shape ?? "roundRect", {
+      ...frame,
+      style: { ...options.style, ...(radius ? { radius } : {}) },
+      role: options.role ?? "container",
+      intentionalOverlap: true,
+    });
+    if (options.accent) {
+      const { color, width = 0.06, side = "left" } = options.accent;
+      const vertical = side === "left" || side === "right";
+      // Inset along the edge the bar runs down, by the radius the panel is
+      // drawn with, so the bar's square corners stay inside the panel's curve.
+      const bar = vertical
+        ? {
+          x: side === "left" ? frame.x : frame.x + frame.w - width,
+          y: frame.y + radius,
+          w: width,
+          h: Math.max(frame.h - radius * 2, 0),
+        }
+        : {
+          x: frame.x + radius,
+          y: side === "top" ? frame.y : frame.y + frame.h - width,
+          w: Math.max(frame.w - radius * 2, 0),
+          h: width,
+        };
+      this.shape(`${id}-accent`, "rect", {
+        ...bar,
+        style: { fill: color, lineWidth: 0 },
+        role: "decorative",
+        intentionalOverlap: true,
+      });
+    }
+    return panel;
   }
 
   public shape(id: string, shape: string, options: ShapeOptions = {}): Handle {

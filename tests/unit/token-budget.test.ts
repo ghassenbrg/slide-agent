@@ -98,6 +98,46 @@ function shape(id: string, at: { x: number; y: number; w: number; h: number }): 
   return { id, type: "shape", shape: "rect", role: "decorative", ...at, style: { fill: "203A55" } };
 }
 
+/**
+ * A deck with a great many findings — the case the ceilings never measured.
+ *
+ * Every ceiling here was set against `healthyDeck`, and the packet ceiling
+ * asserts the fixture stays under eight findings so a flood would not pollute
+ * the measurement. That is backwards for a cost gate: a healthy deck can never
+ * exercise the field that turned out to dominate. Measured on a real
+ * sixteen-slide deck built with 0.14, `report.json` reached 40,675 tokens
+ * against a packet ceiling of 4,000 — and CI was green throughout.
+ *
+ * So: many slides, many elements, every one below the fallback type scale, so
+ * a single code fires on nearly every element. What must hold is not that the
+ * report is small — there is a great deal wrong with this deck — but that its
+ * size tracks the number of *distinct findings* rather than occurrences.
+ */
+function defectiveDeck(slideCount: number, perSlide: number): PresentationOutline {
+  return {
+    brief: {
+      title: "Defect fixture", audience: "Reviewers", objective: "Hold the report to a per-code ceiling",
+      presentationType: "technical", tone: "plain", visualDirection: "fixture",
+      slideCount, language: "English", outputRequirements: [], keyTopics: [], sourcePrompt: "test",
+    },
+    narrative: "Every element is set below the fallback type scale, so one code fires many times.",
+    slides: Array.from({ length: slideCount }, (_, slide) => ({
+      id: `slide-${slide + 1}`,
+      kind: "custom" as const,
+      title: `Slide ${slide + 1}`,
+      canvas: Array.from({ length: perSlide }, (_, index) => text(
+        `small-${slide}-${index}`,
+        `A line of body copy on slide ${slide + 1}, number ${index + 1}, set deliberately small.`,
+        {
+          x: 0.7, y: 0.6 + index * 0.42, w: 11.9, h: 0.38,
+          // Above the 9pt hard floor, below the body minimum: advice, not an error.
+          size: 11, role: "body",
+        },
+      )),
+    })),
+  };
+}
+
 describe("token estimation", () => {
   it("prices text by character count and images by pixel count", () => {
     expect(estimateTextTokens("a".repeat(400))).toBe(100);
@@ -263,5 +303,66 @@ describe("token budget ceilings", () => {
     const patch = review;
     const verify = overview;
     expect(build + reviewCall + patch + verify).toBeLessThan(20_000);
+  });
+});
+
+/**
+ * The ceilings that would have caught 0.14's report.
+ *
+ * These measure the *defective* deck. The healthy-deck ceilings above stay —
+ * they measure a different thing, and both are worth having — but a cost gate
+ * that only ever sees a clean fixture is watching the case that was never
+ * expensive.
+ */
+describe("what a report costs when the deck is in trouble", () => {
+  let written: { report: Record<string, unknown>; raw: string } | undefined;
+
+  async function report() {
+    if (written) return written;
+    const workspace = await mkdtemp(path.join(tmpdir(), "slide-agent-defects-"));
+    const output = path.join(workspace, "defective.pptx");
+    const reportPath = path.join(workspace, "report.json");
+    await new SlideAgent(silentLogger).create({
+      command: "create", outline: defectiveDeck(16, 10), output,
+      reportPath, validate: true, render: false, roundTrip: false, autoFix: false,
+    });
+    const raw = await readFile(reportPath, "utf8");
+    written = { report: JSON.parse(raw) as Record<string, unknown>, raw };
+    await rm(workspace, { recursive: true, force: true });
+    return written;
+  }
+
+  it("holds report.json to a ceiling, which it never had", async () => {
+    const { raw } = await report();
+    // 0.14 wrote 40,675 tokens for a deck this size with nothing watching.
+    expect(tokens(raw)).toBeLessThan(8_000);
+  });
+
+  it("charges for distinct findings rather than for occurrences", async () => {
+    const { report: parsed } = await report();
+    const groups = parsed.issueGroups as Array<{ count: number }>;
+    const occurrences = groups.reduce((total, group) => total + group.count, 0);
+    // The fixture is built to produce many occurrences of few codes. If the
+    // report grew with occurrences, this is where it would show.
+    expect(occurrences).toBeGreaterThan(100);
+    expect(groups.length).toBeLessThan(8);
+    // The invariant that actually matters: the 500th occurrence of a known
+    // code must not cost what the 5th distinct code costs.
+    expect(tokens(parsed) / occurrences).toBeLessThan(20);
+  });
+
+  it("writes findings without indentation", async () => {
+    const { raw } = await report();
+    // Indentation was 27% of a real report. The MCP server stopped paying it
+    // in 0.13; the files on disk stopped in 0.15.
+    expect(raw.includes("\n  ")).toBe(false);
+  });
+
+  it("still names every occurrence, so nothing was bought by hiding a defect", async () => {
+    const { report: parsed } = await report();
+    const groups = parsed.issueGroups as Array<{ code: string; count: number; where: unknown[] }>;
+    for (const group of groups) {
+      expect(group.where, `${group.code} lost its call sites`).toHaveLength(group.count);
+    }
   });
 });

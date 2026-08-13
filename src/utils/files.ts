@@ -16,11 +16,26 @@ export async function readUtf8(filePath: string): Promise<string> {
   return readFile(path.resolve(filePath), "utf8");
 }
 
+/**
+ * How many spaces written JSON is indented by. None, by default.
+ *
+ * Measured on a real deck: indentation was 27% of `report.json` and 34% of the
+ * review packet, and the reader of both is normally a model, for which it is
+ * pure cost. The MCP server has serialised compactly since 0.13 for exactly
+ * this reason; this brings the files on disk into line with it.
+ * `slide-agent --pretty` sets it back to 2 for a person at a terminal.
+ */
+let jsonIndent: number | undefined;
+
+export function setJsonIndent(spaces: number | undefined): void {
+  jsonIndent = spaces;
+}
+
 export async function writeJson(filePath: string, value: unknown): Promise<string> {
   const resolved = path.resolve(filePath);
   await ensureDir(path.dirname(resolved));
   const temporary = `${resolved}.${process.pid}.tmp`;
-  await writeFile(temporary, `${JSON.stringify(value, null, 2)}\n`, "utf8");
+  await writeFile(temporary, `${JSON.stringify(value, null, jsonIndent)}\n`, "utf8");
   await rename(temporary, resolved);
   return resolved;
 }

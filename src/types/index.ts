@@ -1,7 +1,9 @@
 import type { VisualReviewFinding } from "../review/types.js";
 import type { RelativeFrame } from "../design/relations.js";
 import type { TokenBudget } from "../evaluation/token-budget.js";
+import type { IssueGroup, IssuesFormat } from "../validation/issue-groups.js";
 
+export type { IssueGroup, IssueOccurrence, IssuesFormat } from "../validation/issue-groups.js";
 export type { ReviewPacket, VisualReviewFinding, VisualFindingSeverity } from "../review/types.js";
 export type { TokenBudget } from "../evaluation/token-budget.js";
 export type { FrameRelation, FrameValue, RelativeFrame } from "../design/relations.js";
@@ -975,6 +977,14 @@ export interface ValidationIssue {
   fixed?: boolean;
   /** Why a fixable issue could not be repaired automatically. */
   unfixedReason?: string;
+  /**
+   * `message` is the group's example, not this occurrence's own wording.
+   *
+   * Set only on issues reconstructed from a grouped report, where one sentence
+   * stands in for many that differed by an element name and a number. Every
+   * other field is this occurrence's own.
+   */
+  exemplar?: boolean;
 }
 
 /** How much of the intended text survived to the render, and how sure we are. */
@@ -982,6 +992,14 @@ export interface RenderFidelityReport {
   status: "pass" | "review" | "fail" | "skipped";
   method: "pdf-text" | "ocr" | "none";
   confidence: "high" | "medium" | "low";
+  /**
+   * How many slides were compared.
+   *
+   * `slides` lists only the ones that mismatched, so this is what says the
+   * silence is a clean result rather than a check that never ran.
+   */
+  checked?: number;
+  /** Slides whose render did not match what was authored. Clean slides are omitted. */
   slides: Array<{
     slide: number;
     missing: string[];
@@ -1034,7 +1052,21 @@ export interface ValidationReport {
   slideCount: number;
   summary: { errors: number; warnings: number; info: number };
   iterations: number;
+  /**
+   * Every issue, one object each.
+   *
+   * This is the in-memory contract and stays complete. What is *written* is
+   * chosen at serialization: `issueGroups` by default, because a hundred
+   * repetitions of one sentence is not a hundred findings, and this array under
+   * `--issues flat` for readers that want it.
+   */
   issues: ValidationIssue[];
+  /**
+   * The same findings, said once each, with their call sites listed.
+   *
+   * @see groupIssues
+   */
+  issueGroups?: IssueGroup[];
   /**
    * Engine heuristics, named as such. They are proxies for design qualities,
    * not measurements of them, and they are not a quality score.
@@ -1169,6 +1201,12 @@ export interface AgentResult {
 
 export interface CreateRequest {
   command: "create";
+  /**
+   * How the written report carries its findings. Defaults to `grouped`.
+   *
+   * @see IssueGroup
+   */
+  issuesFormat?: IssuesFormat;
   prompt?: string;
   brief?: Partial<PresentationBrief>;
   outline?: PresentationOutline;
@@ -1335,6 +1373,8 @@ export interface RenderRequest {
 export interface ValidateRequest {
   command: "validate";
   input: string;
+  /** How the written report carries its findings. Defaults to `grouped`. */
+  issuesFormat?: IssuesFormat;
   /**
    * What a reviewer saw in the renders.
    *
