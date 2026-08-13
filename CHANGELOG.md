@@ -3,7 +3,7 @@
 All notable public changes are recorded here, newest first. Versions follow
 semantic versioning.
 
-## 0.15.0 — 2026-08-13
+## 0.15.0 — 2026-08-14
 
 Repetition is not information. 0.13 cut what a deck costs a host model by
 attacking the two things that were then largest — static surfaces and images —
