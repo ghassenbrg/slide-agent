@@ -133,7 +133,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@emnapi/core": "2.0.0-alpha.3",
+    "@emnapi/core": "2.0.0-alpha.4",
     "@emnapi/runtime": "2.0.0-alpha.3",
     "@modelcontextprotocol/client": "^2.0.0",
     "@types/node": "^26.1.2",
