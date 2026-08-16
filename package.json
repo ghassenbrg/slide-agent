@@ -134,7 +134,7 @@
   },
   "devDependencies": {
     "@emnapi/core": "2.0.0-alpha.3",
-    "@emnapi/runtime": "2.0.0-alpha.3",
+    "@emnapi/runtime": "2.0.0-alpha.4",
     "@modelcontextprotocol/client": "^2.0.0",
     "@types/node": "^26.1.2",
     "@vitest/coverage-v8": "^4.1.10",
