@@ -163,7 +163,7 @@
     "package": "npm run check && npm run compile && vsce package --no-dependencies"
   },
   "devDependencies": {
-    "@types/node": "^26.1.2",
+    "@types/node": "^26.2.0",
     "@types/vscode": "^1.90.0",
     "@vscode/vsce": "^3.9.2",
     "esbuild": "^0.28.1",
