@@ -7,6 +7,129 @@ npm install @slide-agent/core
 Installing the library runs no lifecycle scripts and writes nothing outside
 your project.
 
+Two APIs, matching the two engines. `@slide-agent/core/v2` is the 2.x engine and
+the one to reach for; the root export is the 0.x API, still supported, and also
+carries `v2` as a namespace.
+
+---
+
+# 2.x: `@slide-agent/core/v2`
+
+## Building a deck
+
+```ts
+import { Engine } from "@slide-agent/core/v2";
+
+const engine = new Engine();
+const { verdict, files } = await engine.build({
+  deck: "./out",                  // the deck directory
+  intent,                         // a slide-agent.intent/1 document
+  previews: "sheet",
+});
+
+if (verdict.suggestedEdits.length) {
+  // The engine declined to make a design decision. Answer it.
+  await engine.edit({ deck: "./out", ops: [
+    { level: "intent", op: "choose", edit: verdict.suggestedEdits[0].id, option: 0 },
+  ] });
+}
+```
+
+`Engine` also has `edit`, `explain`, `finalize`, and `inspect`. Every method
+returns the verdict alongside the files it wrote; nothing throws for a deck that
+merely has findings, because a verdict with findings is the normal result and
+the caller decides what is acceptable.
+
+## Validating without building
+
+```ts
+import { validateIntent, buildScene } from "@slide-agent/core/v2";
+
+const { intent, findings } = validateIntent(candidate);
+if (!intent) return findings;   // each carries the JSON pointer it applies to
+```
+
+`buildScene` goes one step further — compile, expand, solve, fit — without
+writing a package. This is what `mode: "check"` uses.
+
+## Compiling a design language on its own
+
+```ts
+import { compileDesign, contrastRatio, nearestPassing } from "@slide-agent/core/v2";
+
+const theme = await compileDesign({ language }, { format: "16:9", text });
+theme.slots;        // the twelve PowerPoint theme slots
+theme.findings;     // contrast repairs, unavailable fonts, unknown roles
+```
+
+`themeToDtcg` and `languageFromDtcg` move a language in and out of W3C DTCG
+tokens, which is the supported way to share one with a design system.
+
+## Measuring text
+
+```ts
+import { TextEngine, sharedFontRegistry, parseRichText } from "@slide-agent/core/v2";
+
+const text = new TextEngine(sharedFontRegistry());
+const face = await text.load({ family: "Helvetica", weight: 400, italic: false });
+
+const laid = text.layout({
+  paragraphs: parseRichText("Waves fail at the pilot, not in production"),
+  size: 32,
+  leading: 1.1,
+  width: 5.2,          // inches
+  faceFor: () => face,
+});
+
+laid.lineCount;   // 2 — where it actually broke
+laid.height;      // 0.978 inches
+laid.widest;      // 5.166 inches
+```
+
+This is the same engine the solver and the previews use, which is why a preview
+shows the lines the fit ladder measured rather than a browser's guess at them.
+
+## Template fill
+
+```ts
+import { fillDecks } from "@slide-agent/core/v2";
+
+const decks = await fillDecks(new Engine(), {
+  template: "qbr.intent.json",
+  data: "accounts.csv",
+  out: "decks/",
+  nameBy: "account",
+});
+```
+
+No model, one deck per row, deterministic.
+
+## Everything else
+
+The `/v2` entry point exports the IR types, the recipe library, rhythm
+analysis, the OOXML writer, SVG and PNG rendering, the QA checks, the command
+registry, the MCP server factory, migration from 0.x, and the engine-managed
+pieces (`generateDeck`, providers, routing profiles). The module list in
+[architecture.md](architecture.md#v2-modules) says which is which.
+
+## Engine-managed mode, and the creative floor
+
+```ts
+import { generateDeck, AnthropicProvider, resolveProfile } from "@slide-agent/core/v2";
+```
+
+One thing to know before you configure a profile: `resolveProfile` **throws** if
+a routing profile would send a judgement task — directing, critiquing, a design
+edit — to a model below the `balanced` tier. That is not a warning to be ignored
+in production; it is the guarantee that cost pressure cannot quietly turn the
+design over to a cheap model. Under a budget ceiling the guard drops the second
+revise pass, then the critic, then stops. It never downgrades the tier. See
+[ADR 0010](adr/0010-creative-floor-in-routing.md).
+
+---
+
+# 0.x API
+
 ## Executing a request
 
 ```ts

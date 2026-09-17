@@ -68,7 +68,7 @@ item.
   residual. The automatic steps are reported; the taste-bearing ones are asked.
   Text can no longer silently overflow, and it can no longer be silently
   shrunk to fit either.
-- **Components, 40 recipes across 24 families, a draft-mode selector with a
+- **Components, 38 recipes across 24 families, a draft-mode selector with a
   scored trail, and rhythm analysis** over a centred 12×7 occupancy signature —
   so "these six slides are the same slide" is a finding, not a feeling.
 - **A native OOXML writer.** Real placeholders, theme-referenced colours and

@@ -1,3 +1,4 @@
+import { readFile } from "node:fs/promises";
 import path from "node:path";
 
 import { describe, expect, it } from "vitest";
@@ -48,6 +49,18 @@ const SAMPLE: Record<string, unknown> = {
 };
 
 describe("recipe library", () => {
+  it("has the size the documentation claims", async () => {
+    // README, ADR 0007, the changelog, and the status page all quote this pair.
+    // A recipe added without updating them leaves the prose overstating the
+    // library, which is the kind of small dishonesty nobody catches by reading.
+    const families = new Set(RECIPES.map((recipe) => recipe.id.split("/")[0]));
+    expect({ recipes: RECIPES.length, families: families.size }).toEqual({ recipes: 38, families: 24 });
+    for (const file of ["README.md", "CHANGELOG.md", "docs/adr/0007-opt-in-vocabulary.md", "docs/v2/04-implementation-status.md"]) {
+      const text = await readFile(path.join(root, file), "utf8");
+      expect(text, `${file} does not mention 38 recipes`).toMatch(/38 (saved compositions|recipes|across|variants)|38 across|24 families \/ 38/);
+    }
+  });
+
   it.each(RECIPES.map((recipe) => [recipe.id]))("%s builds with nominal content and no blocking findings", async (id) => {
     const recipe = RECIPES.find((candidate) => candidate.id === id)!;
     const content = Object.fromEntries(Object.keys(recipe.slots).filter((slot) => SAMPLE[slot] !== undefined).map((slot) => [slot, SAMPLE[slot]]));

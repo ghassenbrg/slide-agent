@@ -13,7 +13,7 @@ sources, Q&A — genuinely do not deserve a model's attention, and volume paths
 
 Ship them, and never apply them on the model's behalf.
 
-- **Recipes** (~40 across 24 families) are saved compositions with named slots.
+- **Recipes** (38 across 24 families) are saved compositions with named slots.
   A directed deck may use one where a starting point is good enough, adapt it
   with `adjust`, or open it with `expand` and rework the composition.
 - **Presets** are generated themes for draft mode and template-fill.

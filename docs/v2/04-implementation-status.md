@@ -18,7 +18,7 @@ it matters.
 | **Text system**: TrueType/OpenType parsing, font registry, measurement from real advance widths, UAX-14-style breaking with CJK and spaceless scripts, balanced headlines, table fallback | Shipped | `src/v2/text` |
 | **Layout**: grid tracks, flex rows and columns, layers, free placement, bleed, connectors, repeats | Shipped | `src/v2/layout` |
 | **Fit ladder** with automatic steps, reported adjustments, choices, and character budgets | Shipped | `src/v2/layout/solve.ts` |
-| **Components, recipes (24 families / 40 variants), draft selector, rhythm analysis** | Shipped | `src/v2/compose` |
+| **Components, recipes (24 families / 38 variants), draft selector, rhythm analysis** | Shipped | `src/v2/compose` |
 | **Charts**: deterministic stats, form check, native OOXML charts with an embedded workbook, SVG preview | Shipped | `src/v2/charts`, `src/v2/ooxml/chart.ts` |
 | **Diagrams**: flow, layered, hierarchy, cycle, swimlane, with obstacle-aware routing (ported from V1) | Shipped | `src/v2/layout/diagram.ts` |
 | **Icons**: 1,848 Lucide glyphs as `a:custGeom`, concept search | Shipped | `src/v2/icons`, `assets/icons` |

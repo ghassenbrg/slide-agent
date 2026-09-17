@@ -16,7 +16,8 @@ export { compileDesign, resolveColor, roleColor, themeToDtcg, languageFromDtcg, 
 export { contrastRatio, nearestPassing, oklchToHex, hexToOklch, parseColor, simulateCvd, tint } from "./tokens/color.js";
 export { presetLanguage, presetNames } from "./tokens/presets.js";
 
-export { TextEngine, type LoadedFace } from "./text/measure.js";
+export { TextEngine, type FaceSpec, type LaidLine, type LayoutInput, type LoadedFace, type TextLayout } from "./text/measure.js";
+export { parseRichText, plainText, type RichParagraph, type RichRun } from "./text/rich.js";
 export { FontRegistry, sharedFontRegistry, fontCacheDirectory, systemFontDirectories } from "./text/registry.js";
 export { fetchFamily, fontDownloadsAllowed } from "./text/fetch.js";
 export { searchFamilies, OPEN_FAMILIES, OFFICE_FAMILIES } from "./text/catalog.js";

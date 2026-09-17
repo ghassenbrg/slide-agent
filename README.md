@@ -181,7 +181,7 @@ Every command returns one JSON object on stdout and JSON-lines logs on stderr.
 | **Composition language** | Grid, flex rows and columns, layers, free placement, bleed, connectors, repeats — in grid units, roles, and named tokens, never inches |
 | **Design languages** | Your palette and roles, any typeface the engine can measure, modular or explicit type scales, space, grid, shape, surfaces, and texture primitives; compiled to theme slots with contrast verified |
 | **Components** | Defined once per deck, instantiated anywhere, fitted per instance |
-| **Recipes** | ~40 saved compositions across 24 families as starting points; `expand` opens any of them as a composition you can rework |
+| **Recipes** | 38 saved compositions across 24 families as starting points; `expand` opens any of them as a composition you can rework |
 | **Fit ladder** | Measure, reflow, balance, size down within your limit — reported — then choices, exact character budgets, and a residual that is never hidden |
 | **Typography** | Measured from the real font files, with UAX-14-style breaking, CJK and RTL scripts, balanced headlines, and OFL faces fetched and embedded on demand |
 | **Charts** | Native charts with an embedded workbook, styled from your tokens; facts computed deterministically — a model may phrase them, never invent them |
