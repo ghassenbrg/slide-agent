@@ -18,7 +18,7 @@ const HINTS: Record<string, string> = {
   "text-overflow": "Answer the choice in suggestedEdits, or shorten to the character budget.",
   "word-broken": "Answer the choice in suggestedEdits: a smaller step, a wider region, or a shorter word.",
   "contrast-pinned": "Contrast is a hard constraint: drop the pin or choose a passing tone.",
-  "font-unavailable": "Run `slide-agent fonts add <family>`, choose an available face, or allow downloads.",
+  "font-unavailable": "Run `slide-agent font --add <family>`, choose an available face, or allow downloads.",
   "out-of-bounds": "Keep it inside the grid, or declare bleed on the region.",
   collision: "Separate the regions, or use a layer if the overlap is intended.",
   "placeholder-text": "Replace the placeholder with the real content.",

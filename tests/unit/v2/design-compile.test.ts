@@ -75,6 +75,23 @@ describe("design compile", () => {
     expect(fromTokens.source).toBe("tokens");
   });
 
+  it("does not report a data-colour clash it introduced itself", async () => {
+    // accentAlt falls back to accent, so an undeclared data series derives to
+    // [accent, accent]. Reporting that as a clash blames the author for the
+    // engine's own default, at a pointer their intent does not contain.
+    const base = language();
+    const derived = await compileDesign({
+      language: { ...base, color: { palette: base.color.palette, roles: { ...base.color.roles, accentAlt: undefined } } as never },
+    }, { format: "16:9", text: fixtureText() });
+    expect(derived.findings.filter((finding) => finding.code === "data-colors-close")).toEqual([]);
+
+    // A series the author did write is still checked.
+    const declared = await compileDesign({
+      language: language({ color: { ...base.color, data: ["signal", "signal"] } }),
+    }, { format: "16:9", text: fixtureText() });
+    expect(declared.findings.some((finding) => finding.code === "data-colors-close")).toBe(true);
+  });
+
   it("merges a brand with the model's partial language and refuses locked paths", async () => {
     const theme = await compileDesign({ brand: "acme", language: { color: { palette: { ink: "#FF0000" } }, concept: "Our own concept" } }, {
       format: "16:9",

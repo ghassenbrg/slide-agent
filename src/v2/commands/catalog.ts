@@ -85,7 +85,7 @@ export function catalog(include: CatalogSection[] = ["grammar", "components", "r
   if (include.includes("textures")) result.texturePrimitives = [...TEXTURE_PRIMITIVES];
   if (include.includes("fonts")) {
     result.fonts = searchFamilies(query?.fonts ?? "", 24).map((family) => `${family.family} — ${family.classes.join("/")}${family.note ? `; ${family.note}` : ""}`);
-    result.fontNote = "Any face may be named. Office faces are never embedded; others are embedded when their files are available (slide-agent fonts add <family>).";
+    result.fontNote = "Any face may be named. Office faces are never embedded; others are embedded when their files are available (slide-agent font --add <family>).";
   }
   if (include.includes("icons")) {
     const info = iconSetInfo();

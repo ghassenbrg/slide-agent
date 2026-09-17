@@ -107,6 +107,28 @@ describe("engine", () => {
     expect(invalid.verdict.issues[0]!.code).toBe("intent-invalid");
   });
 
+  it("says what is wrong with a design block instead of `Invalid input`", async () => {
+    const incomplete = await engine.build({
+      deck: path.join(workspace, "no-design"),
+      intent: {
+        ...intent([{ id: "a", message: "m", compose: { grid: "12x6", items: [] } }]),
+        design: { language: { color: { palette: { ink: "#111111" }, roles: { background: "ink", text: "ink", muted: "ink", accent: "ink" } } } },
+      } as never,
+      mode: "check",
+    });
+    const finding = incomplete.verdict.issues.find((issue) => issue.code === "intent-invalid");
+    expect(finding!.where).toContain("/design");
+    // The truncated hint has to carry the actionable half, not the general rule.
+    expect(finding!.hint).toContain("/language/color/roles/surface");
+
+    const wrongShape = await engine.build({
+      deck: path.join(workspace, "bad-design"),
+      intent: { ...intent([{ id: "a", message: "m", compose: { grid: "12x6", items: [] } }]), design: { presets: "draft/technical" } } as never,
+      mode: "check",
+    });
+    expect(wrongShape.verdict.issues.find((issue) => issue.code === "intent-invalid")!.hint).toContain("preset");
+  });
+
   it("finalizes with a round-trip check", async () => {
     const deck = path.join(workspace, "final");
     await engine.build({ deck, intent: intent([{ id: "only", message: "m", compose: { grid: "12x6", items: [{ at: "c1-10 r2-3", text: "Everything fits here", role: "title" }] } }]) });

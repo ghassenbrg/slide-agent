@@ -11,7 +11,7 @@ import { parseFaces } from "./sfnt.js";
  * Fetching open-licence faces on demand.
  *
  * Off unless the operator allows it (`SLIDE_AGENT_FONT_DOWNLOADS=1`, or an
- * explicit `slide-agent fonts add`). Only two hosts are contacted —
+ * explicit `slide-agent font --add`). Only two hosts are contacted —
  * fonts.googleapis.com for the stylesheet that names the files, and
  * fonts.gstatic.com for the files — and every file is checked to be a real
  * font before it is kept. A manifest beside the files records each file's

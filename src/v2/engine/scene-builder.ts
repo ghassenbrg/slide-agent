@@ -12,6 +12,7 @@ import { getRecipe, RECIPES, STARTER_COMPONENTS } from "../compose/recipes.js";
 import { rhythmNotes, signature, type RhythmNote } from "../compose/rhythm.js";
 import { checkSlots, normalizeContent, selectRecipe } from "../compose/selector.js";
 import { normalizeNode, type CompositionNode } from "../ir/compose.js";
+import { designLanguage } from "../ir/design.js";
 import { deckIntent, slideMode, type AutoSlide, type ComponentDef, type DeckIntent, type Slide } from "../ir/intent.js";
 import { didYouMean, joinPointer, pointer, type Finding } from "../ir/issues.js";
 import type { SceneElement, SceneFont, SceneGraph, SceneSlide, TextElement } from "../ir/scene.js";
@@ -66,7 +67,10 @@ export function validateIntent(raw: unknown): { intent?: DeckIntent; findings: F
     const path = `/${issue.path.map(String).join("/")}`;
     // Slides are a union of four shapes; name the shape the author was going for.
     let message = issue.message;
-    if (issue.code === "invalid_union" && /^\/slides\/\d+$/.test(path)) {
+    // `design` is a union of four shapes; report the one the author chose.
+    if (issue.code === "invalid_union" && path === "/design") {
+      message = designUnionMessage((raw as { design?: unknown })?.design);
+    } else if (issue.code === "invalid_union" && /^\/slides\/\d+$/.test(path)) {
       message = "A slide needs id, message, and exactly one of compose, recipe (with content), auto, or canvas.";
       const slide = (raw as { slides?: unknown[] })?.slides?.[Number(path.split("/")[2] ?? -1)] as Record<string, unknown> | undefined;
       if (slide) {
@@ -80,6 +84,39 @@ export function validateIntent(raw: unknown): { intent?: DeckIntent; findings: F
     findings.push({ code: "intent-invalid", severity: "blocking", tier: "T0", message, path: path === "/" ? "" : path });
   }
   return { findings };
+}
+
+/**
+ * `design` is one of `{language}`, `{brand}`, `{preset}`, or `{tokens}`. Zod
+ * reports "Invalid input" for the union as a whole, which tells an author
+ * nothing. Pick the branch they were going for and report that branch's own
+ * issues against the keys they actually wrote.
+ */
+function designUnionMessage(design: unknown): string {
+  const shapes = "design is one of {\"language\": …}, {\"brand\": \"file.potx\"}, {\"preset\": \"name\"}, or {\"tokens\": …}.";
+  if (!design || typeof design !== "object" || Array.isArray(design)) return shapes;
+  const record = design as Record<string, unknown>;
+  const branches = ["language", "brand", "preset", "tokens"] as const;
+  const chosen = branches.filter((branch) => branch in record);
+  if (chosen.length === 0) {
+    const unknown = Object.keys(record).map((key) => `"${key}"${didYouMean(key, [...branches])}`).join(", ");
+    return `${shapes}${unknown ? ` Found ${unknown}.` : ""}`;
+  }
+  if (chosen.length > 1) return `${shapes} Found ${chosen.map((branch) => `"${branch}"`).join(" and ")}; use one.`;
+  const branch = chosen[0] as (typeof branches)[number];
+  if (branch !== "language") {
+    const extra = Object.keys(record).filter((key) => key !== branch && !(branch === "brand" && key === "language") && !(branch === "preset" && key === "params"));
+    if (extra.length) return `${shapes} "${branch}" does not take ${extra.map((key) => `"${key}"`).join(", ")}.`;
+    return shapes;
+  }
+  const attempt = designLanguage.safeParse(record.language);
+  if (attempt.success) return shapes;
+  const detail = attempt.error.issues.slice(0, 4).map((issue) => {
+    const where = issue.path.length ? `/language/${issue.path.map(String).join("/")}` : "/language";
+    return `${where}: ${issue.message}`;
+  }).join("; ");
+  // Detail first: the verdict truncates hints, and the specific pointer is the useful half.
+  return `design.language: ${detail}. A full language needs color (palette and the roles background, surface, text, muted, accent), type (display, body, scale), space (unit, margin, gutter), grid, and shape.`;
 }
 
 function hash(value: unknown): string {

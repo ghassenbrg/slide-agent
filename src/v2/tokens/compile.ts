@@ -230,7 +230,10 @@ export async function compileDesign(request: DesignRequest, context: CompileCont
   const roles = {} as Record<ColorRole, string>;
   for (const role of COLOR_ROLES) if (roleNames[role]) roles[role] = palette[roleNames[role]]!;
 
-  const dataNames = (language.color.data ?? [roleNames.accent, roleNames.accentAlt].filter(Boolean) as string[]);
+  // `accentAlt` falls back to `accent`, so the derived series is de-duplicated:
+  // a repeat the engine introduced is not a finding against the author.
+  const declaredData = language.color.data;
+  const dataNames = declaredData ?? [...new Set([roleNames.accent, roleNames.accentAlt].filter(Boolean) as string[])];
   const data: string[] = [];
   dataNames.forEach((name, index) => {
     const hex = palette[name];
@@ -240,7 +243,7 @@ export async function compileDesign(request: DesignRequest, context: CompileCont
     }
     data.push(hex);
   });
-  for (let index = 1; index < data.length; index += 1) {
+  for (let index = 1; declaredData && index < data.length; index += 1) {
     for (let previous = 0; previous < index; previous += 1) {
       if (deltaE(data[index]!, data[previous]!) < 0.06) {
         findings.push({ code: "data-colors-close", severity: "minor", tier: "T1", message: `Data colours ${dataNames[previous]} and ${dataNames[index]} are hard to tell apart (ΔE ${deltaE(data[index]!, data[previous]!).toFixed(3)}).`, path: `${languagePath}/color/data/${index}` });
@@ -378,7 +381,7 @@ async function resolveFontRole(
         tier: "T1",
         message: `${spec.family} is not available to measure or embed; the audience will see a substitute.`,
         path,
-        hint: "Run `slide-agent fonts add` for it, choose an available face, or allow downloads.",
+        hint: "Run `slide-agent font --add` for it, choose an available face, or allow downloads.",
       });
     }
   } else if (regular.substituteFor) {
