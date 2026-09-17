@@ -1,8 +1,10 @@
+import { readFile } from "node:fs/promises";
 import path from "node:path";
 
 import { describe, expect, it } from "vitest";
 
 import { buildScene, type BuiltScene } from "../../../src/v2/engine/scene-builder.js";
+import { TextEngine } from "../../../src/v2/text/measure.js";
 import type { Finding } from "../../../src/v2/ir/issues.js";
 import type { SceneElement, TextElement } from "../../../src/v2/ir/scene.js";
 import { fixtureText, intent, root } from "./helpers.js";
@@ -61,6 +63,47 @@ describe("solving compositions", () => {
     const shorten = choice.suggestedEdits.find((edit) => edit.kind === "shorten")!;
     expect(shorten.maxChars).toBeLessThan(shorten.currentChars!);
     expect(choice.findings.some((finding) => finding.code === "text-overflow")).toBe(true);
+  });
+
+  it("treats a word the breaker would split as not fitting, including inside the wrap margin", async () => {
+    // The line breaker wraps at width × WRAP_SAFETY, so a word between that and
+    // the raw frame width is split mid-word. Checking the raw width called such
+    // a word "fit" and shipped "Expan / d" with nothing in the verdict.
+    const narrow = await build([{
+      id: "s1",
+      message: "m",
+      compose: { grid: "12x6", items: [{ at: "c1 r1-3", column: { items: [{ text: "Expand", role: "h3" }] } }] },
+    }]);
+    const word = element(narrow, (candidate) => candidate.kind === "text") as TextElement;
+    // The property that matters: a single word laid out over more than one line
+    // is never reported as having fitted. Either the ladder resolved it, or it
+    // asked — silence is the one outcome that is wrong.
+    if ((word.fit?.lines ?? 1) > 1) expect(word.fit?.status, JSON.stringify(word.fit)).not.toBe("fit");
+
+    // A word nothing can fit still reports rather than breaking in silence.
+    const impossible = await build([{
+      id: "s1",
+      message: "m",
+      compose: { grid: "12x6", items: [{ at: "c1 r1", text: "Pneumonoultramicroscopicsilicovolcanoconiosis", role: "title" }] },
+    }]);
+    expect(impossible.findings.some((finding) => finding.code === "word-broken" || finding.code === "text-overflow")).toBe(true);
+
+    // The worked example is where this was found: a gate label reading
+    // "Expan / d", status "fit", nothing in the verdict. It only reproduces on
+    // table metrics — a bare TextEngine, the way the CLI measures a face it does
+    // not have — which is exactly the configuration most readers will hit.
+    const example = JSON.parse(await readFile(path.join(root, "examples", "v2", "zero-trust-rollout.intent.json"), "utf8"));
+    const deck = await buildScene(example, { text: new TextEngine(), baseDir: path.join(root, "examples", "v2") }) as BuiltScene;
+    for (const slide of deck.scene.slides) {
+      for (const candidate of slide.elements) {
+        if (candidate.kind !== "text") continue;
+        const laid = candidate as TextElement;
+        const words = laid.paragraphs.flatMap((paragraph) => paragraph.runs.map((run) => run.text).join("").trim().split(/\s+/).filter(Boolean)).length;
+        if ((laid.fit?.lines ?? 1) > Math.max(1, words)) {
+          expect.fail(`${slide.id}/${laid.id} broke a word across ${laid.fit!.lines} lines with ${words} word(s): ${JSON.stringify(laid.fit)}`);
+        }
+      }
+    }
   });
 
   it("never sizes a pinned node, and applies draft fits automatically down to the floor", async () => {

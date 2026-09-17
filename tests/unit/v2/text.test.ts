@@ -4,7 +4,7 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { searchFamilies, classifyByName, isOfficeFamily, officeSubstitute } from "../../../src/v2/text/catalog.js";
-import { TextEngine } from "../../../src/v2/text/measure.js";
+import { TextEngine, WRAP_SAFETY } from "../../../src/v2/text/measure.js";
 import { applyCase, parseInline, parseRichText, plainText } from "../../../src/v2/text/rich.js";
 import { embeddingAllowed, GlyphMetrics, parseFaces } from "../../../src/v2/text/sfnt.js";
 import { fixtureFonts, fixtureRegistry, fixtureText } from "./helpers.js";
@@ -75,6 +75,28 @@ describe("measurement and wrapping", () => {
     expect(balanced).toBeLessThan(6);
     expect(text.layout({ ...input, width: balanced }).lineCount).toBe(2);
     expect(text.minContentWidth(input)).toBeGreaterThan(0.5);
+  });
+
+  it("agrees with the breaker about whether a word fits, across the wrap margin", async () => {
+    // `layout` wraps at width × WRAP_SAFETY; `minContentWidth` returns the raw
+    // width of the widest unbreakable run. A caller that compares the two
+    // against the *frame* width misses every word in between, which is how a
+    // gate label shipped reading "Expan / d" with status "fit" in the verdict.
+    const text = fixtureText();
+    const face = await text.load({ family: "Inter", weight: 400, italic: false });
+    const at = (width: number) => ({ paragraphs: parseRichText("Expand"), size: 22.5, leading: 1.18, width, faceFor: () => face });
+    const word = text.minContentWidth(at(10));
+
+    for (const width of [word * 0.9, word * 1.005, word / WRAP_SAFETY - 0.0005, word / WRAP_SAFETY + 0.001, word * 1.2]) {
+      const broken = text.layout(at(width)).lineCount > 1;
+      expect(word > width * WRAP_SAFETY + 1e-6, `width ${width.toFixed(4)} broke=${broken}`).toBe(broken);
+    }
+
+    // And the margin is not empty: there are widths where the raw comparison
+    // says the word fits and the breaker splits it anyway.
+    const inMargin = word * 1.005;
+    expect(text.layout(at(inMargin)).lineCount).toBe(2);
+    expect(word > inMargin + 1e-6).toBe(false);
   });
 
   it("breaks CJK between characters and never before closing punctuation", async () => {

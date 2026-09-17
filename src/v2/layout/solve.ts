@@ -41,6 +41,7 @@ import { computeFacts, chartFormProblem, suggestChartKind, toChartData } from ".
 import { resolveIcon } from "../icons/index.js";
 import { resolveColor, roleColor, type ThemeSpec } from "../tokens/compile.js";
 import { contrastRatio } from "../tokens/color.js";
+import { WRAP_SAFETY } from "../text/measure.js";
 import type { LayoutInput, LoadedFace, TextEngine } from "../text/measure.js";
 import { parseRichText, plainText, type RichParagraph } from "../text/rich.js";
 import { buildDiagram } from "./diagram.js";
@@ -866,9 +867,12 @@ class SlideSolver {
 
     const needed = layout.height;
     const maximumLines = node.lines;
-    // A word wider than its box breaks mid-word in PowerPoint: that does not fit either.
+    // A word wider than its box breaks mid-word in PowerPoint: that does not fit
+    // either. Compare against the width the breaker actually wraps at, not the
+    // raw frame — a word in the WRAP_SAFETY margin is broken by the layout and
+    // would otherwise be reported as fitting.
     const widest = this.input.text.minContentWidth(prepared.layout);
-    const wordBroken = widest > textFrame.w + EPSILON;
+    const wordBroken = widest > textFrame.w * WRAP_SAFETY + EPSILON;
     const overflowing = needed > frame.h + EPSILON || (maximumLines !== undefined && layout.lineCount > maximumLines) || wordBroken;
     let status: FitStatus = fitSteps !== 0 ? "scaled" : "fit";
     const steps: string[] = ["measure"];
