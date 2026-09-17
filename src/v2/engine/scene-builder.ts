@@ -47,6 +47,7 @@ export interface BuiltScene {
   rhythm: RhythmNote[];
   decisions: Array<{ slide?: string; kind: string; detail: string; score?: number }>;
   timings: Array<{ stage: string; ms: number; cached: number; computed: number }>;
+  assets: Map<string, AssetInfo>;
 }
 
 export function validateIntent(raw: unknown): { intent?: DeckIntent; findings: Finding[] } {
@@ -156,7 +157,9 @@ export async function buildScene(raw: unknown, context: BuildContext): Promise<B
     const slidePath = pointer("slides", index);
     const reuse = context.only && !context.only.has(slide.id) ? context.previous?.slides.find((candidate) => candidate.id === slide.id) : undefined;
     if (reuse) {
-      slides.push({ ...reuse, index });
+      slides.push({ ...reuse, index, elements: reuse.elements.filter((element) => element.role !== "chrome") });
+      findings.push(...reuse.findings.filter((finding) => finding.tier !== "T3"));
+      suggestedEdits.push(...(reuse.suggestedEdits ?? []));
       continue;
     }
     computed += 1;
@@ -213,7 +216,7 @@ export async function buildScene(raw: unknown, context: BuildContext): Promise<B
     ...(slideNumber || footer ? { chrome: { slideNumber, ...(footer ? { footer } : {}), color: chromeColor, font: theme.fonts.body.regular.typeface, size: Math.max(theme.floors.caption, Math.min(theme.sizes.caption, 12)), position: chromeSpec.position ?? "bottom-right" } } : {}),
   };
   if (scene.chrome) addChrome(scene, theme);
-  return { intent, theme, scene, findings, suggestedEdits, rhythm, decisions, timings };
+  return { intent, theme, scene, findings, suggestedEdits, rhythm, decisions, timings, assets };
 }
 
 interface SlideContext {
@@ -300,6 +303,7 @@ async function buildSlide(slide: Slide, index: number, count: number, slidePath:
     }
   }
 
+  elements = applyElementPins(elements, slide.pins ?? [], findings, slide.id, slidePath);
   const hasTitle = elements.some((element) => element.placeholder?.type === "title");
   if (!hasTitle && !slide.hidden) {
     findings.push({ code: "slide-no-title", severity: "minor", tier: "T4", message: "No text with role title: screen readers and the outline will show this slide as untitled.", slide: slide.id, path: slidePath, hint: "Give the slide's headline role: \"title\"." });
@@ -320,6 +324,7 @@ async function buildSlide(slide: Slide, index: number, count: number, slidePath:
     signature: sig.vector,
     density: sig.density,
     findings,
+    ...(suggestedEdits.length ? { suggestedEdits } : {}),
     hash: "",
   };
   sceneSlide.hash = hash({ elements, background, notes, hidden: slide.hidden ?? false, engine: VERSION });
@@ -333,6 +338,7 @@ function addChrome(scene: SceneGraph, theme: ThemeSpec): void {
   const height = (chrome.size * 1.4) / 72;
   const y = theme.slide.height - theme.space.margin / 2 - height / 2;
   for (const slide of scene.slides) {
+    slide.elements = slide.elements.filter((element) => element.role !== "chrome");
     if (slide.index === 0) continue;
     const base = { role: "chrome" as const, z: 100_000, provenance: { source: "composed" as const, path: "/options/chrome" }, fit: { status: "fit" as const, steps: ["measure"] } };
     const style = { font: chrome.font, fontRole: "body" as const, size: chrome.size, bold: false, italic: false, color: chrome.color, valign: "middle" as const, leading: 1.2, inset: [0, 0, 0, 0] as [number, number, number, number] };
@@ -347,4 +353,44 @@ function addChrome(scene: SceneGraph, theme: ThemeSpec): void {
       slide.elements.push(element);
     }
   }
+}
+
+/**
+ * Element-level pins (`{path: "/elements/<id>", …}`): refused adjustments and
+ * overrides recorded by EditOps. They survive rebuilds and design changes. A
+ * refused adjustment that protected a hard constraint becomes a blocking finding.
+ */
+function applyElementPins(elements: SceneElement[], pins: NonNullable<Slide["pins"]>, findings: Finding[], slideId: string, slidePath: string): SceneElement[] {
+  let result = elements;
+  for (const pin of pins) {
+    if (typeof pin === "string" || !pin.path.startsWith("/elements/")) continue;
+    const elementId = pin.path.slice("/elements/".length);
+    const element = result.find((candidate) => candidate.id === elementId || candidate.id === `${slideId}/${elementId}`);
+    if (!element) {
+      findings.push({ code: "pin-unmatched", severity: "minor", tier: "T0", message: `A pin names ${elementId}, which this build did not produce; it is kept but has no effect.`, slide: slideId, path: `${slidePath}/pins` });
+      continue;
+    }
+    element.pins = [...new Set([...(element.pins ?? []), pin.refuse ? `refuse:${pin.refuse}` : "override"])];
+    if (pin.refuse) {
+      const refused = (element.adjustments ?? []).filter((adjustment) => adjustment.kind === pin.refuse);
+      element.adjustments = (element.adjustments ?? []).filter((adjustment) => adjustment.kind !== pin.refuse);
+      for (const adjustment of refused) {
+        if (element.kind === "text" && adjustment.kind === "type-step" && typeof adjustment.from === "number") {
+          element.style.size = adjustment.from;
+          element.fit = { status: "overflow", steps: [...(element.fit?.steps ?? []), "type-step refused"] };
+          findings.push({ code: "adjustment-refused", severity: "blocking", tier: "T1", message: `${element.id} keeps ${adjustment.from} pt as pinned, and does not fit its region at that size.`, slide: slideId, element: element.id, path: adjustment.path, hint: "Widen the region, shorten the text, or drop the pin." });
+        }
+        if (element.kind === "text" && adjustment.kind === "contrast" && typeof adjustment.from === "string") {
+          element.style.color = { hex: adjustment.from.replace(/^#/, "") };
+          findings.push({ code: "contrast-pinned", severity: "blocking", tier: "T1", message: `${element.id} keeps a colour that fails contrast (${adjustment.reason}).`, slide: slideId, element: element.id, path: adjustment.path, hint: "Contrast is a hard constraint: drop the pin or choose a passing tone." });
+        }
+      }
+    }
+    const value = pin.value as { frame?: Partial<SceneElement["frame"]>; hidden?: boolean; size?: number; color?: string } | undefined;
+    if (value?.hidden) result = result.filter((candidate) => candidate !== element);
+    if (value?.frame) element.frame = { ...element.frame, ...value.frame };
+    if (value?.size !== undefined && element.kind === "text") element.style.size = value.size;
+    if (value?.color && element.kind === "text") element.style.color = { hex: value.color.replace(/^#/, "").toUpperCase() };
+  }
+  return result;
 }

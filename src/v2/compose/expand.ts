@@ -211,9 +211,12 @@ function expandUse(node: Record<string, unknown>, path: string, scope: Scope, co
 }
 
 function stampTree(node: Record<string, Json>, path: string, component: string, provenance: string): void {
-  if (node.$ptr === undefined) node.$ptr = path;
-  node.$component ??= component;
-  if (node.$prov === undefined || node.$prov === "composed") node.$prov = provenance;
+  // Only composition nodes carry metadata; property objects (fit, crop, data…) stay as authored.
+  if (kindOf(node)) {
+    if (node.$ptr === undefined) node.$ptr = path;
+    node.$component ??= component;
+    if (node.$prov === undefined || node.$prov === "composed") node.$prov = provenance;
+  }
   for (const value of Object.values(node)) {
     if (Array.isArray(value)) {
       for (const item of value) if (item && typeof item === "object" && !Array.isArray(item)) stampTree(item as Record<string, Json>, path, component, provenance);

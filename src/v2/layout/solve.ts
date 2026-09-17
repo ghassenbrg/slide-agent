@@ -133,7 +133,7 @@ export async function preloadFaces(root: CompositionNode, theme: ThemeSpec, text
       if (weight !== undefined && weight !== theme.fonts[choice].weight) requests.push({ family: theme.fonts[choice].spec.family, weight, italic: false });
     } else {
       const base = weight ?? 400;
-      for (const [w, italic] of [[base, false], [Math.max(700, base + 300), false], [base, true], [Math.max(700, base + 300), true]] as const) {
+      for (const [w, italic] of [[base, false], [Math.min(900, Math.max(700, base + 300)), false], [base, true], [Math.min(900, Math.max(700, base + 300)), true]] as const) {
         requests.push({ family: choice.family, weight: w, italic });
       }
     }
@@ -204,6 +204,7 @@ class SlideSolver {
   private readonly keys = new Map<CompositionNode, number>();
   private readonly stepOffsets = new Map<number, number>();
   private order = 0;
+  private overlapDepth = 0;
   private titleBound = false;
   private readonly theme: ThemeSpec;
   private readonly page: Rect;
@@ -292,6 +293,7 @@ class SlideSolver {
       this.order += 1;
     }
     if (decorative) element.decorative = true;
+    if (this.overlapDepth > 0) element.overlapAllowed = true;
     if (node?.rotate) element.rotate = node.rotate;
     if (node?.pins?.length) element.pins = node.pins;
     element.frame = roundRect(element.frame);
@@ -453,6 +455,15 @@ class SlideSolver {
   }
 
   private placeLayer(node: ContainerNode, frame: Rect, inherit: Inherit, grid: GridGeometry): void {
+    this.overlapDepth += 1;
+    try {
+      this.placeLayerChildren(node, frame, inherit, grid);
+    } finally {
+      this.overlapDepth -= 1;
+    }
+  }
+
+  private placeLayerChildren(node: ContainerNode, frame: Rect, inherit: Inherit, grid: GridGeometry): void {
     const anchor = node.anchor ?? "top-left";
     for (const child of node.items) {
       if (child.box) {
@@ -474,9 +485,14 @@ class SlideSolver {
   }
 
   private placeFree(node: ContainerNode, frame: Rect, inherit: Inherit, grid: GridGeometry): void {
-    for (const child of node.items) {
-      const childFrame = child.box ? this.boxFrame(child.box, frame) : frame;
-      this.place(child, child.bleed?.length ? extendToPage(childFrame, child.bleed, this.page) : childFrame, inherit, grid);
+    this.overlapDepth += 1;
+    try {
+      for (const child of node.items) {
+        const childFrame = child.box ? this.boxFrame(child.box, frame) : frame;
+        this.place(child, child.bleed?.length ? extendToPage(childFrame, child.bleed, this.page) : childFrame, inherit, grid);
+      }
+    } finally {
+      this.overlapDepth -= 1;
     }
   }
 

@@ -62,6 +62,9 @@ export type ElementRole =
 
 export interface TextStyle {
   font: string;
+  /** The family and weight the author asked for, so previews measure with the same faces as the fit engine. */
+  family?: string;
+  weight?: number;
   /** "display" | "body" | "mono" when the face is a theme font. */
   fontRole?: "display" | "body" | "mono";
   size: number;
@@ -106,6 +109,8 @@ export interface SceneElementBase {
   fit?: { status: FitStatus; steps: string[]; lines?: number; capacityChars?: number };
   /** Surfaces this element sits on, nearest last, used for contrast checks. */
   ground?: string;
+  /** Placed inside a layer or free container, where overlap is declared rather than a defect. */
+  overlapAllowed?: boolean;
 }
 
 export interface TextElement extends SceneElementBase {
@@ -208,6 +213,8 @@ export interface SceneSlide {
   signature: number[];
   density: number;
   findings: Finding[];
+  /** Choices and budgets raised by this slide's fit, kept so an incremental build can carry them. */
+  suggestedEdits?: import("./verdict.js").SuggestedEdit[];
   hash: string;
 }
 

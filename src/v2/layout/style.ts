@@ -52,11 +52,16 @@ export function faceSet(theme: ThemeSpec, choice: ReturnType<typeof fontRoleFor>
   return {
     family: choice.family,
     regular: load(choice.family, base, false),
-    bold: load(choice.family, Math.max(700, base + 300), false),
+    bold: load(choice.family, boldWeightFor(base), false),
     italic: load(choice.family, base, true),
-    boldItalic: load(choice.family, Math.max(700, base + 300), true),
+    boldItalic: load(choice.family, boldWeightFor(base), true),
     mono: theme.fonts.mono.regular,
   };
+}
+
+/** The weight bold runs use for a base weight: at least 700, three steps heavier, at most 900. */
+export function boldWeightFor(weight: number): number {
+  return Math.min(900, Math.max(700, weight + 300));
 }
 
 export function faceForRun(faces: FaceSet, run: RichRun, bold: boolean): LoadedFace {
@@ -137,6 +142,8 @@ export function textStyle(
   const bold = faces.regular.bold;
   return {
     font: faces.regular.typeface,
+    family: faces.family,
+    weight: faces.regular.requested.weight,
     ...(faces.role ? { fontRole: faces.role } : {}),
     size,
     bold,

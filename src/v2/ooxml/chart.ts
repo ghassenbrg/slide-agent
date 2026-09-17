@@ -177,6 +177,6 @@ async function writeWorkbook(categories: string[], series: Array<{ name: string;
     "xl/_rels/workbook.xml.rels": `${XML_HEADER}<Relationships xmlns="${NS.rel}"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/></Relationships>`,
     "xl/worksheets/sheet1.xml": `${XML_HEADER}<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>${rows.join("")}</sheetData></worksheet>`,
   };
-  for (const [name, content] of Object.entries(files)) zip.file(name, content, { date });
+  for (const [name, content] of Object.entries(files)) zip.file(name, content, { date, createFolders: false });
   return zip.generateAsync({ type: "nodebuffer", compression: "DEFLATE" });
 }

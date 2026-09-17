@@ -355,7 +355,7 @@ async function resolveFontRole(
   implicit = false,
 ): Promise<ResolvedFontRole> {
   const weight = fontWeight(spec.weight, role === "display" ? 600 : 400);
-  const boldWeight = Math.min(900, Math.max(weight + 300, 700));
+  const boldWeight = Math.min(900, Math.max(700, weight + 300));
   let regular = await context.text.load({ family: spec.family, weight, italic: Boolean(spec.italic) });
   if (regular.source === "table" && !regular.office && context.acquireFont) {
     const acquired = await context.acquireFont(spec.family, [...new Set([weight, boldWeight, 400, 700])]).catch(() => false);

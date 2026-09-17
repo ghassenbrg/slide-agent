@@ -23,3 +23,7 @@
 # Vendored ECMA-376 schemas stay byte-for-byte as published upstream.
 assets/ooxml-schemas/** -text
 distribution/**/assets/ooxml-schemas/** -text
+*.ttf binary
+*.otf binary
+*.fntdata binary
+*.xlsx binary
