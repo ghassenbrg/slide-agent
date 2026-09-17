@@ -427,6 +427,11 @@ export function normalizeNode(raw: unknown, path: string, context: NormalizeCont
   let props: Record<string, unknown>;
   switch (leafKind) {
     case "text": {
+      if (typeof value === "number" && Number.isFinite(value)) {
+        props = { ...outer, text: String(value) };
+        if (props.role === undefined) props.role = "body";
+        break;
+      }
       if (typeof value !== "string" && !(isObject(value) && typeof (value as { text?: unknown }).text === "string")) {
         finding(context, joinPointer(path, "text"), "\"text\" takes a string. Use **bold**, *italic*, [link](url), and new lines inside it.");
         return undefined;

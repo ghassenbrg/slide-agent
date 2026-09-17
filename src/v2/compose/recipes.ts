@@ -283,7 +283,7 @@ export const RECIPES: Recipe[] = [
     slots: { title: "text", quadrants: { min: 4, max: 4, item: { name: "text", detail: "text?" } } },
     root: { grid: "12x6", items: [
       heading(),
-      { at: "c1-12 r2-6", row: { wrap: true, gap: "space.2", rowGap: "space.2", each: "quadrants", item: { width: "49%", height: "49%", column: { surface: "card", pad: "space.3", gap: "space.1", items: [{ text: "{name}", role: "h3" }, { text: "{detail}", role: "small", tone: "muted", optional: true }] } } } },
+      { at: "c1-12 r2-6", row: { wrap: true, gap: "space.2", rowGap: "space.2", each: "quadrants", item: { width: "48%", height: "46%", column: { surface: "card", pad: "space.3", gap: "space.1", items: [{ text: "{name}", role: "h3" }, { text: "{detail}", role: "small", tone: "muted", optional: true }] } } } },
     ] },
   },
   // ------------------------------------------------------------ diagram

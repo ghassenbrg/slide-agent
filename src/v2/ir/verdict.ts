@@ -5,7 +5,7 @@ export const editOp = z.discriminatedUnion("level", [
   z.object({
     level: z.literal("intent"),
     op: z.enum(["set", "insert", "remove", "move", "choose", "expand"]),
-    path: z.string().describe("JSON pointer into the intent, e.g. /slides/2/compose/items/0/text"),
+    path: z.string().optional().describe("JSON pointer into the intent, e.g. /slides/2/compose/items/0/text (not needed for choose)"),
     value: z.unknown().optional(),
     to: z.string().optional().describe("For move: destination pointer"),
     option: z.number().int().nonnegative().optional().describe("For choose: the index of the option in the suggested edit"),

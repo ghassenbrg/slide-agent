@@ -119,7 +119,8 @@ export function applyEdits(source: DeckIntent, ops: EditOp[], context: { suggest
   for (const op of ops) {
     switch (op.level) {
       case "intent": {
-        const path = op.path;
+        const path = op.path ?? "";
+        if (!path && op.op !== "choose") throw new SlideAgentError("EDIT_PATH_REQUIRED", `${op.op} needs a JSON pointer in path.`);
         if (path.startsWith("/design") || path.startsWith("/components") || path.startsWith("/data") || path.startsWith("/options") || path.startsWith("/brief")) touch(undefined);
         switch (op.op) {
           case "set":
@@ -146,8 +147,8 @@ export function applyEdits(source: DeckIntent, ops: EditOp[], context: { suggest
             break;
           }
           case "choose": {
-            const edit = context.suggestedEdits?.find((candidate) => candidate.id === (op.edit ?? op.path));
-            if (!edit) throw new SlideAgentError("EDIT_CHOICE_UNKNOWN", `No pending choice "${op.edit ?? op.path}". Rebuild to see current choices.`);
+            const edit = context.suggestedEdits?.find((candidate) => candidate.id === (op.edit ?? path));
+            if (!edit) throw new SlideAgentError("EDIT_CHOICE_UNKNOWN", `No pending choice "${op.edit ?? path}". Rebuild to see current choices.`);
             const option = edit.options?.[op.option ?? 0];
             if (!option) throw new SlideAgentError("EDIT_CHOICE_OPTION", `Choice ${edit.id} has no option ${op.option ?? 0}.`);
             if (option.do === "split") {

@@ -144,7 +144,7 @@ export class ScriptedProvider implements ModelProvider {
   public constructor(private readonly responses: Array<string | ((request: ModelRequest) => string)>) {}
 
   public async complete(request: ModelRequest): Promise<ModelResponse> {
-    this.requests.push(request);
+    this.requests.push(structuredClone(request));
     const next = this.responses.shift();
     if (next === undefined) throw new SlideAgentError("SCRIPTED_EXHAUSTED", `No scripted response left for ${request.task}.`);
     const text = typeof next === "function" ? next(request) : next;

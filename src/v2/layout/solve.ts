@@ -100,7 +100,7 @@ export interface OverflowRecord {
   available: number;
   size: number;
   steps: number;
-  gridAncestor?: { node: CompositionNode; range: { column: [number, number]; row: [number, number] }; grid: { columns: number; rows: number } };
+  gridAncestor?: { node: CompositionNode; range: { column: [number, number]; row: [number, number] }; grid: GridGeometry };
 }
 
 export interface SolvedSlide {
@@ -351,7 +351,7 @@ class SlideSolver {
       nextInherit.sizeStep = inherit.sizeStep + parseStep(node.size);
       if (node.at) {
         const parsed = parseCellRange(node.at, { columns: parentGrid.columns, rows: parentGrid.rows });
-        if (parsed.range) nextInherit.gridAncestor = { node, range: parsed.range, grid: { columns: parentGrid.columns, rows: parentGrid.rows } };
+        if (parsed.range) nextInherit.gridAncestor = { node, range: parsed.range, grid: parentGrid };
       }
       switch (node.kind) {
         case "grid": return this.placeGrid(node, inner, nextInherit);
@@ -363,7 +363,7 @@ class SlideSolver {
     }
     if (node.at && !isContainer(node)) {
       const parsed = parseCellRange(node.at, { columns: parentGrid.columns, rows: parentGrid.rows });
-      if (parsed.range) nextInherit.gridAncestor = { node, range: parsed.range, grid: { columns: parentGrid.columns, rows: parentGrid.rows } };
+      if (parsed.range) nextInherit.gridAncestor = { node, range: parsed.range, grid: parentGrid };
     }
     this.placeLeaf(node, inner, nextInherit);
   }
@@ -742,6 +742,14 @@ class SlideSolver {
 
   /** Intrinsic size of a node laid out at `width`. */
   private measure(node: CompositionNode, width: number, inherit: Inherit, availableHeight: number): { w: number; h: number } {
+    // A leaf drawn on its own surface needs the surface's padding around its content.
+    if (!isContainer(node) && node.surface !== undefined && node.kind !== "shape") {
+      const pad = this.surfacePad(node, width);
+      if (pad > 0) {
+        const inner = this.measure({ ...node, surface: undefined } as CompositionNode, Math.max(0.05, width - pad * 2), inherit, availableHeight);
+        return { w: inner.w + pad * 2, h: inner.h + pad * 2 };
+      }
+    }
     const explicitH = resolveLength(node.height, { theme: this.theme, reference: availableHeight });
     switch (node.kind) {
       case "text": {
@@ -947,13 +955,30 @@ class SlideSolver {
     }
     const ancestor = record.gridAncestor;
     if (ancestor) {
+      // The smallest widening of the grid region that holds the text at its current size.
       const { range, grid } = ancestor;
-      const deficit = record.needed - record.available;
-      const extraRows = Math.max(1, Math.ceil(deficit / (frame.h / Math.max(1, range.row[1] - range.row[0] + 1))));
-      if (range.row[1] + extraRows <= grid.rows) {
-        options.push({ do: "span", path: joinPointer(ancestor.node.ptr, "at"), value: formatCellRange({ column: range.column, row: [range.row[0], range.row[1] + extraRows] }), effect: `region +${extraRows} row${extraRows > 1 ? "s" : ""}` });
-      } else if (range.row[0] - extraRows >= 1) {
-        options.push({ do: "span", path: joinPointer(ancestor.node.ptr, "at"), value: formatCellRange({ column: range.column, row: [range.row[0] - extraRows, range.row[1]] }), effect: `region +${extraRows} row${extraRows > 1 ? "s" : ""} upward` });
+      const current = cellRect(grid, range.column, range.row);
+      const spanW = range.column[1] - range.column[0] + 1;
+      const spanH = range.row[1] - range.row[0] + 1;
+      let best: { column: [number, number]; row: [number, number]; area: number } | undefined;
+      for (let width = spanW; width <= grid.columns; width += 1) {
+        for (let height = spanH; height <= grid.rows; height += 1) {
+          if (width === spanW && height === spanH) continue;
+          const area = width * height;
+          if (best && area >= best.area) continue;
+          const startColumn = Math.max(1, Math.min(range.column[0], grid.columns - width + 1));
+          const startRow = Math.max(1, Math.min(range.row[0], grid.rows - height + 1));
+          const candidate = cellRect(grid, [startColumn, startColumn + width - 1], [startRow, startRow + height - 1]);
+          const innerWidth = frame.w + (candidate.w - current.w);
+          const innerHeight = frame.h + (candidate.h - current.h);
+          const layout = this.input.text.layout({ ...prepared.layout, width: innerWidth });
+          if (layout.height <= innerHeight + EPSILON && this.input.text.minContentWidth(prepared.layout) <= innerWidth + EPSILON) {
+            best = { column: [startColumn, startColumn + width - 1], row: [startRow, startRow + height - 1], area };
+          }
+        }
+      }
+      if (best) {
+        options.push({ do: "span", path: joinPointer(ancestor.node.ptr, "at"), value: formatCellRange({ column: best.column, row: best.row }), effect: `region ${formatCellRange(range)} → ${formatCellRange({ column: best.column, row: best.row })}` });
       }
     }
     options.push({ do: "split", path: this.input.slide.path, effect: "continue on a new slide" });

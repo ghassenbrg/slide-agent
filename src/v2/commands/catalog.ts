@@ -12,6 +12,11 @@ import { VERSION } from "../../version.js";
  * make the composition language fluent in under 2,000 tokens.
  */
 
+/** Worked examples, kept as data so tests can prove every one of them builds. */
+export const EXAMPLE_COMPONENTS = "\"components\":{\"gate\":{\"params\":[\"n\",\"label\",\"detail\"],\"root\":{\"column\":{\"surface\":\"card\",\"pad\":\"space.2\",\"gap\":\"space.1\",\"items\":[{\"text\":\"{n}\",\"role\":\"label\",\"font\":\"mono\",\"tone\":\"muted\"},{\"text\":\"{label}\",\"role\":\"h3\"},{\"text\":\"{detail}\",\"role\":\"small\",\"tone\":\"muted\"}]}}}}";
+export const EXAMPLE_ROUTE = "{\"id\":\"route\",\"message\":\"Waves fail at the pilot\",\"compose\":{\"grid\":\"12x6\",\"items\":[\n {\"at\":\"c1-9 r1\",\"text\":\"Every wave clears the same six gates\",\"role\":\"title\"},\n {\"at\":\"c1-12 r3-5\",\"row\":{\"gap\":\"space.3\",\"connect\":\"chevron\",\"items\":[\n  {\"use\":\"gate\",\"n\":\"01\",\"label\":\"Inventory\",\"detail\":\"what talks to what\"},\n  {\"use\":\"gate\",\"n\":\"04\",\"label\":\"Pilot\",\"detail\":\"one business unit\",\"grow\":2,\"tone\":\"accent\",\"size\":\"+1\"}]}}]}}";
+export const EXAMPLE_TURN = "{\"id\":\"turn\",\"message\":\"Churn fell 41%\",\"compose\":{\"grid\":\"12x6\",\"items\":[\n {\"at\":\"c1-7 r1-4\",\"layer\":{\"anchor\":\"bottom-left\",\"items\":[{\"texture\":\"large-numeral\",\"params\":{\"text\":\"41\"}},{\"text\":\"\u221241%\",\"role\":\"display\",\"size\":150,\"tone\":\"accent\"}]}},\n {\"at\":\"c1-6 r5-6\",\"column\":{\"gap\":\"space.1\",\"items\":[{\"text\":\"Churn fell 41% in two quarters\",\"role\":\"title\"},{\"text\":\"after onboarding moved in-product\",\"role\":\"body\",\"tone\":\"muted\"}]}},\n {\"at\":\"c8-12 r1-6\",\"bleed\":[\"right\",\"top\",\"bottom\"],\"surface\":\"band\",\"column\":{\"pad\":\"space.5\",\"justify\":\"center\",\"items\":[{\"chart\":{\"data\":\"churn\",\"chart\":\"line\",\"highlight\":\"Mar\"}},{\"text\":\"Cohorts Jan\u2013Jun, n = 18,400\",\"role\":\"caption\"}]}}]}}";
+
 export const GRAMMAR = `# ${COMPOSE_GRAMMAR_ID}
 
 You direct the design; the engine computes geometry, fits text, verifies contrast, and writes native PowerPoint. Write decisions, never coordinates.
@@ -49,20 +54,13 @@ use: {"use":"gate","n":"01","label":"Pilot","tone":"accent"}; texture: {"texture
 Values: tokens (space.3, accent, muted, card, accent/20 = 20% toward white), relative (40%, 2fr, "+1" type steps), or literals (recorded, allowed).
 
 ## Components (defined once, used anywhere)
-"components":{"gate":{"params":["n","label","detail"],"root":{"column":{"surface":"card","pad":"space.2","gap":"space.1","items":[{"text":"{n}","role":"label","font":"mono","tone":"muted"},{"text":"{label}","role":"h3"},{"text":"{detail}","role":"small","tone":"muted"}]}}}}
+${EXAMPLE_COMPONENTS}
 
 ## Worked example: emphasis by proportion
-{"id":"route","message":"Waves fail at the pilot","compose":{"grid":"12x6","items":[
- {"at":"c1-9 r1","text":"Every wave clears the same six gates","role":"title"},
- {"at":"c1-12 r3-5","row":{"gap":"space.3","connect":"chevron","items":[
-  {"use":"gate","n":"01","label":"Inventory","detail":"what talks to what"},
-  {"use":"gate","n":"04","label":"Pilot","detail":"one business unit","grow":2,"tone":"accent","size":"+1"}]}}]}}
+${EXAMPLE_ROUTE}
 
 ## Worked example: a hero number over a bleeding chart band
-{"id":"turn","message":"Churn fell 41%","compose":{"grid":"12x6","items":[
- {"at":"c1-7 r1-4","layer":{"anchor":"bottom-left","items":[{"texture":"large-numeral","params":{"text":"41"}},{"text":"−41%","role":"display","size":150,"tone":"accent"}]}},
- {"at":"c1-6 r5-6","column":{"gap":"space.1","items":[{"text":"Churn fell 41% in two quarters","role":"title"},{"text":"after onboarding moved in-product","role":"body","tone":"muted"}]}},
- {"at":"c8-12 r1-6","bleed":["right","top","bottom"],"surface":"band","column":{"pad":"space.5","justify":"center","items":[{"chart":{"data":"churn","chart":"line","highlight":"Mar"}},{"text":"Cohorts Jan–Jun, n = 18,400","role":"caption"}]}}]}}
+${EXAMPLE_TURN}
 
 ## What comes back
 A verdict: state (broken | needs-attention | ready-unrendered | ready), adjustments the engine made (contrast, type-step — refuse any with a pin), suggestedEdits (choose an option, or shorten to maxChars), rhythm notes (you decide if repetition is deliberate), and a preview sheet to judge the design against the brief. Answer choices with slides_edit; never hunt overflow by eye.
