@@ -1,0 +1,327 @@
+{
+  "schema": "slide-agent.intent/1",
+  "brief": {
+    "title": "Zero-trust rollout",
+    "audience": "IT steering committee",
+    "goal": "Approve the pilot-first rollout plan",
+    "format": "16:9",
+    "archetype": "board"
+  },
+  "direction": {
+    "concept": "An engineering drawing: quiet paper, ink-dark type, one signal colour reserved for the gate where waves fail. Numbers set in mono like part labels.",
+    "fit": "ask"
+  },
+  "design": {
+    "language": {
+      "color": {
+        "palette": {
+          "paper": "#F5F3EE",
+          "panel": "#E9E5DC",
+          "ink": "#1D2228",
+          "graphite": "#5B6168",
+          "signal": "#C2410C",
+          "steel": "#2F5D8A",
+          "hair": "#CFC9BD"
+        },
+        "roles": {
+          "background": "paper",
+          "surface": "panel",
+          "text": "ink",
+          "muted": "graphite",
+          "accent": "signal",
+          "accentAlt": "steel",
+          "rule": "hair"
+        },
+        "data": [
+          "steel",
+          "signal",
+          "graphite"
+        ]
+      },
+      "type": {
+        "display": {
+          "family": "Source Serif 4",
+          "weight": 600
+        },
+        "body": {
+          "family": "Inter",
+          "weight": 400
+        },
+        "mono": {
+          "family": "JetBrains Mono"
+        },
+        "scale": {
+          "base": 18,
+          "ratio": 1.25
+        }
+      },
+      "space": {
+        "unit": 8,
+        "margin": 44,
+        "gutter": 20
+      },
+      "grid": {
+        "columns": 12,
+        "rows": 6
+      },
+      "shape": {
+        "radius": 2,
+        "stroke": 0
+      },
+      "surfaces": {
+        "card": {
+          "fill": "surface",
+          "radius": 2,
+          "pad": "space.2"
+        },
+        "band": {
+          "fill": "ink"
+        }
+      },
+      "texture": [
+        {
+          "id": "margin-rule",
+          "primitive": "margin-rule",
+          "params": {
+            "tone": "signal",
+            "weight": 1
+          }
+        }
+      ],
+      "chrome": {
+        "slideNumber": true,
+        "footer": "Zero-trust rollout · Steering committee"
+      }
+    }
+  },
+  "components": {
+    "gate": {
+      "params": [
+        "n",
+        "label",
+        "detail"
+      ],
+      "root": {
+        "column": {
+          "surface": "card",
+          "pad": "space.2",
+          "gap": "space.1",
+          "items": [
+            {
+              "text": "{n}",
+              "role": "label",
+              "font": "mono",
+              "tone": "muted"
+            },
+            {
+              "text": "{label}",
+              "role": "h3",
+              "fit": {
+                "minStep": -2
+              }
+            },
+            {
+              "text": "{detail}",
+              "role": "small",
+              "tone": "muted"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "data": {
+    "incidents": {
+      "categories": [
+        "Q1",
+        "Q2",
+        "Q3",
+        "Q4"
+      ],
+      "series": [
+        {
+          "name": "Lateral-movement incidents",
+          "values": [
+            42,
+            37,
+            21,
+            12
+          ]
+        }
+      ]
+    }
+  },
+  "slides": [
+    {
+      "id": "cover",
+      "message": "We are asking to approve a pilot-first rollout",
+      "compose": {
+        "grid": "12x6",
+        "items": [
+          {
+            "at": "c1-9 r3-5",
+            "column": {
+              "gap": "space.2",
+              "justify": "end",
+              "items": [
+                {
+                  "text": "Board decision · September",
+                  "role": "label",
+                  "tone": "accent",
+                  "case": "upper",
+                  "tracking": 0.08
+                },
+                {
+                  "text": "Zero trust, one wave at a time",
+                  "role": "title",
+                  "size": "+2"
+                },
+                {
+                  "text": "A six-gate rollout that fails small, at the pilot, not in production",
+                  "role": "lead",
+                  "tone": "muted"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "route",
+      "message": "Every wave clears the same six gates; waves fail at the pilot",
+      "compose": {
+        "grid": "12x6",
+        "items": [
+          {
+            "at": "c1-9 r1",
+            "text": "Every wave clears the same six gates",
+            "role": "title"
+          },
+          {
+            "at": "c1-12 r3-5",
+            "row": {
+              "gap": "space.3",
+              "connect": "chevron",
+              "items": [
+                {
+                  "use": "gate",
+                  "n": "01",
+                  "label": "Inventory",
+                  "detail": "what talks to what"
+                },
+                {
+                  "use": "gate",
+                  "n": "02",
+                  "label": "Identity",
+                  "detail": "one directory"
+                },
+                {
+                  "use": "gate",
+                  "n": "03",
+                  "label": "Policy",
+                  "detail": "deny by default"
+                },
+                {
+                  "use": "gate",
+                  "n": "04",
+                  "label": "Pilot",
+                  "detail": "one business unit",
+                  "grow": 2,
+                  "tone": "accent",
+                  "size": "+1"
+                },
+                {
+                  "use": "gate",
+                  "n": "05",
+                  "label": "Expand",
+                  "detail": "wave by wave"
+                },
+                {
+                  "use": "gate",
+                  "n": "06",
+                  "label": "Enforce",
+                  "detail": "legacy paths off"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "evidence",
+      "message": "Lateral movement fell 71% in the pilot units",
+      "tags": [
+        "evidence"
+      ],
+      "compose": {
+        "grid": "12x6",
+        "items": [
+          {
+            "at": "c1-5 r1-2",
+            "text": "Lateral movement fell **71%** where the pilot ran",
+            "role": "title"
+          },
+          {
+            "at": "c1-4 r3-6",
+            "column": {
+              "gap": "space.2",
+              "justify": "end",
+              "items": [
+                {
+                  "text": "−71%",
+                  "role": "display",
+                  "tone": "accent",
+                  "font": "mono"
+                },
+                {
+                  "text": "incidents, Q1 to Q4, pilot business units",
+                  "role": "small",
+                  "tone": "muted"
+                }
+              ]
+            }
+          },
+          {
+            "at": "c6-12 r1-6",
+            "chart": {
+              "data": "incidents",
+              "chart": "column",
+              "highlight": "Q4",
+              "annotate": [
+                "change:Q1..Q4"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "ask",
+      "message": "Approve the pilot and the budget for waves one and two",
+      "recipe": "decision/recommendation",
+      "content": {
+        "title": "The decision we need today",
+        "groups": [
+          {
+            "name": "Big-bang cutover",
+            "points": [
+              "Fastest on paper",
+              "One failure takes every unit down"
+            ]
+          },
+          {
+            "name": "Pilot first",
+            "points": [
+              "Fails small, in one unit",
+              "Six weeks longer"
+            ]
+          }
+        ],
+        "statement": "Pilot first, in Finance, starting October",
+        "ask": "Approve €1.4M for waves one and two"
+      }
+    }
+  ]
+}
