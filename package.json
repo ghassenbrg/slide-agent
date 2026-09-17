@@ -1,14 +1,19 @@
 {
   "name": "@slide-agent/core",
-  "version": "0.15.0",
-  "description": "Portable AI-agent skill and TypeScript toolkit for creating, editing, rendering, and validating editable PowerPoint presentations.",
+  "version": "2.0.0",
+  "description": "Model-directed PowerPoint: you decide the design, the engine solves geometry, fits text, verifies contrast, and writes native .pptx. Agent skill, MCP server, CLI, and TypeScript toolkit.",
   "keywords": [
+    "agent-skill",
+    "ai-agent",
+    "charts",
+    "design",
+    "mcp",
+    "ooxml",
     "powerpoint",
     "pptx",
-    "slides",
     "presentations",
-    "ai-agent",
-    "agent-skill"
+    "slides",
+    "typography"
   ],
   "homepage": "https://github.com/ghassenbrg/slide-agent#readme",
   "repository": {
@@ -42,6 +47,10 @@
     "./contract": {
       "types": "./dist/contract/index.d.ts",
       "import": "./dist/contract/index.js"
+    },
+    "./v2": {
+      "types": "./dist/v2/index.d.ts",
+      "import": "./dist/v2/index.js"
     }
   },
   "files": [
@@ -66,6 +75,7 @@
     "examples/showcase/*.md",
     "examples/showcase/*.ndjson",
     "examples/showcase/assets",
+    "examples/v2",
     "images/icon.png",
     "install.cmd",
     "install.ps1",
@@ -86,7 +96,7 @@
     "uninstall.sh"
   ],
   "scripts": {
-    "build": "tsup src/index.ts src/cli.ts src/mcp-server.ts src/contract/index.ts --format esm --sourcemap --clean --shims && tsc --project tsconfig.build.json",
+    "build": "tsup src/index.ts src/cli.ts src/mcp-server.ts src/contract/index.ts src/v2/index.ts --format esm --sourcemap --clean --shims && tsc --project tsconfig.build.json",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:unit": "vitest run tests/unit",
@@ -121,7 +131,8 @@
     "examples:showcase": "tsx scripts/build-showcase.ts",
     "examples:evaluate": "tsx scripts/evaluate-examples.ts",
     "examples:evaluate:check": "tsx scripts/evaluate-examples.ts --check",
-    "examples:assets": "tsx scripts/generate-showcase-assets.ts"
+    "examples:assets": "tsx scripts/generate-showcase-assets.ts",
+    "icons": "tsx scripts/generate-icons.ts"
   },
   "dependencies": {
     "@modelcontextprotocol/server": "^2.0.0",
@@ -147,5 +158,13 @@
   },
   "overrides": {
     "esbuild": "^0.28.1"
+  },
+  "peerDependencies": {
+    "@anthropic-ai/sdk": ">=0.60.0"
+  },
+  "peerDependenciesMeta": {
+    "@anthropic-ai/sdk": {
+      "optional": true
+    }
   }
 }

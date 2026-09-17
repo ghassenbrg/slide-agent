@@ -195,10 +195,18 @@ describe("MCP documentation", () => {
 
     const resources = (await client.listResources()).resources;
     // Guide sections and schemas are documented as lists rather than 21 URIs,
-    // so check each distinct name appears somewhere on the page.
+    // so check each distinct name appears somewhere on the page. Resources a
+    // template enumerates (every recipe, every example) are documented by
+    // their template instead, which is checked below.
+    const templates = (await client.listResourceTemplates()).resourceTemplates;
+    const prefixes = templates.map((template) => template.uriTemplate.replace(/\{[^}]+\}.*$/, ""));
     for (const resource of resources) {
+      if (prefixes.some((prefix) => prefix.length > 0 && resource.uri.startsWith(prefix))) continue;
       const leaf = resource.uri.split("/").pop()!;
       expect(doc, `docs/mcp.md does not mention the ${resource.uri} resource`).toContain(leaf);
+    }
+    for (const template of templates) {
+      expect(doc, `docs/mcp.md does not mention the ${template.uriTemplate} template`).toContain(template.uriTemplate);
     }
   });
 

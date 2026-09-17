@@ -71,6 +71,110 @@ configuration currently references the server.
 
 ---
 
+## The loop
+
+You direct the design; the engine computes. Six to eight calls, one design
+review, and no rounds spent hunting overflow.
+
+**1. Read the grammar.** `slides_catalog` returns the composition language with
+worked examples, starter components, recipe one-liners, and presets — under
+3,000 tokens, byte-stable for a version, so it caches. `slide-agent://grammar`
+is the same page on its own (~1,300 tokens).
+
+**2. Write the intent.** A brief, a visual concept in plain words, a design
+language for this deck (palette and roles, type, space, grid, shape, surfaces,
+texture), components for anything repeated, and a composition per slide in grid
+units, roles, and named tokens. Recipes are starting points for routine slides;
+`"auto"` slides are draft mode and are labelled as such in every verdict.
+
+**3. Build.** `slides_build {deck, intent}`. The verdict returns the mechanical
+state, the adjustments the engine made (contrast repairs, type steps — refuse
+any of them with a pin), the choices it will not make for you, rhythm notes, and
+a link to the preview sheet.
+
+Optional and cheap: `slides_build {mode: "explore", explore: {designs, slides}}`
+renders up to three design languages across up to four slides side by side, in
+about a second, before you commit to one.
+
+**4. Look.** `slides_view {deck, what: "sheet"}` returns the contact sheet
+inline. Judge the design against the brief — hierarchy, focus, pacing, craft,
+anything that reads as generic. Overflow, contrast, and bounds have already been
+checked; spend the look on design. Record what you decided with
+`slides_build {reviewed: {by, at, notes}}`.
+
+**5. Edit.** `slides_edit {deck, ops}` with EditOps: change a composition or the
+design language, answer a choice, shorten to the character budget the engine
+computed, pin a value so the engine stops adjusting it. Only changed slides are
+rebuilt.
+
+**6. Finalize.** `slides_finalize {deck, exports}` renders with LibreOffice,
+checks the text survived the render, validates every part against the ECMA-376
+schemas, rebuilds the deck from its intent in a clean directory, and exports.
+
+Callers with no model of their own use `slides_generate` instead: a director
+model writes the intent, a critic reviews the preview against the brief, and the
+director revises.
+
+## Tools
+
+| Tool | What it does | Response budget |
+|---|---|---|
+| `slides_catalog` | The composition grammar with worked examples; starter components, recipes, presets, and searches for fonts (`fonts: "geometric sans"`) and icons (`icons: "growth"`) | ≤ 3,000 tokens |
+| `slides_build` | Validate, compile the design, solve, fit, check, write `deck.pptx`, and render a preview sheet. `mode: "check"` writes nothing; `mode: "explore"` compares designs | ≤ 800 tokens |
+| `slides_edit` | Apply EditOps (intent, design, element pins, package) or, in engine-managed mode, an instruction | ≤ 500 tokens |
+| `slides_view` | `sheet`, `slides`, `crop`, `rhythm`, `expand` (a recipe as its composition), `report`, `explain` | ≤ 1,500 tokens |
+| `slides_finalize` | Fidelity render, text-survival checks, schema validation, round-trip rebuild, exports | ≤ 800 tokens |
+| `slides_inspect` | A foreign `.pptx` or template: layouts, placeholders, brand tokens and locks, per-slide outline | ≤ 1,500 tokens |
+| `slides_generate` | Engine-managed direction: director, critic, revise. Needs `ANTHROPIC_API_KEY` and `@anthropic-ai/sdk` where the server runs | ≤ 800 tokens |
+
+Every tool returns compact JSON. Previews come back as resource links from
+`slides_build`, and inline images from `slides_view` — the call whose purpose is
+looking. They are previews, drawn from the same measurements the fit engine
+used, not PowerPoint renders; `slides_finalize` is what produces those.
+
+### What a call costs
+
+A verdict is a few hundred tokens whatever the deck's size; the sheet is about
+1,850 image tokens for the whole deck, which is what makes looking at twelve
+slides cheaper than reading two of them. `slides_view {what: "report"}` pages
+the full findings when you want them, and `explain` says why one element looks
+the way it does — its provenance, fit steps, and every adjustment.
+
+## Resources
+
+| URI | What it is |
+|---|---|
+| `slide-agent://grammar` | The composition language with worked examples (~1,300 tokens) |
+| `slide-agent://catalog` | Grammar, starter components, recipes, presets as JSON |
+| `slide-agent://schema/intent` | The full JSON Schema for `slide-agent.intent/1` — for validators, not for reading |
+| `slide-agent://recipes/{family}/{variant}` | One recipe: slots, capacity, composition |
+| `slide-agent://examples/{name}` | A complete directed intent with its design language |
+
+## Paths and roots
+
+Every path a tool names is confined to the workspace: the client's MCP roots
+when it publishes them, `SLIDE_AGENT_ROOTS` when the operator sets it, otherwise
+the directory the server was started in. Traversal, absolute escapes, and
+symlinks out of the workspace are refused, and the error says so. Requests
+cannot widen policy: remote image fetching stays off unless the operator sets
+`SLIDE_AGENT_ALLOW_REMOTE_IMAGES=1`, and build scripts never run from a tool
+call unless `SLIDE_AGENT_ALLOW_SCRIPTS=1`.
+
+## Compatibility with 0.x
+
+`slide-agent-mcp --compat-v1` also registers the 0.x tools (`slide_agent_run`,
+`get_capabilities`, `get_authoring_contract`, `plan_presentation`,
+`create_presentation`, `revise_presentation`, `edit_presentation`,
+`render_presentation`, `validate_presentation`, `review_presentation`,
+`patch_presentation`, `slide_agent_doctor`), their resources, and the
+`author_presentation_scene` and `revise_presentation_scene` prompts. It is there
+so a host can migrate at its own pace; the 0.x surface is documented below and
+is frozen.
+
+---
+
+# 0.x surface (`--compat-v1`)
+
 ## The flow that produces good decks
 
 It is not prompt → deck. It is build → see → critique → patch, and skipping the

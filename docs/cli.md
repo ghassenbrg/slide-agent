@@ -1,7 +1,173 @@
 # CLI reference
 
 Every command prints one JSON object on stdout and JSON-lines logs on stderr.
-Exit code is `1` when `status` is `error`, `0` otherwise.
+Exit code 2 means the deck needs attention or is broken; 1 means the command
+failed.
+
+The V2 commands are first; the 0.x commands below them still work and are
+unchanged.
+
+---
+
+## `catalog`
+
+The composition language and what the engine ships with.
+
+```bash
+slide-agent catalog --grammar                      # the grammar page as Markdown
+slide-agent catalog --include recipes,presets      # JSON, for a program
+slide-agent catalog --include fonts --fonts "geometric sans"
+slide-agent catalog --include icons --icons growth
+```
+
+## `build`
+
+Build a deck from an intent. (With `--script`, this is the 0.x build script
+path, documented below.)
+
+```bash
+slide-agent build --intent deck.intent.json --deck out/
+slide-agent build --deck out/                      # rebuild after editing intent.json
+slide-agent build --deck out/ --check              # validate and solve, write nothing
+slide-agent build --deck out/ --strict             # validate every part against ECMA-376
+```
+
+Writes `intent.json`, `theme.tokens.json`, `scene.json`, `deck.pptx`,
+`previews/`, and `run.json` into the deck directory. Only slides whose own JSON
+changed are re-solved; a change to the design language rebuilds every slide.
+
+## `check`
+
+`build --check` with an intent that has no deck yet.
+
+```bash
+slide-agent check --intent deck.intent.json
+```
+
+## `explore`
+
+Compare design languages on the slides that matter, before committing.
+
+```bash
+slide-agent explore --deck out/ --designs directions.json --slides cover,evidence
+```
+
+`directions.json` is an array of up to three design requests; up to four slide
+ids. Renders one side-by-side sheet in about a second.
+
+## `view`
+
+```bash
+slide-agent view --deck out/ --what sheet          # the contact sheet
+slide-agent view --deck out/ --what slides --slides cover,ask
+slide-agent view --deck out/ --what crop --element ask/text3
+slide-agent view --deck out/ --what rhythm         # silhouettes and densities
+slide-agent view --deck out/ --what expand --slides agenda   # a recipe as its composition
+slide-agent view --deck out/ --what report --page 0
+```
+
+Previews are drawn in-process from the same measurements the fit engine used.
+They are previews, not PowerPoint renders.
+
+## `edit`
+
+```bash
+slide-agent edit --deck out/ --ops edits.json
+slide-agent edit --deck out/ --instruction "make slide 4 calmer"   # engine-managed
+```
+
+`edits.json` is an array of EditOps:
+
+```json
+[
+  {"level": "intent", "op": "set", "path": "/slides/2/compose/items/0/text", "value": "Churn fell 41%"},
+  {"level": "intent", "op": "choose", "edit": "fit-route-1", "option": 0},
+  {"level": "intent", "op": "expand", "path": "/slides/5"},
+  {"level": "design", "op": "set", "path": "/color/palette/signal", "value": "#C2410C"},
+  {"level": "element", "slide": "route", "element": "route/text5", "set": {"refuse": "type-step"}}
+]
+```
+
+## `finalize`
+
+```bash
+slide-agent finalize --deck out/ --export pdf,png
+```
+
+Fidelity render with LibreOffice, text-survival checks, full schema validation,
+a clean-directory rebuild from `intent.json`, and exports. `--no-round-trip`
+skips the rebuild.
+
+## `explain`
+
+```bash
+slide-agent explain --deck out/ --element route/text5
+```
+
+Where an element came from (composition, component, or recipe), its fit steps,
+every adjustment the engine made, and the findings attached to it.
+
+## `generate`
+
+Engine-managed direction, for callers with no model of their own. Needs
+`ANTHROPIC_API_KEY` and `@anthropic-ai/sdk` installed where Slide Agent runs.
+
+```bash
+slide-agent generate --deck out/ --brief brief.md --sources notes.md,data.csv \
+  --profile balanced --slides 12 --format 16:9
+```
+
+Profiles: `quality`, `balanced` (default), `draft`. Judgement tasks never run
+below the balanced tier; a tight budget drops the critic, never the tier.
+
+## `fill`
+
+```bash
+slide-agent fill --template qbr.intent.json --data accounts.csv --out decks/ --name-by account
+```
+
+One deck per row, deterministic, no model. The template uses `{{bindings}}`,
+slide-level `$each` and `$if`, and `$requires` to assert the data's shape.
+
+## `migrate`
+
+```bash
+slide-agent migrate --input deck.scene.ndjson --output deck.intent.json
+```
+
+Converts a 0.x scene or outline into an intent and reports what mapped.
+
+## `brand`
+
+```bash
+slide-agent brand --input acme.potx --output acme.brand.json
+```
+
+Locked tokens, layouts, and placeholders from an organisation's template. Use
+it with `"design": {"brand": "acme.brand.json"}`.
+
+## `inspect`
+
+```bash
+slide-agent inspect --file deck.pptx --page 0
+```
+
+## `font`
+
+```bash
+slide-agent font --search "humanist sans"
+slide-agent font --local
+slide-agent font --add "Fraunces" --weights 400,700
+```
+
+`--add` fetches an open-licence family from Google Fonts into the font cache and
+records each file's SHA-256.
+
+---
+
+# 0.x commands
+
+These are unchanged, and still supported.
 
 ## `create`
 

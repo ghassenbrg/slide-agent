@@ -1,4 +1,10 @@
 export { SlideAgent } from "./pipeline.js";
+
+/**
+ * The V2 engine. `@slide-agent/core/v2` is the same surface without the 0.x
+ * exports; this namespace keeps one import working for embedders.
+ */
+export * as v2 from "./v2/index.js";
 export { DeckBuilder, type BuiltDeck } from "./export/deck-builder.js";
 export { PptxExporter } from "./export/pptx-exporter.js";
 export { PptxSanitizer } from "./export/pptx-sanitizer.js";

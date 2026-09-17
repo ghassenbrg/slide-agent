@@ -3,6 +3,139 @@
 All notable public changes are recorded here, newest first. Versions follow
 semantic versioning.
 
+## 2.0.0 — 2026-09-18
+
+**The model directs; the engine executes.**
+
+0.x asked a host model to author a deck in inches. Every slide was a build
+script placing rectangles at absolute coordinates, and the model spent most of
+its tokens on arithmetic it is bad at — column widths, baseline advances,
+whether 34pt of headline fits a 3.2-inch box — while the decisions it is
+uniquely good at, the ones a reader actually sees, got whatever attention was
+left. The obvious fix is to hand the layout to deterministic code. The
+non-obvious trap is that the same move, done carelessly, hands the *design* to
+deterministic code too, and what comes out is cheap in both senses: a template
+with the model's content poured in, indistinguishable from the next deck the
+same template produced.
+
+2.0 draws the line explicitly and holds it everywhere. The model writes a
+**composition** — grid units, roles, tokens, a design language authored for this
+deck — and the engine computes inches, measures real glyph advances, fits text,
+repairs contrast, and writes OOXML. Every place the engine changes something the
+model decided, it reports the change as a refusable **adjustment** rather than
+applying taste silently. Where a decision is genuinely aesthetic and the engine
+cannot make it without inventing taste, it stops and asks with a **choice** —
+options, not a guess. Recipes and presets exist, are labelled, and are never
+selected on the model's behalf for a directed deck. In engine-managed mode, the
+**creative floor** in the router throws rather than downgrading a judgement task
+to a cheaper model under budget pressure; the budget guard drops passes, never
+tiers.
+
+The savings are real and they come from arithmetic, repetition, and
+defect-hunting — never from design decisions. See
+[`docs/adr/0005`](docs/adr/0005-the-model-directs-the-engine-executes.md) for the
+thesis and [`docs/v2/`](docs/v2/README.md) for the plan it came from.
+
+**What this release does not claim.** No designer panel and no blind-preference
+comparison against 0.x has been run, so there is no evidence here that 2.0 decks
+are *better* than 0.x decks — only that the model spends its tokens on design
+instead of on multiplication. The cost figures in the plan are modelled, not
+measured. [`docs/v2/04-implementation-status.md`](docs/v2/04-implementation-status.md)
+lists what shipped, what changed from the plan, and what is still open, item by
+item.
+
+### Added
+
+- **`slide-agent.intent/1` and the composition language `slide-agent.compose/1`.**
+  A deck is an intent: a brief, a visual concept, a design language, reusable
+  components, and one composition per slide. Compositions are grids, rows,
+  columns, layers, and free placement in grid units and roles — never inches and
+  never literal colours. Validation returns JSON-pointer findings with
+  did-you-mean suggestions, so a malformed composition says which key, where.
+- **A design-language compiler.** Colour in OKLCH, roles mapped onto the twelve
+  PowerPoint theme slots, WCAG contrast repaired by a nearest-passing-lightness
+  search and reported as an adjustment, a type scale with legibility floors, and
+  DTCG token import and export. Brand packs import from `.potx`/`.pptx` as locked
+  tokens plus a layout map; the model still directs inside the locks.
+- **A real text engine.** Dependency-free TrueType/OpenType parsing, measurement
+  from the font's own advance widths rather than per-class estimate tables,
+  UAX-14-style breaking with CJK and spaceless scripts, balanced headlines, and
+  metric-compatible substitutes for Office faces. ~80 open-licence families are
+  catalogued and fetched on demand (`slide-agent font --add`), hash-recorded,
+  instead of bundling 10 MB of faces most decks never open.
+- **The fit ladder.** Measure, reflow, balance, size down, offer a structural
+  choice, suggest a shortened edit with a character budget, and report the
+  residual. The automatic steps are reported; the taste-bearing ones are asked.
+  Text can no longer silently overflow, and it can no longer be silently
+  shrunk to fit either.
+- **Components, 40 recipes across 24 families, a draft-mode selector with a
+  scored trail, and rhythm analysis** over a centred 12×7 occupancy signature —
+  so "these six slides are the same slide" is a finding, not a feeling.
+- **A native OOXML writer.** Real placeholders, theme-referenced colours and
+  fonts, native charts with an embedded XLSX workbook, tables, images with crops
+  and treatments, 1,848 Lucide icons as `a:custGeom`, notes, hidden slides,
+  embedded font subsets, and deterministic zip bytes. A deck rebuilt from its own
+  `intent.json` in a clean directory is byte-identical.
+- **In-process previews.** SVG to PNG through the same `TextEngine.layout()` the
+  fit engine used, so a preview shows the lines the solver measured. Contact
+  sheets, exploration sheets, and issue crops. No LibreOffice needed until
+  `finalize`.
+- **QA T0–T5 and readiness v2.** Mechanical `state` (`broken`,
+  `needs-attention`, `ready-unrendered`, `ready`) is kept strictly separate from
+  `designReview` (`none`, `host`, `critic`). A deck is never called "ready"
+  because a model said it looked fine, and design review never blocks.
+- **Seven MCP tools from one command registry** — `slides_catalog`,
+  `slides_build`, `slides_edit`, `slides_view`, `slides_finalize`,
+  `slides_inspect`, `slides_generate` — with per-tool response budgets, the
+  grammar and catalog as resources, and recipe and example resource templates.
+  The same registry generates the CLI.
+- **`slide-agent explain`.** Why a slide or element looks the way it does:
+  provenance, which fit steps ran, which adjustments were applied, which choices
+  are open.
+- **Engine-managed mode** (`slides_generate`): director, design critic, revise
+  loop, micro-tasks, routing profiles with the creative floor, a budget guard
+  that degrades by dropping passes, exact-input response caching keyed on a
+  SHA-256 of the request (never semantic or fuzzy matching), and ingestion from
+  Markdown, text, CSV, JSON, DOCX, PDF, and PPTX.
+- **`slide-agent fill`.** An intent template with `{{bindings}}`, `$each`, `$if`,
+  and `$requires`, plus a data file, produces one deck per row with no model
+  call at all.
+- **`./v2` SDK export** with the full public API, and a skill page under ~1.2k
+  tokens.
+
+### Changed
+
+- **The default MCP surface is V2's seven tools.** `--compat-v1` (or
+  `SLIDE_AGENT_COMPAT_V1=1`) registers the 0.x ten-tool surface alongside it for
+  one minor release.
+- **`build` and `edit` are dual-mode on the CLI.** `--script`/`--input` keep
+  their 0.x behaviour; `--intent`, `--deck`, `--ops`, and `--instruction` select
+  V2.
+- **Version numbering skips to 2.0.0.** The 0.x contract line (`0.11`) is not
+  changed — it is one of two supported authoring formats now, not the only one.
+
+### Fixed
+
+- **Security hardening across the 0.x paths**, shipped ahead of the engine:
+  workspace-root path confinement, refusal to execute scripts arriving in a
+  request, zip-bomb limits that inflate every entry rather than trusting the
+  header, subprocess timeouts with a minimal environment and process-group kill,
+  DNS-pinned fetches against rebinding, and a remote-fetch policy an operator
+  sets and a request may only narrow.
+
+### Compatibility
+
+- **0.x is not removed.** Scenes, outlines, requests, and build scripts build
+  unchanged through the same code paths; `canvas` slides are a first-class V2
+  slide kind, so a hand-placed slide is still hand-placed.
+- **`slide-agent migrate`** converts a 0.x scene (`.ndjson`) or outline (`.json`)
+  into a V2 intent with a report of what mapped to which recipe and what did not.
+- The 0.x MCP tool surface needs `--compat-v1` from this release and will be
+  removed in 2.1.
+- `@anthropic-ai/sdk` is an optional peer dependency, needed only for
+  engine-managed mode. `@resvg/resvg-js` is required for previews.
+- [`MIGRATION-2.0.md`](MIGRATION-2.0.md) covers the move end to end.
+
 ## 0.15.0 — 2026-08-14
 
 Repetition is not information. 0.13 cut what a deck costs a host model by
