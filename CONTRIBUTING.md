@@ -1,6 +1,8 @@
 # Contributing to Slide Agent
 
-Thank you for improving Slide Agent. This guide covers the development workflow; [README.md](README.md) explains what the project does and [SKILL.md](SKILL.md) defines the agent-facing contract.
+Thank you for improving Slide Agent. This guide covers the development workflow; [README.md](README.md) explains what the project does, [references/v2/grammar.md](references/v2/grammar.md) is the composition language a model authors in, and [SKILL.md](SKILL.md) is the router a host agent reads.
+
+Both are generated — `SKILL.md`, everything under `references/`, and the grammar page come out of `npm run docs`, and `npm run verify` fails on drift. Edit the source (`src/contract` for 0.x, `src/v2/commands` for 2.x), not the output.
 
 ## Prerequisites
 
@@ -30,12 +32,17 @@ The VS Code extension lives in `extensions/vscode` with its own `npm install`, `
 
 ## Architecture in one minute
 
-The pipeline is `src/pipeline.ts`: outline (model-authored or planned from a prompt) → `DeckBuilder` composes editable PptxGenJS elements (`src/components`, `src/layouts`) → `PptxExporter` writes the package and `PptxSanitizer` repairs known PptxGenJS OOXML defects → validators check the manifest, the package, and every XML part against the bundled ECMA-376 schemas (`src/validation`) → `AutoFixer` retries fixable issues. Existing decks are edited at the OOXML level in `src/editing`. The README's Architecture section has the full map.
+Two engines. **2.x** is `src/v2`: a model-authored `slide-agent.intent/1` document → validate (`ir`) → compile the design language (`tokens`) → expand components and recipes (`compose`) → solve each slide against real font metrics (`text`, `layout`) → write OOXML directly (`ooxml`) → QA T0–T5 (`qa`), orchestrated by `Engine` in `src/v2/engine`. **0.x** is `src/pipeline.ts`: outline → `DeckBuilder` composes PptxGenJS elements (`src/components`, `src/layouts`) → `PptxExporter` writes the package and `PptxSanitizer` repairs known PptxGenJS OOXML defects → validators (`src/validation`) → `AutoFixer` retries fixable issues. Existing decks are edited at the OOXML level in `src/editing`.
 
-Two invariants to preserve:
+The dependency runs one way: `src/v2` reads from the 0.x modules, and only the three entry points (`src/index.ts`, `src/cli.ts`, `src/mcp-server.ts`) import `src/v2`. Keep it that way. [docs/architecture.md](docs/architecture.md) has the full map.
 
-1. **Everything stays editable.** No flattening slides into images; native text, shapes, tables, and charts only.
-2. **Generated packages are schema-valid.** `tests/integration/ooxml-schema.test.ts` builds a deck and validates it against the official schemas — if you add new OOXML constructs, extend the sanitizer and validator together (`src/utils/chart-schema.ts` is the shared source of truth for chart sequences).
+Invariants to preserve:
+
+1. **The model directs; the engine executes.** Do not add a code path that makes a design decision silently. If the engine must change something the author decided, report it as an adjustment that a pin can refuse. If the engine cannot decide without inventing taste, return a choice. A change that quietly improves a deck's looks is a change that takes authorship away from the person whose deck it is — see [ADR 0005](docs/adr/0005-the-model-directs-the-engine-executes.md).
+2. **Everything stays editable.** No flattening slides into images; native text, placeholders, shapes, tables, and charts only.
+3. **Generated packages are schema-valid.** `tests/integration/ooxml-schema.test.ts` and `tests/unit/v2/writer.test.ts` build decks and validate them against the official schemas — if you add new OOXML constructs, extend the writer and validator together (`src/utils/chart-schema.ts` is the shared source of truth for chart sequences).
+4. **Builds are deterministic.** The same intent and inputs produce byte-identical packages under a pinned `SOURCE_DATE_EPOCH`. Anything that writes a timestamp, a random id, or an unordered map into the package breaks this; the round-trip test will catch it.
+5. **`ready` stays mechanical.** No model's opinion may set it, and `designReview` must never block it.
 
 ## Tests
 

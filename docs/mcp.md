@@ -5,8 +5,13 @@ the integration path for Cursor, Zed, Windsurf, Claude Desktop, and any other
 MCP client — and unlike a skill, it does not depend on the host implementing a
 particular skills directory.
 
-The server publishes the whole authoring contract as resources, so a client
-that has never heard of Slide Agent can learn how to use it at runtime.
+The server publishes the composition language and everything around it as
+resources, so a client that has never heard of Slide Agent can learn to design
+with it at runtime — start at `slide-agent://grammar`, which is about 1,300
+tokens.
+
+Seven tools by default; `--compat-v1` adds the 0.x surface for one more minor
+release. Both are documented here, 2.x first.
 
 ---
 

@@ -10,19 +10,50 @@ Security fixes target the latest published stable version. Older releases may re
 
 ## Handling untrusted input
 
-A presentation outline, a freeform canvas, and an NDJSON scene are all
-model-authored, and a host model routinely builds them from material Slide
-Agent cannot vouch for — a web page, a customer brief, a file in a repository.
-Slide Agent therefore treats every path and URL in a request as untrusted:
+A deck intent, a presentation outline, a freeform canvas, and an NDJSON scene
+are all model-authored, and a host model routinely builds them from material
+Slide Agent cannot vouch for — a web page, a customer brief, a file in a
+repository. Slide Agent therefore treats every path, URL, and instruction in a
+request as untrusted.
 
-- **Remote assets are refused by default.** Fetching `http(s)` image URLs
-  requires `allowRemoteAssets` on the request or
-  `SLIDE_AGENT_ALLOW_REMOTE_IMAGES=1`.
+The governing rule is that **a request may narrow a permission and never widen
+one.** Authority comes from the operator who started the process, not from
+whatever authored the deck.
+
+- **Paths are confined to the workspace roots.** Every path in a request is
+  resolved to its real location — following symlinks — and refused with
+  `PATH_OUTSIDE_WORKSPACE` if it lands outside. Over MCP the roots come from the
+  client's declared roots; on the CLI they default to the working directory;
+  `SLIDE_AGENT_ROOTS` sets them explicitly.
+- **Requests cannot run scripts.** A build script is imported into this process
+  with its privileges, so a script arriving in a request is refused with
+  `SCRIPT_REFUSED` unless the operator set `SLIDE_AGENT_ALLOW_SCRIPTS=1`. Run
+  your own scripts yourself with `slide-agent build <script>`. An intent is
+  declarative and cannot execute anything, which is the recommended path.
+- **Remote assets are refused unless the operator allows them.**
+  `SLIDE_AGENT_ALLOW_REMOTE_IMAGES=1` turns fetching on. `allowRemoteAssets:
+  false` in a request narrows that to nothing for the run; `true` does not grant
+  it.
+- **Font downloads are the same shape.** Off unless
+  `SLIDE_AGENT_FONT_DOWNLOADS=1` or an explicit `slide-agent font --add`. Only
+  `fonts.googleapis.com` and `fonts.gstatic.com` are contacted, every file is
+  checked to be a real font, and its SHA-256 is recorded.
 - **Even when enabled, private networks stay unreachable.** Loopback, RFC1918,
   link-local (including cloud metadata endpoints), carrier-grade NAT, and
   IPv4-mapped equivalents are refused before the request is made and re-checked
-  after every redirect. `SLIDE_AGENT_ALLOWED_IMAGE_HOSTS` narrows this further
-  to an explicit hostname allowlist.
+  after every redirect. DNS is then pinned to the address that passed that
+  check, so a hostname cannot resolve once for the check and again for the
+  fetch. `SLIDE_AGENT_ALLOWED_IMAGE_HOSTS` narrows this further to an explicit
+  hostname allowlist.
+- **Archives are opened under limits.** Every `.pptx`, `.potx`, and embedded
+  workbook is read through bounded inflation: entry count, per-entry size, total
+  size, and compression ratio. Every entry is inflated under the cap rather than
+  trusting the size the header declares, so a zip bomb cannot lie its way past
+  the check.
+- **Subprocesses are bounded.** LibreOffice and Poppler run with a timeout, a
+  capped output buffer, and a minimal environment built from an allowlist, and
+  are killed as a process group — SIGTERM, then SIGKILL — so a hung child cannot
+  outlive the run or leak the parent's environment.
 - **Responses are bounded and verified.** A 10 MB cap is enforced while the body
   streams, requests time out after 10 seconds, redirects are limited to two, and
   the payload must be a real PNG, JPEG, GIF, or WebP by magic bytes — the
@@ -42,9 +73,24 @@ Installing the library runs no lifecycle scripts and writes nothing outside the
 project. Agent-skill registration happens only when you explicitly run
 `slide-agent install`.
 
-Optional preview rendering shells out to LibreOffice and Poppler. Those run
-against files you supply; discovery honours `SLIDE_AGENT_SOFFICE` and
-`SLIDE_AGENT_PDFTOPPM` if you need to pin the executables.
+Optional fidelity rendering shells out to LibreOffice and Poppler. Those run
+against files you supply, under the subprocess limits above; discovery honours
+`SLIDE_AGENT_SOFFICE` and `SLIDE_AGENT_PDFTOPPM` if you need to pin the
+executables, and an explicit pin is used or nothing is — a typo reports the tool
+as missing rather than quietly running a different binary. 2.x previews are
+rendered in-process and shell out to nothing.
+
+## Models
+
+Slide Agent does not call a model. The host model that authors a deck runs in
+the host, and Slide Agent only reads what it produced.
+
+The single exception is engine-managed mode — `slides_generate` /
+`slide-agent generate` — which calls the Anthropic API when
+`ANTHROPIC_API_KEY` is set and the optional `@anthropic-ai/sdk` peer dependency
+is installed. It sends the brief, the sources you named, and rendered previews
+of the deck being built. Nothing else in the package makes a request to a model
+provider, and no telemetry is collected anywhere.
 
 ## Publication safeguards
 
