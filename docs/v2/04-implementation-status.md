@@ -75,7 +75,18 @@ it matters.
 ## 5. Gates this release does meet
 
 - Every recipe builds in 16:9 and 4:3 with nominal content and **no blocking
-  findings**, and the grammar page's worked examples build.
+  findings**, and the grammar page's worked examples build. All 38 were also
+  rendered to contact sheets and **looked at**, which is a different check and
+  the one that found the only defect this pass turned up: a gate label reading
+  "Expan / d" that the fit record called `fit`. Fixed, with a test that fails
+  without the fix.
+- The worked example goes end to end from a clean directory — `build`, `view`,
+  `edit`, `explain`, `finalize --export pdf,png` — and reaches `state: "ready"`
+  with `designReview: "none"`, which is the honest pair for a deck no one has
+  judged.
+- `npm pack` installs into a clean project, every export subpath imports, and
+  the icons, recipes, and grammar resolve from the installed copy rather than
+  only from the repo.
 - The writer's output validates against the bundled ECMA-376 schemas, with
   charts, tables, images, icons, notes, hidden slides, and embedded fonts in one
   deck.
