@@ -34,6 +34,7 @@ import {
   type GuideSectionId,
 } from "./contract/index.js";
 import { assertScriptAllowed } from "./security/policy.js";
+import { isV2Build, isV2Edit, registerV2Commands, runV2Build, runV2Edit } from "./v2/cli/register.js";
 
 async function text(filePath: string): Promise<string> {
   return readFile(filePath, "utf8");
@@ -58,6 +59,10 @@ function issuesFormat(value: string): IssuesFormat {
  * `--pretty` restores indentation for a person reading a file in a terminal.
  */
 let indent: number | undefined;
+
+function printJson(value: unknown): void {
+  process.stdout.write(`${JSON.stringify(value, null, indent)}\n`);
+}
 
 async function printResult(request: StructuredAgentRequest): Promise<void> {
   const result = await new SlideAgent().execute(request);
@@ -154,9 +159,13 @@ program.command("measure")
   });
 
 program.command("build")
-  .description("Build a deck from a JavaScript module that composes it with the authoring API")
-  .requiredOption("--script <file>", "ES module exporting a deck built with defineDeck(...)")
-  .requiredOption("--output <file>", "Output .pptx path")
+  .description("Build a deck: V2 from an intent (--intent, --deck), or V1 from a JavaScript module (--script, --output)")
+  .option("--intent <file>", "V2: slide-agent.intent/1 JSON")
+  .option("--deck <directory>", "V2: deck directory (intent.json, deck.pptx, previews, run.json)")
+  .option("--check", "V2: validate and solve without writing")
+  .option("--strict", "V2: validate every part against the ECMA-376 schemas")
+  .option("--script <file>", "V1: ES module exporting a deck built with defineDeck(...)")
+  .option("--output <file>", "V1: output .pptx path")
   .option("--previews <directory>", "Rendered preview directory")
   .option("--report <file>", "Validation report JSON path")
   .option("--metadata <file>", "Generation metadata JSON path")
@@ -172,6 +181,8 @@ program.command("build")
   .option("--no-auto-fix", "Disable automatic repair")
   .option("--issues <format>", "grouped (default) states each finding once with its call sites; flat writes one object per occurrence")
   .action(async (options) => {
+    if (isV2Build(options)) return runV2Build(options, printJson);
+    if (!options.script || !options.output) throw new Error("build needs --intent/--deck (V2) or --script and --output (V1).");
     // The script runs in this process with the privileges of whoever invoked
     // the CLI. That is the same decision as running it with `node`, and it is
     // worth saying once rather than burying in the docs.
@@ -265,9 +276,14 @@ program.command("create")
   });
 
 program.command("edit")
-  .requiredOption("--input <file>", "Existing .pptx path")
-  .requiredOption("--prompt <file>", "Edit prompt or structured edit request JSON")
-  .requiredOption("--output <file>", "Output .pptx path; must differ from input")
+  .description("Edit a deck: V2 EditOps or an instruction on a deck directory (--deck), or V1 operations on a .pptx (--input)")
+  .option("--deck <directory>", "V2: deck directory, or a .pptx for package-level ops")
+  .option("--ops <file>", "V2: JSON array of EditOps")
+  .option("--instruction <text>", "V2 engine-managed: a natural-language edit")
+  .option("--profile <name>", "V2 engine-managed: quality, balanced, or draft")
+  .option("--input <file>", "V1: existing .pptx path")
+  .option("--prompt <file>", "V1: edit prompt or structured edit request JSON")
+  .option("--output <file>", "V1: output .pptx path; must differ from input")
   .option("--previews <directory>", "After-edit preview directory")
   .option("--before-previews <directory>", "Before-edit preview directory")
   .option("--report <file>", "Validation report JSON path")
@@ -275,6 +291,8 @@ program.command("edit")
   .option("--render", "Also render before/after previews (requires LibreOffice and Poppler)")
   .option("--no-validate", "Skip validation")
   .action(async (options) => {
+    if (isV2Edit(options)) return runV2Edit(options, printJson);
+    if (!options.input || !options.prompt || !options.output) throw new Error("edit needs --deck (V2) or --input, --prompt, and --output (V1).");
     const prompt = await text(options.prompt);
     await printResult({
       command: "edit",
@@ -589,6 +607,8 @@ program.command("template")
     }
     process.stdout.write(json);
   });
+
+registerV2Commands(program, printJson);
 
 program.command("run")
   .description("Execute a structured JSON request from any VS Code AI agent")
