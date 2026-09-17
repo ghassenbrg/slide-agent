@@ -159,8 +159,9 @@ describe("ImageManager remote policy", () => {
     try {
       process.env.SLIDE_AGENT_ALLOW_REMOTE_IMAGES = "1";
       expect(remoteAssetPolicy().allow).toBe(true);
-      // An explicit request value always wins over the environment.
+      // A request can narrow the operator's policy, never widen it.
       expect(remoteAssetPolicy(false).allow).toBe(false);
+      expect(remoteAssetPolicy(true).allow).toBe(true);
       delete process.env.SLIDE_AGENT_ALLOW_REMOTE_IMAGES;
       expect(remoteAssetPolicy().allow).toBe(false);
     } finally {

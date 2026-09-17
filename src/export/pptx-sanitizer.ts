@@ -6,6 +6,7 @@ import JSZip from "jszip";
 import { ALL_SERIES_ELEMENTS, CHART_TYPE_SCHEMAS } from "../utils/chart-schema.js";
 import { buildTimestamp } from "../utils/reproducible.js";
 import { postProcessSlideXml, type ShapePostProcess } from "./pptx-postprocess.js";
+import { loadZipSafely } from "../utils/safe-zip.js";
 
 const CONTENT_TYPES = "[Content_Types].xml";
 const NOTES_MASTER = "ppt/notesMasters/notesMaster1.xml";
@@ -312,7 +313,7 @@ export class PptxSanitizer {
    * by the element's own id. Omitting it leaves every slide part untouched.
    */
   public async sanitizeFile(inputPath: string, postProcess: ShapePostProcess[] = []): Promise<void> {
-    const zip = await JSZip.loadAsync(await readFile(inputPath), { checkCRC32: true });
+    const zip = await loadZipSafely(await readFile(inputPath), { checkCRC32: true });
     await repairNotesMaster(zip);
 
     for (const [name, entry] of Object.entries(zip.files)) {

@@ -18,6 +18,8 @@ import { PptxSanitizer } from "../export/pptx-sanitizer.js";
 import { resolvePackageTarget } from "../utils/ooxml.js";
 import { decodeXml, escapeXml } from "../utils/text.js";
 import { PptxInspector } from "./pptx-inspector.js";
+import { loadZipSafely } from "../utils/safe-zip.js";
+import { assertInsideWorkspace } from "../security/policy.js";
 
 interface SlideEntry {
   block: string;
@@ -70,7 +72,7 @@ function loadSlides(presentationXml: string, relationshipsXml: string): SlideEnt
 }
 
 async function loadPackage(input: string): Promise<PackageState> {
-  const zip = await JSZip.loadAsync(await readFile(input));
+  const zip = await loadZipSafely(await readFile(input));
   const presentationXml = await zip.file("ppt/presentation.xml")?.async("string");
   const presentationRels = await zip.file("ppt/_rels/presentation.xml.rels")?.async("string");
   const contentTypes = await zip.file("[Content_Types].xml")?.async("string");
@@ -185,7 +187,7 @@ async function updateEmbeddedWorkbook(state: PackageState, chartPath: string, la
   const workbookPath = resolvePackageTarget(chartPath, decodeXml(workbookTarget));
   const workbookBytes = await state.zip.file(workbookPath)?.async("nodebuffer");
   if (!workbookBytes) return false;
-  const workbook = await JSZip.loadAsync(workbookBytes);
+  const workbook = await loadZipSafely(workbookBytes);
   const workbookXml = await workbook.file("xl/workbook.xml")?.async("string");
   const workbookRels = await workbook.file("xl/_rels/workbook.xml.rels")?.async("string");
   if (!workbookXml || !workbookRels) return false;
@@ -428,8 +430,8 @@ export class PptxEditor {
    * it is not more trustworthy than a canvas.
    */
   private async importSlide(state: PackageState, operation: ImportSlideOperation, warnings: string[]): Promise<void> {
-    const sourcePath = path.resolve(operation.source);
-    const sourceZip = await JSZip.loadAsync(await readFile(sourcePath)).catch(() => {
+    const sourcePath = assertInsideWorkspace(operation.source, "source");
+    const sourceZip = await loadZipSafely(await readFile(sourcePath)).catch(() => {
       throw new SlideAgentError("SOURCE_NOT_READABLE", `Cannot read ${sourcePath} as a PowerPoint package.`);
     });
     const sourcePresentation = await sourceZip.file("ppt/presentation.xml")?.async("string");
@@ -669,7 +671,7 @@ export class PptxEditor {
     if (!slideXml || !slideRels) throw new SlideAgentError("SLIDE_RELATIONSHIPS_MISSING", `Slide ${operation.slide} has no editable image relationships.`);
     const relationshipId = relationshipIdForImage(slideXml, operation);
     if (!relationshipId) throw new SlideAgentError("IMAGE_NOT_FOUND", `Could not resolve an image on slide ${operation.slide}.`);
-    const source = path.resolve(operation.imagePath);
+    const source = assertInsideWorkspace(operation.imagePath, "imagePath");
     const extension = path.extname(source).replace(".", "").toLowerCase() || "png";
     const imageNumber = maxNumber(Object.keys(state.zip.files), /^ppt\/media\/image(\d+)\./) + 1;
     const mediaPath = `ppt/media/image${imageNumber}.${extension}`;

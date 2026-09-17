@@ -1,9 +1,13 @@
 import { createHash } from "node:crypto";
 import { lookup } from "node:dns/promises";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
+import http from "node:http";
+import https from "node:https";
 import net from "node:net";
+import { Readable } from "node:stream";
 import path from "node:path";
 
+import { assertInsideWorkspace } from "../security/policy.js";
 import { exists } from "../utils/files.js";
 import { SlideAgentError } from "../utils/errors.js";
 
@@ -161,9 +165,9 @@ export class ImageManager implements ImageResolver {
     if (/^[a-z][a-z0-9+.-]+:/i.test(source) && !path.isAbsolute(source) && !/^[a-z]:[\\/]/i.test(source)) {
       throw new SlideAgentError("UNSUPPORTED_ASSET_SCHEME", `Only local paths and http(s) URLs are supported: ${source}`, { source });
     }
-    const resolved = this.baseDir && !path.isAbsolute(source)
+    const resolved = assertInsideWorkspace(this.baseDir && !path.isAbsolute(source)
       ? await this.locate(source)
-      : path.resolve(source);
+      : path.resolve(source), "image path");
     if (!(await exists(resolved))) {
       throw new SlideAgentError("IMAGE_NOT_FOUND", `Image does not exist: ${resolved}`, { source });
     }
@@ -195,7 +199,7 @@ export class ImageManager implements ImageResolver {
     return path.resolve(source);
   }
 
-  private async assertHostAllowed(url: URL): Promise<void> {
+  private async assertHostAllowed(url: URL): Promise<{ address: string; family: number }> {
     const hostname = url.hostname.replace(/^\[|\]$/g, "");
     if (this.policy.allowedHosts.length > 0) {
       const permitted = this.policy.allowedHosts.some((entry) => {
@@ -225,13 +229,15 @@ export class ImageManager implements ImageResolver {
         });
       }
     }
+    const chosen = addresses[0]!;
+    return { address: chosen.address, family: net.isIP(chosen.address) };
   }
 
   private async download(rawUrl: string): Promise<string> {
     if (!this.policy.allow) {
       throw new SlideAgentError(
         "REMOTE_ASSETS_DISABLED",
-        "Remote image fetching is disabled. Supply a local file, or opt in with allowRemoteAssets on the request or SLIDE_AGENT_ALLOW_REMOTE_IMAGES=1.",
+        "Remote image fetching is disabled. Supply a local file, or have the operator set SLIDE_AGENT_ALLOW_REMOTE_IMAGES=1 where Slide Agent runs; a request cannot enable it.",
         { url: rawUrl },
       );
     }
@@ -241,11 +247,13 @@ export class ImageManager implements ImageResolver {
     // Follow redirects manually so every hop is re-checked against the policy.
     // An allowed host must not be able to bounce the fetch onto a private one.
     for (let hop = 0; hop <= this.policy.maximumRedirects; hop += 1) {
-      await this.assertHostAllowed(url);
+      const pinned = await this.assertHostAllowed(url);
       const controller = new AbortController();
       const timer = setTimeout(() => controller.abort(), this.policy.timeoutMs);
       try {
-        response = await fetch(url, { redirect: "manual", signal: controller.signal });
+        // The connection goes to the address that was checked, not to a
+        // second resolution an attacker's DNS could answer differently.
+        response = await pinnedFetch(url, pinned, controller.signal);
       } catch (error) {
         throw new SlideAgentError("IMAGE_DOWNLOAD_FAILED", `Image request failed: ${error instanceof Error ? error.message : String(error)}`, { url: url.href });
       } finally {
@@ -326,14 +334,52 @@ export async function readCappedStream(body: ReadableStream<Uint8Array>, maximum
   return merged;
 }
 
-/** Resolves the effective policy from the request and the environment. */
+/**
+ * The effective policy: the operator's setting AND the request's.
+ *
+ * A request is model-authored, so it may turn fetching off but never on. Only
+ * SLIDE_AGENT_ALLOW_REMOTE_IMAGES=1 (or a caller constructing a policy in
+ * code) enables the network.
+ */
 export function remoteAssetPolicy(requested?: boolean): RemoteAssetPolicy {
   const allowedHosts = (process.env.SLIDE_AGENT_ALLOWED_IMAGE_HOSTS ?? "")
     .split(",")
     .map((entry) => entry.trim().toLowerCase())
     .filter(Boolean);
   return {
-    allow: requested ?? process.env.SLIDE_AGENT_ALLOW_REMOTE_IMAGES === "1",
+    allow: process.env.SLIDE_AGENT_ALLOW_REMOTE_IMAGES === "1" && requested !== false,
     ...(allowedHosts.length ? { allowedHosts } : {}),
   };
+}
+
+/**
+ * `fetch` with DNS pinned to an address that already passed the private-range
+ * check. Redirects are not followed here; the caller re-checks every hop.
+ */
+export function pinnedFetch(url: URL, pinned: { address: string; family: number }, signal: AbortSignal): Promise<Response> {
+  const client = url.protocol === "https:" ? https : http;
+  return new Promise<Response>((resolve, reject) => {
+    const request = client.request(url, {
+      method: "GET",
+      signal,
+      headers: { "user-agent": "slide-agent", accept: "image/*" },
+      lookup: (_hostname, options, callback) => {
+        const all = typeof options === "object" && options !== null && (options as { all?: boolean }).all;
+        if (all) (callback as unknown as (error: null, addresses: Array<{ address: string; family: number }>) => void)(null, [{ address: pinned.address, family: pinned.family }]);
+        else (callback as (error: null, address: string, family: number) => void)(null, pinned.address, pinned.family);
+      },
+    }, (message) => {
+      const headers = new Headers();
+      for (const [name, value] of Object.entries(message.headers)) {
+        if (Array.isArray(value)) for (const item of value) headers.append(name, item);
+        else if (value !== undefined) headers.set(name, String(value));
+      }
+      const status = message.statusCode ?? 502;
+      const bodyless = status === 204 || status === 304 || (status >= 300 && status < 400);
+      if (bodyless) message.resume();
+      resolve(new Response(bodyless ? null : Readable.toWeb(message) as ReadableStream<Uint8Array>, { status, headers }));
+    });
+    request.on("error", reject);
+    request.end();
+  });
 }

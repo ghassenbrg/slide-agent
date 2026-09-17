@@ -7,6 +7,7 @@ import { SlideAgentError } from "../utils/errors.js";
 import { hexToHsl, hslToHex, normalizeHex } from "../utils/color.js";
 import { decodeXml } from "../utils/text.js";
 import type { BrandKit } from "./brand.js";
+import { loadZipSafely } from "../utils/safe-zip.js";
 
 /**
  * Read an organisation's PowerPoint template into a brand kit.
@@ -185,7 +186,7 @@ export async function brandKitFromTemplate(filePath: string, options: TemplateIm
   const bytes = await readFile(resolved).catch(() => {
     throw new SlideAgentError("TEMPLATE_NOT_FOUND", `Template not found: ${resolved}`, { path: resolved });
   });
-  const zip = await JSZip.loadAsync(bytes).catch(() => {
+  const zip = await loadZipSafely(bytes).catch(() => {
     throw new SlideAgentError("TEMPLATE_INVALID", `${resolved} is not a PowerPoint package.`, { path: resolved });
   });
 

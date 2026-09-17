@@ -6,6 +6,7 @@ import type { ChartSpec, DeckManifest, ElementRecord, PptxInspection, SlideKind 
 import { resolvePackageTarget } from "../utils/ooxml.js";
 import { decodeXml } from "../utils/text.js";
 import { buildTimestamp } from "../utils/reproducible.js";
+import { loadZipSafely } from "../utils/safe-zip.js";
 
 const EMU_PER_INCH = 914400;
 
@@ -178,7 +179,7 @@ function coreTitle(xml: string): string | undefined {
 export class PptxInspector {
   public async inspect(inputPath: string): Promise<PptxInspection> {
     const input = path.resolve(inputPath);
-    const zip = await JSZip.loadAsync(await readFile(input));
+    const zip = await loadZipSafely(await readFile(input));
     const presentationXml = await zip.file("ppt/presentation.xml")?.async("string");
     const presentationRels = await zip.file("ppt/_rels/presentation.xml.rels")?.async("string");
     if (!presentationXml || !presentationRels) throw new Error("Invalid PPTX: presentation parts are missing.");

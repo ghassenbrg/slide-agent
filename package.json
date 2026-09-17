@@ -86,7 +86,7 @@
     "uninstall.sh"
   ],
   "scripts": {
-    "build": "tsup src/index.ts src/cli.ts src/mcp-server.ts --format esm --sourcemap --clean --shims && tsc --project tsconfig.build.json",
+    "build": "tsup src/index.ts src/cli.ts src/mcp-server.ts src/contract/index.ts --format esm --sourcemap --clean --shims && tsc --project tsconfig.build.json",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:unit": "vitest run tests/unit",

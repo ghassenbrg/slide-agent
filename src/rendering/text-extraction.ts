@@ -51,7 +51,7 @@ function pagesFromPdfText(raw: string): ExtractedPage[] {
 async function extractFromPdf(pdfPath: string): Promise<ExtractedText | undefined> {
   const pdftotext = await findExecutable(["pdftotext"], process.env.SLIDE_AGENT_PDFTOTEXT);
   if (!pdftotext || !(await exists(pdfPath))) return undefined;
-  const result = await runProcess(pdftotext, ["-layout", "-enc", "UTF-8", pdfPath, "-"]);
+  const result = await runProcess(pdftotext, ["-layout", "-enc", "UTF-8", pdfPath, "-"], { timeoutMs: 15_000 });
   if (result.exitCode !== 0) return undefined;
   const pages = pagesFromPdfText(result.stdout);
   if (pages.length === 0) return undefined;
@@ -75,7 +75,7 @@ async function extractFromImages(candidates: string[]): Promise<ExtractedText | 
     const pages: ExtractedPage[] = [];
     for (const [index, preview] of previewFiles.entries()) {
       const base = path.join(temporary, `page-${index + 1}`);
-      const result = await runProcess(tesseract, [preview, base, "--psm", "11"]);
+      const result = await runProcess(tesseract, [preview, base, "--psm", "11"], { timeoutMs: 30_000 });
       if (result.exitCode !== 0) continue;
       const text = await readFile(`${base}.txt`, "utf8").catch(() => "");
       pages.push({

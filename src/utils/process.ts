@@ -32,7 +32,10 @@ export function executableSearchDirectories(options: {
       ]
     : ["/opt/homebrew/bin", "/usr/local/bin", "/usr/bin", "/bin"];
   return unique([
-    ...(options.envPath ?? process.env.PATH ?? "").split(path.delimiter),
+    // A relative PATH entry resolves against whatever directory the process
+    // happens to run in, so a checked-out repository could plant its own
+    // `soffice`. Only absolute entries are searched.
+    ...(options.envPath ?? process.env.PATH ?? "").split(path.delimiter).filter((entry) => path.isAbsolute(entry)),
     nodeDirectory,
     path.join(runtimeDependencies, "bin", "override"),
     path.join(runtimeDependencies, "bin", "fallback"),
@@ -85,20 +88,104 @@ export async function findExecutable(
   return undefined;
 }
 
-export async function runProcess(command: string, args: string[], options: { cwd?: string; env?: NodeJS.ProcessEnv } = {}): Promise<ProcessResult> {
+export interface RunProcessOptions {
+  cwd?: string;
+  /** Added to the minimal environment; never the whole parent environment. */
+  env?: NodeJS.ProcessEnv;
+  /** Hard limit. The process group is sent SIGTERM, then SIGKILL after a grace period. Default 60 s. */
+  timeoutMs?: number;
+  /** Bytes kept from each of stdout and stderr. Default 2 MB. */
+  maxOutputBytes?: number;
+  /** Grace between SIGTERM and SIGKILL. Default 5 s. */
+  killGraceMs?: number;
+}
+
+/**
+ * Variables a child legitimately needs. Everything else — tokens, cloud
+ * credentials, proxy secrets — stays in this process: a document converter has
+ * no business reading `ANTHROPIC_API_KEY`.
+ */
+const INHERITED_ENVIRONMENT = [
+  "PATH", "HOME", "USER", "LOGNAME", "LANG", "LANGUAGE", "LC_ALL", "LC_CTYPE", "TMPDIR", "TMP", "TEMP",
+  "SystemRoot", "SYSTEMROOT", "windir", "ComSpec", "PATHEXT", "APPDATA", "LOCALAPPDATA", "USERPROFILE",
+  "ProgramFiles", "ProgramFiles(x86)", "ProgramData", "HOMEDRIVE", "HOMEPATH",
+  "FONTCONFIG_FILE", "FONTCONFIG_PATH", "XDG_RUNTIME_DIR", "XDG_CACHE_HOME", "XDG_CONFIG_HOME", "XDG_DATA_HOME", "SAL_USE_VCLPLUGIN",
+];
+
+export function minimalEnvironment(extra: NodeJS.ProcessEnv = {}): NodeJS.ProcessEnv {
+  const environment: NodeJS.ProcessEnv = {};
+  for (const name of INHERITED_ENVIRONMENT) {
+    if (process.env[name] !== undefined) environment[name] = process.env[name];
+  }
+  return { ...environment, ...extra };
+}
+
+export const DEFAULT_PROCESS_TIMEOUT_MS = 60_000;
+export const DEFAULT_PROCESS_OUTPUT_BYTES = 2 * 1024 * 1024;
+
+export async function runProcess(command: string, args: string[], options: RunProcessOptions = {}): Promise<ProcessResult> {
+  const timeoutMs = options.timeoutMs ?? DEFAULT_PROCESS_TIMEOUT_MS;
+  const maxOutput = options.maxOutputBytes ?? DEFAULT_PROCESS_OUTPUT_BYTES;
+  const grace = options.killGraceMs ?? 5_000;
   return new Promise((resolve, reject) => {
+    // Its own process group on POSIX, so a timeout kills LibreOffice's helper
+    // processes too rather than orphaning them.
+    const detached = process.platform !== "win32";
     const child = spawn(command, args, {
       cwd: options.cwd,
-      env: { ...process.env, ...options.env },
+      env: minimalEnvironment(options.env),
       stdio: ["ignore", "pipe", "pipe"],
+      detached,
     });
     let stdout = "";
     let stderr = "";
+    let stdoutBytes = 0;
+    let stderrBytes = 0;
+    let timedOut = false;
+    let settled = false;
+    const append = (current: string, chunk: string, used: number): [string, number] => {
+      if (used >= maxOutput) return [current, used];
+      const room = maxOutput - used;
+      const bytes = Buffer.byteLength(chunk);
+      if (bytes <= room) return [current + chunk, used + bytes];
+      return [current + Buffer.from(chunk).subarray(0, room).toString("utf8"), maxOutput];
+    };
+    const signal = (name: NodeJS.Signals): void => {
+      try {
+        if (detached && child.pid) process.kill(-child.pid, name);
+        else child.kill(name);
+      } catch {
+        // Already gone.
+      }
+    };
+    let killTimer: NodeJS.Timeout | undefined;
+    const timer = setTimeout(() => {
+      timedOut = true;
+      signal("SIGTERM");
+      killTimer = setTimeout(() => signal("SIGKILL"), grace);
+      killTimer.unref();
+    }, timeoutMs);
+    timer.unref();
     child.stdout.setEncoding("utf8");
     child.stderr.setEncoding("utf8");
-    child.stdout.on("data", (chunk: string) => { stdout += chunk; });
-    child.stderr.on("data", (chunk: string) => { stderr += chunk; });
-    child.on("error", (error) => reject(new SlideAgentError("PROCESS_START_FAILED", error.message, { command, args })));
-    child.on("close", (exitCode) => resolve({ stdout, stderr, exitCode: exitCode ?? -1 }));
+    child.stdout.on("data", (chunk: string) => { [stdout, stdoutBytes] = append(stdout, chunk, stdoutBytes); });
+    child.stderr.on("data", (chunk: string) => { [stderr, stderrBytes] = append(stderr, chunk, stderrBytes); });
+    child.on("error", (error) => {
+      clearTimeout(timer);
+      if (settled) return;
+      settled = true;
+      reject(new SlideAgentError("PROCESS_START_FAILED", error.message, { command, args }));
+    });
+    child.on("close", (exitCode) => {
+      clearTimeout(timer);
+      if (killTimer) clearTimeout(killTimer);
+      if (settled) return;
+      settled = true;
+      if (timedOut) {
+        reject(new SlideAgentError("PROCESS_TIMEOUT", `${path.basename(command)} did not finish within ${Math.round(timeoutMs / 1000)} s and was stopped.`, { command, args, timeoutMs }));
+        return;
+      }
+      resolve({ stdout, stderr, exitCode: exitCode ?? -1 });
+    });
   });
 }

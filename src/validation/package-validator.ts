@@ -6,6 +6,7 @@ import JSZip from "jszip";
 import type { ValidationIssue } from "../types/index.js";
 import { CHART_TYPE_SCHEMAS, sequenceViolations } from "../utils/chart-schema.js";
 import { relationshipOwnerPath, resolvePackageTarget } from "../utils/ooxml.js";
+import { loadZipSafely } from "../utils/safe-zip.js";
 
 function issue(code: string, message: string, details?: Record<string, unknown>): ValidationIssue {
   return { code, severity: "error", message, fixable: false, ...(details ? { details } : {}) };
@@ -87,7 +88,7 @@ export class PackageValidator {
     const issues: ValidationIssue[] = [];
     let zip: JSZip;
     try {
-      zip = await JSZip.loadAsync(await readFile(inputPath), { checkCRC32: true });
+      zip = await loadZipSafely(await readFile(inputPath), { checkCRC32: true });
     } catch (error) {
       return {
         issues: [issue("corrupt-pptx", `PowerPoint file is corrupt or unreadable: ${error instanceof Error ? error.message : String(error)}`)],

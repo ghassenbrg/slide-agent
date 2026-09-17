@@ -69,6 +69,17 @@ async function main() {
     );
     if (!/^\d+\.\d+\.\d+/.test(stdout.trim())) problems.push(`library import did not expose a version: ${stdout.trim()}`);
 
+    // Every public subpath must import from the installed package, not just the root.
+    const manifest = JSON.parse(await (await import("node:fs/promises")).readFile(path.join(project, "node_modules", "@slide-agent", "core", "package.json"), "utf8"));
+    for (const key of Object.keys(manifest.exports ?? {})) {
+      const specifier = key === "." ? "@slide-agent/core" : `@slide-agent/core/${key.replace(/^\.\//, "")}`;
+      try {
+        await execute(process.execPath, ["--input-type=module", "-e", `await import(${JSON.stringify(specifier)});`], { cwd: project, shell: process.platform === "win32" });
+      } catch (error) {
+        problems.push(`export ${key} does not import: ${error instanceof Error ? error.message.split("\n")[0] : String(error)}`);
+      }
+    }
+
     if (problems.length) throw new Error(`Consumer install is not inert:\n${problems.map((entry) => `  - ${entry}`).join("\n")}`);
     process.stdout.write(`Consumer install is inert (${path.basename(tarball)}, library reports ${stdout.trim()}).\n`);
   } finally {

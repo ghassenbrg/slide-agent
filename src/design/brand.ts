@@ -5,6 +5,7 @@ import type { CreativeDirection, PresentationOutline } from "../types/index.js";
 import { SlideAgentError } from "../utils/errors.js";
 import { exists, readUtf8 } from "../utils/files.js";
 import { brandKitFromTemplate, isTemplateFile } from "./template.js";
+import { assertInsideWorkspace } from "../security/policy.js";
 
 /**
  * An organisation's visual constraints, supplied as a file rather than prose.
@@ -69,7 +70,7 @@ export type BrandKit = z.infer<typeof brandKitSchema>;
  * step where a human retypes a colour scheme is the step that goes wrong.
  */
 export async function loadBrandKit(filePath: string): Promise<BrandKit> {
-  const resolved = path.resolve(filePath);
+  const resolved = assertInsideWorkspace(filePath, "brand");
   if (isTemplateFile(resolved)) return brandKitFromTemplate(resolved);
   if (!(await exists(resolved))) {
     throw new SlideAgentError("BRAND_KIT_NOT_FOUND", `Brand kit not found: ${resolved}`, { path: resolved });

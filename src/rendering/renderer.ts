@@ -1,4 +1,4 @@
-import { copyFile, mkdtemp, readdir, rm, stat, unlink } from "node:fs/promises";
+import { copyFile, mkdtemp, readdir, rm, stat, unlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
@@ -72,6 +72,7 @@ export class PresentationRenderer {
     try {
       this.logger.info("render.start", "Rendering presentation", { input, output });
       const profile = path.join(temporary, "lo-profile");
+      await seedLibreOfficeProfile(profile);
       const conversion = await runProcess(soffice, [
         "--headless",
         // pathToFileURL produces the file:///C:/... form LibreOffice needs on
@@ -82,7 +83,7 @@ export class PresentationRenderer {
         "--outdir",
         temporary,
         input,
-      ]);
+      ], { timeoutMs: 60_000 });
       if (conversion.exitCode !== 0) {
         throw new SlideAgentError("LIBREOFFICE_RENDER_FAILED", "LibreOffice could not convert the presentation to PDF.", {
           stdout: conversion.stdout,
@@ -109,7 +110,7 @@ export class PresentationRenderer {
       const scaleArguments = options.preserveAspect === false
         ? ["-scale-to-x", String(width), "-scale-to-y", String(height)]
         : ["-scale-to", String(Math.max(width, height))];
-      const raster = await runProcess(pdftoppm, ["-png", ...scaleArguments, pdfPath, prefix]);
+      const raster = await runProcess(pdftoppm, ["-png", ...scaleArguments, pdfPath, prefix], { timeoutMs: 15_000 });
       if (raster.exitCode !== 0) {
         throw new SlideAgentError("PDF_RASTER_FAILED", "Poppler could not rasterize the rendered PDF.", {
           stdout: raster.stdout,
@@ -133,4 +134,30 @@ export class PresentationRenderer {
       await rm(temporary, { recursive: true, force: true });
     }
   }
+}
+
+/**
+ * A fresh LibreOffice profile that treats the document as untrusted: macros
+ * never run, and linked content (OLE links, external data, remote images) is
+ * never refreshed, so rendering a deck cannot reach the network or execute
+ * anything the deck carries.
+ */
+export async function seedLibreOfficeProfile(profileDirectory: string): Promise<void> {
+  const user = path.join(profileDirectory, "user");
+  await ensureDir(user);
+  const item = (pathName: string, prop: string, _type: string, value: string): string =>
+    `<item oor:path="${pathName}"><prop oor:name="${prop}" oor:op="fuse"><value>${value}</value></prop></item>`;
+  const xcu = [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<oor:items xmlns:oor="http://openoffice.org/2001/registry" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">',
+    item("/org.openoffice.Office.Common/Security/Scripting", "MacroSecurityLevel", "int", "3"),
+    item("/org.openoffice.Office.Common/Security/Scripting", "DisableMacrosExecution", "boolean", "true"),
+    item("/org.openoffice.Office.Common/Security/Scripting", "BlockUntrustedRefererLinks", "boolean", "true"),
+    item("/org.openoffice.Office.Common/Misc", "UseLocking", "boolean", "false"),
+    item("/org.openoffice.Office.Calc/Content/Update", "Link", "int", "1"),
+    item("/org.openoffice.Office.Writer/Content/Update", "Link", "int", "1"),
+    item("/org.openoffice.Office.Common/Load", "ShowOfficeUpdateDialog", "boolean", "false"),
+    "</oor:items>",
+  ].join("\n");
+  await writeFile(path.join(user, "registrymodifications.xcu"), xcu, "utf8");
 }

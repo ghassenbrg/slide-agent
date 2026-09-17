@@ -5,6 +5,7 @@ import JSZip from "jszip";
 import type { NativePresentation } from "../components/pptx-values.js";
 import type { ColorsConfig, CreativeDirection, SlideAgentConfig } from "../types/index.js";
 import { normalizeHex } from "../utils/color.js";
+import { loadZipSafely } from "../utils/safe-zip.js";
 
 /**
  * The theme colour scheme a deck's palette implies.
@@ -34,7 +35,7 @@ export function themeColorScheme(colors: ColorsConfig): Record<string, string> {
 
 /** Rewrite every theme part's colour scheme to match the deck's palette. */
 export async function writeThemeColors(pptxPath: string, colors: ColorsConfig): Promise<void> {
-  const zip = await JSZip.loadAsync(await readFile(pptxPath));
+  const zip = await loadZipSafely(await readFile(pptxPath));
   const scheme = themeColorScheme(colors);
   const themes = Object.keys(zip.files).filter((name) => /^ppt\/theme\/theme\d+\.xml$/.test(name));
   if (themes.length === 0) return;

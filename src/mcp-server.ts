@@ -41,6 +41,7 @@ import { planOutline } from "./planner/index.js";
 import { parseStructuredRequest } from "./types/schemas.js";
 import type { AgentResult } from "./types/index.js";
 import { VERSION } from "./version.js";
+import { assertScriptAllowed, confineRequestPaths, getWorkspaceRoots, setWorkspaceRoots } from "./security/policy.js";
 
 /**
  * Results are serialized compactly.
@@ -206,7 +207,28 @@ reduced one — images:"all" and imageDetail:"full" return everything there is.
 create_presentation takes only a prompt and returns a structural draft full of
 bracketed placeholders. Use it to start, never to finish.`;
 
+/**
+ * Workspace roots for this server: SLIDE_AGENT_ROOTS (path-list), else the
+ * directory the server was started in. Every path a tool call names must
+ * resolve inside one of them.
+ */
+export function serverRoots(): string[] {
+  const configured = (process.env.SLIDE_AGENT_ROOTS ?? "").split(path.delimiter).map((entry) => entry.trim()).filter(Boolean);
+  return configured.length > 0 ? configured.map((entry) => path.resolve(entry)) : [process.cwd()];
+}
+
+/** Everything a V1 tool receives passes through here first. */
+export function guardRequest<T>(request: T): T {
+  assertScriptAllowed(request as { script?: unknown });
+  return confineRequestPaths(request, getWorkspaceRoots() ?? serverRoots());
+}
+
+function remoteEnabled(): boolean {
+  return process.env.SLIDE_AGENT_ALLOW_REMOTE_IMAGES === "1";
+}
+
 export function buildMcpServer(): McpServer {
+  if (!getWorkspaceRoots()) setWorkspaceRoots(serverRoots());
   const server = new McpServer(
     { name: "slide-agent", version: VERSION },
     { instructions: INSTRUCTIONS },
@@ -343,9 +365,9 @@ export function buildMcpServer(): McpServer {
       }).describe("A structured request. slide-agent://contract carries the full schema for each command."),
       ...runPreviews.schema,
     }),
-    annotations: { destructiveHint: false, idempotentHint: false },
+    annotations: { destructiveHint: true, idempotentHint: false, openWorldHint: remoteEnabled() },
   }, async ({ images, imageDetail, includeImages, request }: PreviewOptions & { request: Record<string, unknown> }) => {
-    const result = await new SlideAgent().execute(parseStructuredRequest(request));
+    const result = await new SlideAgent().execute(guardRequest(parseStructuredRequest(request)));
     return toolResultWithPreviews(result, evidenceOf(result), { images, imageDetail, includeImages }, runPreviews.fallback);
   });
 
@@ -440,9 +462,9 @@ export function buildMcpServer(): McpServer {
       maxRetries: z.number().int().min(0).max(10).optional(),
       ...createPreviews.schema,
     }),
-    annotations: { destructiveHint: false, idempotentHint: false },
+    annotations: { destructiveHint: true, idempotentHint: false, openWorldHint: remoteEnabled() },
   }, async ({ images, imageDetail, includeImages, ...input }: PreviewOptions & { prompt: string; output: string; render?: boolean; validate?: boolean; autoFix?: boolean; maxRetries?: number }) => {
-    const result = await new SlideAgent().create({ command: "create", ...input });
+    const result = await new SlideAgent().create(guardRequest({ command: "create" as const, ...input }));
     return toolResultWithPreviews(result, evidenceOf(result), { images, imageDetail, includeImages }, createPreviews.fallback);
   });
 
@@ -459,9 +481,9 @@ export function buildMcpServer(): McpServer {
       render: z.boolean().optional(),
       ...revisePreviews.schema,
     }),
-    annotations: { destructiveHint: false, idempotentHint: false },
+    annotations: { destructiveHint: true, idempotentHint: false, openWorldHint: remoteEnabled() },
   }, async ({ images, imageDetail, includeImages, ...request }: PreviewOptions & { input: string; output: string; slide: number; sceneNdjson: string; scene?: string; validate?: boolean; render?: boolean }) => {
-    const result = await new SlideAgent().revise({ command: "revise", ...request });
+    const result = await new SlideAgent().revise(guardRequest({ command: "revise" as const, ...request }));
     return toolResultWithPreviews(result, evidenceOf(result), { images, imageDetail, includeImages }, revisePreviews.fallback);
   });
 
@@ -477,9 +499,9 @@ export function buildMcpServer(): McpServer {
       validate: z.boolean().optional(),
       ...editPreviews.schema,
     }),
-    annotations: { destructiveHint: false, idempotentHint: false },
+    annotations: { destructiveHint: true, idempotentHint: false, openWorldHint: remoteEnabled() },
   }, async ({ images, imageDetail, includeImages, ...input }: PreviewOptions & Record<string, unknown>) => {
-    const result = await new SlideAgent().execute(parseStructuredRequest({ command: "edit", ...input }));
+    const result = await new SlideAgent().execute(guardRequest(parseStructuredRequest({ command: "edit", ...input })));
     return toolResultWithPreviews(result, evidenceOf(result), { images, imageDetail, includeImages }, editPreviews.fallback);
   });
 
@@ -493,9 +515,9 @@ export function buildMcpServer(): McpServer {
       height: z.number().int().positive().optional(),
       ...renderPreviews.schema,
     }),
-    annotations: { destructiveHint: false, idempotentHint: true },
+    annotations: { destructiveHint: true, idempotentHint: true },
   }, async ({ images, imageDetail, includeImages, ...request }: PreviewOptions & { input: string; output: string; width?: number; height?: number }) => {
-    const result = await new SlideAgent().render({ command: "render", ...request });
+    const result = await new SlideAgent().render(guardRequest({ command: "render" as const, ...request }));
     return toolResultWithPreviews(result, evidenceOf(result), { images, imageDetail, includeImages }, renderPreviews.fallback);
   });
 
@@ -510,9 +532,9 @@ export function buildMcpServer(): McpServer {
       render: z.boolean().optional(),
       ...validatePreviews.schema,
     }),
-    annotations: { destructiveHint: false, idempotentHint: true },
+    annotations: { destructiveHint: true, idempotentHint: true },
   }, async ({ images, imageDetail, includeImages, ...request }: PreviewOptions & { input: string; report?: string; manifest?: string; previewsDir?: string; render?: boolean }) => {
-    const result = await new SlideAgent().validate({ command: "validate", ...request });
+    const result = await new SlideAgent().validate(guardRequest({ command: "validate" as const, ...request }));
     return toolResultWithPreviews(result, evidenceOf(result), { images, imageDetail, includeImages }, validatePreviews.fallback);
   });
 
@@ -536,9 +558,10 @@ export function buildMcpServer(): McpServer {
     input: string; scene?: string; manifest?: string; slide?: number; from?: number; to?: number; maxSlides?: number;
     detail?: "defects" | "full";
   }) => {
-    const packet = await new SlideAgent().review(input, {
-      ...(scene ? { scene } : {}),
-      ...(manifest ? { manifest } : {}),
+    const confined = guardRequest({ input, scene, manifest });
+    const packet = await new SlideAgent().review(confined.input, {
+      ...(confined.scene ? { scene: confined.scene } : {}),
+      ...(confined.manifest ? { manifest: confined.manifest } : {}),
       ...(slide === undefined ? {} : { slide }),
       ...(from === undefined ? {} : { from }),
       ...(to === undefined ? {} : { to }),
@@ -566,9 +589,9 @@ export function buildMcpServer(): McpServer {
       validate: z.boolean().optional(),
       ...patchPreviews.schema,
     }),
-    annotations: { destructiveHint: false, idempotentHint: false },
+    annotations: { destructiveHint: true, idempotentHint: false, openWorldHint: remoteEnabled() },
   }, async ({ images, imageDetail, includeImages, ...input }: PreviewOptions & Record<string, unknown>) => {
-    const result = await new SlideAgent().execute(parseStructuredRequest({ command: "patch", ...input }));
+    const result = await new SlideAgent().execute(guardRequest(parseStructuredRequest({ command: "patch", ...input })));
     return toolResultWithPreviews(result, evidenceOf(result), { images, imageDetail, includeImages }, patchPreviews.fallback);
   });
 

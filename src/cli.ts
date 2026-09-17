@@ -33,6 +33,7 @@ import {
   type ContractSchemaName,
   type GuideSectionId,
 } from "./contract/index.js";
+import { assertScriptAllowed } from "./security/policy.js";
 
 async function text(filePath: string): Promise<string> {
   return readFile(filePath, "utf8");
@@ -592,7 +593,13 @@ program.command("template")
 program.command("run")
   .description("Execute a structured JSON request from any VS Code AI agent")
   .requiredOption("--request <file>", "Structured request JSON file")
-  .action(async (options) => printResult(parseStructuredRequest(JSON.parse(await text(options.request)))));
+  .action(async (options) => {
+    const request = parseStructuredRequest(JSON.parse(await text(options.request)));
+    // A request file is data someone (or some model) wrote, not a command the
+    // person at this terminal typed; it cannot run code on its own say-so.
+    assertScriptAllowed(request as { script?: unknown });
+    return printResult(request);
+  });
 
 program.parseAsync(process.argv).catch((error: unknown) => {
   process.stderr.write(`${error instanceof Error ? error.stack ?? error.message : String(error)}\n`);

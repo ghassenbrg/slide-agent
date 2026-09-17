@@ -3,6 +3,7 @@ import path from "node:path";
 import type { ChartSpec, SourceCitation, TableSpec } from "../types/index.js";
 import { SlideAgentError } from "../utils/errors.js";
 import { exists, readUtf8 } from "../utils/files.js";
+import { assertInsideWorkspace } from "../security/policy.js";
 
 /**
  * Turns a data file into a chart or table spec.
@@ -103,7 +104,7 @@ export function parseJsonRows(text: string, source: SourceCitation): DataTable {
 }
 
 export async function loadDataTable(filePath: string, options: { label?: string } = {}): Promise<DataTable> {
-  const resolved = path.resolve(filePath);
+  const resolved = assertInsideWorkspace(filePath, "data");
   if (!(await exists(resolved))) {
     throw new SlideAgentError("DATA_NOT_FOUND", `Data file not found: ${resolved}`, { path: resolved });
   }

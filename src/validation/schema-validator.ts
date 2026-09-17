@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import JSZip from "jszip";
 
 import type { ValidationIssue } from "../types/index.js";
+import { loadZipSafely } from "../utils/safe-zip.js";
 
 // The vendored ECMA-376 5th edition transitional schema set (see
 // THIRD_PARTY_NOTICES.md). pml.xsd is the validation root for every
@@ -84,7 +85,7 @@ export class SchemaValidator {
       }];
     }
 
-    const zip = await JSZip.loadAsync(await readFile(inputPath));
+    const zip = await loadZipSafely(await readFile(inputPath));
     const partNames = Object.keys(zip.files).filter((name) => !zip.files[name]!.dir);
 
     const issues: ValidationIssue[] = [];
