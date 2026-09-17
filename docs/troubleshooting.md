@@ -23,6 +23,78 @@ Google Antigravity requires the global plugin manifest at
 
 Restart the chat or host after installing; most hosts scan skills at startup.
 
+## `intent-invalid` and I cannot tell what is wrong
+
+Read the `where` pointer, not just the hint — every finding carries the JSON
+pointer into your intent that it applies to. The verdict truncates hints to 140
+characters; `run.json` in the deck directory has the full message.
+
+The two that catch people out:
+
+- **`/design`** is a union of `{language}`, `{brand}`, `{preset}`, and
+  `{tokens}`. A complete `language` needs `color` (a palette plus the roles
+  `background`, `surface`, `text`, `muted`, `accent`), `type` (`display`,
+  `body`, `scale`), `space`, `grid`, and `shape`. The finding names the specific
+  key that is missing.
+- **`/slides/N`** needs `id`, `message`, and exactly one of `compose`, `recipe`
+  (with `content`), `auto`, or `canvas`.
+
+## The deck is `needs-attention` but I cannot see anything wrong
+
+Two things hold a deck there, and only one of them is a defect. Check
+`suggestedEdits`: a choice you have not answered keeps the state at
+`needs-attention` by design, because the engine is waiting on a decision it
+will not make for you. Answer it:
+
+```json
+{ "level": "intent", "op": "choose", "edit": "<the id>", "option": 0 }
+```
+
+## The engine shrank my type / changed my colour
+
+That is an `adjustment`, and it is reported precisely so you can refuse it:
+
+```json
+{ "level": "element", "slide": "route", "element": "text5", "set": { "refuse": "type-step" } }
+```
+
+The engine will then find another way or report a residual. Contrast is the
+exception — a refused contrast repair is reported as `contrast-pinned` and
+stays refused, because the text is unreadable either way and the engine will
+not pretend the deck is fine.
+
+`slide-agent explain --deck out/ --element text5` says which fit step ran and
+why.
+
+## `font-unavailable`
+
+The face is not on this machine, so it cannot be measured or embedded and the
+audience will see a substitute. Either fetch it:
+
+```bash
+slide-agent font --add "Source Serif 4" --weights 400,700
+```
+
+(off unless the operator set `SLIDE_AGENT_FONT_DOWNLOADS=1`, and every file is
+hash-recorded), or name a face you have — `slide-agent font --local` lists them.
+Office faces are never embedded and do not need fetching; they measure from
+metric-compatible substitutes.
+
+## Embedded fonts do not show up in LibreOffice
+
+They will not. PowerPoint reads the EOT parts Slide Agent writes; LibreOffice
+needs libeot, which most builds lack. The fidelity render reports this rather
+than letting you read the render as what the audience will see. Check in
+PowerPoint.
+
+## Every slide looks the same
+
+Read `rhythm` in the verdict — it names the pairs and scores them. If the
+`authoring` counts show `recipe` or `draft` above zero, that is why: recipes are
+starting points and several slides took the same one. `{"level": "intent", "op":
+"expand", "path": "/slides/3"}` turns a recipe slide into a composition you can
+rework.
+
 ## The deck is generic and full of `[placeholders]`
 
 You used the prompt path. `metadata.provenance` will read `template-draft`.
@@ -81,11 +153,41 @@ unaffected, and whoever opens it sees what they have installed.
 
 ## `REMOTE_ASSETS_DISABLED`
 
-Remote image URLs are refused by default, because a canvas is model-authored
-and often derived from untrusted input. Opt in per request with
-`allowRemoteAssets: true`, or set `SLIDE_AGENT_ALLOW_REMOTE_IMAGES=1`.
-Private, loopback, and link-local addresses stay blocked either way; narrow
-further with `SLIDE_AGENT_ALLOWED_IMAGE_HOSTS`.
+Remote image URLs are refused unless **the operator** turned them on:
+
+```bash
+export SLIDE_AGENT_ALLOW_REMOTE_IMAGES=1
+```
+
+A request cannot turn fetching on. `allowRemoteAssets: false` in a request
+narrows an operator's permission to nothing for that run; `true` does not widen
+it. That asymmetry is deliberate — an intent is model-authored and often derived
+from material nobody vouched for, so the decision to reach the network belongs
+to whoever is running the process, not to whatever wrote the deck.
+
+Private, loopback, and link-local addresses stay blocked either way, DNS is
+pinned to the address that passed that check so a name cannot resolve twice to
+two different places, and `SLIDE_AGENT_ALLOWED_IMAGE_HOSTS` narrows further.
+
+## `PATH_OUTSIDE_WORKSPACE`
+
+Every path in a request is resolved against the workspace roots and refused if
+it lands outside — through a symlink too, since the check is on the real
+location. Over MCP the roots come from the client; on the CLI they default to
+the working directory. `SLIDE_AGENT_ROOTS` sets them explicitly.
+
+## `SCRIPT_REFUSED`
+
+A request asked to run a build script. A script is imported into this process
+with its privileges, so one arriving in a request is arbitrary code from a
+model. Run it yourself:
+
+```bash
+slide-agent build script.ts
+```
+
+Or, where you started the server, `SLIDE_AGENT_ALLOW_SCRIPTS=1`. Better: author
+the deck as an intent, which is declarative and cannot execute anything.
 
 ## `SCENE_NOT_FOUND` when revising
 

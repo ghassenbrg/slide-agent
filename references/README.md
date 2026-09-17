@@ -2,16 +2,33 @@
 
 # Reference
 
+## 2.x — the composition language
+
+The default authoring format. The model writes a `slide-agent.intent/1`
+document in grid units, roles, and tokens; the engine computes the rest.
+
+- [Composition grammar](v2/grammar.md) — the language, with worked examples. Read this one.
+- [Recipes and presets](v2/recipes.md) — labelled starting points for routine slides
+- [`slide-agent.intent/1` JSON Schema](v2/intent.schema.json) — for validators and structured output
+
+---
+
+## 0.x — the canvas contract
+
 Authoring contract 0.11 · scene schema `slide-agent.scene/1`
 
-Every page here is generated from `src/contract`. Change the contract, run
+Still supported: scenes, outlines, and build scripts build unchanged, and
+`canvas` slides are a first-class 2.x slide kind. [`v1-skill.md`](v1-skill.md)
+is the router for this contract, and `slide-agent migrate` converts a scene
+or outline into an intent.
+
+Every page below is generated from `src/contract`. Change the contract, run
 `npm run docs`, and the prose, the schemas, and the engine stay in step.
 
-Read a section when its moment arrives rather than all of them up front;
-`SKILL.md` is the router and says when each one becomes relevant. The whole
-guide as one page is [`guide.md`](guide.md).
+Read a section when its moment arrives rather than all of them up front.
+The whole guide as one page is [`guide.md`](guide.md).
 
-## Guide
+### Guide
 
 - [Your role](role.md) — Always. It is who you are on this job and what the engine will not do for you. (~380 tokens)
 - [Invent the deck's visual thesis](creative-direction.md) — Before you choose a palette, a typeface, or a shape language — that is, before any coordinate exists. (~1510 tokens)
@@ -30,7 +47,7 @@ guide as one page is [`guide.md`](guide.md).
 - [Look at what you built](review.md) — After the first render, to know what to look for and what the packet is telling you. (~820 tokens)
 - [The loop that produces good decks](workflow.md) — Always. It is the loop, and skipping it is how a deck ships unlooked-at. (~500 tokens)
 
-## Schemas
+### Schemas
 
 - [`outline`](schemas/outline.schema.json)
 - [`brief`](schemas/brief.schema.json)

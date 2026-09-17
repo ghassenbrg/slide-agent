@@ -1,5 +1,126 @@
 # Editing existing decks
 
+Pick the weakest operation that does the job.
+
+| You have | Use |
+|---|---|
+| A V2 deck directory (`intent.json` beside `deck.pptx`) | `slide-agent edit --deck out/` with EditOps — below |
+| Any `.pptx`, no intent | `slide-agent edit --deck theirs.pptx` with package-level ops, or the 0.x `edit --input` |
+| A 0.x deck Slide Agent created | `slide-agent revise` — [0.x](#0x-editing) |
+
+---
+
+# 2.x: EditOps
+
+One operation model, four levels. An edit goes to the highest level that can
+express it, because the higher the level, the more the engine can re-derive.
+
+```bash
+slide-agent edit --deck out/ --ops edits.json
+```
+
+`edits.json` is a JSON array. Only the slides an op touches are rebuilt;
+everything else is carried from the previous scene.
+
+## `intent` — the deck's own document
+
+```json
+{ "level": "intent", "op": "set", "path": "/slides/2/compose/items/0/text", "value": "Waves fail at the pilot" }
+```
+
+`op` is `set`, `insert`, `remove`, `move`, `choose`, or `expand`. `path` is a
+JSON pointer into `intent.json` — the same pointers the findings report, so a
+finding can be acted on without searching for what it refers to.
+
+**`choose`** answers a `suggestedEdit` and takes no path:
+
+```json
+{ "level": "intent", "op": "choose", "edit": "fit-evidence-headline", "option": 1 }
+```
+
+**`expand`** turns a recipe slide into the composition it would have produced,
+so you can rework it as your own:
+
+```json
+{ "level": "intent", "op": "expand", "path": "/slides/3" }
+```
+
+That is the intended route out of a recipe. A recipe is a starting point; the
+moment you want it to be different, expand it and it is yours.
+
+## `design` — the language, not the slide
+
+```json
+{ "level": "design", "op": "set", "path": "/color/palette/signal", "value": "#B45309" }
+```
+
+Recompiles the design language and rebuilds every slide that referenced what
+changed. `op: "brand"` swaps in a brand pack; paths the brand locks are refused
+with `brand-locked` rather than silently ignored.
+
+## `element` — a pin on one element
+
+This is where you overrule the engine:
+
+```json
+{ "level": "element", "slide": "route", "element": "text5", "set": { "refuse": "type-step" } }
+```
+
+`refuse` takes `contrast`, `type-step`, `snap`, `font-substitute`, or
+`clamp-bounds`. The engine will then find another way, or report a residual —
+it will not apply the adjustment anyway. Contrast is the exception: a refused
+contrast repair is reported as `contrast-pinned` and stays refused, because the
+text would be unreadable either way and the engine will not pretend otherwise.
+
+Pins survive rebuilds. A pin that no longer matches anything is reported as
+`pin-unmatched` rather than dropped quietly.
+
+`set` also takes `frame`, `hidden`, `size`, and `color` for a one-off override.
+
+## `package` — straight through to the OOXML
+
+For a `.pptx` that has no intent beside it — one someone handed you, or one
+another tool produced — pass the file itself as the deck:
+
+```bash
+slide-agent edit --deck theirs.pptx --ops edits.json
+```
+
+```json
+{ "level": "package", "op": { "type": "replace-text", "slide": 4, "find": "Q2", "replace": "Q3" } }
+```
+
+`op` is a 0.x OOXML operation, applied through the same editor documented
+[below](#edit--ooxml-operations-on-any-deck). The result is written beside the
+input as `theirs.edited.pptx`; the input is never overwritten.
+
+Two rules follow from there being no intent: a `.pptx` on its own accepts
+**package-level ops only** — the other three levels need an intent to edit — and
+conversely, a deck directory that has one will not take package ops, because the
+next rebuild would not reproduce them. Use `slide-agent inspect --file
+theirs.pptx` first to see what is in a package you did not build.
+
+## In words
+
+```bash
+slide-agent edit --deck out/ --instruction "the evidence slide feels crowded"
+```
+
+Needs a model. The instruction is routed by what it asks for: a number, a word,
+or an order goes to a small model; anything about how the deck *looks* goes to
+the director tier with the rendered preview attached, because a design edit made
+without seeing the deck is a guess. The verdict reports which route it took and
+the ops it produced, so you can check the reasoning rather than trust it.
+
+## Confirming what changed
+
+The verdict's `changed` lists the slide ids that were rebuilt. For a deeper
+comparison, `slide-agent diff` still works on the packages.
+
+---
+
+# 0.x editing
+
 Three different operations, with different guarantees. Pick the weakest one
 that does the job.
 
