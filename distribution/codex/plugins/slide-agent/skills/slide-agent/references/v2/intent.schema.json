@@ -1,0 +1,2027 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schema": {
+      "type": "string",
+      "const": "slide-agent.intent/1"
+    },
+    "brief": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "audience": {
+          "default": "",
+          "type": "string",
+          "maxLength": 160
+        },
+        "goal": {
+          "default": "",
+          "type": "string",
+          "maxLength": 240
+        },
+        "tone": {
+          "type": "string",
+          "maxLength": 60
+        },
+        "language": {
+          "default": "en",
+          "type": "string"
+        },
+        "format": {
+          "default": "16:9",
+          "type": "string",
+          "enum": [
+            "16:9",
+            "4:3",
+            "9:16",
+            "a4-landscape",
+            "a4-portrait"
+          ]
+        },
+        "archetype": {
+          "type": "string",
+          "enum": [
+            "board",
+            "pitch",
+            "report",
+            "training",
+            "technical",
+            "sales",
+            "keynote",
+            "general"
+          ]
+        },
+        "author": {
+          "type": "string",
+          "maxLength": 120
+        }
+      },
+      "required": [
+        "title"
+      ],
+      "additionalProperties": false
+    },
+    "direction": {
+      "default": {
+        "concept": "",
+        "fit": "ask"
+      },
+      "type": "object",
+      "properties": {
+        "concept": {
+          "default": "",
+          "description": "The visual idea in plain words: what the deck should feel like, and why that suits this audience and goal",
+          "type": "string",
+          "maxLength": 600
+        },
+        "fit": {
+          "default": "ask",
+          "description": "ask: design-changing fit moves come back as choices; auto: the engine may apply them",
+          "type": "string",
+          "enum": [
+            "ask",
+            "auto"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "design": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "language": {
+              "type": "object",
+              "properties": {
+                "concept": {
+                  "type": "string",
+                  "maxLength": 400
+                },
+                "color": {
+                  "type": "object",
+                  "properties": {
+                    "palette": {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string",
+                        "pattern": "^[a-zA-Z][a-zA-Z0-9_-]{0,31}$"
+                      },
+                      "additionalProperties": {
+                        "type": "string",
+                        "description": "#RRGGBB, #RGB, or oklch(L C H)"
+                      }
+                    },
+                    "roles": {
+                      "type": "object",
+                      "properties": {
+                        "background": {
+                          "type": "string",
+                          "pattern": "^[a-zA-Z][a-zA-Z0-9_-]{0,31}$"
+                        },
+                        "surface": {
+                          "type": "string",
+                          "pattern": "^[a-zA-Z][a-zA-Z0-9_-]{0,31}$"
+                        },
+                        "text": {
+                          "type": "string",
+                          "pattern": "^[a-zA-Z][a-zA-Z0-9_-]{0,31}$"
+                        },
+                        "muted": {
+                          "type": "string",
+                          "pattern": "^[a-zA-Z][a-zA-Z0-9_-]{0,31}$"
+                        },
+                        "accent": {
+                          "type": "string",
+                          "pattern": "^[a-zA-Z][a-zA-Z0-9_-]{0,31}$"
+                        },
+                        "accentAlt": {
+                          "type": "string",
+                          "pattern": "^[a-zA-Z][a-zA-Z0-9_-]{0,31}$"
+                        },
+                        "rule": {
+                          "type": "string",
+                          "pattern": "^[a-zA-Z][a-zA-Z0-9_-]{0,31}$"
+                        }
+                      },
+                      "required": [
+                        "background",
+                        "surface",
+                        "text",
+                        "muted",
+                        "accent"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "data": {
+                      "maxItems": 8,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "pattern": "^[a-zA-Z][a-zA-Z0-9_-]{0,31}$"
+                      }
+                    }
+                  },
+                  "required": [
+                    "palette",
+                    "roles"
+                  ],
+                  "additionalProperties": false
+                },
+                "type": {
+                  "type": "object",
+                  "properties": {
+                    "display": {
+                      "type": "object",
+                      "properties": {
+                        "family": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 64
+                        },
+                        "weight": {
+                          "anyOf": [
+                            {
+                              "type": "integer",
+                              "minimum": 100,
+                              "maximum": 900
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "regular",
+                                "medium",
+                                "semibold",
+                                "bold",
+                                "black",
+                                "light"
+                              ]
+                            }
+                          ]
+                        },
+                        "italic": {
+                          "type": "boolean"
+                        },
+                        "tracking": {
+                          "description": "Letter spacing in em",
+                          "type": "number",
+                          "minimum": -0.2,
+                          "maximum": 0.5
+                        },
+                        "case": {
+                          "type": "string",
+                          "enum": [
+                            "none",
+                            "upper",
+                            "lower",
+                            "title",
+                            "small-caps"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "family"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "body": {
+                      "type": "object",
+                      "properties": {
+                        "family": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 64
+                        },
+                        "weight": {
+                          "anyOf": [
+                            {
+                              "type": "integer",
+                              "minimum": 100,
+                              "maximum": 900
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "regular",
+                                "medium",
+                                "semibold",
+                                "bold",
+                                "black",
+                                "light"
+                              ]
+                            }
+                          ]
+                        },
+                        "italic": {
+                          "type": "boolean"
+                        },
+                        "tracking": {
+                          "description": "Letter spacing in em",
+                          "type": "number",
+                          "minimum": -0.2,
+                          "maximum": 0.5
+                        },
+                        "case": {
+                          "type": "string",
+                          "enum": [
+                            "none",
+                            "upper",
+                            "lower",
+                            "title",
+                            "small-caps"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "family"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "mono": {
+                      "type": "object",
+                      "properties": {
+                        "family": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 64
+                        },
+                        "weight": {
+                          "anyOf": [
+                            {
+                              "type": "integer",
+                              "minimum": 100,
+                              "maximum": 900
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "regular",
+                                "medium",
+                                "semibold",
+                                "bold",
+                                "black",
+                                "light"
+                              ]
+                            }
+                          ]
+                        },
+                        "italic": {
+                          "type": "boolean"
+                        },
+                        "tracking": {
+                          "description": "Letter spacing in em",
+                          "type": "number",
+                          "minimum": -0.2,
+                          "maximum": 0.5
+                        },
+                        "case": {
+                          "type": "string",
+                          "enum": [
+                            "none",
+                            "upper",
+                            "lower",
+                            "title",
+                            "small-caps"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "family"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "scale": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "base": {
+                              "type": "number",
+                              "minimum": 12,
+                              "maximum": 32
+                            },
+                            "ratio": {
+                              "type": "number",
+                              "minimum": 1.05,
+                              "maximum": 1.8
+                            }
+                          },
+                          "required": [
+                            "base",
+                            "ratio"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "propertyNames": {
+                            "type": "string",
+                            "enum": [
+                              "display",
+                              "title",
+                              "subtitle",
+                              "h2",
+                              "h3",
+                              "lead",
+                              "body",
+                              "small",
+                              "caption",
+                              "label",
+                              "quote"
+                            ]
+                          },
+                          "additionalProperties": {
+                            "type": "number",
+                            "minimum": 6,
+                            "maximum": 400
+                          },
+                          "required": [
+                            "display",
+                            "title",
+                            "subtitle",
+                            "h2",
+                            "h3",
+                            "lead",
+                            "body",
+                            "small",
+                            "caption",
+                            "label",
+                            "quote"
+                          ]
+                        }
+                      ]
+                    },
+                    "leading": {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string",
+                        "enum": [
+                          "display",
+                          "title",
+                          "subtitle",
+                          "h2",
+                          "h3",
+                          "lead",
+                          "body",
+                          "small",
+                          "caption",
+                          "label",
+                          "quote"
+                        ]
+                      },
+                      "additionalProperties": {
+                        "type": "number",
+                        "minimum": 0.7,
+                        "maximum": 2.5
+                      },
+                      "required": [
+                        "display",
+                        "title",
+                        "subtitle",
+                        "h2",
+                        "h3",
+                        "lead",
+                        "body",
+                        "small",
+                        "caption",
+                        "label",
+                        "quote"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "display",
+                    "body",
+                    "scale"
+                  ],
+                  "additionalProperties": false
+                },
+                "space": {
+                  "type": "object",
+                  "properties": {
+                    "unit": {
+                      "type": "number",
+                      "minimum": 2,
+                      "maximum": 48,
+                      "description": "Points per space step: space.3 = 3 × unit"
+                    },
+                    "margin": {
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 400
+                        },
+                        {
+                          "type": "string",
+                          "pattern": "^(space\\.\\d+(\\.\\d+)?|\\d+(\\.\\d+)?%)$"
+                        }
+                      ]
+                    },
+                    "gutter": {
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 400
+                        },
+                        {
+                          "type": "string",
+                          "pattern": "^(space\\.\\d+(\\.\\d+)?|\\d+(\\.\\d+)?%)$"
+                        }
+                      ]
+                    },
+                    "baseline": {
+                      "type": "number",
+                      "minimum": 2,
+                      "maximum": 48
+                    }
+                  },
+                  "required": [
+                    "unit",
+                    "margin",
+                    "gutter"
+                  ],
+                  "additionalProperties": false
+                },
+                "grid": {
+                  "type": "object",
+                  "properties": {
+                    "columns": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 24
+                    },
+                    "rows": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 24
+                    }
+                  },
+                  "required": [
+                    "columns",
+                    "rows"
+                  ],
+                  "additionalProperties": false
+                },
+                "shape": {
+                  "type": "object",
+                  "properties": {
+                    "radius": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 200
+                    },
+                    "stroke": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24
+                    },
+                    "shadow": {
+                      "type": "string",
+                      "enum": [
+                        "none",
+                        "soft",
+                        "hard"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "radius",
+                    "stroke"
+                  ],
+                  "additionalProperties": false
+                },
+                "surfaces": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9-]{0,31}$"
+                  },
+                  "additionalProperties": {
+                    "type": "object",
+                    "properties": {
+                      "fill": {
+                        "description": "A colour role, a palette name, `name/NN` for a tint, or `none`",
+                        "type": "string"
+                      },
+                      "stroke": {
+                        "type": "string"
+                      },
+                      "strokeWidth": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 24
+                      },
+                      "radius": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 200
+                      },
+                      "shadow": {
+                        "type": "string",
+                        "enum": [
+                          "none",
+                          "soft",
+                          "hard"
+                        ]
+                      },
+                      "pad": {
+                        "anyOf": [
+                          {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 400
+                          },
+                          {
+                            "type": "string",
+                            "pattern": "^(space\\.\\d+(\\.\\d+)?|\\d+(\\.\\d+)?%)$"
+                          }
+                        ]
+                      },
+                      "opacity": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1
+                      },
+                      "image": {
+                        "type": "string"
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "texture": {
+                  "maxItems": 6,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-z0-9-]{0,40}$"
+                      },
+                      "primitive": {
+                        "type": "string",
+                        "enum": [
+                          "hairline",
+                          "margin-rule",
+                          "corner-ticks",
+                          "band",
+                          "dot-grid",
+                          "line-grid",
+                          "bracket-frame",
+                          "numbered-margin",
+                          "large-numeral",
+                          "path-marks",
+                          "image-mask",
+                          "gradient-wash",
+                          "paper-tone",
+                          "frame",
+                          "underline"
+                        ]
+                      },
+                      "params": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string"
+                        },
+                        "additionalProperties": {}
+                      },
+                      "apply": {
+                        "description": "Omit to make the rule available only where a composition places it",
+                        "type": "object",
+                        "properties": {
+                          "slides": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "const": "all"
+                              },
+                              {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              }
+                            ]
+                          },
+                          "roles": {
+                            "description": "Apply to slides whose `role` tag matches, e.g. evidence",
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "primitive"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "imagery": {
+                  "type": "object",
+                  "properties": {
+                    "treatment": {
+                      "type": "string",
+                      "enum": [
+                        "none",
+                        "grayscale",
+                        "duotone",
+                        "tint"
+                      ]
+                    },
+                    "tint": {
+                      "type": "string"
+                    },
+                    "radius": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 200
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "charts": {
+                  "type": "object",
+                  "properties": {
+                    "axis": {
+                      "type": "string",
+                      "enum": [
+                        "none",
+                        "hairline",
+                        "regular"
+                      ]
+                    },
+                    "gridlines": {
+                      "type": "string",
+                      "enum": [
+                        "none",
+                        "major",
+                        "subtle"
+                      ]
+                    },
+                    "labels": {
+                      "type": "string",
+                      "enum": [
+                        "none",
+                        "end",
+                        "inside",
+                        "outside"
+                      ]
+                    },
+                    "highlight": {
+                      "description": "Colour used for the highlighted series or points",
+                      "type": "string"
+                    },
+                    "legend": {
+                      "type": "string",
+                      "enum": [
+                        "none",
+                        "top",
+                        "bottom",
+                        "right"
+                      ]
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "chrome": {
+                  "type": "object",
+                  "properties": {
+                    "slideNumber": {
+                      "type": "boolean"
+                    },
+                    "footer": {
+                      "type": "string",
+                      "maxLength": 80
+                    },
+                    "tone": {
+                      "type": "string"
+                    },
+                    "position": {
+                      "type": "string",
+                      "enum": [
+                        "bottom-left",
+                        "bottom-right",
+                        "bottom-center",
+                        "top-right"
+                      ]
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "color",
+                "type",
+                "space",
+                "grid",
+                "shape"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "language"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "brand": {
+              "type": "string",
+              "minLength": 1
+            },
+            "language": {
+              "type": "object",
+              "properties": {
+                "concept": {
+                  "type": "string",
+                  "maxLength": 400
+                },
+                "color": {
+                  "type": "object",
+                  "properties": {
+                    "palette": {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string",
+                        "pattern": "^[a-zA-Z][a-zA-Z0-9_-]{0,31}$"
+                      },
+                      "additionalProperties": {
+                        "type": "string",
+                        "description": "#RRGGBB, #RGB, or oklch(L C H)"
+                      }
+                    },
+                    "roles": {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {
+                        "type": "string",
+                        "pattern": "^[a-zA-Z][a-zA-Z0-9_-]{0,31}$"
+                      }
+                    },
+                    "data": {
+                      "maxItems": 8,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "pattern": "^[a-zA-Z][a-zA-Z0-9_-]{0,31}$"
+                      }
+                    }
+                  }
+                },
+                "type": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                },
+                "space": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                },
+                "grid": {
+                  "type": "object",
+                  "properties": {
+                    "columns": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 24
+                    },
+                    "rows": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 24
+                    }
+                  },
+                  "required": [
+                    "columns",
+                    "rows"
+                  ]
+                },
+                "shape": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                },
+                "surfaces": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {
+                    "type": "object",
+                    "properties": {
+                      "fill": {
+                        "description": "A colour role, a palette name, `name/NN` for a tint, or `none`",
+                        "type": "string"
+                      },
+                      "stroke": {
+                        "type": "string"
+                      },
+                      "strokeWidth": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 24
+                      },
+                      "radius": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 200
+                      },
+                      "shadow": {
+                        "type": "string",
+                        "enum": [
+                          "none",
+                          "soft",
+                          "hard"
+                        ]
+                      },
+                      "pad": {
+                        "anyOf": [
+                          {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 400
+                          },
+                          {
+                            "type": "string",
+                            "pattern": "^(space\\.\\d+(\\.\\d+)?|\\d+(\\.\\d+)?%)$"
+                          }
+                        ]
+                      },
+                      "opacity": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1
+                      },
+                      "image": {
+                        "type": "string"
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "texture": {
+                  "maxItems": 6,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-z0-9-]{0,40}$"
+                      },
+                      "primitive": {
+                        "type": "string",
+                        "enum": [
+                          "hairline",
+                          "margin-rule",
+                          "corner-ticks",
+                          "band",
+                          "dot-grid",
+                          "line-grid",
+                          "bracket-frame",
+                          "numbered-margin",
+                          "large-numeral",
+                          "path-marks",
+                          "image-mask",
+                          "gradient-wash",
+                          "paper-tone",
+                          "frame",
+                          "underline"
+                        ]
+                      },
+                      "params": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string"
+                        },
+                        "additionalProperties": {}
+                      },
+                      "apply": {
+                        "description": "Omit to make the rule available only where a composition places it",
+                        "type": "object",
+                        "properties": {
+                          "slides": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "const": "all"
+                              },
+                              {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              }
+                            ]
+                          },
+                          "roles": {
+                            "description": "Apply to slides whose `role` tag matches, e.g. evidence",
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "primitive"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "imagery": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                },
+                "charts": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                },
+                "chrome": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                }
+              }
+            }
+          },
+          "required": [
+            "brand"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "preset": {
+              "type": "string",
+              "minLength": 1
+            },
+            "params": {
+              "type": "object",
+              "properties": {
+                "mood": {
+                  "type": "string",
+                  "enum": [
+                    "calm",
+                    "confident",
+                    "editorial",
+                    "technical",
+                    "warm",
+                    "bold",
+                    "minimal"
+                  ]
+                },
+                "seed": {
+                  "type": "string",
+                  "description": "#RRGGBB, #RGB, or oklch(L C H)"
+                },
+                "mode": {
+                  "type": "string",
+                  "enum": [
+                    "light",
+                    "dark"
+                  ]
+                },
+                "contrast": {
+                  "type": "string",
+                  "enum": [
+                    "standard",
+                    "high"
+                  ]
+                },
+                "density": {
+                  "type": "string",
+                  "enum": [
+                    "sparse",
+                    "balanced",
+                    "dense"
+                  ]
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "preset"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "tokens": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            }
+          },
+          "required": [
+            "tokens"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "components": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9-]{0,31}$"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "maxItems": 20,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-zA-Z][a-zA-Z0-9_]{0,30}$"
+            }
+          },
+          "defaults": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "root": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {},
+            "description": "A composition node: an object with one kind key (grid, row, column, layer, free, text, shape, image, icon, chart, table, diagram, use, texture, rule, space). See slide-agent://grammar."
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "params",
+          "root"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "data": {
+      "description": "Named datasets that charts and tables reference by name",
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {}
+    },
+    "slides": {
+      "minItems": 1,
+      "maxItems": 300,
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9][a-z0-9-]{0,40}$"
+              },
+              "message": {
+                "type": "string",
+                "maxLength": 200,
+                "description": "What the audience should take away from this slide"
+              },
+              "notes": {
+                "type": "string",
+                "maxLength": 3000
+              },
+              "sources": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "pins": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "description": "A JSON pointer (relative to the slide) of a property to keep as authored, e.g. /compose/items/0/size"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "path": {
+                          "type": "string"
+                        },
+                        "refuse": {
+                          "type": "string",
+                          "enum": [
+                            "contrast",
+                            "type-step",
+                            "snap",
+                            "font-substitute",
+                            "clamp-bounds"
+                          ]
+                        },
+                        "value": {}
+                      },
+                      "required": [
+                        "path"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              },
+              "tags": {
+                "description": "Free labels such as evidence or section-open; texture rules can target them",
+                "maxItems": 8,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "maxLength": 30
+                }
+              },
+              "background": {
+                "description": "A colour role or palette name for this slide's ground",
+                "type": "string"
+              },
+              "layout": {
+                "description": "Customer layout name to generate into (brand decks)",
+                "type": "string"
+              },
+              "hidden": {
+                "type": "boolean"
+              },
+              "compose": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {},
+                "description": "A composition node: an object with one kind key (grid, row, column, layer, free, text, shape, image, icon, chart, table, diagram, use, texture, rule, space). See slide-agent://grammar."
+              }
+            },
+            "required": [
+              "id",
+              "message",
+              "compose"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9][a-z0-9-]{0,40}$"
+              },
+              "message": {
+                "type": "string",
+                "maxLength": 200,
+                "description": "What the audience should take away from this slide"
+              },
+              "notes": {
+                "type": "string",
+                "maxLength": 3000
+              },
+              "sources": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "pins": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "description": "A JSON pointer (relative to the slide) of a property to keep as authored, e.g. /compose/items/0/size"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "path": {
+                          "type": "string"
+                        },
+                        "refuse": {
+                          "type": "string",
+                          "enum": [
+                            "contrast",
+                            "type-step",
+                            "snap",
+                            "font-substitute",
+                            "clamp-bounds"
+                          ]
+                        },
+                        "value": {}
+                      },
+                      "required": [
+                        "path"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              },
+              "tags": {
+                "description": "Free labels such as evidence or section-open; texture rules can target them",
+                "maxItems": 8,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "maxLength": 30
+                }
+              },
+              "background": {
+                "description": "A colour role or palette name for this slide's ground",
+                "type": "string"
+              },
+              "layout": {
+                "description": "Customer layout name to generate into (brand decks)",
+                "type": "string"
+              },
+              "hidden": {
+                "type": "boolean"
+              },
+              "recipe": {
+                "type": "string",
+                "pattern": "^[a-z-]+\\/[a-z0-9-]+$"
+              },
+              "content": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {}
+              },
+              "adjust": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "node": {
+                      "type": "string",
+                      "description": "A slot or node id in the recipe, e.g. steps[3] or title"
+                    },
+                    "set": {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {}
+                    }
+                  },
+                  "required": [
+                    "node",
+                    "set"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "id",
+              "message",
+              "recipe",
+              "content"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9][a-z0-9-]{0,40}$"
+              },
+              "message": {
+                "type": "string",
+                "maxLength": 200,
+                "description": "What the audience should take away from this slide"
+              },
+              "notes": {
+                "type": "string",
+                "maxLength": 3000
+              },
+              "sources": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "pins": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "description": "A JSON pointer (relative to the slide) of a property to keep as authored, e.g. /compose/items/0/size"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "path": {
+                          "type": "string"
+                        },
+                        "refuse": {
+                          "type": "string",
+                          "enum": [
+                            "contrast",
+                            "type-step",
+                            "snap",
+                            "font-substitute",
+                            "clamp-bounds"
+                          ]
+                        },
+                        "value": {}
+                      },
+                      "required": [
+                        "path"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              },
+              "tags": {
+                "description": "Free labels such as evidence or section-open; texture rules can target them",
+                "maxItems": 8,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "maxLength": 30
+                }
+              },
+              "background": {
+                "description": "A colour role or palette name for this slide's ground",
+                "type": "string"
+              },
+              "layout": {
+                "description": "Customer layout name to generate into (brand decks)",
+                "type": "string"
+              },
+              "hidden": {
+                "type": "boolean"
+              },
+              "auto": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "maxLength": 200
+                  },
+                  "subtitle": {
+                    "type": "string",
+                    "maxLength": 300
+                  },
+                  "kicker": {
+                    "type": "string",
+                    "maxLength": 80
+                  },
+                  "points": {
+                    "maxItems": 12,
+                    "type": "array",
+                    "items": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "text": {
+                              "type": "string"
+                            },
+                            "sub": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "required": [
+                            "text"
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "metrics": {
+                    "maxItems": 8,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "type": "string"
+                        },
+                        "label": {
+                          "type": "string"
+                        },
+                        "note": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "value",
+                        "label"
+                      ]
+                    }
+                  },
+                  "events": {
+                    "maxItems": 16,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "date": {
+                          "type": "string"
+                        },
+                        "label": {
+                          "type": "string"
+                        },
+                        "detail": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "date",
+                        "label"
+                      ]
+                    }
+                  },
+                  "steps": {
+                    "maxItems": 10,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "label": {
+                          "type": "string"
+                        },
+                        "detail": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "label"
+                      ]
+                    }
+                  },
+                  "groups": {
+                    "maxItems": 6,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "points": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "verdict": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "points"
+                      ]
+                    }
+                  },
+                  "chart": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {}
+                  },
+                  "table": {
+                    "type": "object",
+                    "properties": {
+                      "columns": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "rows": {
+                        "type": "array",
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "required": [
+                      "columns",
+                      "rows"
+                    ]
+                  },
+                  "nodes": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "label": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "label"
+                      ],
+                      "additionalProperties": {}
+                    }
+                  },
+                  "edges": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "from": {
+                          "type": "string"
+                        },
+                        "to": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "from",
+                        "to"
+                      ],
+                      "additionalProperties": {}
+                    }
+                  },
+                  "quote": {
+                    "type": "string",
+                    "maxLength": 600
+                  },
+                  "attribution": {
+                    "type": "string",
+                    "maxLength": 120
+                  },
+                  "image": {
+                    "type": "object",
+                    "properties": {
+                      "asset": {
+                        "type": "string"
+                      },
+                      "alt": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "asset",
+                      "alt"
+                    ]
+                  },
+                  "statement": {
+                    "type": "string",
+                    "maxLength": 300
+                  },
+                  "people": {
+                    "maxItems": 12,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "role": {
+                          "type": "string"
+                        },
+                        "image": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "name"
+                      ]
+                    }
+                  },
+                  "pairs": {
+                    "maxItems": 8,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "q": {
+                          "type": "string"
+                        },
+                        "a": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "q",
+                        "a"
+                      ]
+                    }
+                  },
+                  "sources": {
+                    "maxItems": 20,
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "actions": {
+                    "maxItems": 6,
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "contact": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": {}
+              }
+            },
+            "required": [
+              "id",
+              "message",
+              "auto"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9][a-z0-9-]{0,40}$"
+              },
+              "message": {
+                "type": "string",
+                "maxLength": 200,
+                "description": "What the audience should take away from this slide"
+              },
+              "notes": {
+                "type": "string",
+                "maxLength": 3000
+              },
+              "sources": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "pins": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "description": "A JSON pointer (relative to the slide) of a property to keep as authored, e.g. /compose/items/0/size"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "path": {
+                          "type": "string"
+                        },
+                        "refuse": {
+                          "type": "string",
+                          "enum": [
+                            "contrast",
+                            "type-step",
+                            "snap",
+                            "font-substitute",
+                            "clamp-bounds"
+                          ]
+                        },
+                        "value": {}
+                      },
+                      "required": [
+                        "path"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              },
+              "tags": {
+                "description": "Free labels such as evidence or section-open; texture rules can target them",
+                "maxItems": 8,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "maxLength": 30
+                }
+              },
+              "background": {
+                "description": "A colour role or palette name for this slide's ground",
+                "type": "string"
+              },
+              "layout": {
+                "description": "Customer layout name to generate into (brand decks)",
+                "type": "string"
+              },
+              "hidden": {
+                "type": "boolean"
+              },
+              "canvas": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                }
+              }
+            },
+            "required": [
+              "id",
+              "message",
+              "canvas"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "url": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 300
+          }
+        },
+        "required": [
+          "id",
+          "title"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 300
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "slides": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "text",
+          "sources"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "pins": {
+      "description": "Deck-wide pins, e.g. {path: \"/design/language/color/palette/stone\", refuse: \"contrast\"}",
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "type": "string",
+            "description": "A JSON pointer (relative to the slide) of a property to keep as authored, e.g. /compose/items/0/size"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "path": {
+                "type": "string"
+              },
+              "refuse": {
+                "type": "string",
+                "enum": [
+                  "contrast",
+                  "type-step",
+                  "snap",
+                  "font-substitute",
+                  "clamp-bounds"
+                ]
+              },
+              "value": {}
+            },
+            "required": [
+              "path"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    "options": {
+      "type": "object",
+      "properties": {
+        "chrome": {
+          "type": "object",
+          "properties": {
+            "slideNumbers": {
+              "type": "boolean"
+            },
+            "footer": {
+              "type": "string",
+              "maxLength": 80
+            },
+            "logo": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "speakerNotes": {
+          "type": "string",
+          "enum": [
+            "none",
+            "authored",
+            "generate"
+          ]
+        },
+        "fonts": {
+          "type": "string",
+          "enum": [
+            "embed",
+            "office-safe"
+          ]
+        },
+        "seed": {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        }
+      },
+      "additionalProperties": false
+    },
+    "reviewed": {
+      "description": "A design review recorded by the host after looking at the preview",
+      "type": "object",
+      "properties": {
+        "by": {
+          "type": "string"
+        },
+        "at": {
+          "type": "string"
+        },
+        "notes": {
+          "maxItems": 40,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "slide": {
+                "type": "string"
+              },
+              "note": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "note"
+            ]
+          }
+        }
+      },
+      "required": [
+        "by",
+        "at"
+      ]
+    }
+  },
+  "required": [
+    "schema",
+    "brief",
+    "design",
+    "slides"
+  ],
+  "additionalProperties": false
+}

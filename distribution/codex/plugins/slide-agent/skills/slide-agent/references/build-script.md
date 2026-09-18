@@ -24,6 +24,7 @@ The script imports `@slide-agent/core`, so the package has to be resolvable from
 - Declare `slideChrome` once for the kicker, slide number, footer rule, and brand mark. Repeating them by hand on thirteen slides is how they end up omitted, which is most of why a deck reads as unfinished. Give it `variants` when the deck alternates light and dark slides, so pacing does not cost the deck its chrome.
 - Reach for `graph` whenever the relationship is the point. Hand-placing nodes is how a diagram becomes labels on diagonals: the geometry costs more attention than the idea, and the idea gets simplified until the geometry is cheap.
 - The emitted `.ndjson` remains the canonical artifact. Keep the script, but deliver the package.
+- A `rect` accent bar flush against a `roundRect` card has square corners the card's rounding doesn't. Give the card `style.radius` and inset the bar by that amount on its corner-adjacent edges, or its corner pokes past the card's curve.
 
 A composite the deck defines for itself, placed on a computed rhythm:
 
@@ -45,8 +46,10 @@ const deck = defineDeck({
 
 // Your component, not Slide Agent's. It draws whatever this deck needs.
 function stage(slide, id, frame, label, sub, accent) {
-  slide.shape(`${id}-box`, "roundRect", { ...frame, style: { fill: "141C2F", lineColor: "2D3850", lineWidth: 1 } });
-  slide.shape(`${id}-bar`, "rect", { ...frame, w: 0.06, style: { fill: accent }, role: "decorative" });
+  const radius = 0.08;
+  slide.shape(`${id}-box`, "roundRect", { ...frame, style: { fill: "141C2F", lineColor: "2D3850", lineWidth: 1, radius } });
+  // Inset the bar within the box's straight edge so its square corners never cross the box's rounded ones.
+  slide.shape(`${id}-bar`, "rect", { x: frame.x, y: frame.y + radius, w: 0.06, h: frame.h - radius * 2, style: { fill: accent }, role: "decorative" });
   slide.text(`${id}-label`, label, { x: frame.x + 0.22, y: frame.y + 0.12, w: frame.w - 0.34, h: 0.34,
     style: { fontSize: 17, bold: true, color: "F6F7FB" } });
   slide.text(`${id}-sub`, sub, { x: frame.x + 0.22, y: frame.y + 0.5, w: frame.w - 0.34, h: 0.3,
