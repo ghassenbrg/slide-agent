@@ -6,7 +6,7 @@ pretend it can answer the second.
 
 ---
 
-# 2.x: readiness, adjustments, and choices
+# 1.x: readiness, adjustments, and choices
 
 ## Three things a verdict carries, and they are not the same
 

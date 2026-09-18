@@ -2,7 +2,7 @@
 
 Thank you for improving Slide Agent. This guide covers the development workflow; [README.md](README.md) explains what the project does, [references/v2/grammar.md](references/v2/grammar.md) is the composition language a model authors in, and [SKILL.md](SKILL.md) is the router a host agent reads.
 
-Both are generated — `SKILL.md`, everything under `references/`, and the grammar page come out of `npm run docs`, and `npm run verify` fails on drift. Edit the source (`src/contract` for 0.x, `src/v2/commands` for 2.x), not the output.
+Both are generated — `SKILL.md`, everything under `references/`, and the grammar page come out of `npm run docs`, and `npm run verify` fails on drift. Edit the source (`src/contract` for 0.x, `src/v2/commands` for 1.x), not the output.
 
 ## Prerequisites
 
@@ -32,7 +32,7 @@ The VS Code extension lives in `extensions/vscode` with its own `npm install`, `
 
 ## Architecture in one minute
 
-Two engines. **2.x** is `src/v2`: a model-authored `slide-agent.intent/1` document → validate (`ir`) → compile the design language (`tokens`) → expand components and recipes (`compose`) → solve each slide against real font metrics (`text`, `layout`) → write OOXML directly (`ooxml`) → QA T0–T5 (`qa`), orchestrated by `Engine` in `src/v2/engine`. **0.x** is `src/pipeline.ts`: outline → `DeckBuilder` composes PptxGenJS elements (`src/components`, `src/layouts`) → `PptxExporter` writes the package and `PptxSanitizer` repairs known PptxGenJS OOXML defects → validators (`src/validation`) → `AutoFixer` retries fixable issues. Existing decks are edited at the OOXML level in `src/editing`.
+Two engines. **1.x** is `src/v2`: a model-authored `slide-agent.intent/1` document → validate (`ir`) → compile the design language (`tokens`) → expand components and recipes (`compose`) → solve each slide against real font metrics (`text`, `layout`) → write OOXML directly (`ooxml`) → QA T0–T5 (`qa`), orchestrated by `Engine` in `src/v2/engine`. **0.x** is `src/pipeline.ts`: outline → `DeckBuilder` composes PptxGenJS elements (`src/components`, `src/layouts`) → `PptxExporter` writes the package and `PptxSanitizer` repairs known PptxGenJS OOXML defects → validators (`src/validation`) → `AutoFixer` retries fixable issues. Existing decks are edited at the OOXML level in `src/editing`.
 
 The dependency runs one way: `src/v2` reads from the 0.x modules, and only the three entry points (`src/index.ts`, `src/cli.ts`, `src/mcp-server.ts`) import `src/v2`. Keep it that way. [docs/architecture.md](docs/architecture.md) has the full map.
 

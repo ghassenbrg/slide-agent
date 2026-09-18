@@ -1,6 +1,6 @@
 # 10. A creative floor in model routing
 
-**Status:** accepted, 2.0.0
+**Status:** accepted, 1.0.0
 
 ## Context
 

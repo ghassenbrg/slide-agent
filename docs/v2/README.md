@@ -1,6 +1,6 @@
 # Slide Agent V2 — technical audit and implementation roadmap
 
-**Status:** Implemented in 2.0.0 — see [`04-implementation-status.md`](04-implementation-status.md) for what shipped, what changed, and what is still open
+**Status:** Implemented in 1.0.0 — see [`04-implementation-status.md`](04-implementation-status.md) for what shipped, what changed, and what is still open
 **Date:** 2026-09-17
 **Baseline audited:** `0.15.0` (commit `f85fae0`), contract `0.11`, scene `slide-agent.scene/1`
 **Audience:** maintainers, and any engineering team or coding agent that will build V2
@@ -18,7 +18,7 @@ and pull requests.
 | **This file** | Always, first | Verdict, why the model stays in charge, headline numbers, the ten decisions, what to do this week |
 | [`01-current-system-audit.md`](01-current-system-audit.md) | Before you argue with a decision | What V1 is, what was measured, strengths, critique, the debt register (`F-*`), security findings (`S-*`), how it compares to the rest of the field |
 | [`02-v2-architecture.md`](02-v2-architecture.md) | Before you design or build a component | Target architecture, data models, the composition and design languages, agent workflow, rendering, QA and design review, token and cost strategy, models, caching, performance, DX, observability, plugins, security, technology choices |
-| [`04-implementation-status.md`](04-implementation-status.md) | Before you trust a figure on this page | What shipped in 2.0.0, where the implementation differs from this plan and why, what is deliberately still open, and the known limitations |
+| [`04-implementation-status.md`](04-implementation-status.md) | Before you trust a figure on this page | What shipped in 1.0.0, where the implementation differs from this plan and why, what is deliberately still open, and the known limitations |
 | [`03-v2-roadmap.md`](03-v2-roadmap.md) | Before you plan or pick up work | What to keep, redesign, remove, and add; migration; phases with task IDs (`V2-*`), exit gates, priorities, risks, ADRs to write, open questions, sources |
 
 ---
@@ -156,7 +156,7 @@ are replaced by real measurements in Phase 0 (`V2-006`, `V2-010`).
 | Theme-role colours emitted as theme references | 0% | ≥ 90% | measured → target |
 | Model-chosen typefaces that reach the audience | depends on installed fonts | embedded subsets | target |
 | CLI build result size (product-introduction, rendered) | 28.5k chars, ~45% duplicated | ≤ 3k chars verdict; detail on request | measured → target |
-| Security findings open (`S-*`) | 8 | 0 before the 2.0 beta | audit |
+| Security findings open (`S-*`) | 8 | 0 before the 1.0 beta | audit |
 
 ---
 
@@ -212,12 +212,12 @@ These ship on the V1 line, as `0.16.0`, while V2 is being built.
 ```text
 Phase 0  Stabilise V1, measure cost and design quality .. weeks 1–2    → 0.16.0
 Phase 1  IR, design language, writer, fonts ............. weeks 3–7
-Phase 2  Composition language, fit, previews, recipes ... weeks 6–11   → 2.0.0-alpha
-Phase 3  Directed host workflow, design review, MCP v2 .. weeks 11–14  → 2.0.0-beta
-Phase 4  Engine-managed direction, critic, ingestion .... weeks 13–17  → 2.0.0-rc
-Phase 5  Editing, templates, migration .................. weeks 17–20  → 2.0.0
+Phase 2  Composition language, fit, previews, recipes ... weeks 6–11   → 1.0.0-alpha
+Phase 3  Directed host workflow, design review, MCP v2 .. weeks 11–14  → 1.0.0-beta
+Phase 4  Engine-managed direction, critic, ingestion .... weeks 13–17  → 1.0.0-rc
+Phase 5  Editing, templates, migration .................. weeks 17–20  → 1.0.0
 Phase 6  Service mode, scale, observability ............. weeks 19–23  → 2.1.0
-Phase 7  Ecosystem, packs, exports, tuning .............. week 24+     → 2.x
+Phase 7  Ecosystem, packs, exports, tuning .............. week 24+     → 1.x
 ```
 
 Assumes three engineers with coding-agent assistance, a part-time presentation

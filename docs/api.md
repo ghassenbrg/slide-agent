@@ -7,13 +7,13 @@ npm install @slide-agent/core
 Installing the library runs no lifecycle scripts and writes nothing outside
 your project.
 
-Two APIs, matching the two engines. `@slide-agent/core/v2` is the 2.x engine and
+Two APIs, matching the two engines. `@slide-agent/core/v2` is the 1.x engine and
 the one to reach for; the root export is the 0.x API, still supported, and also
 carries `v2` as a namespace.
 
 ---
 
-# 2.x: `@slide-agent/core/v2`
+# 1.x: `@slide-agent/core/v2`
 
 ## Building a deck
 

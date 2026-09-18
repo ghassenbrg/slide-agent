@@ -3,7 +3,7 @@
 All notable public changes are recorded here, newest first. Versions follow
 semantic versioning.
 
-## 2.0.0 — 2026-09-18
+## 1.0.0 — 2026-09-18
 
 **The model directs; the engine executes.**
 
@@ -18,7 +18,7 @@ deterministic code too, and what comes out is cheap in both senses: a template
 with the model's content poured in, indistinguishable from the next deck the
 same template produced.
 
-2.0 draws the line explicitly and holds it everywhere. The model writes a
+1.0 draws the line explicitly and holds it everywhere. The model writes a
 **composition** — grid units, roles, tokens, a design language authored for this
 deck — and the engine computes inches, measures real glyph advances, fits text,
 repairs contrast, and writes OOXML. Every place the engine changes something the
@@ -37,7 +37,7 @@ defect-hunting — never from design decisions. See
 thesis and [`docs/v2/`](docs/v2/README.md) for the plan it came from.
 
 **What this release does not claim.** No designer panel and no blind-preference
-comparison against 0.x has been run, so there is no evidence here that 2.0 decks
+comparison against 0.x has been run, so there is no evidence here that 1.0 decks
 are *better* than 0.x decks — only that the model spends its tokens on design
 instead of on multiplication. The cost figures in the plan are modelled, not
 measured. [`docs/v2/04-implementation-status.md`](docs/v2/04-implementation-status.md)
@@ -111,8 +111,9 @@ item.
 - **`build` and `edit` are dual-mode on the CLI.** `--script`/`--input` keep
   their 0.x behaviour; `--intent`, `--deck`, `--ops`, and `--instruction` select
   V2.
-- **Version numbering skips to 2.0.0.** The 0.x contract line (`0.11`) is not
-  changed — it is one of two supported authoring formats now, not the only one.
+- **Version numbering moves to 1.0.0.** This is the first release the project
+  calls stable. The 0.x contract line (`0.11`) is not changed — it is one of two
+  supported authoring formats now, not the only one.
 
 ### Fixed
 
@@ -131,10 +132,10 @@ item.
 - **`slide-agent migrate`** converts a 0.x scene (`.ndjson`) or outline (`.json`)
   into a V2 intent with a report of what mapped to which recipe and what did not.
 - The 0.x MCP tool surface needs `--compat-v1` from this release and will be
-  removed in 2.1.
+  removed in 1.1.
 - `@anthropic-ai/sdk` is an optional peer dependency, needed only for
   engine-managed mode. `@resvg/resvg-js` is required for previews.
-- [`MIGRATION-2.0.md`](MIGRATION-2.0.md) covers the move end to end.
+- [`MIGRATION-1.0.md`](MIGRATION-1.0.md) covers the move end to end.
 
 ## 0.15.0 — 2026-08-14
 

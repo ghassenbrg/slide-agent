@@ -1,6 +1,6 @@
-# Migrating to 2.0
+# Migrating to 1.0
 
-2.0 changes how a deck is authored, not what it can express. You still make
+1.0 changes how a deck is authored, not what it can express. You still make
 every design decision; you write them in grid units, roles, and named tokens
 instead of inches and colour literals, and the engine solves the geometry.
 
@@ -11,7 +11,7 @@ canvases still build, and the 0.x MCP tools are one flag away.
 
 ## The shape of the change
 
-| 0.x | 2.0 |
+| 0.x | 1.0 |
 |---|---|
 | `slide-agent.scene/1` NDJSON, or an outline with `kind` slides | `slide-agent.intent/1` JSON: brief, direction, design language, components, and a composition per slide |
 | Coordinates in inches, colours and sizes per element | `"at": "c1-7 r2-6"`, roles, and tokens; the design language holds the rest |

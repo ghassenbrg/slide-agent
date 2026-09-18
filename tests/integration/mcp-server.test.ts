@@ -21,7 +21,7 @@ async function connect(): Promise<Client> {
   const created = new Client({ name: "slide-agent-test", version: "1.0.0" });
   await created.connect(new StdioClientTransport({
     command: process.execPath,
-    // The 0.x tools are served behind --compat-v1 on the 2.x server.
+    // The 0.x tools are served behind --compat-v1 on the 1.x server.
     args: [path.join(root, "node_modules", "tsx", "dist", "cli.mjs"), path.join(root, "src", "mcp-server.ts"), "--compat-v1"],
     stderr: "pipe",
   }));

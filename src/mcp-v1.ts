@@ -239,7 +239,7 @@ export function buildV1McpServer(): McpServer {
 
 /**
  * Registers the 0.x tools, resources, and prompts on `server`. Behind
- * `--compat-v1` on the 2.x server, for one minor release, so hosts can move
+ * `--compat-v1` on the 1.x server, for one minor release, so hosts can move
  * at their own pace.
  */
 export function registerV1(server: McpServer): McpServer {

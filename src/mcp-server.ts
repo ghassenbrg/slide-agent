@@ -14,7 +14,7 @@ export { buildV1McpServer, guardRequest, previewImagePaths, serverRoots, type Pr
 /**
  * The Slide Agent MCP server.
  *
- * 2.x serves the seven V2 tools. `--compat-v1` (or SLIDE_AGENT_COMPAT_V1=1)
+ * 1.x serves the seven V2 tools. `--compat-v1` (or SLIDE_AGENT_COMPAT_V1=1)
  * also registers the 0.x tools for one minor release, so a host can migrate
  * without breaking.
  */

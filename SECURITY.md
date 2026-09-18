@@ -77,7 +77,7 @@ Optional fidelity rendering shells out to LibreOffice and Poppler. Those run
 against files you supply, under the subprocess limits above; discovery honours
 `SLIDE_AGENT_SOFFICE` and `SLIDE_AGENT_PDFTOPPM` if you need to pin the
 executables, and an explicit pin is used or nothing is — a typo reports the tool
-as missing rather than quietly running a different binary. 2.x previews are
+as missing rather than quietly running a different binary. 1.x previews are
 rendered in-process and shell out to nothing.
 
 ## Models

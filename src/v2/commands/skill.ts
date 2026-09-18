@@ -47,5 +47,5 @@ Package integrity, bounds (unless you declare bleed), legibility floors, contras
 - [references/v2/grammar.md](references/v2/grammar.md) — the composition language (~1.3k tokens)
 - [references/v2/recipes.md](references/v2/recipes.md) — recipe slots and presets
 - [references/v2/intent.schema.json](references/v2/intent.schema.json) — the full schema, for validators
-- [references/v1-skill.md](references/v1-skill.md) — the 0.x canvas contract, for decks authored before 2.0
+- [references/v1-skill.md](references/v1-skill.md) — the 0.x canvas contract, for decks authored before 1.0
 `;

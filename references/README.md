@@ -2,7 +2,7 @@
 
 # Reference
 
-## 2.x — the composition language
+## 1.x — the composition language
 
 The default authoring format. The model writes a `slide-agent.intent/1`
 document in grid units, roles, and tokens; the engine computes the rest.
@@ -18,7 +18,7 @@ document in grid units, roles, and tokens; the engine computes the rest.
 Authoring contract 0.11 · scene schema `slide-agent.scene/1`
 
 Still supported: scenes, outlines, and build scripts build unchanged, and
-`canvas` slides are a first-class 2.x slide kind. [`v1-skill.md`](v1-skill.md)
+`canvas` slides are a first-class 1.x slide kind. [`v1-skill.md`](v1-skill.md)
 is the router for this contract, and `slide-agent migrate` converts a scene
 or outline into an intent.
 

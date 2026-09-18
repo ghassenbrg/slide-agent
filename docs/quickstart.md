@@ -284,7 +284,7 @@ slide-agent migrate --input scene.ndjson --output deck.intent.json
 ```
 
 The report says what mapped to which recipe and what came through as a canvas.
-[MIGRATION-2.0.md](../MIGRATION-2.0.md) covers the rest.
+[MIGRATION-1.0.md](../MIGRATION-1.0.md) covers the rest.
 
 ---
 

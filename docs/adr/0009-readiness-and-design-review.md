@@ -1,6 +1,6 @@
 # 9. Readiness is mechanical; design review is separate and recorded
 
-**Status:** accepted, 2.0.0
+**Status:** accepted, 1.0.0
 
 ## Context
 

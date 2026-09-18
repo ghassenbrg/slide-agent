@@ -1,6 +1,6 @@
 # 11. Any face the engine can measure, embedded by default
 
-**Status:** accepted, 2.0.0
+**Status:** accepted, 1.0.0
 
 ## Context
 

@@ -240,7 +240,7 @@ plugs in. See [docs/api.md](docs/api.md#extension-points).
 | [Composition grammar](references/v2/grammar.md) | The language you design in — generated from the engine |
 | [Recipes and presets](references/v2/recipes.md) | Starting points for routine slides, and draft themes |
 | [V2 plan](docs/v2/README.md) | Why the engine is shaped this way, and what shipped ([status](docs/v2/04-implementation-status.md)) |
-| [Migration to 2.0](MIGRATION-2.0.md) | What changes for a 0.x host, and what still works |
+| [Migration to 1.0](MIGRATION-1.0.md) | What changes for a 0.x host, and what still works |
 | [0.x authoring contract](references/README.md) | The V1 canvas contract, kept for compatibility |
 | [Agent integrations](docs/agents.md) | Codex, Claude Code, Copilot, Gemini, Cursor, MCP, CLI |
 | [CLI reference](docs/cli.md) | Every command and flag |

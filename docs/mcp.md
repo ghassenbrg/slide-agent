@@ -11,7 +11,7 @@ with it at runtime — start at `slide-agent://grammar`, which is about 1,300
 tokens.
 
 Seven tools by default; `--compat-v1` adds the 0.x surface for one more minor
-release. Both are documented here, 2.x first.
+release. Both are documented here, 1.x first.
 
 ---
 

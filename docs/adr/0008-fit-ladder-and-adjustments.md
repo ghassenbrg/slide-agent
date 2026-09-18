@@ -1,6 +1,6 @@
 # 8. Automatic fitting stops where design begins
 
-**Status:** accepted, 2.0.0
+**Status:** accepted, 1.0.0
 
 ## Context
 

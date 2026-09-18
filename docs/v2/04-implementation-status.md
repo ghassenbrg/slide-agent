@@ -1,6 +1,6 @@
 # 04 — Implementation status
 
-Part of the [Slide Agent V2 plan](README.md). What shipped in 2.0.0, what
+Part of the [Slide Agent V2 plan](README.md). What shipped in 1.0.0, what
 changed from the plan and why, and what is deliberately still open. Figures in
 [`02 §9.3`](02-v2-architecture.md#93-cost-model) remain **modelled**: nothing in
 this release measured them against a corpus, and the sections below say so where
@@ -50,7 +50,7 @@ it matters.
 | **Designer panels and the blind-preference gate** (`V2-010`, `V2-007`) | **Needs people.** The engine ships the tooling a panel needs — deterministic builds, preview sheets, `explain`, and inter-deck similarity — but no panel has been run, so *no claim is made here that V2 decks are better than V1 decks*. That comparison is the release's main open question. |
 | **Measured cost and quality baseline** (`V2-006`) | Not run. The cost figures in the plan are modelled. The engine records tokens, cost, and stage timings per run, which is what a harness needs. |
 | **Expressiveness gate**: 30 showcase-class slides re-expressed, ≥ 90% without `free` | Not run as a formal gate. Every recipe and both worked examples build clean in two formats, which is a weaker check of the same thing. |
-| **Service mode** (Phase 6): HTTP API, workers, queues, streamable-HTTP MCP, load testing | Out of scope for 2.0, as planned. |
+| **Service mode** (Phase 6): HTTP API, workers, queues, streamable-HTTP MCP, load testing | Out of scope for 1.0, as planned. |
 | **Plugin manifest and third-party packs** (`V2-701`+) | Not implemented. V1's extension points still exist for V1 paths. |
 | **Batch API, MCP sampling path, fine-tuned small models** | Not implemented. |
 | **Image downscaling and focal-point cropping from a vision model** | Crops are computed deterministically from a declared focal point; no re-encoding, and no automatic focal detection. |

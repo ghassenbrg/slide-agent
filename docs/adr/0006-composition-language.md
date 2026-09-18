@@ -1,6 +1,6 @@
 # 6. A composition language, not a layout registry
 
-**Status:** accepted, 2.0.0
+**Status:** accepted, 1.0.0
 
 ## Context
 

@@ -61,15 +61,15 @@ to [`02-v2-architecture.md`](02-v2-architecture.md); findings `F-*`/`S-*` to
 
 | Remove | Replacement | When |
 |---|---|---|
-| Prompt-only placeholder drafts (`create --prompt`, `RequestAnalyzer` regex inference, `ContentGenerator`, `OutlinePlanner`) | Engine-managed mode; template-fill | 2.0 |
-| Built-in `LayoutRegistry` fallback layouts | Components and recipes in the composition language | 2.0 |
-| Coordinate-level authoring as the documented path (inches, per-element literals) | The composition language; `canvas` stays in `compat-v1` | 2.0 |
-| Mandatory defect-hunting review rounds (render → inspect → patch for overflow and collisions) | Construction and deterministic tiers; one design review for judgement | 2.0 |
-| Deprecated aliases: `report.quality`, `includeImages`, `autoFix`, `create --prompt file.json`, legacy `intermediate_files/` and `logs/` discovery | — | `quality` in 0.16.0; the rest in 2.0 (kept in `compat-v1`) |
+| Prompt-only placeholder drafts (`create --prompt`, `RequestAnalyzer` regex inference, `ContentGenerator`, `OutlinePlanner`) | Engine-managed mode; template-fill | 1.0 |
+| Built-in `LayoutRegistry` fallback layouts | Components and recipes in the composition language | 1.0 |
+| Coordinate-level authoring as the documented path (inches, per-element literals) | The composition language; `canvas` stays in `compat-v1` | 1.0 |
+| Mandatory defect-hunting review rounds (render → inspect → patch for overflow and collisions) | Construction and deterministic tiers; one design review for judgement | 1.0 |
+| Deprecated aliases: `report.quality`, `includeImages`, `autoFix`, `create --prompt file.json`, legacy `intermediate_files/` and `logs/` discovery | — | `quality` in 0.16.0; the rest in 1.0 (kept in `compat-v1`) |
 | Script execution through MCP or structured requests | CLI `--allow-script` (trusted local) and sandboxed server execution | 0.16.0 |
-| Duplicate `issues` / `warnings` / `artifacts` / `generatedFiles` in results; full outline copy in `metadata.json` | Verdict + RunRecord | 0.16.0 (results), 2.0 (files) |
-| Templated per-slide `reviewQuestions` | Design review against the brief and concept | 2.0 |
-| Hand-written PNG codec (`rendering/png.ts`) | `sharp` | 2.0 |
+| Duplicate `issues` / `warnings` / `artifacts` / `generatedFiles` in results; full outline copy in `metadata.json` | Verdict + RunRecord | 0.16.0 (results), 1.0 (files) |
+| Templated per-slide `reviewQuestions` | Design review against the brief and concept | 1.0 |
+| Hand-written PNG codec (`rendering/png.ts`) | `sharp` | 1.0 |
 | ADR-0004 clauses "no icon vocabulary" and "no components" | ADR-0007: an **opt-in** vocabulary (starter components, recipes, icons, font library, texture primitives), never applied to a directed deck without the model choosing it | Decided in Phase 0 |
 
 ### 1.4 Add
@@ -119,7 +119,7 @@ to [`02-v2-architecture.md`](02-v2-architecture.md); findings `F-*`/`S-*` to
 | V1 | V2 | Conversion |
 |---|---|---|
 | `slide-agent.scene/1` NDJSON | SceneGraph v2 (`canvas` slides with pinned geometry) + minimal DeckIntent | Automatic (`compat-v1` importer, `V2-108`) |
-| Build script (`defineDeck`) | `compat-v1` DeckBuilder shim → SceneGraph `canvas` slides; recommend rewriting as compositions | Runs as-is under `--allow-script`; rewrite guide in `MIGRATION-2.0.md` |
+| Build script (`defineDeck`) | `compat-v1` DeckBuilder shim → SceneGraph `canvas` slides; recommend rewriting as compositions | Runs as-is under `--allow-script`; rewrite guide in `MIGRATION-1.0.md` |
 | Outline JSON with `kind` + fields | DeckIntent: `kind` → a recipe where a mapping exists (the author can expand it into a composition); `canvas` → `canvas` slide | Automatic with a report of unmapped slides (`V2-505`) |
 | `creativeDirection` (prose, palette, typography) | Design language: prose → `direction.concept`; palette → `color.palette` and roles; typography → `type` | Automatic, heuristic, reported |
 | `visualSystem` variables and styles | Design-language tokens and surfaces; repeated style groups lifted into components where they map | Automatic, with a report of what stayed literal |
@@ -172,7 +172,7 @@ to [`02-v2-architecture.md`](02-v2-architecture.md); findings `F-*`/`S-*` to
 | `doctor.ts`, `installer.ts`, `scripts/install-*` | `packages/cli` | **Port** |
 | `extensions.ts` | Plugin system | **Replace** (+ V1 adapters) |
 
-### 2.4 Dual-run validation (before 2.0 GA)
+### 2.4 Dual-run validation (before 1.0 GA)
 
 `V2-505` runs every V1 example, showcase deck, and fixture through V1 and
 through `compat-v1`. It compares:
@@ -191,12 +191,12 @@ blocking V2 bugs gate GA.
 | Milestone | V1 line | V2 line |
 |---|---|---|
 | Week 2 — `0.16.0` | Security fixes (`S-01`–`S-06`, `S-08`), `F-21`, result deduplication, `quality` removed | — |
-| Week 11 — `2.0.0-alpha` | `0.16.x` maintenance | Engine + CLI build from directed DeckIntents; composition language; design languages and fonts; previews; recipes |
-| Week 14 — `2.0.0-beta` | V1 README points to the V2 beta | MCP v2, skill v2 (directed workflow), design exploration and review, QA tiers, readiness v2, `compat-v1` |
-| Week 17 — `2.0.0-rc` | — | Engine-managed direction, critic and revision, ingestion |
-| Week 20 — `2.0.0` | `0.x` enters **security-only maintenance for 6 months** | GA with editing, template induction, `slide-agent migrate`, `MIGRATION-2.0.md` |
+| Week 11 — `1.0.0-alpha` | `0.16.x` maintenance | Engine + CLI build from directed DeckIntents; composition language; design languages and fonts; previews; recipes |
+| Week 14 — `1.0.0-beta` | V1 README points to the V2 beta | MCP v2, skill v2 (directed workflow), design exploration and review, QA tiers, readiness v2, `compat-v1` |
+| Week 17 — `1.0.0-rc` | — | Engine-managed direction, critic and revision, ingestion |
+| Week 20 — `1.0.0` | `0.x` enters **security-only maintenance for 6 months** | GA with editing, template induction, `slide-agent migrate`, `MIGRATION-1.0.md` |
 | Week 23 — `2.1.0` | — | Service mode |
-| 2.0 + 6 months | `0.x` end of life | `compat-v1` retained through 2.x |
+| 1.0 + 6 months | `0.x` end of life | `compat-v1` retained through 1.x |
 
 ---
 
@@ -536,7 +536,7 @@ audience intact.
 
 ---
 
-### Phase 2 — Composition language, fit engine, previews, recipes (weeks 6–11) → `2.0.0-alpha`
+### Phase 2 — Composition language, fit engine, previews, recipes (weeks 6–11) → `1.0.0-alpha`
 
 **Goal.** Turn a directed DeckIntent into correct slides that look the way the
 model composed them, with no model involvement; make looking at them nearly
@@ -655,7 +655,7 @@ to bland layouts.
   brief fit, "same tool", and similarity results, and a nightly judge-proxy job
   tracks them.
 
-**Phase 2 exit gate → `2.0.0-alpha`.** Quality gates first, on the 30-brief
+**Phase 2 exit gate → `1.0.0-alpha`.** Quality gates first, on the 30-brief
 corpus:
 - directed V2 decks are non-inferior to V1 in blind designer preference (margin
   agreed in `V2-010`); brief fit ≥ V1; "same tool" identification ≤ the V1
@@ -669,7 +669,7 @@ Then mechanics:
 
 ---
 
-### Phase 3 — Directed host workflow, design review, MCP v2 (weeks 11–14) → `2.0.0-beta`
+### Phase 3 — Directed host workflow, design review, MCP v2 (weeks 11–14) → `1.0.0-beta`
 
 **Goal.** A host agent directs a deck — concept, design language, compositions
 — looks at it, refines it, and finalizes it in 6–8 tool calls, at about a third
@@ -800,7 +800,7 @@ of V1's cost, with design at least as good as V1's.
 - **Done when:** the sheet renders in ≤ 1.5 s warm at ≤ 2k image tokens, and
   choosing between explored directions takes one tool call.
 
-**Phase 3 exit gate → `2.0.0-beta`.** Measured with `V2-006` and `V2-010`
+**Phase 3 exit gate → `1.0.0-beta`.** Measured with `V2-006` and `V2-010`
 against the Phase 0 baseline, on the same host models and briefs. **Quality
 gates are evaluated first; cost gates count only if they pass.**
 - Blind designer preference, directed V2 vs V1: non-inferior (target: ≥ 60%
@@ -814,7 +814,7 @@ gates are evaluated first; cost gates count only if they pass.**
 
 ---
 
-### Phase 4 — Engine-managed direction (weeks 13–17) → `2.0.0-rc`
+### Phase 4 — Engine-managed direction (weeks 13–17) → `1.0.0-rc`
 
 **Goal.** Slide Agent directs a deck by itself from a brief and source
 documents — concept, design language, compositions, critique, and revision — at
@@ -914,7 +914,7 @@ budgeted, and measured.
   directed quality reports by construction (test); labels verified in golden
   tests.
 
-**Phase 4 exit gate → `2.0.0-rc`.** On the eval corpus, quality gates first:
+**Phase 4 exit gate → `1.0.0-rc`.** On the eval corpus, quality gates first:
 - `balanced` decks non-inferior to host-directed Phase 3 decks in blind designer
   preference; `quality` preferred over or tied with `balanced`;
 - RunRecords show 0 creative-task calls below the profile's tier.
@@ -929,7 +929,7 @@ Then cost and reliability:
 
 ---
 
-### Phase 5 — Editing, templates, migration (weeks 17–20) → `2.0.0`
+### Phase 5 — Editing, templates, migration (weeks 17–20) → `1.0.0`
 
 **Goal.** Edit real decks robustly, generate into customer templates, and move
 V1 users over.
@@ -976,7 +976,7 @@ V1 users over.
   - the DeckBuilder shim;
   - V1 extension adapters;
   - dual-run validation (§2.4);
-  - `MIGRATION-2.0.md`.
+  - `MIGRATION-1.0.md`.
 - **Done when:** every V1 example and showcase deck migrates and rebuilds with a
   passing round-trip, and the dual-run report has no blocking V2 bugs.
 
@@ -984,7 +984,7 @@ V1 users over.
 - **Do:** `slide-agent diff --visual` combining the V1 semantic diff with
   preview pixel diffs and changed-region crops.
 
-#### V2-507 · 2.0 release hardening · P0 · M
+#### V2-507 · 1.0 release hardening · P0 · M
 - **Do:**
   - Documentation set (§13.7).
   - Examples as DeckIntents and templates.
@@ -994,9 +994,9 @@ V1 users over.
     including designer-panel results for directed, engine-managed, and draft
     decks.
 
-**Phase 5 exit gate → `2.0.0`.**
+**Phase 5 exit gate → `1.0.0`.**
 - The `V2-502` and `V2-503` gates pass.
-- Designer panel: 2.0 directed decks (host and `balanced`) non-inferior to V1,
+- Designer panel: 1.0 directed decks (host and `balanced`) non-inferior to V1,
   with results published.
 - All V1 examples migrate.
 - 0 open Critical or High security findings.
@@ -1131,7 +1131,7 @@ budget gates; migration tooling.
 | R-12 | Two operating modes double the surface | Medium | Medium | One orchestrator, command registry, shared fixtures; `llm` and `ingest` optional | Features landing in one mode only | Track C |
 | R-13 | LibreOffice fragility at scale | Medium | Medium | Pooling with recycling, timeouts, containers, alternative backend plugins; previews make fidelity renders rarer | Render failure rate > 1% | Track A |
 | R-14 | Plugin or script sandbox escape in service mode | Low | High | Declarative-first packs, isolates, containers, penetration test | Pen-test findings | Track A/C |
-| R-15 | Scope creep (service, registry) delays 2.0 | Medium | High | 2.0 GA defined at the Phase 5 gate; service is 2.1; cut list | Phase 3 gate slips > 2 weeks | Maintainers |
+| R-15 | Scope creep (service, registry) delays 1.0 | Medium | High | 1.0 GA defined at the Phase 5 gate; service is 1.1; cut list | Phase 3 gate slips > 2 weeks | Maintainers |
 | R-16 | Host support for Tasks, Apps, sampling, or cache hints varies | High | Low | Graceful fallbacks: synchronous finalize, resource links, no sampling path, plain resources | Host matrix tests | Track C |
 
 ### 6.2 Trade-offs accepted
@@ -1176,14 +1176,14 @@ Each ADR follows the existing template: context, decision, consequences, and
 
 | # | Question | Why it matters | Recommendation |
 |---|---|---|---|
-| Q1 | Which persona is primary for 2.0: agent developers in host tools, or enterprise template users? | Orders Phase 4 against Phase 5 | Host-agent users for beta; enterprise templates, directed inside brand locks, for GA (as planned) |
+| Q1 | Which persona is primary for 1.0: agent developers in host tools, or enterprise template users? | Orders Phase 4 against Phase 5 | Host-agent users for beta; enterprise templates, directed inside brand locks, for GA (as planned) |
 | Q2 | Are optional commercial or cloud render backends acceptable (Aspose, Microsoft Graph conversion)? | PowerPoint-true fidelity versus data-egress and licensing concerns | Yes, as opt-in plugins, never defaults |
 | Q3 | Default font strategy: embed chosen faces, or `office-safe`? | Fidelity of the model's typography versus package size and corporate font policies | Embed subset OFL faces by default in directed decks after `V2-107b`; `office-safe` for brand templates that specify Office fonts |
 | Q4 | Telemetry for local installs? | Improvement data versus privacy | Off by default; opt-in anonymous aggregate metrics only |
 | Q5 | Licence and governance for component, recipe, design, and font packs? | Ecosystem growth | MIT for built-ins; pack licences declared and checked; font embedding rights enforced |
 | Q6 | VS Code extension: thin client or retire? | Maintenance cost (`F-25`) | Thin client over the CLI and MCP for one release, then decide from usage |
 | Q7 | Minimum host capabilities to support (Tasks, Apps, sampling)? | Test matrix size | Require tools + resources only; everything else progressive |
-| Q8 | Is build-script authoring a supported 2.x path or compatibility only? | Documentation and support scope | Compatibility only; the supported freeform path is `free` placement inside compositions |
+| Q8 | Is build-script authoring a supported 1.x path or compatibility only? | Documentation and support scope | Compatibility only; the supported freeform path is `free` placement inside compositions |
 | Q9 | Is a hosted service in the project's scope, or a reference deployment only? | Phase 6 scope and operations | Reference deployment (Helm/Compose) in 2.1; hosting is a separate decision |
 | Q10 | Who funds and runs human labelling and designer panels? | Every quality gate depends on them | Budget in Phase 0; contract annotators for flaw labels; paid designers for panels |
 | Q11 | Should the host skill offer draft mode at all? | A cheap path invites use where quality matters | Yes, never as the default, labelled on every verdict, and recommended only for internal drafts |

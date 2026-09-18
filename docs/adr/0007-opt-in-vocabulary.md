@@ -1,6 +1,6 @@
 # 7. Recipes, presets, and components are opt-in and labelled
 
-**Status:** accepted, 2.0.0
+**Status:** accepted, 1.0.0
 
 ## Context
 

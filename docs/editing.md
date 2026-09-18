@@ -10,7 +10,7 @@ Pick the weakest operation that does the job.
 
 ---
 
-# 2.x: EditOps
+# 1.x: EditOps
 
 One operation model, four levels. An edit goes to the highest level that can
 express it, because the higher the level, the more the engine can re-derive.

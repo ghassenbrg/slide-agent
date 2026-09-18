@@ -717,7 +717,7 @@ still *allowed* for a deliberate exception and are recorded as literals.
     {"text":"Cohorts Jan–Jun 2026, n = 18,400","role":"caption","tone":"muted"}]}}]}}
 ```
 
-**Expressiveness gate (`V2-202`).** Before 2.0, 30 showcase-class slides — V1
+**Expressiveness gate (`V2-202`).** Before 1.0, 30 showcase-class slides — V1
 showcase slides and designer-made references — are re-expressed in the
 language. At least 90% must be expressible without `free`, 100% with it, at a
 median ≤ 300 tokens per slide, with designers judging the re-expression faithful.
@@ -756,7 +756,7 @@ auto-fit ladder. Recipes serve three purposes:
 3. **A starting point to open and edit.** `slides_view {what: "expand"}` returns
    the composition behind a recipe, so the model can rework any part of it.
 
-Initial families at 2.0 (~24 families, ~60 variants):
+Initial families at 1.0 (~24 families, ~60 variants):
 
 | Family | Variants (initial) | Slots (summary) | Ported from V1 |
 |---|---|---|---|
@@ -1107,7 +1107,7 @@ export interface RenderBackend {
 ### 7.7 Exports
 
 PPTX (primary); PDF and PNG from the fidelity backend; HTML (from SceneGraph,
-2.x); Google Slides via API plugin (2.x). Every export is recorded in the
+1.x); Google Slides via API plugin (1.x). Every export is recorded in the
 artifact graph with hashes (V1 ADR-0003, kept).
 
 ---
@@ -1718,7 +1718,7 @@ can be.
   ships an upgrade function (`slide-agent migrate intent`).
 - Deprecations live for at least two minor releases **and** 90 days, and they
   announce themselves in the verdict's `more` field — not in logs nobody reads.
-- After 2.0: release trains every 2–4 weeks; a contract changelog separate from
+- After 1.0: release trains every 2–4 weeks; a contract changelog separate from
   the engine changelog; hosts can pin a contract version.
 
 ### 13.7 Documentation
