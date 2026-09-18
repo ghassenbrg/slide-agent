@@ -36,7 +36,7 @@ export async function verifyRelease() {
     plugin: pluginJson.version,
     source: sourceVersion,
   };
-  const allowedRuntimeLicenses = new Set(["MIT", "ISC", "(MIT AND Zlib)", "(MIT OR GPL-3.0-or-later)"]);
+  const allowedRuntimeLicenses = new Set(["MIT", "ISC", "(MIT AND Zlib)", "(MIT OR GPL-3.0-or-later)", "MPL-2.0"]);
   await verifyLockfile().catch((error) => problems.push(error instanceof Error ? error.message : String(error)));
   for (const [packagePath, metadata] of Object.entries(packageLock.packages ?? {})) {
     if (!packagePath || metadata.dev) continue;

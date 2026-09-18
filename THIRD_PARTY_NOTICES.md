@@ -7,12 +7,15 @@ The npm package declares the following direct runtime dependencies. They are ins
 | Package | Declared license |
 | --- | --- |
 | `@modelcontextprotocol/server` | MIT |
+| `@resvg/resvg-js` | MPL-2.0 |
 | `@xmldom/xmldom` | MIT |
 | `commander` | MIT |
 | `jszip` | MIT OR GPL-3.0-or-later |
 | `pptxgenjs` | MIT |
 | `xmllint-wasm` | MIT |
 | `zod` | MIT |
+
+`@resvg/resvg-js` is covered by the Mozilla Public License 2.0 rather than a permissive license. It is installed unmodified from npm and is not forked, patched, or statically combined with Slide Agent's own sources, so the MPL's file-level reciprocity reaches only that package's own files. Its complete corresponding source is published at <https://github.com/yisibl/resvg-js> and the license text ships in the installed package. It is used to rasterize preview SVGs.
 
 The `assets/ooxml-schemas/` directory redistributes an unmodified subset of the Office Open XML Transitional XML Schemas published by Ecma International as part of ECMA-376 5th edition (Part 4, `OfficeOpenXML-XMLSchema-Transitional.zip`, December 2016). They are used to validate generated `.pptx` packages against the official standard and remain © Ecma International. The complete standard is available from <https://ecma-international.org/publications-and-standards/standards/ecma-376/>.
 
