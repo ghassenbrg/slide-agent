@@ -1,0 +1,146 @@
+{
+ "schema": "slide-agent.run/1",
+ "id": "c45e0fc3-479c-4094-a206-1a643e98edcd",
+ "command": "build",
+ "startedAt": "2026-10-02T09:55:43.030Z",
+ "finishedAt": "2026-10-02T09:55:47.705Z",
+ "versions": {
+  "engine": "1.0.0",
+  "grammar": "slide-agent.compose/1",
+  "recipes": "1.0.0",
+  "compiler": "2.0.0",
+  "writer": "2.0.0"
+ },
+ "intentHash": "503d8b47f54015ed",
+ "stages": [
+  {
+   "stage": "intent-validate",
+   "ms": 0.3,
+   "cached": 0,
+   "computed": 1
+  },
+  {
+   "stage": "design-compile",
+   "ms": 1854.2,
+   "cached": 0,
+   "computed": 1
+  },
+  {
+   "stage": "assets",
+   "ms": 2.1,
+   "cached": 0,
+   "computed": 1
+  },
+  {
+   "stage": "expand+solve+fit",
+   "ms": 66,
+   "cached": 0,
+   "computed": 5
+  },
+  {
+   "stage": "rhythm",
+   "ms": 0.9,
+   "cached": 0,
+   "computed": 1
+  },
+  {
+   "stage": "write+package",
+   "ms": 277,
+   "cached": 0,
+   "computed": 1
+  },
+  {
+   "stage": "preview",
+   "ms": 2453,
+   "cached": 0,
+   "computed": 5
+  }
+ ],
+ "decisions": [],
+ "adjustments": [],
+ "findings": [],
+ "fit": [],
+ "artifacts": [
+  {
+   "path": "deck.pptx",
+   "sha256": "03bcaa127fde7726342695a2c9e70c77c9e7f2aa8e8a238848cd4030bc0c509c",
+   "bytes": 698401,
+   "kind": "pptx"
+  }
+ ],
+ "modelCalls": [],
+ "verdict": {
+  "run": "c45e0fc3-479c-4094-a206-1a643e98edcd",
+  "deck": "/Users/ghassenbrg/git/slide-agent/promo/announce/demo/blue",
+  "state": "ready-unrendered",
+  "slides": 5,
+  "changed": [
+   "data-story",
+   "growth",
+   "retention",
+   "funnel",
+   "experiment"
+  ],
+  "authoring": {
+   "composed": 5,
+   "recipe": 0,
+   "draft": 0,
+   "canvas": 0,
+   "design": "authored"
+  },
+  "designReview": "none",
+  "issues": [],
+  "adjustments": [],
+  "suggestedEdits": [],
+  "rhythm": [
+   {
+    "slides": [
+     "retention",
+     "funnel"
+    ],
+    "similarity": 0.907,
+    "note": "adjacent slides share a silhouette"
+   }
+  ],
+  "views": {
+   "sheet": "/Users/ghassenbrg/git/slide-agent/promo/announce/demo/blue/previews/sheet.png",
+   "pptx": "/Users/ghassenbrg/git/slide-agent/promo/announce/demo/blue/deck.pptx"
+  },
+  "cost": {
+   "engineMs": 4674
+  }
+ },
+ "suggestedEdits": [],
+ "fonts": [
+  {
+   "family": "Charter",
+   "role": "display",
+   "resolved": "Charter",
+   "file": "/System/Library/Fonts/Supplemental/Charter.ttc",
+   "sha256": "6ab86ae2c687f80652a8afdc851b3e3234c5ae702e307c0593adfcc63079e19f",
+   "embeddable": true,
+   "embed": true,
+   "metrics": "font-file"
+  },
+  {
+   "family": "Helvetica Neue",
+   "role": "body",
+   "resolved": "Helvetica Neue",
+   "file": "/System/Library/Fonts/HelveticaNeue.ttc",
+   "sha256": "a43317500f5c8086ebbe479b32e86f53ce7c075c14283aa9894cc23be5bfd8e2",
+   "embeddable": true,
+   "embed": true,
+   "metrics": "font-file"
+  },
+  {
+   "family": "Menlo",
+   "role": "mono",
+   "resolved": "Menlo",
+   "file": "/System/Library/Fonts/Menlo.ttc",
+   "sha256": "dc256e0b39c2a6fec947129d421fef41b8b429f58f9b6e5d1b148c87f775c1f6",
+   "embeddable": true,
+   "embed": true,
+   "metrics": "font-file"
+  }
+ ]
+}

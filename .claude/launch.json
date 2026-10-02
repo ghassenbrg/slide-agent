@@ -1,0 +1,23 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "promo-studio",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": [
+        "-c",
+        "cd promo && npx remotion studio --no-open --port 3123"
+      ],
+      "port": 3123
+    },
+    {
+      "name": "docs-site",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": [
+        "-c",
+        "cd site && npx vitepress preview --port 4173"
+      ],
+      "port": 4173
+    }
+  ]
+}

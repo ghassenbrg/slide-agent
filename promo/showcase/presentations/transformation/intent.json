@@ -1,0 +1,2367 @@
+{
+ "schema": "slide-agent.intent/1",
+ "brief": {
+  "title": "From Manual to AI-Native",
+  "audience": "Transformation strategy audience",
+  "goal": "Stage investment against measurable workflow outcomes.",
+  "format": "16:9"
+ },
+ "direction": {
+  "concept": "Transformation strategy with Futura display typography, an intentional five-slide narrative and varied compositions.",
+  "fit": "ask"
+ },
+ "design": {
+  "language": {
+   "color": {
+    "palette": {
+     "s5white": "#FFFFFF",
+     "s5ink": "#1F2933",
+     "s5slate": "#56606C",
+     "s5hair": "#DDE2E8",
+     "s5today": "#5F6E84",
+     "s5todaySoft": "#F1F3F6",
+     "s5next": "#0F7C86",
+     "s5nextSoft": "#E7F4F5",
+     "s5mid": "#1F5F9E",
+     "s5future": "#1E3A8A",
+     "s5futureSoft": "#EAEFFA",
+     "s5lane": "#E6EBF2",
+     "s5gold": "#C98A0B"
+    },
+    "roles": {
+     "background": "s5white",
+     "surface": "s5nextSoft",
+     "text": "s5ink",
+     "muted": "s5slate",
+     "accent": "s5next",
+     "rule": "s5hair"
+    },
+    "data": [
+     "s5next",
+     "s5ink"
+    ]
+   },
+   "type": {
+    "display": {
+     "family": "Futura",
+     "weight": 700,
+     "tracking": -0.01
+    },
+    "body": {
+     "family": "Gill Sans",
+     "weight": 400
+    },
+    "mono": {
+     "family": "Menlo"
+    },
+    "scale": {
+     "base": 16,
+     "ratio": 1.25
+    }
+   },
+   "space": {
+    "unit": 8,
+    "margin": 36,
+    "gutter": 16
+   },
+   "grid": {
+    "columns": 12,
+    "rows": 6
+   },
+   "shape": {
+    "radius": 10,
+    "stroke": 0
+   },
+   "texture": [],
+   "charts": {
+    "axis": "hairline",
+    "gridlines": "none",
+    "labels": "none",
+    "highlight": "s5next",
+    "legend": "none"
+   },
+   "chrome": {
+    "slideNumber": false
+   }
+  }
+ },
+ "data": {},
+ "slides": [
+  {
+   "id": "transformation",
+   "message": "Three stages and three years take us from manual work to an AI-native organization",
+   "background": "s5white",
+   "notes": "Strategy / transformation: a chevron maturity model with a maturity meter per stage, then a year-by-year roadmap with initiative lanes and milestones.",
+   "compose": {
+    "free": {
+     "items": [
+      {
+       "text": "TRANSFORMATION ROADMAP  ·  2026 – 2028",
+       "role": "label",
+       "size": 10.5,
+       "font": "Futura",
+       "weight": "bold",
+       "tone": "s5next",
+       "tracking": 0.16,
+       "box": [
+        0.0,
+        0.0,
+        6.3243,
+        0.2308
+       ]
+      },
+      {
+       "text": "From manual workflow to AI-native organization",
+       "role": "title",
+       "size": 28,
+       "font": "Futura",
+       "weight": "bold",
+       "tone": "s5ink",
+       "box": [
+        0.0,
+        0.24,
+        11.9997,
+        0.5723
+       ]
+      },
+      {
+       "text": "From fragmented tools to an autonomous, high-performance organization",
+       "role": "small",
+       "size": 14,
+       "font": "Gill Sans",
+       "tone": "s5slate",
+       "box": [
+        0.0,
+        0.7938,
+        7.2,
+        0.2954
+       ]
+      },
+      {
+       "text": "People  ×  Process  ×  AI",
+       "role": "small",
+       "size": 14,
+       "font": "Gill Sans",
+       "tone": "s5ink",
+       "align": "right",
+       "box": [
+        6.9081,
+        0.7938,
+        2.6757,
+        0.2954
+       ]
+      },
+      {
+       "text": "=  compounding impact",
+       "role": "small",
+       "size": 14,
+       "font": "Gill Sans",
+       "weight": "bold",
+       "tone": "s5next",
+       "box": [
+        9.6616,
+        0.7938,
+        2.3381,
+        0.2954
+       ]
+      },
+      {
+       "shape": "homePlate",
+       "decorative": true,
+       "fill": "s5today",
+       "box": [
+        0.0,
+        1.2738,
+        4.1488,
+        0.5723
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s5today",
+        "opacity": 0
+       },
+       "row": {
+        "items": [
+         {
+          "text": "TODAY",
+          "role": "label",
+          "size": 10.5,
+          "font": "Futura",
+          "weight": "bold",
+          "tone": "s5white",
+          "tracking": 0.1,
+          "width": "auto"
+         },
+         {
+          "text": "Manual",
+          "role": "h3",
+          "size": 18,
+          "font": "Futura",
+          "weight": "bold",
+          "tone": "s5white"
+         }
+        ],
+        "gap": 12,
+        "align": "center"
+       },
+       "box": [
+        0.2141,
+        1.3292,
+        3.4969,
+        0.4615
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "icon": "files",
+          "tone": "s5today",
+          "size": 30,
+          "width": 30,
+          "height": 30,
+          "strokeWidth": 1.75,
+          "box": [
+           0.8046,
+           0.7692,
+           1.5473,
+           1.9231
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "s5today",
+          "box": [
+           3.1565,
+           1.0769,
+           0.2166,
+           0.2692
+          ]
+         },
+         {
+          "text": "Fragmented tools",
+          "role": "small",
+          "size": 13.5,
+          "font": "Gill Sans",
+          "tone": "s5ink",
+          "valign": "middle",
+          "box": [
+           3.6517,
+           0.6538,
+           7.8222,
+           1.1154
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "s5today",
+          "box": [
+           3.1565,
+           2.2692,
+           0.2166,
+           0.2692
+          ]
+         },
+         {
+          "text": "Repetitive work",
+          "role": "small",
+          "size": 13.5,
+          "font": "Gill Sans",
+          "tone": "s5ink",
+          "valign": "middle",
+          "box": [
+           3.6517,
+           1.8462,
+           7.8222,
+           1.1154
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "s5today",
+          "box": [
+           3.1565,
+           3.4615,
+           0.2166,
+           0.2692
+          ]
+         },
+         {
+          "text": "Slow decisions",
+          "role": "small",
+          "size": 13.5,
+          "font": "Gill Sans",
+          "tone": "s5ink",
+          "valign": "middle",
+          "box": [
+           3.6517,
+           3.0385,
+           7.8222,
+           1.1154
+          ]
+         },
+         {
+          "text": "AI MATURITY",
+          "role": "caption",
+          "size": 10,
+          "font": "Gill Sans",
+          "tone": "s5slate",
+          "tracking": 0.06,
+          "valign": "middle",
+          "box": [
+           0.8046,
+           4.6923,
+           3.4041,
+           0.8462
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "s5today",
+          "box": [
+           4.3944,
+           4.9038,
+           0.3404,
+           0.4231
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "s5hair",
+          "box": [
+           5.0133,
+           4.9038,
+           0.3404,
+           0.4231
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "s5hair",
+          "box": [
+           5.6323,
+           4.9038,
+           0.3404,
+           0.4231
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "s5hair",
+          "box": [
+           6.2512,
+           4.9038,
+           0.3404,
+           0.4231
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "s5hair",
+          "box": [
+           6.8701,
+           4.9038,
+           0.3404,
+           0.4231
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s5todaySoft",
+        "radius": 10
+       },
+       "box": [
+        0.0,
+        1.9754,
+        3.7729,
+        1.44
+       ]
+      },
+      {
+       "shape": "chevron",
+       "decorative": true,
+       "fill": "s5next",
+       "box": [
+        3.925,
+        1.2738,
+        4.1488,
+        0.5723
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s5next",
+        "opacity": 0
+       },
+       "row": {
+        "items": [
+         {
+          "text": "NEXT",
+          "role": "label",
+          "size": 10.5,
+          "font": "Futura",
+          "weight": "bold",
+          "tone": "s5white",
+          "tracking": 0.1,
+          "width": "auto"
+         },
+         {
+          "text": "AI-assisted",
+          "role": "h3",
+          "size": 18,
+          "font": "Futura",
+          "weight": "bold",
+          "tone": "s5white"
+         }
+        ],
+        "gap": 12,
+        "align": "center"
+       },
+       "box": [
+        4.3823,
+        1.3292,
+        3.2536,
+        0.4615
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "icon": "bot",
+          "tone": "s5next",
+          "size": 30,
+          "width": 30,
+          "height": 30,
+          "strokeWidth": 1.75,
+          "box": [
+           0.8046,
+           0.7692,
+           1.5473,
+           1.9231
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "s5next",
+          "box": [
+           3.1565,
+           1.0769,
+           0.2166,
+           0.2692
+          ]
+         },
+         {
+          "text": "Copilots for every team",
+          "role": "small",
+          "size": 13.5,
+          "font": "Gill Sans",
+          "tone": "s5ink",
+          "valign": "middle",
+          "box": [
+           3.6517,
+           0.6538,
+           7.8222,
+           1.1154
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "s5next",
+          "box": [
+           3.1565,
+           2.2692,
+           0.2166,
+           0.2692
+          ]
+         },
+         {
+          "text": "Connected knowledge",
+          "role": "small",
+          "size": 13.5,
+          "font": "Gill Sans",
+          "tone": "s5ink",
+          "valign": "middle",
+          "box": [
+           3.6517,
+           1.8462,
+           7.8222,
+           1.1154
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "s5next",
+          "box": [
+           3.1565,
+           3.4615,
+           0.2166,
+           0.2692
+          ]
+         },
+         {
+          "text": "Workflow automation",
+          "role": "small",
+          "size": 13.5,
+          "font": "Gill Sans",
+          "tone": "s5ink",
+          "valign": "middle",
+          "box": [
+           3.6517,
+           3.0385,
+           7.8222,
+           1.1154
+          ]
+         },
+         {
+          "text": "AI MATURITY",
+          "role": "caption",
+          "size": 10,
+          "font": "Gill Sans",
+          "tone": "s5slate",
+          "tracking": 0.06,
+          "valign": "middle",
+          "box": [
+           0.8046,
+           4.6923,
+           3.4041,
+           0.8462
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "s5next",
+          "box": [
+           4.3944,
+           4.9038,
+           0.3404,
+           0.4231
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "s5next",
+          "box": [
+           5.0133,
+           4.9038,
+           0.3404,
+           0.4231
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "s5next",
+          "box": [
+           5.6323,
+           4.9038,
+           0.3404,
+           0.4231
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "s5hair",
+          "box": [
+           6.2512,
+           4.9038,
+           0.3404,
+           0.4231
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "s5hair",
+          "box": [
+           6.8701,
+           4.9038,
+           0.3404,
+           0.4231
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s5nextSoft",
+        "radius": 10
+       },
+       "box": [
+        4.1134,
+        1.9754,
+        3.7729,
+        1.44
+       ]
+      },
+      {
+       "shape": "chevron",
+       "decorative": true,
+       "fill": "s5future",
+       "box": [
+        7.85,
+        1.2738,
+        4.1488,
+        0.5723
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s5future",
+        "opacity": 0
+       },
+       "row": {
+        "items": [
+         {
+          "text": "FUTURE",
+          "role": "label",
+          "size": 10.5,
+          "font": "Futura",
+          "weight": "bold",
+          "tone": "s5white",
+          "tracking": 0.1,
+          "width": "auto"
+         },
+         {
+          "text": "AI-native",
+          "role": "h3",
+          "size": 18,
+          "font": "Futura",
+          "weight": "bold",
+          "tone": "s5white"
+         }
+        ],
+        "gap": 12,
+        "align": "center"
+       },
+       "box": [
+        8.3073,
+        1.3292,
+        3.2536,
+        0.4615
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "icon": "brain-circuit",
+          "tone": "s5future",
+          "size": 30,
+          "width": 30,
+          "height": 30,
+          "strokeWidth": 1.75,
+          "box": [
+           0.8046,
+           0.7692,
+           1.5473,
+           1.9231
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "s5future",
+          "box": [
+           3.1565,
+           1.0769,
+           0.2166,
+           0.2692
+          ]
+         },
+         {
+          "text": "Autonomous agents",
+          "role": "small",
+          "size": 13.5,
+          "font": "Gill Sans",
+          "tone": "s5ink",
+          "valign": "middle",
+          "box": [
+           3.6517,
+           0.6538,
+           7.8222,
+           1.1154
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "s5future",
+          "box": [
+           3.1565,
+           2.2692,
+           0.2166,
+           0.2692
+          ]
+         },
+         {
+          "text": "Intelligent orchestration",
+          "role": "small",
+          "size": 13.5,
+          "font": "Gill Sans",
+          "tone": "s5ink",
+          "valign": "middle",
+          "box": [
+           3.6517,
+           1.8462,
+           7.8222,
+           1.1154
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "s5future",
+          "box": [
+           3.1565,
+           3.4615,
+           0.2166,
+           0.2692
+          ]
+         },
+         {
+          "text": "Continuous optimization",
+          "role": "small",
+          "size": 13.5,
+          "font": "Gill Sans",
+          "tone": "s5ink",
+          "valign": "middle",
+          "box": [
+           3.6517,
+           3.0385,
+           7.8222,
+           1.1154
+          ]
+         },
+         {
+          "text": "AI MATURITY",
+          "role": "caption",
+          "size": 10,
+          "font": "Gill Sans",
+          "tone": "s5slate",
+          "tracking": 0.06,
+          "valign": "middle",
+          "box": [
+           0.8046,
+           4.6923,
+           3.4041,
+           0.8462
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "s5future",
+          "box": [
+           4.3944,
+           4.9038,
+           0.3404,
+           0.4231
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "s5future",
+          "box": [
+           5.0133,
+           4.9038,
+           0.3404,
+           0.4231
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "s5future",
+          "box": [
+           5.6323,
+           4.9038,
+           0.3404,
+           0.4231
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "s5future",
+          "box": [
+           6.2512,
+           4.9038,
+           0.3404,
+           0.4231
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "s5future",
+          "box": [
+           6.8701,
+           4.9038,
+           0.3404,
+           0.4231
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s5futureSoft",
+        "radius": 10
+       },
+       "box": [
+        8.2268,
+        1.9754,
+        3.7729,
+        1.44
+       ]
+      },
+      {
+       "text": "ROADMAP",
+       "role": "label",
+       "size": 10.5,
+       "font": "Futura",
+       "weight": "bold",
+       "tone": "s5ink",
+       "tracking": 0.16,
+       "valign": "middle",
+       "box": [
+        0.0,
+        3.6185,
+        1.8487,
+        0.2769
+       ]
+      },
+      {
+       "text": "2026",
+       "role": "h2",
+       "size": 22,
+       "font": "Futura",
+       "weight": "bold",
+       "tone": "s5next",
+       "box": [
+        1.946,
+        3.5631,
+        0.8757,
+        0.4062
+       ]
+      },
+      {
+       "text": "Foundation",
+       "role": "small",
+       "size": 13.5,
+       "font": "Gill Sans",
+       "tone": "s5slate",
+       "valign": "middle",
+       "box": [
+        2.8411,
+        3.6369,
+        2.2378,
+        0.2769
+       ]
+      },
+      {
+       "shape": "roundRect",
+       "decorative": true,
+       "fill": "s5next",
+       "radius": 2,
+       "box": [
+        1.946,
+        4.0615,
+        3.2929,
+        0.0554
+       ]
+      },
+      {
+       "text": "2027",
+       "role": "h2",
+       "size": 22,
+       "font": "Futura",
+       "weight": "bold",
+       "tone": "s5mid",
+       "box": [
+        5.2972,
+        3.5631,
+        0.8757,
+        0.4062
+       ]
+      },
+      {
+       "text": "Scale",
+       "role": "small",
+       "size": 13.5,
+       "font": "Gill Sans",
+       "tone": "s5slate",
+       "valign": "middle",
+       "box": [
+        6.1923,
+        3.6369,
+        2.2378,
+        0.2769
+       ]
+      },
+      {
+       "shape": "roundRect",
+       "decorative": true,
+       "fill": "s5mid",
+       "radius": 2,
+       "box": [
+        5.3264,
+        4.0615,
+        3.2929,
+        0.0554
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s5hair",
+       "box": [
+        5.2921,
+        4.1354,
+        0.0101,
+        1.8462
+       ]
+      },
+      {
+       "text": "2028",
+       "role": "h2",
+       "size": 22,
+       "font": "Futura",
+       "weight": "bold",
+       "tone": "s5future",
+       "box": [
+        8.6485,
+        3.5631,
+        0.8757,
+        0.4062
+       ]
+      },
+      {
+       "text": "Autonomy",
+       "role": "small",
+       "size": 13.5,
+       "font": "Gill Sans",
+       "tone": "s5slate",
+       "valign": "middle",
+       "box": [
+        9.5436,
+        3.6369,
+        2.2378,
+        0.2769
+       ]
+      },
+      {
+       "shape": "roundRect",
+       "decorative": true,
+       "fill": "s5future",
+       "radius": 2,
+       "box": [
+        8.6776,
+        4.0615,
+        3.2929,
+        0.0554
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s5hair",
+       "box": [
+        8.6434,
+        4.1354,
+        0.0101,
+        1.8462
+       ]
+      },
+      {
+       "text": "Data & platform",
+       "role": "small",
+       "size": 12.5,
+       "font": "Gill Sans",
+       "tone": "s5ink",
+       "valign": "middle",
+       "box": [
+        0.0,
+        4.2462,
+        1.8973,
+        0.2954
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s5next",
+        "radius": 100
+       },
+       "row": {
+        "items": [
+         {
+          "text": "Unified data layer  ·  AI platform  ·  governance",
+          "role": "caption",
+          "size": 10.5,
+          "font": "Gill Sans",
+          "tone": "s5white"
+         }
+        ],
+        "pad": [
+         0,
+         12,
+         0,
+         12
+        ],
+        "align": "center"
+       },
+       "box": [
+        1.9751,
+        4.2646,
+        4.1307,
+        0.2585
+       ]
+      },
+      {
+       "text": "Copilots",
+       "role": "small",
+       "size": 12.5,
+       "font": "Gill Sans",
+       "tone": "s5ink",
+       "valign": "middle",
+       "box": [
+        0.0,
+        4.5969,
+        1.8973,
+        0.2954
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s5mid",
+        "radius": 100
+       },
+       "row": {
+        "items": [
+         {
+          "text": "Copilots in every function  ·  connected knowledge",
+          "role": "caption",
+          "size": 10.5,
+          "font": "Gill Sans",
+          "tone": "s5white"
+         }
+        ],
+        "pad": [
+         0,
+         12,
+         0,
+         12
+        ],
+        "align": "center"
+       },
+       "box": [
+        3.6508,
+        4.6154,
+        4.9685,
+        0.2585
+       ]
+      },
+      {
+       "text": "Agents",
+       "role": "small",
+       "size": 12.5,
+       "font": "Gill Sans",
+       "tone": "s5ink",
+       "valign": "middle",
+       "box": [
+        0.0,
+        4.9477,
+        1.8973,
+        0.2954
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s5future",
+        "radius": 100
+       },
+       "row": {
+        "items": [
+         {
+          "text": "Autonomous agents  ·  intelligent orchestration",
+          "role": "caption",
+          "size": 10.5,
+          "font": "Gill Sans",
+          "tone": "s5white"
+         }
+        ],
+        "pad": [
+         0,
+         12,
+         0,
+         12
+        ],
+        "align": "center"
+       },
+       "box": [
+        7.002,
+        4.9662,
+        4.9685,
+        0.2585
+       ]
+      },
+      {
+       "text": "People & operating model",
+       "role": "small",
+       "size": 12.5,
+       "font": "Gill Sans",
+       "tone": "s5ink",
+       "valign": "middle",
+       "box": [
+        0.0,
+        5.2985,
+        1.8973,
+        0.2954
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s5lane",
+        "radius": 100
+       },
+       "row": {
+        "items": [
+         {
+          "text": "Upskilling   ·   new AI-native roles   ·   continuous optimization",
+          "role": "caption",
+          "size": 10.5,
+          "font": "Gill Sans",
+          "tone": "s5ink"
+         }
+        ],
+        "pad": [
+         0,
+         12,
+         0,
+         12
+        ],
+        "align": "center"
+       },
+       "box": [
+        1.9751,
+        5.3169,
+        9.9954,
+        0.2585
+       ]
+      },
+      {
+       "text": "Milestones",
+       "role": "small",
+       "size": 12.5,
+       "font": "Gill Sans",
+       "tone": "s5ink",
+       "valign": "middle",
+       "box": [
+        0.0,
+        5.6492,
+        1.8973,
+        0.2954
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s5gold",
+       "opacity": 0.6,
+       "box": [
+        3.6165,
+        4.1354,
+        0.0101,
+        1.5508
+       ]
+      },
+      {
+       "shape": "diamond",
+       "decorative": true,
+       "fill": "s5gold",
+       "box": [
+        3.534,
+        5.7138,
+        0.1751,
+        0.1662
+       ]
+      },
+      {
+       "text": "AI platform live",
+       "role": "caption",
+       "size": 10.5,
+       "font": "Gill Sans",
+       "weight": "bold",
+       "tone": "s5ink",
+       "valign": "middle",
+       "box": [
+        3.7578,
+        5.6677,
+        2.2378,
+        0.2585
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s5gold",
+       "opacity": 0.6,
+       "box": [
+        6.9678,
+        4.1354,
+        0.0101,
+        1.5508
+       ]
+      },
+      {
+       "shape": "diamond",
+       "decorative": true,
+       "fill": "s5gold",
+       "box": [
+        6.8853,
+        5.7138,
+        0.1751,
+        0.1662
+       ]
+      },
+      {
+       "text": "Copilots in every team",
+       "role": "caption",
+       "size": 10.5,
+       "font": "Gill Sans",
+       "weight": "bold",
+       "tone": "s5ink",
+       "valign": "middle",
+       "box": [
+        7.109,
+        5.6677,
+        2.2378,
+        0.2585
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s5gold",
+       "opacity": 0.6,
+       "box": [
+        9.4812,
+        4.1354,
+        0.0101,
+        1.5508
+       ]
+      },
+      {
+       "shape": "diamond",
+       "decorative": true,
+       "fill": "s5gold",
+       "box": [
+        9.3987,
+        5.7138,
+        0.1751,
+        0.1662
+       ]
+      },
+      {
+       "text": "First autonomous workflows",
+       "role": "caption",
+       "size": 10.5,
+       "font": "Gill Sans",
+       "weight": "bold",
+       "tone": "s5ink",
+       "valign": "middle",
+       "box": [
+        9.6225,
+        5.6677,
+        2.2378,
+        0.2585
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "diagnosis",
+   "message": "Connected knowledge and ownership precede autonomy.",
+   "background": "s5white",
+   "notes": "Fictional demonstration data. Connected knowledge and ownership precede autonomy.",
+   "compose": {
+    "free": {
+     "items": [
+      {
+       "text": "TRANSFORMATION STRATEGY",
+       "role": "label",
+       "size": 10.5,
+       "font": "Gill Sans",
+       "tone": "s5next",
+       "weight": "bold",
+       "box": [
+        0.0,
+        0.0,
+        9.7298,
+        0.2308
+       ]
+      },
+      {
+       "text": "Start where the workflow breaks.",
+       "role": "title",
+       "size": 30,
+       "font": "Futura",
+       "tone": "s5ink",
+       "weight": "bold",
+       "box": [
+        0.0,
+        0.4431,
+        11.9968,
+        0.6
+       ]
+      },
+      {
+       "text": "Connect knowledge and assign ownership before increasing autonomy.",
+       "role": "small",
+       "size": 15,
+       "font": "Gill Sans",
+       "tone": "s5slate",
+       "box": [
+        0.0,
+        1.08,
+        11.4811,
+        0.4615
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s5hair",
+       "box": [
+        0.0,
+        5.7737,
+        11.9968,
+        0.0096
+       ]
+      },
+      {
+       "text": "From Manual to AI-Native  ·  Illustrative demo",
+       "role": "caption",
+       "size": 10,
+       "font": "Gill Sans",
+       "tone": "s5slate",
+       "box": [
+        0.0,
+        5.9077,
+        10.1189,
+        0.2308
+       ]
+      },
+      {
+       "text": "02 / 05",
+       "role": "caption",
+       "size": 10,
+       "font": "Gill Sans",
+       "tone": "s5slate",
+       "align": "right",
+       "box": [
+        10.9946,
+        5.9077,
+        1.0022,
+        0.2308
+       ]
+      },
+      {
+       "text": "Fragmented tools",
+       "role": "h3",
+       "size": 21,
+       "font": "Futura",
+       "tone": "s5ink",
+       "weight": "bold",
+       "box": [
+        0.0,
+        1.9662,
+        3.4054,
+        0.4154
+       ]
+      },
+      {
+       "text": "People rebuild context at every handoff.",
+       "role": "body",
+       "size": 16,
+       "font": "Gill Sans",
+       "tone": "s5slate",
+       "box": [
+        3.6487,
+        1.9662,
+        4.4757,
+        0.6092
+       ]
+      },
+      {
+       "shape": "chevron",
+       "decorative": true,
+       "fill": "s5next",
+       "box": [
+        8.4162,
+        2.04,
+        0.2335,
+        0.2492
+       ]
+      },
+      {
+       "text": "Connect knowledge",
+       "role": "h3",
+       "size": 19,
+       "font": "Futura",
+       "tone": "s5next",
+       "weight": "bold",
+       "box": [
+        8.9027,
+        1.9662,
+        3.0941,
+        0.5538
+       ]
+      },
+      {
+       "text": "Repetitive work",
+       "role": "h3",
+       "size": 21,
+       "font": "Futura",
+       "tone": "s5ink",
+       "weight": "bold",
+       "box": [
+        0.0,
+        2.9631,
+        3.4054,
+        0.4154
+       ]
+      },
+      {
+       "text": "Teams spend capacity copying and routing.",
+       "role": "body",
+       "size": 16,
+       "font": "Gill Sans",
+       "tone": "s5slate",
+       "box": [
+        3.6487,
+        2.9631,
+        4.4757,
+        0.6092
+       ]
+      },
+      {
+       "shape": "chevron",
+       "decorative": true,
+       "fill": "s5next",
+       "box": [
+        8.4162,
+        3.0369,
+        0.2335,
+        0.2492
+       ]
+      },
+      {
+       "text": "Automate handoffs",
+       "role": "h3",
+       "size": 19,
+       "font": "Futura",
+       "tone": "s5next",
+       "weight": "bold",
+       "box": [
+        8.9027,
+        2.9631,
+        3.0941,
+        0.5538
+       ]
+      },
+      {
+       "text": "Slow decisions",
+       "role": "h3",
+       "size": 21,
+       "font": "Futura",
+       "tone": "s5ink",
+       "weight": "bold",
+       "box": [
+        0.0,
+        3.96,
+        3.4054,
+        0.4154
+       ]
+      },
+      {
+       "text": "Evidence arrives after the decision window.",
+       "role": "body",
+       "size": 16,
+       "font": "Gill Sans",
+       "tone": "s5slate",
+       "box": [
+        3.6487,
+        3.96,
+        4.4757,
+        0.6092
+       ]
+      },
+      {
+       "shape": "chevron",
+       "decorative": true,
+       "fill": "s5next",
+       "box": [
+        8.4162,
+        4.0338,
+        0.2335,
+        0.2492
+       ]
+      },
+      {
+       "text": "Surface insights",
+       "role": "h3",
+       "size": 19,
+       "font": "Futura",
+       "tone": "s5next",
+       "weight": "bold",
+       "box": [
+        8.9027,
+        3.96,
+        3.0941,
+        0.5538
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "Choose a high-volume workflow with a measurable outcome and an accountable owner.",
+          "role": "h3",
+          "size": 17,
+          "font": "Futura",
+          "tone": "s5next",
+          "weight": "bold",
+          "box": [
+           0.253,
+           1.3151,
+           11.4842,
+           3.2877
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s5nextSoft",
+        "radius": 10
+       },
+       "box": [
+        0.0,
+        4.8185,
+        11.9968,
+        0.6738
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "operating-model",
+   "message": "People, agents and platform have distinct responsibilities.",
+   "background": "s5white",
+   "notes": "Fictional demonstration data. People, agents and platform have distinct responsibilities.",
+   "compose": {
+    "free": {
+     "items": [
+      {
+       "text": "TRANSFORMATION STRATEGY",
+       "role": "label",
+       "size": 10.5,
+       "font": "Gill Sans",
+       "tone": "s5next",
+       "weight": "bold",
+       "box": [
+        0.0,
+        0.0,
+        9.7298,
+        0.2308
+       ]
+      },
+      {
+       "text": "Autonomy grows inside a clear operating model.",
+       "role": "title",
+       "size": 30,
+       "font": "Futura",
+       "tone": "s5ink",
+       "weight": "bold",
+       "box": [
+        0.0,
+        0.4431,
+        11.9968,
+        0.6
+       ]
+      },
+      {
+       "text": "People own outcomes; agents execute within policy; the platform supplies context and control.",
+       "role": "small",
+       "size": 15,
+       "font": "Gill Sans",
+       "tone": "s5slate",
+       "box": [
+        0.0,
+        1.08,
+        11.4811,
+        0.4615
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s5hair",
+       "box": [
+        0.0,
+        5.7737,
+        11.9968,
+        0.0096
+       ]
+      },
+      {
+       "text": "From Manual to AI-Native  ·  Illustrative demo",
+       "role": "caption",
+       "size": 10,
+       "font": "Gill Sans",
+       "tone": "s5slate",
+       "box": [
+        0.0,
+        5.9077,
+        10.1189,
+        0.2308
+       ]
+      },
+      {
+       "text": "03 / 05",
+       "role": "caption",
+       "size": 10,
+       "font": "Gill Sans",
+       "tone": "s5slate",
+       "align": "right",
+       "box": [
+        10.9946,
+        5.9077,
+        1.0022,
+        0.2308
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "People",
+          "role": "h3",
+          "size": 24,
+          "font": "Futura",
+          "tone": "s5next",
+          "weight": "bold",
+          "box": [
+           0.8463,
+           0.6,
+           10.3073,
+           1.0714
+          ]
+         },
+         {
+          "text": "Outcome ownership\nException review\nWorkflow design",
+          "role": "body",
+          "size": 17,
+          "font": "Gill Sans",
+          "tone": "s5slate",
+          "leading": 1.4,
+          "box": [
+           0.8463,
+           2.2286,
+           10.3073,
+           3.0429
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s5nextSoft",
+        "radius": 10
+       },
+       "box": [
+        0.0,
+        1.9385,
+        3.8627,
+        2.5846
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "Agents",
+          "role": "h3",
+          "size": 24,
+          "font": "Futura",
+          "tone": "s5next",
+          "weight": "bold",
+          "box": [
+           0.8463,
+           0.6,
+           10.3073,
+           1.0714
+          ]
+         },
+         {
+          "text": "Bounded execution\nContext-aware actions\nTraceable handoffs",
+          "role": "body",
+          "size": 17,
+          "font": "Gill Sans",
+          "tone": "s5slate",
+          "leading": 1.4,
+          "box": [
+           0.8463,
+           2.2286,
+           10.3073,
+           3.0429
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s5nextSoft",
+        "radius": 10
+       },
+       "box": [
+        4.067,
+        1.9385,
+        3.8627,
+        2.5846
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "Platform",
+          "role": "h3",
+          "size": 24,
+          "font": "Futura",
+          "tone": "s5next",
+          "weight": "bold",
+          "box": [
+           0.8463,
+           0.6,
+           10.3073,
+           1.0714
+          ]
+         },
+         {
+          "text": "Connected knowledge\nIdentity and policy\nEvaluation and telemetry",
+          "role": "body",
+          "size": 17,
+          "font": "Gill Sans",
+          "tone": "s5slate",
+          "leading": 1.4,
+          "box": [
+           0.8463,
+           2.2286,
+           10.3073,
+           3.0429
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s5nextSoft",
+        "radius": 10
+       },
+       "box": [
+        8.1341,
+        1.9385,
+        3.8627,
+        2.5846
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "Expand permissions only when evaluations and operational evidence justify the next level.",
+          "role": "h3",
+          "size": 17,
+          "font": "Futura",
+          "tone": "s5next",
+          "weight": "bold",
+          "box": [
+           0.253,
+           1.3151,
+           11.4842,
+           3.2877
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s5nextSoft",
+        "radius": 10
+       },
+       "box": [
+        0.0,
+        4.8185,
+        11.9968,
+        0.6738
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "roadmap",
+   "message": "Three years of initiatives advance through evidence gates.",
+   "background": "s5white",
+   "notes": "Fictional demonstration data. Three years of initiatives advance through evidence gates.",
+   "compose": {
+    "free": {
+     "items": [
+      {
+       "text": "TRANSFORMATION STRATEGY",
+       "role": "label",
+       "size": 10.5,
+       "font": "Gill Sans",
+       "tone": "s5next",
+       "weight": "bold",
+       "box": [
+        0.0,
+        0.0,
+        9.7298,
+        0.2308
+       ]
+      },
+      {
+       "text": "Three years. Three gates. Evidence at every step.",
+       "role": "title",
+       "size": 30,
+       "font": "Futura",
+       "tone": "s5ink",
+       "weight": "bold",
+       "box": [
+        0.0,
+        0.4431,
+        11.9968,
+        0.6
+       ]
+      },
+      {
+       "text": "Foundation in 2026, scale in 2027, autonomy in 2028.",
+       "role": "small",
+       "size": 15,
+       "font": "Gill Sans",
+       "tone": "s5slate",
+       "box": [
+        0.0,
+        1.08,
+        11.4811,
+        0.4615
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s5hair",
+       "box": [
+        0.0,
+        5.7737,
+        11.9968,
+        0.0096
+       ]
+      },
+      {
+       "text": "From Manual to AI-Native  ·  Illustrative demo",
+       "role": "caption",
+       "size": 10,
+       "font": "Gill Sans",
+       "tone": "s5slate",
+       "box": [
+        0.0,
+        5.9077,
+        10.1189,
+        0.2308
+       ]
+      },
+      {
+       "text": "04 / 05",
+       "role": "caption",
+       "size": 10,
+       "font": "Gill Sans",
+       "tone": "s5slate",
+       "align": "right",
+       "box": [
+        10.9946,
+        5.9077,
+        1.0022,
+        0.2308
+       ]
+      },
+      {
+       "text": "2026",
+       "role": "display",
+       "size": 44,
+       "font": "Futura",
+       "tone": "s5next",
+       "weight": "bold",
+       "box": [
+        0.0,
+        1.8923,
+        3.8627,
+        0.7385
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s5next",
+       "box": [
+        0.0,
+        2.7869,
+        3.8627,
+        0.0385
+       ]
+      },
+      {
+       "text": "Foundation",
+       "role": "h3",
+       "size": 23,
+       "font": "Futura",
+       "tone": "s5ink",
+       "weight": "bold",
+       "box": [
+        0.0,
+        3.0462,
+        3.8627,
+        0.4615
+       ]
+      },
+      {
+       "text": "Connect knowledge\nSet identity and policy\nPilot two workflows",
+       "role": "body",
+       "size": 16,
+       "font": "Gill Sans",
+       "tone": "s5slate",
+       "leading": 1.3,
+       "box": [
+        0.0,
+        3.6738,
+        3.8627,
+        1.1538
+       ]
+      },
+      {
+       "text": "Gate: reliable first value",
+       "role": "small",
+       "size": 12,
+       "font": "Gill Sans",
+       "tone": "s5next",
+       "weight": "bold",
+       "box": [
+        0.0,
+        5.0677,
+        3.8627,
+        0.3323
+       ]
+      },
+      {
+       "text": "2027",
+       "role": "display",
+       "size": 44,
+       "font": "Futura",
+       "tone": "s5next",
+       "weight": "bold",
+       "box": [
+        4.067,
+        1.8923,
+        3.8627,
+        0.7385
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s5next",
+       "box": [
+        4.067,
+        2.7869,
+        3.8627,
+        0.0385
+       ]
+      },
+      {
+       "text": "Scale",
+       "role": "h3",
+       "size": 23,
+       "font": "Futura",
+       "tone": "s5ink",
+       "weight": "bold",
+       "box": [
+        4.067,
+        3.0462,
+        3.8627,
+        0.4615
+       ]
+      },
+      {
+       "text": "Roll out team copilots\nAutomate cross-team flows\nMeasure adoption and ROI",
+       "role": "body",
+       "size": 16,
+       "font": "Gill Sans",
+       "tone": "s5slate",
+       "leading": 1.3,
+       "box": [
+        4.067,
+        3.6738,
+        3.8627,
+        1.1538
+       ]
+      },
+      {
+       "text": "Gate: repeatable outcomes",
+       "role": "small",
+       "size": 12,
+       "font": "Gill Sans",
+       "tone": "s5next",
+       "weight": "bold",
+       "box": [
+        4.067,
+        5.0677,
+        3.8627,
+        0.3323
+       ]
+      },
+      {
+       "text": "2028",
+       "role": "display",
+       "size": 44,
+       "font": "Futura",
+       "tone": "s5next",
+       "weight": "bold",
+       "box": [
+        8.1341,
+        1.8923,
+        3.8627,
+        0.7385
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s5next",
+       "box": [
+        8.1341,
+        2.7869,
+        3.8627,
+        0.0385
+       ]
+      },
+      {
+       "text": "Autonomy",
+       "role": "h3",
+       "size": 23,
+       "font": "Futura",
+       "tone": "s5ink",
+       "weight": "bold",
+       "box": [
+        8.1341,
+        3.0462,
+        3.8627,
+        0.4615
+       ]
+      },
+      {
+       "text": "Deploy bounded agents\nOrchestrate end-to-end flows\nOptimize continuously",
+       "role": "body",
+       "size": 16,
+       "font": "Gill Sans",
+       "tone": "s5slate",
+       "leading": 1.3,
+       "box": [
+        8.1341,
+        3.6738,
+        3.8627,
+        1.1538
+       ]
+      },
+      {
+       "text": "Gate: controlled autonomy",
+       "role": "small",
+       "size": 12,
+       "font": "Gill Sans",
+       "tone": "s5next",
+       "weight": "bold",
+       "box": [
+        8.1341,
+        5.0677,
+        3.8627,
+        0.3323
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "investment",
+   "message": "Stage investment against measurable workflow outcomes.",
+   "background": "s5white",
+   "notes": "Fictional demonstration data. Stage investment against measurable workflow outcomes.",
+   "compose": {
+    "free": {
+     "items": [
+      {
+       "text": "TRANSFORMATION STRATEGY",
+       "role": "label",
+       "size": 10.5,
+       "font": "Gill Sans",
+       "tone": "s5next",
+       "weight": "bold",
+       "box": [
+        0.0,
+        0.0,
+        9.7298,
+        0.2308
+       ]
+      },
+      {
+       "text": "Fund the foundation. Measure the transformation.",
+       "role": "title",
+       "size": 30,
+       "font": "Futura",
+       "tone": "s5ink",
+       "weight": "bold",
+       "box": [
+        0.0,
+        0.4431,
+        11.9968,
+        0.6
+       ]
+      },
+      {
+       "text": "Release investment in stages, with explicit evidence for each expansion.",
+       "role": "small",
+       "size": 15,
+       "font": "Gill Sans",
+       "tone": "s5slate",
+       "box": [
+        0.0,
+        1.08,
+        11.4811,
+        0.4615
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s5hair",
+       "box": [
+        0.0,
+        5.7737,
+        11.9968,
+        0.0096
+       ]
+      },
+      {
+       "text": "From Manual to AI-Native  ·  Illustrative demo",
+       "role": "caption",
+       "size": 10,
+       "font": "Gill Sans",
+       "tone": "s5slate",
+       "box": [
+        0.0,
+        5.9077,
+        10.1189,
+        0.2308
+       ]
+      },
+      {
+       "text": "05 / 05",
+       "role": "caption",
+       "size": 10,
+       "font": "Gill Sans",
+       "tone": "s5slate",
+       "align": "right",
+       "box": [
+        10.9946,
+        5.9077,
+        1.0022,
+        0.2308
+       ]
+      },
+      {
+       "text": "2",
+       "role": "display",
+       "size": 44,
+       "font": "Futura",
+       "tone": "s5next",
+       "weight": "bold",
+       "box": [
+        0.0,
+        1.9477,
+        3.6973,
+        0.7846
+       ]
+      },
+      {
+       "text": "Pilot workflows",
+       "role": "h3",
+       "size": 18,
+       "font": "Futura",
+       "tone": "s5ink",
+       "weight": "bold",
+       "box": [
+        0.0,
+        2.7969,
+        3.6973,
+        0.3692
+       ]
+      },
+      {
+       "text": "Named owners and documented baselines",
+       "role": "small",
+       "size": 13,
+       "font": "Gill Sans",
+       "tone": "s5slate",
+       "box": [
+        0.0,
+        3.24,
+        3.6973,
+        0.5077
+       ]
+      },
+      {
+       "text": "90 days",
+       "role": "display",
+       "size": 44,
+       "font": "Futura",
+       "tone": "s5next",
+       "weight": "bold",
+       "box": [
+        4.1351,
+        1.9477,
+        3.6973,
+        0.7846
+       ]
+      },
+      {
+       "text": "First evidence gate",
+       "role": "h3",
+       "size": 18,
+       "font": "Futura",
+       "tone": "s5ink",
+       "weight": "bold",
+       "box": [
+        4.1351,
+        2.7969,
+        3.6973,
+        0.3692
+       ]
+      },
+      {
+       "text": "Value, adoption and quality measured",
+       "role": "small",
+       "size": 13,
+       "font": "Gill Sans",
+       "tone": "s5slate",
+       "box": [
+        4.1351,
+        3.24,
+        3.6973,
+        0.5077
+       ]
+      },
+      {
+       "text": "3",
+       "role": "display",
+       "size": 44,
+       "font": "Futura",
+       "tone": "s5next",
+       "weight": "bold",
+       "box": [
+        8.2703,
+        1.9477,
+        3.6973,
+        0.7846
+       ]
+      },
+      {
+       "text": "Success measures",
+       "role": "h3",
+       "size": 18,
+       "font": "Futura",
+       "tone": "s5ink",
+       "weight": "bold",
+       "box": [
+        8.2703,
+        2.7969,
+        3.6973,
+        0.3692
+       ]
+      },
+      {
+       "text": "Time saved, cycle time and error rate",
+       "role": "small",
+       "size": 13,
+       "font": "Gill Sans",
+       "tone": "s5slate",
+       "box": [
+        8.2703,
+        3.24,
+        3.6973,
+        0.5077
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "Approve the foundation phase: knowledge, governance and two measurable workflow pilots.",
+          "role": "h3",
+          "size": 17,
+          "font": "Futura",
+          "tone": "s5next",
+          "weight": "bold",
+          "box": [
+           0.253,
+           1.3151,
+           11.4842,
+           3.2877
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s5nextSoft",
+        "radius": 10
+       },
+       "box": [
+        0.0,
+        4.8185,
+        11.9968,
+        0.6738
+       ]
+      }
+     ]
+    }
+   }
+  }
+ ]
+}

@@ -1,0 +1,2025 @@
+{
+  "schema": "slide-agent.intent/1",
+  "brief": {
+    "title": "AI platform — Q4 engineering review",
+    "audience": "Engineering leadership",
+    "goal": "Show the platform's results and agree the 2027 roadmap and what it needs",
+    "format": "16:9"
+  },
+  "direction": {
+    "concept": "A modern engineering review: crisp white cards on a cool canvas, deep navy headlines with one word in electric indigo, numbers set in mono like live metrics, and every idea anchored by a round tinted icon badge.",
+    "fit": "ask"
+  },
+  "data": {
+    "latency": {
+      "categories": [
+        "Q1",
+        "Q2",
+        "Q3",
+        "Q4"
+      ],
+      "series": [
+        {
+          "name": "p95 latency (ms)",
+          "values": [
+            310,
+            262,
+            214,
+            180
+          ]
+        }
+      ]
+    },
+    "traffic": {
+      "categories": [
+        "Q1",
+        "Q2",
+        "Q3",
+        "Q4"
+      ],
+      "series": [
+        {
+          "name": "Requests / sec (thousands)",
+          "values": [
+            14,
+            21,
+            32,
+            43
+          ]
+        }
+      ]
+    }
+  },
+  "design": {
+    "language": {
+      "color": {
+        "palette": {
+          "canvas": "#F5F7FB",
+          "card": "#FFFFFF",
+          "navy": "#0B1B33",
+          "slate": "#55627A",
+          "line": "#E1E6EF",
+          "indigo": "#4F46E5",
+          "cyan": "#0891B2",
+          "violet": "#7C3AED",
+          "green": "#15803D",
+          "amber": "#B45309",
+          "rose": "#BE123C",
+          "indigoDeep": "#3730A3",
+          "amberBright": "#F5A524",
+          "track": "#EEF1F7",
+          "indigoTint": "#EEF0FF",
+          "cyanTint": "#E4F6FA",
+          "violetTint": "#F3EEFF",
+          "greenTint": "#E7F6EE",
+          "amberTint": "#FFF4E2",
+          "roseTint": "#FDECEE"
+        },
+        "roles": {
+          "background": "canvas",
+          "surface": "card",
+          "text": "navy",
+          "muted": "slate",
+          "accent": "indigo",
+          "accentAlt": "cyan",
+          "rule": "line"
+        },
+        "data": [
+          "indigo",
+          "cyan",
+          "violet"
+        ]
+      },
+      "type": {
+        "display": {
+          "family": "Plus Jakarta Sans",
+          "weight": 800,
+          "tracking": -0.02
+        },
+        "body": {
+          "family": "Plus Jakarta Sans",
+          "weight": 500
+        },
+        "mono": {
+          "family": "JetBrains Mono",
+          "weight": 500
+        },
+        "scale": {
+          "base": 17,
+          "ratio": 1.25
+        }
+      },
+      "space": {
+        "unit": 8,
+        "margin": 44,
+        "gutter": 16
+      },
+      "grid": {
+        "columns": 12,
+        "rows": 8
+      },
+      "shape": {
+        "radius": 14,
+        "stroke": 0,
+        "shadow": "soft"
+      },
+      "surfaces": {
+        "card": {
+          "fill": "card",
+          "radius": 16,
+          "pad": "space.3",
+          "shadow": "soft"
+        },
+        "tile": {
+          "fill": "card",
+          "radius": 16,
+          "pad": "space.2",
+          "shadow": "soft"
+        },
+        "panel": {
+          "fill": "indigoTint",
+          "radius": 20,
+          "pad": "space.3"
+        },
+        "rose": {
+          "fill": "roseTint",
+          "radius": 18,
+          "pad": "space.2.5"
+        },
+        "mint": {
+          "fill": "greenTint",
+          "radius": 18,
+          "pad": "space.2.5"
+        },
+        "track": {
+          "fill": "track",
+          "radius": 10
+        },
+        "dot-indigo-tint": {
+          "fill": "indigoTint",
+          "radius": 100
+        },
+        "dot-cyan-tint": {
+          "fill": "cyanTint",
+          "radius": 100
+        },
+        "dot-violet-tint": {
+          "fill": "violetTint",
+          "radius": 100
+        },
+        "dot-green-tint": {
+          "fill": "greenTint",
+          "radius": 100
+        },
+        "dot-amber-tint": {
+          "fill": "amberTint",
+          "radius": 100
+        },
+        "dot-rose-tint": {
+          "fill": "roseTint",
+          "radius": 100
+        },
+        "dot-indigo": {
+          "fill": "indigo",
+          "radius": 100
+        },
+        "dot-indigo-deep": {
+          "fill": "indigoDeep",
+          "radius": 100
+        }
+      },
+      "charts": {
+        "axis": "hairline",
+        "gridlines": "subtle",
+        "legend": "none",
+        "labels": "end"
+      },
+      "chrome": {
+        "slideNumber": true,
+        "position": "bottom-right"
+      }
+    }
+  },
+  "components": {
+    "agenda": {
+      "params": [
+        "n",
+        "title",
+        "detail",
+        "fill"
+      ],
+      "root": {
+        "row": {
+          "gap": "space.2.5",
+          "align": "center",
+          "items": [
+            {
+              "column": {
+                "surface": "dot-{fill}",
+                "width": 46,
+                "height": 46,
+                "justify": "center",
+                "items": [
+                  {
+                    "text": "{n}",
+                    "role": "h3",
+                    "tone": "card",
+                    "font": "mono",
+                    "align": "center"
+                  }
+                ]
+              }
+            },
+            {
+              "column": {
+                "gap": "space.0.5",
+                "items": [
+                  {
+                    "text": "{title}",
+                    "role": "h3"
+                  },
+                  {
+                    "text": "{detail}",
+                    "role": "body",
+                    "tone": "muted"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "kpi": {
+      "params": [
+        "icon",
+        "fill",
+        "tone",
+        "value",
+        "label",
+        "detail"
+      ],
+      "root": {
+        "column": {
+          "surface": "tile",
+          "gap": "space.1",
+          "justify": "center",
+          "items": [
+            {
+              "column": {
+                "surface": "dot-{fill}",
+                "width": 50,
+                "height": 50,
+                "align": "center",
+                "justify": "center",
+                "items": [
+                  {
+                    "icon": "{icon}",
+                    "tone": "{tone}",
+                    "width": 24,
+                    "height": 24
+                  }
+                ]
+              }
+            },
+            {
+              "space": "space.1"
+            },
+            {
+              "text": "{value}",
+              "role": "display",
+              "size": 46,
+              "font": "mono",
+              "tone": "{tone}"
+            },
+            {
+              "text": "{label}",
+              "role": "h3"
+            },
+            {
+              "text": "{detail}",
+              "role": "small",
+              "tone": "muted"
+            }
+          ]
+        }
+      }
+    },
+    "feature": {
+      "params": [
+        "icon",
+        "fill",
+        "tone",
+        "title",
+        "detail"
+      ],
+      "root": {
+        "column": {
+          "surface": "tile",
+          "gap": "space.1",
+          "align": "center",
+          "justify": "center",
+          "items": [
+            {
+              "column": {
+                "surface": "dot-{fill}",
+                "width": 50,
+                "height": 50,
+                "align": "center",
+                "justify": "center",
+                "items": [
+                  {
+                    "icon": "{icon}",
+                    "tone": "{tone}",
+                    "width": 24,
+                    "height": 24
+                  }
+                ]
+              }
+            },
+            {
+              "text": "{title}",
+              "role": "h3",
+              "align": "center"
+            },
+            {
+              "text": "{detail}",
+              "role": "small",
+              "tone": "muted",
+              "align": "center"
+            }
+          ]
+        }
+      }
+    },
+    "item": {
+      "params": [
+        "icon",
+        "tone",
+        "title",
+        "detail"
+      ],
+      "root": {
+        "row": {
+          "gap": "space.2",
+          "height": 44,
+          "items": [
+            {
+              "icon": "{icon}",
+              "tone": "{tone}",
+              "width": 22,
+              "height": 22
+            },
+            {
+              "column": {
+                "gap": "space.0.25",
+                "items": [
+                  {
+                    "text": "{title}",
+                    "role": "body",
+                    "weight": 700
+                  },
+                  {
+                    "text": "{detail}",
+                    "role": "small",
+                    "tone": "muted"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "slides": [
+    {
+      "id": "cover",
+      "message": "The platform is faster, leaner, and ready to scale",
+      "compose": {
+        "grid": "12x8",
+        "items": [
+          {
+            "at": "c1-6 r1-8",
+            "column": {
+              "gap": "space.3",
+              "justify": "center",
+              "items": [
+                {
+                  "text": "Engineering review · Q4 2026",
+                  "role": "label",
+                  "tone": "accent",
+                  "case": "upper",
+                  "font": "mono",
+                  "tracking": 0.1
+                },
+                {
+                  "text": "Faster, leaner, ready to scale",
+                  "role": "display",
+                  "size": 56
+                },
+                {
+                  "text": "The AI platform: results, architecture, and what comes next",
+                  "role": "lead",
+                  "tone": "muted"
+                }
+              ]
+            }
+          },
+          {
+            "at": "c7-12 r1-8",
+            "bleed": [
+              "right",
+              "top",
+              "bottom"
+            ],
+            "surface": "panel",
+            "column": {
+              "pad": "space.5",
+              "gap": "space.2",
+              "justify": "center",
+              "items": [
+                {
+                  "text": "p95 latency",
+                  "role": "label",
+                  "font": "mono",
+                  "tone": "muted",
+                  "case": "upper",
+                  "tracking": 0.1
+                },
+                {
+                  "text": "310 → 180 ms",
+                  "role": "display",
+                  "size": 44,
+                  "font": "mono",
+                  "tone": "accent"
+                },
+                {
+                  "chart": {
+                    "data": "latency",
+                    "chart": "column",
+                    "highlight": "Q4"
+                  },
+                  "grow": 1
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "agenda",
+      "message": "Five things to cover: results, architecture, reliability, roadmap, and asks",
+      "compose": {
+        "grid": "12x8",
+        "items": [
+          {
+            "at": "c1-7 r1-2",
+            "column": {
+              "gap": "space.1",
+              "justify": "start",
+              "items": [
+                {
+                  "row": {
+                    "gap": "space.1",
+                    "items": [
+                      {
+                        "text": "Today's",
+                        "role": "title",
+                        "size": 44,
+                        "width": "auto"
+                      },
+                      {
+                        "text": "Agenda",
+                        "role": "title",
+                        "size": 44,
+                        "tone": "accent",
+                        "width": "auto"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "at": "c1-7 r2-8",
+            "column": {
+              "gap": "space.1.25",
+              "justify": "center",
+              "items": [
+                {
+                  "use": "agenda",
+                  "n": "01",
+                  "title": "Results",
+                  "detail": "What the platform delivered this year",
+                  "fill": "indigo-deep"
+                },
+                {
+                  "use": "agenda",
+                  "n": "02",
+                  "title": "Architecture",
+                  "detail": "How a request flows today",
+                  "fill": "indigo"
+                },
+                {
+                  "use": "agenda",
+                  "n": "03",
+                  "title": "Reliability",
+                  "detail": "Milestones, quarter by quarter",
+                  "fill": "indigo-deep"
+                },
+                {
+                  "use": "agenda",
+                  "n": "04",
+                  "title": "Roadmap",
+                  "detail": "2027, lane by lane",
+                  "fill": "indigo"
+                },
+                {
+                  "use": "agenda",
+                  "n": "05",
+                  "title": "What we need",
+                  "detail": "Risks and the support to manage them",
+                  "fill": "indigo-deep"
+                }
+              ]
+            }
+          },
+          {
+            "at": "c8-12 r2-7",
+            "surface": "panel",
+            "column": {
+              "gap": "space.2",
+              "justify": "center",
+              "items": [
+                {
+                  "text": "At a glance",
+                  "role": "label",
+                  "font": "mono",
+                  "tone": "muted",
+                  "case": "upper",
+                  "tracking": 0.1
+                },
+                {
+                  "text": "12 services",
+                  "role": "h2",
+                  "font": "mono"
+                },
+                {
+                  "text": "4 regions",
+                  "role": "h2",
+                  "font": "mono"
+                },
+                {
+                  "text": "43k requests / sec",
+                  "role": "h2",
+                  "font": "mono",
+                  "tone": "accent"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "results",
+      "message": "Latency down 42%, uptime 99.98%, cost per request down 31%",
+      "compose": {
+        "grid": "12x8",
+        "items": [
+          {
+            "at": "c1-10 r1-2",
+            "column": {
+              "gap": "space.1",
+              "justify": "start",
+              "items": [
+                {
+                  "row": {
+                    "gap": "space.1",
+                    "items": [
+                      {
+                        "text": "Key",
+                        "role": "title",
+                        "size": 44,
+                        "width": "auto"
+                      },
+                      {
+                        "text": "Results",
+                        "role": "title",
+                        "size": 44,
+                        "tone": "accent",
+                        "width": "auto"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "text": "Four numbers from a year of platform work.",
+                  "role": "lead",
+                  "tone": "muted"
+                }
+              ]
+            }
+          },
+          {
+            "at": "c1-12 r3-7",
+            "row": {
+              "gap": "space.2",
+              "items": [
+                {
+                  "use": "kpi",
+                  "icon": "gauge",
+                  "fill": "indigo-tint",
+                  "tone": "indigo",
+                  "value": "−42%",
+                  "label": "p95 latency",
+                  "detail": "310 → 180 ms"
+                },
+                {
+                  "use": "kpi",
+                  "icon": "shield-check",
+                  "fill": "green-tint",
+                  "tone": "green",
+                  "value": "99.98%",
+                  "label": "Uptime",
+                  "detail": "Up from 99.91%"
+                },
+                {
+                  "use": "kpi",
+                  "icon": "coins",
+                  "fill": "amber-tint",
+                  "tone": "amberBright",
+                  "value": "−31%",
+                  "label": "Cost per request",
+                  "detail": "$0.42 → $0.29 per 1k"
+                },
+                {
+                  "use": "kpi",
+                  "icon": "zap",
+                  "fill": "cyan-tint",
+                  "tone": "cyan",
+                  "value": "3.1×",
+                  "label": "Peak throughput",
+                  "detail": "14k → 43k req/s"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "traffic",
+      "message": "Traffic tripled while latency fell",
+      "compose": {
+        "grid": "12x8",
+        "items": [
+          {
+            "at": "c1-10 r1-2",
+            "column": {
+              "gap": "space.1",
+              "justify": "start",
+              "items": [
+                {
+                  "row": {
+                    "gap": "space.1",
+                    "items": [
+                      {
+                        "text": "Traffic",
+                        "role": "title",
+                        "size": 44,
+                        "width": "auto"
+                      },
+                      {
+                        "text": "tripled",
+                        "role": "title",
+                        "size": 44,
+                        "tone": "accent",
+                        "width": "auto"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "text": "Requests per second by quarter, in thousands.",
+                  "role": "lead",
+                  "tone": "muted"
+                }
+              ]
+            }
+          },
+          {
+            "at": "c1-8 r3-8",
+            "surface": "card",
+            "chart": {
+              "data": "traffic",
+              "chart": "column",
+              "highlight": "Q4"
+            }
+          },
+          {
+            "at": "c9-12 r3-8",
+            "surface": "panel",
+            "column": {
+              "gap": "space.1",
+              "justify": "center",
+              "items": [
+                {
+                  "text": "Q1 → Q4",
+                  "role": "label",
+                  "font": "mono",
+                  "tone": "muted",
+                  "case": "upper",
+                  "tracking": 0.1
+                },
+                {
+                  "text": "14k → 43k",
+                  "role": "display",
+                  "size": 40,
+                  "font": "mono",
+                  "tone": "accent"
+                },
+                {
+                  "text": "requests per second, with p95 latency down from 310 to 180 ms",
+                  "role": "body",
+                  "tone": "muted"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "architecture",
+      "message": "Every request flows through one router to the right model",
+      "compose": {
+        "grid": "12x8",
+        "items": [
+          {
+            "at": "c1-11 r1-2",
+            "column": {
+              "gap": "space.1",
+              "justify": "start",
+              "items": [
+                {
+                  "row": {
+                    "gap": "space.1",
+                    "items": [
+                      {
+                        "text": "Platform",
+                        "role": "title",
+                        "size": 44,
+                        "width": "auto"
+                      },
+                      {
+                        "text": "Architecture",
+                        "role": "title",
+                        "size": 44,
+                        "tone": "accent",
+                        "width": "auto"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "text": "How a request flows today. The model router is new this year.",
+                  "role": "lead",
+                  "tone": "muted"
+                }
+              ]
+            }
+          },
+          {
+            "at": "c1-12 r3-6",
+            "diagram": {
+              "grammar": "flow",
+              "nodes": [
+                {
+                  "id": "apps",
+                  "label": "Client apps"
+                },
+                {
+                  "id": "gw",
+                  "label": "API gateway"
+                },
+                {
+                  "id": "router",
+                  "label": "Model router",
+                  "emphasis": "accent"
+                },
+                {
+                  "id": "pool",
+                  "label": "Inference pool"
+                },
+                {
+                  "id": "vec",
+                  "label": "Vector store"
+                }
+              ],
+              "edges": [
+                {
+                  "from": "apps",
+                  "to": "gw"
+                },
+                {
+                  "from": "gw",
+                  "to": "router"
+                },
+                {
+                  "from": "router",
+                  "to": "pool"
+                },
+                {
+                  "from": "pool",
+                  "to": "vec"
+                }
+              ]
+            }
+          },
+          {
+            "at": "c1-12 r7-8",
+            "row": {
+              "gap": "space.2",
+              "items": [
+                {
+                  "row": {
+                    "gap": "space.1.5",
+                    "align": "center",
+                    "height": 26,
+                    "items": [
+                      {
+                        "icon": "circle-check",
+                        "tone": "accent",
+                        "width": 20,
+                        "height": 20
+                      },
+                      {
+                        "text": "Stateless services, autoscaled",
+                        "role": "body"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "row": {
+                    "gap": "space.1.5",
+                    "align": "center",
+                    "height": 26,
+                    "items": [
+                      {
+                        "icon": "circle-check",
+                        "tone": "accent",
+                        "width": 20,
+                        "height": 20
+                      },
+                      {
+                        "text": "Traced end to end",
+                        "role": "body"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "row": {
+                    "gap": "space.1.5",
+                    "align": "center",
+                    "height": 26,
+                    "items": [
+                      {
+                        "icon": "circle-check",
+                        "tone": "accent",
+                        "width": 20,
+                        "height": 20
+                      },
+                      {
+                        "text": "Canary deploys on every change",
+                        "role": "body"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "reliability",
+      "message": "Three quarters shipped; Q4 resilience work is under way",
+      "compose": {
+        "grid": "12x8",
+        "items": [
+          {
+            "at": "c1-10 r1-2",
+            "column": {
+              "gap": "space.1",
+              "justify": "start",
+              "items": [
+                {
+                  "row": {
+                    "gap": "space.1",
+                    "items": [
+                      {
+                        "text": "Reliability",
+                        "role": "title",
+                        "size": 44,
+                        "width": "auto"
+                      },
+                      {
+                        "text": "Milestones",
+                        "role": "title",
+                        "size": 44,
+                        "tone": "accent",
+                        "width": "auto"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "text": "Quarter by quarter, from foundation to resilience.",
+                  "role": "lead",
+                  "tone": "muted"
+                }
+              ]
+            }
+          },
+          {
+            "at": "c1-12 r3",
+            "row": {
+              "gap": "space.2",
+              "items": [
+                {
+                  "column": {
+                    "gap": "space.0.5",
+                    "align": "center",
+                    "items": [
+                      {
+                        "text": "Q1 2026",
+                        "role": "h3",
+                        "font": "mono",
+                        "align": "center"
+                      },
+                      {
+                        "text": "Foundation",
+                        "role": "small",
+                        "tone": "muted",
+                        "align": "center"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "column": {
+                    "gap": "space.0.5",
+                    "align": "center",
+                    "items": [
+                      {
+                        "text": "Q2 2026",
+                        "role": "h3",
+                        "font": "mono",
+                        "align": "center"
+                      },
+                      {
+                        "text": "Scale",
+                        "role": "small",
+                        "tone": "muted",
+                        "align": "center"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "column": {
+                    "gap": "space.0.5",
+                    "align": "center",
+                    "items": [
+                      {
+                        "text": "Q3 2026",
+                        "role": "h3",
+                        "font": "mono",
+                        "align": "center"
+                      },
+                      {
+                        "text": "Intelligence",
+                        "role": "small",
+                        "tone": "muted",
+                        "align": "center"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "column": {
+                    "gap": "space.0.5",
+                    "align": "center",
+                    "items": [
+                      {
+                        "text": "Q4 2026",
+                        "role": "h3",
+                        "font": "mono",
+                        "align": "center"
+                      },
+                      {
+                        "text": "Resilience",
+                        "role": "small",
+                        "tone": "muted",
+                        "align": "center"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "at": "c1-9 r4",
+            "column": {
+              "justify": "center",
+              "items": [
+                {
+                  "shape": "rect",
+                  "fill": "green",
+                  "height": 4
+                }
+              ]
+            }
+          },
+          {
+            "at": "c10-12 r4",
+            "column": {
+              "justify": "center",
+              "items": [
+                {
+                  "shape": "rect",
+                  "fill": "indigo",
+                  "height": 4
+                }
+              ]
+            }
+          },
+          {
+            "at": "c1-12 r4",
+            "row": {
+              "gap": "space.2",
+              "items": [
+                {
+                  "column": {
+                    "align": "center",
+                    "justify": "center",
+                    "items": [
+                      {
+                        "icon": "circle-check",
+                        "tone": "green",
+                        "width": 34,
+                        "height": 34
+                      }
+                    ]
+                  }
+                },
+                {
+                  "column": {
+                    "align": "center",
+                    "justify": "center",
+                    "items": [
+                      {
+                        "icon": "circle-check",
+                        "tone": "green",
+                        "width": 34,
+                        "height": 34
+                      }
+                    ]
+                  }
+                },
+                {
+                  "column": {
+                    "align": "center",
+                    "justify": "center",
+                    "items": [
+                      {
+                        "icon": "circle-check",
+                        "tone": "green",
+                        "width": 34,
+                        "height": 34
+                      }
+                    ]
+                  }
+                },
+                {
+                  "column": {
+                    "align": "center",
+                    "justify": "center",
+                    "items": [
+                      {
+                        "column": {
+                          "surface": "dot-indigo",
+                          "width": 34,
+                          "height": 34,
+                          "align": "center",
+                          "justify": "center",
+                          "items": [
+                            {
+                              "icon": "circle-dot",
+                              "tone": "card",
+                              "width": 20,
+                              "height": 20
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "at": "c1-12 r5-8",
+            "row": {
+              "gap": "space.2",
+              "items": [
+                {
+                  "column": {
+                    "gap": "space.1.5",
+                    "items": [
+                      {
+                        "row": {
+                          "gap": "space.1.5",
+                          "align": "center",
+                          "height": 22,
+                          "items": [
+                            {
+                              "icon": "circle-check",
+                              "tone": "green",
+                              "width": 20,
+                              "height": 20
+                            },
+                            {
+                              "text": "Gateway v2",
+                              "role": "small"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "row": {
+                          "gap": "space.1.5",
+                          "align": "center",
+                          "height": 22,
+                          "items": [
+                            {
+                              "icon": "circle-check",
+                              "tone": "green",
+                              "width": 20,
+                              "height": 20
+                            },
+                            {
+                              "text": "Distributed tracing",
+                              "role": "small"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "row": {
+                          "gap": "space.1.5",
+                          "align": "center",
+                          "height": 22,
+                          "items": [
+                            {
+                              "icon": "circle-check",
+                              "tone": "green",
+                              "width": 20,
+                              "height": 20
+                            },
+                            {
+                              "text": "SLOs per service",
+                              "role": "small"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "row": {
+                          "gap": "space.1.5",
+                          "align": "center",
+                          "height": 22,
+                          "items": [
+                            {
+                              "icon": "circle-check",
+                              "tone": "green",
+                              "width": 20,
+                              "height": 20
+                            },
+                            {
+                              "text": "On-call rotation",
+                              "role": "small"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "column": {
+                    "gap": "space.1.5",
+                    "items": [
+                      {
+                        "row": {
+                          "gap": "space.1.5",
+                          "align": "center",
+                          "height": 22,
+                          "items": [
+                            {
+                              "icon": "circle-check",
+                              "tone": "green",
+                              "width": 20,
+                              "height": 20
+                            },
+                            {
+                              "text": "Autoscaling",
+                              "role": "small"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "row": {
+                          "gap": "space.1.5",
+                          "align": "center",
+                          "height": 22,
+                          "items": [
+                            {
+                              "icon": "circle-check",
+                              "tone": "green",
+                              "width": 20,
+                              "height": 20
+                            },
+                            {
+                              "text": "GPU pool",
+                              "role": "small"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "row": {
+                          "gap": "space.1.5",
+                          "align": "center",
+                          "height": 22,
+                          "items": [
+                            {
+                              "icon": "circle-check",
+                              "tone": "green",
+                              "width": 20,
+                              "height": 20
+                            },
+                            {
+                              "text": "Caching layer",
+                              "role": "small"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "row": {
+                          "gap": "space.1.5",
+                          "align": "center",
+                          "height": 22,
+                          "items": [
+                            {
+                              "icon": "circle-check",
+                              "tone": "green",
+                              "width": 20,
+                              "height": 20
+                            },
+                            {
+                              "text": "Load tests",
+                              "role": "small"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "column": {
+                    "gap": "space.1.5",
+                    "items": [
+                      {
+                        "row": {
+                          "gap": "space.1.5",
+                          "align": "center",
+                          "height": 22,
+                          "items": [
+                            {
+                              "icon": "circle-check",
+                              "tone": "green",
+                              "width": 20,
+                              "height": 20
+                            },
+                            {
+                              "text": "Model router",
+                              "role": "small"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "row": {
+                          "gap": "space.1.5",
+                          "align": "center",
+                          "height": 22,
+                          "items": [
+                            {
+                              "icon": "circle-check",
+                              "tone": "green",
+                              "width": 20,
+                              "height": 20
+                            },
+                            {
+                              "text": "Eval suite",
+                              "role": "small"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "row": {
+                          "gap": "space.1.5",
+                          "align": "center",
+                          "height": 22,
+                          "items": [
+                            {
+                              "icon": "circle-check",
+                              "tone": "green",
+                              "width": 20,
+                              "height": 20
+                            },
+                            {
+                              "text": "Cost dashboards",
+                              "role": "small"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "row": {
+                          "gap": "space.1.5",
+                          "align": "center",
+                          "height": 22,
+                          "items": [
+                            {
+                              "icon": "circle-check",
+                              "tone": "green",
+                              "width": 20,
+                              "height": 20
+                            },
+                            {
+                              "text": "Canary deploys",
+                              "role": "small"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "column": {
+                    "gap": "space.1.5",
+                    "items": [
+                      {
+                        "row": {
+                          "gap": "space.1.5",
+                          "align": "center",
+                          "height": 22,
+                          "items": [
+                            {
+                              "icon": "circle-dot",
+                              "tone": "indigo",
+                              "width": 20,
+                              "height": 20
+                            },
+                            {
+                              "text": "Multi-region",
+                              "role": "small"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "row": {
+                          "gap": "space.1.5",
+                          "align": "center",
+                          "height": 22,
+                          "items": [
+                            {
+                              "icon": "circle-dot",
+                              "tone": "indigo",
+                              "width": 20,
+                              "height": 20
+                            },
+                            {
+                              "text": "Vector store v2",
+                              "role": "small"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "row": {
+                          "gap": "space.1.5",
+                          "align": "center",
+                          "height": 22,
+                          "items": [
+                            {
+                              "icon": "circle-dot",
+                              "tone": "indigo",
+                              "width": 20,
+                              "height": 20
+                            },
+                            {
+                              "text": "Chaos tests",
+                              "role": "small"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "row": {
+                          "gap": "space.1.5",
+                          "align": "center",
+                          "height": 22,
+                          "items": [
+                            {
+                              "icon": "circle-dot",
+                              "tone": "indigo",
+                              "width": 20,
+                              "height": 20
+                            },
+                            {
+                              "text": "SOC 2 prep",
+                              "role": "small"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "capabilities",
+      "message": "Six capabilities every team now gets by default",
+      "compose": {
+        "grid": "12x8",
+        "items": [
+          {
+            "at": "c1-10 r1-2",
+            "column": {
+              "gap": "space.1",
+              "justify": "start",
+              "items": [
+                {
+                  "row": {
+                    "gap": "space.1",
+                    "items": [
+                      {
+                        "text": "Platform",
+                        "role": "title",
+                        "size": 44,
+                        "width": "auto"
+                      },
+                      {
+                        "text": "Capabilities",
+                        "role": "title",
+                        "size": 44,
+                        "tone": "accent",
+                        "width": "auto"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "text": "What every team gets by default.",
+                  "role": "lead",
+                  "tone": "muted"
+                }
+              ]
+            }
+          },
+          {
+            "at": "c1-12 r3-5",
+            "row": {
+              "gap": "space.2",
+              "items": [
+                {
+                  "use": "feature",
+                  "icon": "trending-up",
+                  "fill": "indigo-tint",
+                  "tone": "indigo",
+                  "title": "Autoscaling",
+                  "detail": "Scales on queue depth, not CPU"
+                },
+                {
+                  "use": "feature",
+                  "icon": "route",
+                  "fill": "cyan-tint",
+                  "tone": "cyan",
+                  "title": "Model routing",
+                  "detail": "Right model for each request"
+                },
+                {
+                  "use": "feature",
+                  "icon": "activity",
+                  "fill": "violet-tint",
+                  "tone": "violet",
+                  "title": "Observability",
+                  "detail": "Traces, metrics and logs in one place"
+                }
+              ]
+            }
+          },
+          {
+            "at": "c1-12 r6-8",
+            "row": {
+              "gap": "space.2",
+              "items": [
+                {
+                  "use": "feature",
+                  "icon": "database-zap",
+                  "fill": "amber-tint",
+                  "tone": "amber",
+                  "title": "Smart caching",
+                  "detail": "Repeat prompts served in milliseconds"
+                },
+                {
+                  "use": "feature",
+                  "icon": "shield-check",
+                  "fill": "green-tint",
+                  "tone": "green",
+                  "title": "Security",
+                  "detail": "Scoped keys, audit trail, PII redaction"
+                },
+                {
+                  "use": "feature",
+                  "icon": "gauge",
+                  "fill": "rose-tint",
+                  "tone": "rose",
+                  "title": "Cost controls",
+                  "detail": "Budgets and alerts per team"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "roadmap",
+      "message": "Six workstreams take the platform multi-region by Q3 2027",
+      "compose": {
+        "grid": "12x8",
+        "items": [
+          {
+            "at": "c1-10 r1-2",
+            "column": {
+              "gap": "space.1",
+              "justify": "start",
+              "items": [
+                {
+                  "row": {
+                    "gap": "space.1",
+                    "items": [
+                      {
+                        "text": "Roadmap",
+                        "role": "title",
+                        "size": 44,
+                        "width": "auto"
+                      },
+                      {
+                        "text": "2027",
+                        "role": "title",
+                        "size": 44,
+                        "tone": "accent",
+                        "width": "auto"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "text": "Six workstreams, three quarters.",
+                  "role": "lead",
+                  "tone": "muted"
+                }
+              ]
+            }
+          },
+          {
+            "at": "c1-12 r3-8",
+            "grid": "13x7",
+            "items": [
+              {
+                "at": "c5-13 r2-7",
+                "surface": "track",
+                "space": "space.1"
+              },
+              {
+                "at": "c5-7 r1",
+                "text": "Q1 2027",
+                "role": "body",
+                "font": "mono",
+                "weight": 600,
+                "align": "center",
+                "valign": "middle"
+              },
+              {
+                "at": "c8-10 r1",
+                "text": "Q2 2027",
+                "role": "body",
+                "font": "mono",
+                "weight": 600,
+                "align": "center",
+                "valign": "middle"
+              },
+              {
+                "at": "c11-13 r1",
+                "text": "Q3 2027",
+                "role": "body",
+                "font": "mono",
+                "weight": 600,
+                "align": "center",
+                "valign": "middle"
+              },
+              {
+                "at": "c1-4 r2",
+                "row": {
+                  "gap": "space.1.5",
+                  "align": "center",
+                  "items": [
+                    {
+                      "icon": "globe",
+                      "tone": "indigo",
+                      "width": 22,
+                      "height": 22
+                    },
+                    {
+                      "text": "Multi-region active-active",
+                      "role": "body"
+                    }
+                  ]
+                }
+              },
+              {
+                "at": "c5-8 r2",
+                "column": {
+                  "justify": "center",
+                  "items": [
+                    {
+                      "shape": "roundRect",
+                      "fill": "indigo",
+                      "radius": 8,
+                      "height": 22
+                    }
+                  ]
+                }
+              },
+              {
+                "at": "c1-4 r3",
+                "row": {
+                  "gap": "space.1.5",
+                  "align": "center",
+                  "items": [
+                    {
+                      "icon": "cpu",
+                      "tone": "cyan",
+                      "width": 22,
+                      "height": 22
+                    },
+                    {
+                      "text": "GPU pooling v2",
+                      "role": "body"
+                    }
+                  ]
+                }
+              },
+              {
+                "at": "c6-9 r3",
+                "column": {
+                  "justify": "center",
+                  "items": [
+                    {
+                      "shape": "roundRect",
+                      "fill": "cyan",
+                      "radius": 8,
+                      "height": 22
+                    }
+                  ]
+                }
+              },
+              {
+                "at": "c1-4 r4",
+                "row": {
+                  "gap": "space.1.5",
+                  "align": "center",
+                  "items": [
+                    {
+                      "icon": "flask-conical",
+                      "tone": "violet",
+                      "width": 22,
+                      "height": 22
+                    },
+                    {
+                      "text": "Eval pipeline",
+                      "role": "body"
+                    }
+                  ]
+                }
+              },
+              {
+                "at": "c7-11 r4",
+                "column": {
+                  "justify": "center",
+                  "items": [
+                    {
+                      "shape": "roundRect",
+                      "fill": "violet",
+                      "radius": 8,
+                      "height": 22
+                    }
+                  ]
+                }
+              },
+              {
+                "at": "c1-4 r5",
+                "row": {
+                  "gap": "space.1.5",
+                  "align": "center",
+                  "items": [
+                    {
+                      "icon": "brain-circuit",
+                      "tone": "indigo",
+                      "width": 22,
+                      "height": 22
+                    },
+                    {
+                      "text": "Fine-tuning service",
+                      "role": "body"
+                    }
+                  ]
+                }
+              },
+              {
+                "at": "c9-12 r5",
+                "column": {
+                  "justify": "center",
+                  "items": [
+                    {
+                      "shape": "roundRect",
+                      "fill": "indigo",
+                      "radius": 8,
+                      "height": 22
+                    }
+                  ]
+                }
+              },
+              {
+                "at": "c1-4 r6",
+                "row": {
+                  "gap": "space.1.5",
+                  "align": "center",
+                  "items": [
+                    {
+                      "icon": "radar",
+                      "tone": "cyan",
+                      "width": 22,
+                      "height": 22
+                    },
+                    {
+                      "text": "Edge inference",
+                      "role": "body"
+                    }
+                  ]
+                }
+              },
+              {
+                "at": "c10-13 r6",
+                "column": {
+                  "justify": "center",
+                  "items": [
+                    {
+                      "shape": "roundRect",
+                      "fill": "cyan",
+                      "radius": 8,
+                      "height": 22
+                    }
+                  ]
+                }
+              },
+              {
+                "at": "c1-4 r7",
+                "row": {
+                  "gap": "space.1.5",
+                  "align": "center",
+                  "items": [
+                    {
+                      "icon": "lock",
+                      "tone": "violet",
+                      "width": 22,
+                      "height": 22
+                    },
+                    {
+                      "text": "SOC 2 Type II",
+                      "role": "body"
+                    }
+                  ]
+                }
+              },
+              {
+                "at": "c11-13 r7",
+                "column": {
+                  "justify": "center",
+                  "items": [
+                    {
+                      "shape": "roundRect",
+                      "fill": "violet",
+                      "radius": 8,
+                      "height": 22
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "asks",
+      "message": "Four risks to manage, and four things we need to manage them",
+      "compose": {
+        "grid": "12x8",
+        "items": [
+          {
+            "at": "c1-11 r1-2",
+            "column": {
+              "gap": "space.1",
+              "justify": "start",
+              "items": [
+                {
+                  "row": {
+                    "gap": "space.1",
+                    "items": [
+                      {
+                        "text": "Risks &",
+                        "role": "title",
+                        "size": 44,
+                        "width": "auto"
+                      },
+                      {
+                        "text": "Asks",
+                        "role": "title",
+                        "size": 44,
+                        "tone": "accent",
+                        "width": "auto"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "text": "What could slow us down, and what would help.",
+                  "role": "lead",
+                  "tone": "muted"
+                }
+              ]
+            }
+          },
+          {
+            "at": "c1-6 r3-8",
+            "surface": "rose",
+            "column": {
+              "gap": "space.2",
+              "items": [
+                {
+                  "row": {
+                    "gap": "space.1.5",
+                    "align": "center",
+                    "items": [
+                      {
+                        "icon": "triangle-alert",
+                        "tone": "rose",
+                        "width": 26,
+                        "height": 26
+                      },
+                      {
+                        "text": "Risks",
+                        "role": "h3",
+                        "tone": "rose"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "use": "item",
+                  "icon": "circle-dot",
+                  "tone": "rose",
+                  "title": "GPU supply",
+                  "detail": "Lead times up to 12 weeks"
+                },
+                {
+                  "use": "item",
+                  "icon": "circle-dot",
+                  "tone": "rose",
+                  "title": "Vendor lock-in",
+                  "detail": "Two providers carry 80% of traffic"
+                },
+                {
+                  "use": "item",
+                  "icon": "circle-dot",
+                  "tone": "rose",
+                  "title": "On-call load",
+                  "detail": "Pages up 30% since Q2"
+                },
+                {
+                  "use": "item",
+                  "icon": "circle-dot",
+                  "tone": "rose",
+                  "title": "Data residency",
+                  "detail": "EU customers need in-region inference"
+                }
+              ]
+            }
+          },
+          {
+            "at": "c7-12 r3-8",
+            "surface": "mint",
+            "column": {
+              "gap": "space.2",
+              "items": [
+                {
+                  "row": {
+                    "gap": "space.1.5",
+                    "align": "center",
+                    "items": [
+                      {
+                        "icon": "rocket",
+                        "tone": "green",
+                        "width": 26,
+                        "height": 26
+                      },
+                      {
+                        "text": "What we need",
+                        "role": "h3",
+                        "tone": "green"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "use": "item",
+                  "icon": "circle-check",
+                  "tone": "green",
+                  "title": "Two SREs",
+                  "detail": "For multi-region and on-call"
+                },
+                {
+                  "use": "item",
+                  "icon": "circle-check",
+                  "tone": "green",
+                  "title": "GPU budget for H1",
+                  "detail": "Reserved capacity, not spot"
+                },
+                {
+                  "use": "item",
+                  "icon": "circle-check",
+                  "tone": "green",
+                  "title": "Security review",
+                  "detail": "Before SOC 2 Type II"
+                },
+                {
+                  "use": "item",
+                  "icon": "circle-check",
+                  "tone": "green",
+                  "title": "Product input",
+                  "detail": "Priorities for fine-tuning"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

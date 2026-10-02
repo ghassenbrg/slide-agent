@@ -1,0 +1,26 @@
+[
+ {
+  "level": "intent",
+  "op": "set",
+  "path": "/slides/3/compose/items/2/column/items/2/row/items/0/tone",
+  "value": "orangeDeep"
+ },
+ {
+  "level": "intent",
+  "op": "set",
+  "path": "/slides/3/compose/items/2/column/items/3/row/items/0/tone",
+  "value": "orangeDeep"
+ },
+ {
+  "level": "intent",
+  "op": "set",
+  "path": "/slides/3/compose/items/2/column/items/4/row/items/0/tone",
+  "value": "orangeDeep"
+ },
+ {
+  "level": "intent",
+  "op": "set",
+  "path": "/slides/3/compose/items/2/column/items/5/row/items/0/tone",
+  "value": "orangeDeep"
+ }
+]

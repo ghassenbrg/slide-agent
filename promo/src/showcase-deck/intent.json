@@ -1,0 +1,6375 @@
+{
+ "schema": "slide-agent.intent/1",
+ "brief": {
+  "title": "MySlideAgent capability showcase",
+  "audience": "Prospective users deciding whether MySlideAgent can make their kind of presentation",
+  "goal": "Prove by example that one tool produces executive, technical, analytical, creative and strategic slides",
+  "format": "16:9"
+ },
+ "direction": {
+  "concept": "Five slides from five different decks. Each speaks the visual language of its genre — a steering-committee dashboard, a night-mode architecture review, an editorial data story, a product keynote, a consulting roadmap — with its own type, palette, density and diagram grammar. The only constant is craft.",
+  "fit": "ask"
+ },
+ "design": {
+  "language": {
+   "color": {
+    "palette": {
+     "s3paper": "#F6F3EC",
+     "s1white": "#FFFFFF",
+     "s3ink": "#1B1B1F",
+     "s3stone": "#66625B",
+     "s3coral": "#C2410C",
+     "s2sky": "#38BDF8",
+     "s3hair": "#D6CFC2",
+     "s1bg": "#F3F5F9",
+     "s2night": "#0A1022",
+     "s4white": "#FFFFFF",
+     "s5white": "#FFFFFF",
+     "s2haze": "#97A3BF",
+     "s5ink": "#1F2933",
+     "s1navy": "#0F1B33",
+     "s2frost": "#E8EDF7",
+     "s2violet": "#A78BFA",
+     "s2teal": "#2DD4BF",
+     "s1slate": "#5B6478",
+     "s2node": "#111A33",
+     "s5next": "#0F7C86",
+     "s5future": "#1E3A8A",
+     "s4uiMuted": "#6E6C80",
+     "s4violet": "#6D28D9",
+     "s4uiText": "#1F1D2B"
+    },
+    "roles": {
+     "background": "s3paper",
+     "surface": "s1white",
+     "text": "s3ink",
+     "muted": "s3stone",
+     "accent": "s3coral",
+     "accentAlt": "s2sky",
+     "rule": "s3hair"
+    },
+    "data": [
+     "s3ink",
+     "s3coral"
+    ]
+   },
+   "type": {
+    "display": {
+     "family": "Helvetica Neue",
+     "weight": 700,
+     "tracking": -0.01
+    },
+    "body": {
+     "family": "Helvetica Neue",
+     "weight": 400
+    },
+    "mono": {
+     "family": "Menlo"
+    },
+    "scale": {
+     "base": 16,
+     "ratio": 1.25
+    }
+   },
+   "space": {
+    "unit": 8,
+    "margin": 36,
+    "gutter": 16
+   },
+   "grid": {
+    "columns": 12,
+    "rows": 6
+   },
+   "shape": {
+    "radius": 10,
+    "stroke": 0
+   },
+   "texture": [
+    {
+     "id": "blueprint",
+     "primitive": "line-grid",
+     "params": {
+      "spacing": 36,
+      "tone": "s2grid",
+      "opacity": 0.18,
+      "weight": 0.5
+     }
+    }
+   ],
+   "charts": {
+    "axis": "hairline",
+    "gridlines": "none",
+    "labels": "none",
+    "highlight": "s3coral",
+    "legend": "none"
+   },
+   "chrome": {
+    "slideNumber": false
+   }
+  }
+ },
+ "data": {
+  "mau": {
+   "categories": [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun"
+   ],
+   "series": [
+    {
+     "name": "MAU (K)",
+     "values": [
+      42,
+      47,
+      53,
+      61,
+      68,
+      79
+     ]
+    }
+   ],
+   "unit": "K"
+  },
+  "retention": {
+   "categories": [
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M6"
+   ],
+   "series": [
+    {
+     "name": "Retained (%)",
+     "values": [
+      100,
+      82,
+      72,
+      67,
+      64,
+      62
+     ]
+    }
+   ],
+   "unit": "%"
+  }
+ },
+ "slides": [
+  {
+   "id": "executive-dashboard",
+   "message": "Project Atlas is on track; GPU capacity is the one risk to the Q2 launch",
+   "background": "s1bg",
+   "notes": "Executive / project-management dashboard: KPI cards, progress rings, workstream bars, a milestone timeline, the key risk and the decision needed.",
+   "compose": {
+    "free": {
+     "items": [
+      {
+       "icon": "mountain",
+       "tone": "#2563EB",
+       "size": 18,
+       "width": 18,
+       "height": 18,
+       "box": [
+        0.0,
+        0.0277,
+        0.253,
+        0.24
+       ]
+      },
+      {
+       "text": "ATLAS",
+       "role": "label",
+       "font": "Avenir Next",
+       "size": 12,
+       "weight": "bold",
+       "tone": "s1navy",
+       "tracking": 0.25,
+       "valign": "middle",
+       "box": [
+        0.3308,
+        0.0,
+        1.4595,
+        0.2769
+       ]
+      },
+      {
+       "text": "Q4 2024     |     Steering Committee     |     28 Nov",
+       "role": "label",
+       "font": "Avenir Next",
+       "size": 11,
+       "tone": "s1slate",
+       "align": "right",
+       "valign": "middle",
+       "box": [
+        6.1589,
+        0.0,
+        5.8379,
+        0.2769
+       ]
+      },
+      {
+       "text": "Project Atlas — Q4 Executive Status",
+       "role": "title",
+       "font": "Avenir Next",
+       "size": 30,
+       "weight": "bold",
+       "tone": "s1navy",
+       "box": [
+        0.0,
+        0.3692,
+        9.7298,
+        0.5723
+       ]
+      },
+      {
+       "text": "Building the next-generation AI platform for a more productive enterprise",
+       "role": "small",
+       "font": "Avenir Next",
+       "size": 13,
+       "tone": "s1slate",
+       "box": [
+        0.0,
+        0.9231,
+        9.7298,
+        0.2954
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "icon": "circle-check",
+          "tone": "#157A3B",
+          "size": 36,
+          "width": 36,
+          "height": 36,
+          "strokeWidth": 2.25,
+          "box": [
+           1.0638,
+           1.8462,
+           2.0457,
+           2.3077
+          ]
+         },
+         {
+          "text": "ON TRACK",
+          "role": "h3",
+          "font": "Avenir Next",
+          "size": 20,
+          "weight": "bold",
+          "tone": "#157A3B",
+          "tracking": 0.04,
+          "box": [
+           3.7641,
+           1.1077,
+           7.7736,
+           1.8462
+          ]
+         },
+         {
+          "text": "Overall project health",
+          "role": "small",
+          "font": "Avenir Next",
+          "size": 12,
+          "tone": "s1navy",
+          "box": [
+           3.7641,
+           2.9077,
+           7.7736,
+           1.2923
+          ]
+         },
+         {
+          "text": "Unchanged since Q3",
+          "role": "caption",
+          "font": "Avenir Next",
+          "size": 10.5,
+          "tone": "s1slate",
+          "box": [
+           3.7641,
+           4.0615,
+           7.7736,
+           1.2
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "#E6F5EC",
+        "radius": 10
+       },
+       "box": [
+        0.0,
+        1.3846,
+        2.8537,
+        1.2
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "Completion",
+          "role": "small",
+          "font": "Avenir Next",
+          "size": 12,
+          "tone": "s1slate",
+          "box": [
+           1.0638,
+           0.9231,
+           6.9553,
+           1.2
+          ]
+         },
+         {
+          "text": "72%",
+          "role": "display",
+          "font": "Avenir Next",
+          "size": 36,
+          "weight": "bold",
+          "tone": "s1navy",
+          "box": [
+           1.0638,
+           2.0308,
+           6.9553,
+           2.8615
+          ]
+         },
+         {
+          "text": "of scope delivered",
+          "role": "caption",
+          "font": "Avenir Next",
+          "size": 11,
+          "tone": "s1slate",
+          "box": [
+           1.0638,
+           4.5231,
+           7.569,
+           1.1077
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "none",
+          "stroke": "#E7EBF2",
+          "strokeWidth": 7,
+          "box": [
+           7.61,
+           1.1077,
+           3.3549,
+           3.7846
+          ]
+         },
+         {
+          "shape": {
+           "path": "M0.5 0 A0.5 0.5 0 1 1 0.0089 0.5937"
+          },
+          "decorative": true,
+          "fill": "none",
+          "stroke": "#2563EB",
+          "strokeWidth": 7,
+          "box": [
+           7.61,
+           1.1077,
+           3.3549,
+           3.7846
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s1white",
+        "radius": 10,
+        "shadow": "soft"
+       },
+       "box": [
+        3.0483,
+        1.3846,
+        2.8537,
+        1.2
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "Budget used",
+          "role": "small",
+          "font": "Avenir Next",
+          "size": 12,
+          "tone": "s1slate",
+          "box": [
+           1.0638,
+           0.9231,
+           6.9553,
+           1.2
+          ]
+         },
+         {
+          "text": "64%",
+          "role": "display",
+          "font": "Avenir Next",
+          "size": 36,
+          "weight": "bold",
+          "tone": "s1navy",
+          "box": [
+           1.0638,
+           2.0308,
+           6.9553,
+           2.8615
+          ]
+         },
+         {
+          "text": "$4.1M of $6.4M",
+          "role": "caption",
+          "font": "Avenir Next",
+          "size": 11,
+          "tone": "s1slate",
+          "box": [
+           1.0638,
+           4.5231,
+           7.569,
+           1.1077
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "none",
+          "stroke": "#E7EBF2",
+          "strokeWidth": 7,
+          "box": [
+           7.61,
+           1.1077,
+           3.3549,
+           3.7846
+          ]
+         },
+         {
+          "shape": {
+           "path": "M0.5 0 A0.5 0.5 0 1 1 0.1147 0.8187"
+          },
+          "decorative": true,
+          "fill": "none",
+          "stroke": "#7C3AED",
+          "strokeWidth": 7,
+          "box": [
+           7.61,
+           1.1077,
+           3.3549,
+           3.7846
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s1white",
+        "radius": 10,
+        "shadow": "soft"
+       },
+       "box": [
+        6.0976,
+        1.3846,
+        2.8537,
+        1.2
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s1navy",
+        "radius": 10,
+        "shadow": "soft"
+       },
+       "column": {
+        "items": [
+         {
+          "text": "BOTTOM LINE",
+          "role": "label",
+          "size": 10,
+          "font": "Avenir Next",
+          "weight": "bold",
+          "tone": "#9CC3FF",
+          "tracking": 0.2
+         },
+         {
+          "text": "MVP ships on time. GPU capacity is the one risk to a Q2 launch.",
+          "role": "body",
+          "size": 14,
+          "font": "Avenir Next",
+          "weight": "bold",
+          "tone": "s1white",
+          "leading": 1.25
+         }
+        ],
+        "pad": [
+         0,
+         18,
+         0,
+         18
+        ],
+        "gap": 6,
+        "justify": "center"
+       },
+       "box": [
+        9.146,
+        1.3846,
+        2.8537,
+        1.2
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "Workstream progress",
+          "role": "h3",
+          "font": "Avenir Next",
+          "size": 15,
+          "weight": "bold",
+          "tone": "s1navy",
+          "box": [
+           0.5508,
+           0.5053,
+           6.8852,
+           1.0105
+          ]
+         },
+         {
+          "text": "% complete  ·  status",
+          "role": "caption",
+          "font": "Avenir Next",
+          "size": 10,
+          "tone": "s1slate",
+          "align": "right",
+          "box": [
+           6.4918,
+           0.6,
+           5.0754,
+           0.8842
+          ]
+         },
+         {
+          "surface": {
+           "fill": "#E9F0FE",
+           "radius": 7
+          },
+          "column": {
+           "items": [
+            {
+             "icon": "package",
+             "tone": "#2563EB",
+             "size": 13,
+             "width": 13,
+             "height": 13
+            }
+           ],
+           "align": "center",
+           "justify": "center"
+          },
+          "box": [
+           0.5508,
+           1.8316,
+           0.6689,
+           1.0737
+          ]
+         },
+         {
+          "text": "Product",
+          "role": "small",
+          "font": "Avenir Next",
+          "size": 12.5,
+          "tone": "s1navy",
+          "valign": "middle",
+          "box": [
+           1.4557,
+           1.8947,
+           2.8525,
+           0.9474
+          ]
+         },
+         {
+          "shape": "roundRect",
+          "decorative": true,
+          "fill": "#E7EBF2",
+          "radius": 3,
+          "box": [
+           4.4262,
+           2.2105,
+           4.5246,
+           0.3158
+          ]
+         },
+         {
+          "shape": "roundRect",
+          "decorative": true,
+          "fill": "#2563EB",
+          "radius": 3,
+          "box": [
+           4.4262,
+           2.2105,
+           3.7102,
+           0.3158
+          ]
+         },
+         {
+          "text": "82%",
+          "role": "small",
+          "font": "Avenir Next",
+          "size": 12.5,
+          "weight": "bold",
+          "tone": "s1navy",
+          "align": "right",
+          "valign": "middle",
+          "box": [
+           9.0098,
+           1.8947,
+           1.082,
+           0.9474
+          ]
+         },
+         {
+          "surface": {
+           "fill": "#E6F5EC",
+           "radius": 100
+          },
+          "column": {
+           "items": [
+            {
+             "text": "On track",
+             "role": "caption",
+             "size": 10,
+             "font": "Avenir Next",
+             "weight": "bold",
+             "tone": "#157A3B",
+             "align": "center"
+            }
+           ],
+           "justify": "center"
+          },
+          "box": [
+           10.2689,
+           1.9895,
+           1.2984,
+           0.7579
+          ]
+         },
+         {
+          "surface": {
+           "fill": "#F1EAFE",
+           "radius": 7
+          },
+          "column": {
+           "items": [
+            {
+             "icon": "code",
+             "tone": "#7C3AED",
+             "size": 13,
+             "width": 13,
+             "height": 13
+            }
+           ],
+           "align": "center",
+           "justify": "center"
+          },
+          "box": [
+           0.5508,
+           3.1895,
+           0.6689,
+           1.0737
+          ]
+         },
+         {
+          "text": "Engineering",
+          "role": "small",
+          "font": "Avenir Next",
+          "size": 12.5,
+          "tone": "s1navy",
+          "valign": "middle",
+          "box": [
+           1.4557,
+           3.2526,
+           2.8525,
+           0.9474
+          ]
+         },
+         {
+          "shape": "roundRect",
+          "decorative": true,
+          "fill": "#E7EBF2",
+          "radius": 3,
+          "box": [
+           4.4262,
+           3.5684,
+           4.5246,
+           0.3158
+          ]
+         },
+         {
+          "shape": "roundRect",
+          "decorative": true,
+          "fill": "#7C3AED",
+          "radius": 3,
+          "box": [
+           4.4262,
+           3.5684,
+           3.3482,
+           0.3158
+          ]
+         },
+         {
+          "text": "74%",
+          "role": "small",
+          "font": "Avenir Next",
+          "size": 12.5,
+          "weight": "bold",
+          "tone": "s1navy",
+          "align": "right",
+          "valign": "middle",
+          "box": [
+           9.0098,
+           3.2526,
+           1.082,
+           0.9474
+          ]
+         },
+         {
+          "surface": {
+           "fill": "#E6F5EC",
+           "radius": 100
+          },
+          "column": {
+           "items": [
+            {
+             "text": "On track",
+             "role": "caption",
+             "size": 10,
+             "font": "Avenir Next",
+             "weight": "bold",
+             "tone": "#157A3B",
+             "align": "center"
+            }
+           ],
+           "justify": "center"
+          },
+          "box": [
+           10.2689,
+           3.3474,
+           1.2984,
+           0.7579
+          ]
+         },
+         {
+          "surface": {
+           "fill": "#FDF1DE",
+           "radius": 7
+          },
+          "column": {
+           "items": [
+            {
+             "icon": "megaphone",
+             "tone": "#B86A00",
+             "size": 13,
+             "width": 13,
+             "height": 13
+            }
+           ],
+           "align": "center",
+           "justify": "center"
+          },
+          "box": [
+           0.5508,
+           4.5474,
+           0.6689,
+           1.0737
+          ]
+         },
+         {
+          "text": "Go-to-Market",
+          "role": "small",
+          "font": "Avenir Next",
+          "size": 12.5,
+          "tone": "s1navy",
+          "valign": "middle",
+          "box": [
+           1.4557,
+           4.6105,
+           2.8525,
+           0.9474
+          ]
+         },
+         {
+          "shape": "roundRect",
+          "decorative": true,
+          "fill": "#E7EBF2",
+          "radius": 3,
+          "box": [
+           4.4262,
+           4.9263,
+           4.5246,
+           0.3158
+          ]
+         },
+         {
+          "shape": "roundRect",
+          "decorative": true,
+          "fill": "#E08A0B",
+          "radius": 3,
+          "box": [
+           4.4262,
+           4.9263,
+           2.6243,
+           0.3158
+          ]
+         },
+         {
+          "text": "58%",
+          "role": "small",
+          "font": "Avenir Next",
+          "size": 12.5,
+          "weight": "bold",
+          "tone": "s1navy",
+          "align": "right",
+          "valign": "middle",
+          "box": [
+           9.0098,
+           4.6105,
+           1.082,
+           0.9474
+          ]
+         },
+         {
+          "surface": {
+           "fill": "#FDF1DE",
+           "radius": 100
+          },
+          "column": {
+           "items": [
+            {
+             "text": "Watch",
+             "role": "caption",
+             "size": 10,
+             "font": "Avenir Next",
+             "weight": "bold",
+             "tone": "#9A4D06",
+             "align": "center"
+            }
+           ],
+           "justify": "center"
+          },
+          "box": [
+           10.2689,
+           4.7053,
+           1.2984,
+           0.7579
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s1white",
+        "radius": 10,
+        "shadow": "soft"
+       },
+       "box": [
+        0.0,
+        2.7692,
+        5.9352,
+        1.7538
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "Key milestones",
+          "role": "h3",
+          "font": "Avenir Next",
+          "size": 15,
+          "weight": "bold",
+          "tone": "s1navy",
+          "box": [
+           0.5569,
+           0.5053,
+           6.9617,
+           1.0105
+          ]
+         },
+         {
+          "shape": "roundRect",
+          "decorative": true,
+          "fill": "#E7EBF2",
+          "radius": 2,
+          "box": [
+           0.7956,
+           2.9211,
+           10.4426,
+           0.1579
+          ]
+         },
+         {
+          "shape": "roundRect",
+          "decorative": true,
+          "fill": "#2563EB",
+          "radius": 2,
+          "box": [
+           0.7956,
+           2.9211,
+           4.356,
+           0.1579
+          ]
+         },
+         {
+          "text": "Sep 30",
+          "role": "caption",
+          "font": "Avenir Next",
+          "size": 10.5,
+          "tone": "s1slate",
+          "align": "center",
+          "box": [
+           0.2984,
+           1.6421,
+           3.1825,
+           0.7579
+          ]
+         },
+         {
+          "surface": {
+           "fill": "#16A34A",
+           "radius": 100
+          },
+          "column": {
+           "items": [
+            {
+             "icon": "check",
+             "tone": "s1white",
+             "size": 12,
+             "width": 12,
+             "height": 12,
+             "strokeWidth": 3
+            }
+           ],
+           "align": "center",
+           "justify": "center"
+          },
+          "box": [
+           1.5912,
+           2.5263,
+           0.5967,
+           0.9474
+          ]
+         },
+         {
+          "text": "Foundation",
+          "role": "small",
+          "font": "Avenir Next",
+          "size": 13,
+          "weight": "bold",
+          "tone": "s1navy",
+          "align": "center",
+          "box": [
+           0.1989,
+           3.8526,
+           3.3814,
+           0.8842
+          ]
+         },
+         {
+          "text": "Complete",
+          "role": "caption",
+          "font": "Avenir Next",
+          "size": 10.5,
+          "tone": "#157A3B",
+          "align": "center",
+          "box": [
+           0.1989,
+           4.7053,
+           3.3814,
+           0.7579
+          ]
+         },
+         {
+          "text": "Dec 15",
+          "role": "caption",
+          "font": "Avenir Next",
+          "size": 10.5,
+          "tone": "s1slate",
+          "align": "center",
+          "box": [
+           4.4754,
+           1.6421,
+           3.1825,
+           0.7579
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "#E9F0FE",
+          "box": [
+           5.5694,
+           2.2105,
+           0.9945,
+           1.5789
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "#2563EB",
+          "box": [
+           5.7683,
+           2.5263,
+           0.5967,
+           0.9474
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "s1white",
+          "box": [
+           5.9672,
+           2.8421,
+           0.1989,
+           0.3158
+          ]
+         },
+         {
+          "text": "MVP release",
+          "role": "small",
+          "font": "Avenir Next",
+          "size": 13,
+          "weight": "bold",
+          "tone": "s1navy",
+          "align": "center",
+          "box": [
+           4.3759,
+           3.8526,
+           3.3814,
+           0.8842
+          ]
+         },
+         {
+          "text": "In progress",
+          "role": "caption",
+          "font": "Avenir Next",
+          "size": 10.5,
+          "tone": "#2563EB",
+          "align": "center",
+          "box": [
+           4.3759,
+           4.7053,
+           3.3814,
+           0.7579
+          ]
+         },
+         {
+          "text": "Feb 15",
+          "role": "caption",
+          "font": "Avenir Next",
+          "size": 10.5,
+          "tone": "s1slate",
+          "align": "center",
+          "box": [
+           8.6524,
+           1.6421,
+           3.1825,
+           0.7579
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "s1white",
+          "stroke": "#B8C0CC",
+          "strokeWidth": 1.75,
+          "box": [
+           9.9851,
+           2.5895,
+           0.5172,
+           0.8211
+          ]
+         },
+         {
+          "text": "Public beta",
+          "role": "small",
+          "font": "Avenir Next",
+          "size": 13,
+          "weight": "bold",
+          "tone": "s1navy",
+          "align": "center",
+          "box": [
+           8.553,
+           3.8526,
+           3.3814,
+           0.8842
+          ]
+         },
+         {
+          "text": "Planned",
+          "role": "caption",
+          "font": "Avenir Next",
+          "size": 10.5,
+          "tone": "s1slate",
+          "align": "center",
+          "box": [
+           8.553,
+           4.7053,
+           3.3814,
+           0.7579
+          ]
+         },
+         {
+          "surface": {
+           "fill": "s1navy",
+           "radius": 100
+          },
+          "column": {
+           "items": [
+            {
+             "text": "TODAY",
+             "role": "caption",
+             "size": 10,
+             "font": "Avenir Next",
+             "weight": "bold",
+             "tone": "s1white",
+             "align": "center",
+             "tracking": 0.05
+            }
+           ],
+           "justify": "center"
+          },
+          "box": [
+           4.4953,
+           2.6526,
+           1.1537,
+           0.6947
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s1white",
+        "radius": 10,
+        "shadow": "soft"
+       },
+       "box": [
+        6.1297,
+        2.7692,
+        5.87,
+        1.7538
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "surface": {
+           "fill": "s1white",
+           "radius": 7
+          },
+          "column": {
+           "items": [
+            {
+             "icon": "triangle-alert",
+             "tone": "#DC2626",
+             "size": 19,
+             "width": 19,
+             "height": 19
+            }
+           ],
+           "align": "center",
+           "justify": "center"
+          },
+          "box": [
+           0.5508,
+           1.1143,
+           0.9049,
+           1.9714
+          ]
+         },
+         {
+          "text": "KEY RISK",
+          "role": "label",
+          "font": "Avenir Next",
+          "size": 10.5,
+          "weight": "bold",
+          "tone": "#B91C1C",
+          "tracking": 0.15,
+          "valign": "middle",
+          "box": [
+           1.8492,
+           0.9857,
+           2.5574,
+           1.1143
+          ]
+         },
+         {
+          "surface": {
+           "fill": "#FBE2BE",
+           "radius": 100
+          },
+          "column": {
+           "items": [
+            {
+             "text": "Medium",
+             "role": "caption",
+             "size": 10,
+             "font": "Avenir Next",
+             "weight": "bold",
+             "tone": "#9A4D06",
+             "align": "center"
+            }
+           ],
+           "justify": "center"
+          },
+          "box": [
+           3.9344,
+           1.0286,
+           1.5344,
+           1.0286
+          ]
+         },
+         {
+          "text": "GPU capacity from our third-party provider is not yet confirmed for Q1",
+          "role": "small",
+          "font": "Avenir Next",
+          "size": 13.5,
+          "weight": "bold",
+          "tone": "s1navy",
+          "leading": 1.2,
+          "box": [
+           1.8492,
+           2.2286,
+           9.7377,
+           2.1429
+          ]
+         },
+         {
+          "text": "If unresolved, the public beta slips four to six weeks",
+          "role": "caption",
+          "font": "Avenir Next",
+          "size": 11,
+          "tone": "s1slate",
+          "box": [
+           1.8492,
+           4.4143,
+           9.7377,
+           1.1143
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "#FDEEEE",
+        "radius": 10
+       },
+       "box": [
+        0.0,
+        4.7077,
+        5.9352,
+        1.2923
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "surface": {
+           "fill": "s1white",
+           "radius": 7
+          },
+          "column": {
+           "items": [
+            {
+             "icon": "gavel",
+             "tone": "#2563EB",
+             "size": 19,
+             "width": 19,
+             "height": 19
+            }
+           ],
+           "align": "center",
+           "justify": "center"
+          },
+          "box": [
+           0.5569,
+           1.1143,
+           0.915,
+           1.9714
+          ]
+         },
+         {
+          "text": "NEXT DECISION",
+          "role": "label",
+          "font": "Avenir Next",
+          "size": 10.5,
+          "weight": "bold",
+          "tone": "#2563EB",
+          "tracking": 0.15,
+          "valign": "middle",
+          "box": [
+           1.8697,
+           0.9857,
+           3.1825,
+           1.1143
+          ]
+         },
+         {
+          "surface": {
+           "fill": "s1white",
+           "radius": 100
+          },
+          "column": {
+           "items": [
+            {
+             "text": "By Dec 6",
+             "role": "caption",
+             "size": 10,
+             "font": "Avenir Next",
+             "weight": "bold",
+             "tone": "#2563EB",
+             "align": "center"
+            }
+           ],
+           "justify": "center"
+          },
+          "box": [
+           5.1318,
+           1.0286,
+           1.7902,
+           1.0286
+          ]
+         },
+         {
+          "text": "Approve a $0.6M reserve for dedicated GPU capacity",
+          "role": "small",
+          "font": "Avenir Next",
+          "size": 13.5,
+          "weight": "bold",
+          "tone": "s1navy",
+          "leading": 1.2,
+          "box": [
+           1.8697,
+           2.2286,
+           9.6469,
+           2.1429
+          ]
+         },
+         {
+          "text": "Secures the Feb 15 beta and de-risks the Q2 launch",
+          "role": "caption",
+          "font": "Avenir Next",
+          "size": 11,
+          "tone": "s1slate",
+          "box": [
+           1.8697,
+           4.4143,
+           9.6469,
+           1.1143
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "#E9F0FE",
+        "radius": 10
+       },
+       "box": [
+        6.1297,
+        4.7077,
+        5.87,
+        1.2923
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "architecture",
+   "message": "Every request flows through one gateway into a service tier that fans out to the AI runtime and the data plane",
+   "background": "s2night",
+   "notes": "Technical architecture: grouped system boundaries, orthogonal routed wiring, domain colour coding, icons, an infrastructure layer.",
+   "compose": {
+    "free": {
+     "items": [
+      {
+       "bleed": [
+        "left",
+        "right",
+        "top",
+        "bottom"
+       ],
+       "image": {
+        "asset": "assets/night-glow.png",
+        "fit": "cover"
+       },
+       "decorative": true,
+       "box": [
+        0.0,
+        0.0,
+        12.0,
+        6.0
+       ]
+      },
+      {
+       "texture": "blueprint",
+       "box": [
+        0.0,
+        0.9231,
+        11.9997,
+        5.0769
+       ]
+      },
+      {
+       "text": "AI Platform — Production Architecture",
+       "role": "title",
+       "size": 28,
+       "font": "Helvetica Neue",
+       "weight": "bold",
+       "tone": "s2frost",
+       "box": [
+        0.0,
+        -0.0369,
+        8.3676,
+        0.5169
+       ]
+      },
+      {
+       "text": "Scalable, secure and modular architecture for AI-powered applications",
+       "role": "small",
+       "size": 13,
+       "font": "Helvetica Neue",
+       "tone": "s2haze",
+       "box": [
+        0.0,
+        0.4523,
+        7.3946,
+        0.2769
+       ]
+      },
+      {
+       "text": "ARCHITECTURE REVIEW",
+       "role": "label",
+       "size": 10,
+       "font": "Menlo",
+       "tone": "s2sky",
+       "tracking": 0.2,
+       "align": "right",
+       "box": [
+        8.2703,
+        0.0,
+        3.7294,
+        0.2308
+       ]
+      },
+      {
+       "text": "rev 2.3  ·  prod / us-east-1",
+       "role": "caption",
+       "size": 10,
+       "font": "Menlo",
+       "tone": "s2haze",
+       "align": "right",
+       "box": [
+        8.2703,
+        0.2308,
+        3.7294,
+        0.2308
+       ]
+      },
+      {
+       "shape": "ellipse",
+       "decorative": true,
+       "fill": "s2sky",
+       "box": [
+        8.3189,
+        0.6138,
+        0.0876,
+        0.0831
+       ]
+      },
+      {
+       "text": "Request path",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s2haze",
+       "valign": "middle",
+       "box": [
+        8.4552,
+        0.5446,
+        1.0703,
+        0.2215
+       ]
+      },
+      {
+       "shape": "ellipse",
+       "decorative": true,
+       "fill": "s2violet",
+       "box": [
+        9.5352,
+        0.6138,
+        0.0876,
+        0.0831
+       ]
+      },
+      {
+       "text": "AI runtime",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s2haze",
+       "valign": "middle",
+       "box": [
+        9.6714,
+        0.5446,
+        1.0703,
+        0.2215
+       ]
+      },
+      {
+       "shape": "ellipse",
+       "decorative": true,
+       "fill": "s2teal",
+       "box": [
+        10.7514,
+        0.6138,
+        0.0876,
+        0.0831
+       ]
+      },
+      {
+       "text": "Data plane",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s2haze",
+       "valign": "middle",
+       "box": [
+        10.8876,
+        0.5446,
+        1.0703,
+        0.2215
+       ]
+      },
+      {
+       "shape": "roundRect",
+       "decorative": true,
+       "fill": "#0D1530",
+       "stroke": "#2A3757",
+       "strokeWidth": 1,
+       "radius": 12,
+       "opacity": 0.55,
+       "box": [
+        1.0703,
+        1.9569,
+        1.7124,
+        2.1969
+       ]
+      },
+      {
+       "text": "CLIENTS",
+       "role": "label",
+       "size": 10,
+       "font": "Menlo",
+       "tone": "s2haze",
+       "tracking": 0.12,
+       "box": [
+        1.2065,
+        2.0123,
+        1.44,
+        0.2031
+       ]
+      },
+      {
+       "shape": "roundRect",
+       "decorative": true,
+       "fill": "#0D1530",
+       "stroke": "#2A3757",
+       "strokeWidth": 1,
+       "radius": 12,
+       "opacity": 0.55,
+       "box": [
+        4.6703,
+        1.3385,
+        4.1838,
+        3.3231
+       ]
+      },
+      {
+       "text": "CORE SERVICES  ·  ns/platform",
+       "role": "label",
+       "size": 10,
+       "font": "Menlo",
+       "tone": "s2haze",
+       "tracking": 0.12,
+       "box": [
+        4.8065,
+        1.3938,
+        3.9114,
+        0.2031
+       ]
+      },
+      {
+       "shape": "roundRect",
+       "decorative": true,
+       "fill": "#0D1530",
+       "stroke": "#433779",
+       "strokeWidth": 1,
+       "radius": 12,
+       "opacity": 0.55,
+       "box": [
+        9.0973,
+        0.9692,
+        2.9024,
+        1.9477
+       ]
+      },
+      {
+       "text": "AI RUNTIME",
+       "role": "label",
+       "size": 10,
+       "font": "Menlo",
+       "tone": "s2violet",
+       "tracking": 0.12,
+       "box": [
+        9.2335,
+        1.0246,
+        2.63,
+        0.2031
+       ]
+      },
+      {
+       "shape": "roundRect",
+       "decorative": true,
+       "fill": "#0D1530",
+       "stroke": "#1A5552",
+       "strokeWidth": 1,
+       "radius": 12,
+       "opacity": 0.55,
+       "box": [
+        9.0973,
+        3.1015,
+        2.9024,
+        1.9385
+       ]
+      },
+      {
+       "text": "DATA PLANE",
+       "role": "label",
+       "size": 10,
+       "font": "Menlo",
+       "tone": "s2teal",
+       "tracking": 0.12,
+       "box": [
+        9.2335,
+        3.1569,
+        2.63,
+        0.2031
+       ]
+      },
+      {
+       "text": "EDGE",
+       "role": "label",
+       "size": 10,
+       "font": "Menlo",
+       "tone": "s2haze",
+       "tracking": 0.12,
+       "align": "center",
+       "box": [
+        3.0162,
+        2.3446,
+        1.3622,
+        0.2031
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2sky",
+       "opacity": 0.8,
+       "box": [
+        0.827,
+        3.0843,
+        0.1265,
+        0.016
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2sky",
+       "opacity": 0.8,
+       "box": [
+        0.9451,
+        2.5846,
+        0.0169,
+        1.0154
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2sky",
+       "opacity": 0.8,
+       "box": [
+        0.9535,
+        2.5766,
+        0.1751,
+        0.016
+       ]
+      },
+      {
+       "shape": {
+        "path": "M0 0 L1 0.5 L0 1 Z"
+       },
+       "decorative": true,
+       "fill": "s2sky",
+       "box": [
+        1.1141,
+        2.5431,
+        0.073,
+        0.0831
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2sky",
+       "opacity": 0.8,
+       "box": [
+        0.9535,
+        3.592,
+        0.1751,
+        0.016
+       ]
+      },
+      {
+       "shape": {
+        "path": "M0 0 L1 0.5 L0 1 Z"
+       },
+       "decorative": true,
+       "fill": "s2sky",
+       "box": [
+        1.1141,
+        3.5585,
+        0.073,
+        0.0831
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2sky",
+       "opacity": 0.8,
+       "box": [
+        2.6951,
+        2.5766,
+        0.1751,
+        0.016
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2sky",
+       "opacity": 0.8,
+       "box": [
+        2.6951,
+        3.592,
+        0.1751,
+        0.016
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2sky",
+       "opacity": 0.8,
+       "box": [
+        2.8618,
+        2.5846,
+        0.0169,
+        1.0154
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2sky",
+       "opacity": 0.8,
+       "box": [
+        2.8703,
+        3.0843,
+        0.0876,
+        0.016
+       ]
+      },
+      {
+       "shape": {
+        "path": "M0 0 L1 0.5 L0 1 Z"
+       },
+       "decorative": true,
+       "fill": "s2sky",
+       "box": [
+        2.9433,
+        3.0508,
+        0.073,
+        0.0831
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2sky",
+       "opacity": 0.8,
+       "box": [
+        4.3784,
+        3.0843,
+        0.3795,
+        0.016
+       ]
+      },
+      {
+       "shape": {
+        "path": "M0 0 L1 0.5 L0 1 Z"
+       },
+       "decorative": true,
+       "fill": "s2sky",
+       "box": [
+        4.7433,
+        3.0508,
+        0.073,
+        0.0831
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2sky",
+       "opacity": 0.8,
+       "box": [
+        6.2757,
+        3.0843,
+        0.1751,
+        0.016
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2sky",
+       "opacity": 0.8,
+       "box": [
+        6.4424,
+        1.9477,
+        0.0169,
+        2.28
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2sky",
+       "opacity": 0.8,
+       "box": [
+        6.4508,
+        1.9397,
+        0.107,
+        0.016
+       ]
+      },
+      {
+       "shape": {
+        "path": "M0 0 L1 0.5 L0 1 Z"
+       },
+       "decorative": true,
+       "fill": "s2sky",
+       "box": [
+        6.5433,
+        1.9062,
+        0.073,
+        0.0831
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2sky",
+       "opacity": 0.8,
+       "box": [
+        6.4508,
+        2.7151,
+        0.107,
+        0.016
+       ]
+      },
+      {
+       "shape": {
+        "path": "M0 0 L1 0.5 L0 1 Z"
+       },
+       "decorative": true,
+       "fill": "s2sky",
+       "box": [
+        6.5433,
+        2.6815,
+        0.073,
+        0.0831
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2sky",
+       "opacity": 0.8,
+       "box": [
+        6.4508,
+        3.472,
+        0.107,
+        0.016
+       ]
+      },
+      {
+       "shape": {
+        "path": "M0 0 L1 0.5 L0 1 Z"
+       },
+       "decorative": true,
+       "fill": "s2sky",
+       "box": [
+        6.5433,
+        3.4385,
+        0.073,
+        0.0831
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2sky",
+       "opacity": 0.8,
+       "box": [
+        6.4508,
+        4.2197,
+        0.107,
+        0.016
+       ]
+      },
+      {
+       "shape": {
+        "path": "M0 0 L1 0.5 L0 1 Z"
+       },
+       "decorative": true,
+       "fill": "s2sky",
+       "box": [
+        6.5433,
+        4.1862,
+        0.073,
+        0.0831
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2violet",
+       "opacity": 0.8,
+       "box": [
+        8.7179,
+        1.9397,
+        0.2141,
+        0.016
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2violet",
+       "opacity": 0.8,
+       "box": [
+        8.9235,
+        1.5231,
+        0.0169,
+        1.0708
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2violet",
+       "opacity": 0.8,
+       "box": [
+        8.9319,
+        1.5151,
+        0.253,
+        0.016
+       ]
+      },
+      {
+       "shape": {
+        "path": "M0 0 L1 0.5 L0 1 Z"
+       },
+       "decorative": true,
+       "fill": "s2violet",
+       "box": [
+        9.1703,
+        1.4815,
+        0.073,
+        0.0831
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2violet",
+       "opacity": 0.8,
+       "box": [
+        8.9319,
+        2.0504,
+        0.253,
+        0.016
+       ]
+      },
+      {
+       "shape": {
+        "path": "M0 0 L1 0.5 L0 1 Z"
+       },
+       "decorative": true,
+       "fill": "s2violet",
+       "box": [
+        9.1703,
+        2.0169,
+        0.073,
+        0.0831
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2violet",
+       "opacity": 0.8,
+       "box": [
+        8.9319,
+        2.5858,
+        0.253,
+        0.016
+       ]
+      },
+      {
+       "shape": {
+        "path": "M0 0 L1 0.5 L0 1 Z"
+       },
+       "decorative": true,
+       "fill": "s2violet",
+       "box": [
+        9.1703,
+        2.5523,
+        0.073,
+        0.0831
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2teal",
+       "opacity": 0.8,
+       "box": [
+        8.7179,
+        4.2197,
+        0.2141,
+        0.016
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2teal",
+       "opacity": 0.8,
+       "box": [
+        8.9235,
+        3.6462,
+        0.0169,
+        1.0708
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2teal",
+       "opacity": 0.8,
+       "box": [
+        8.9319,
+        3.6381,
+        0.253,
+        0.016
+       ]
+      },
+      {
+       "shape": {
+        "path": "M0 0 L1 0.5 L0 1 Z"
+       },
+       "decorative": true,
+       "fill": "s2teal",
+       "box": [
+        9.1703,
+        3.6046,
+        0.073,
+        0.0831
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2teal",
+       "opacity": 0.8,
+       "box": [
+        8.9319,
+        4.1735,
+        0.253,
+        0.016
+       ]
+      },
+      {
+       "shape": {
+        "path": "M0 0 L1 0.5 L0 1 Z"
+       },
+       "decorative": true,
+       "fill": "s2teal",
+       "box": [
+        9.1703,
+        4.14,
+        0.073,
+        0.0831
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2teal",
+       "opacity": 0.8,
+       "box": [
+        8.9319,
+        4.7089,
+        0.253,
+        0.016
+       ]
+      },
+      {
+       "shape": {
+        "path": "M0 0 L1 0.5 L0 1 Z"
+       },
+       "decorative": true,
+       "fill": "s2teal",
+       "box": [
+        9.1703,
+        4.6754,
+        0.073,
+        0.0831
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s2node",
+        "stroke": "#1E4466",
+        "strokeWidth": 1,
+        "radius": 10
+       },
+       "column": {
+        "items": [
+         {
+          "icon": "users",
+          "tone": "s2sky",
+          "size": 22,
+          "width": 22,
+          "height": 22
+         },
+         {
+          "text": "Users",
+          "role": "small",
+          "size": 12,
+          "font": "Helvetica Neue",
+          "weight": "bold",
+          "tone": "s2frost",
+          "align": "center"
+         }
+        ],
+        "pad": [
+         6,
+         8,
+         6,
+         8
+        ],
+        "gap": 4,
+        "align": "center",
+        "justify": "center"
+       },
+       "box": [
+        0.0,
+        2.6308,
+        0.827,
+        0.9231
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s2node",
+        "stroke": "#1E4466",
+        "strokeWidth": 1,
+        "radius": 8
+       },
+       "row": {
+        "items": [
+         {
+          "icon": "monitor",
+          "tone": "s2sky",
+          "size": 16,
+          "width": 16,
+          "height": 16
+         },
+         {
+          "column": {
+           "gap": 1,
+           "justify": "center",
+           "grow": 1,
+           "items": [
+            {
+             "text": "Web app",
+             "role": "small",
+             "size": 12,
+             "font": "Helvetica Neue",
+             "weight": "bold",
+             "tone": "s2frost"
+            },
+            {
+             "text": "React · Next.js",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s2haze"
+            }
+           ]
+          }
+         }
+        ],
+        "pad": [
+         0,
+         9,
+         0,
+         9
+        ],
+        "gap": 8,
+        "align": "center"
+       },
+       "box": [
+        1.187,
+        2.3077,
+        1.5081,
+        0.5538
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s2node",
+        "stroke": "#1E4466",
+        "strokeWidth": 1,
+        "radius": 8
+       },
+       "row": {
+        "items": [
+         {
+          "icon": "smartphone",
+          "tone": "s2sky",
+          "size": 16,
+          "width": 16,
+          "height": 16
+         },
+         {
+          "column": {
+           "gap": 1,
+           "justify": "center",
+           "grow": 1,
+           "items": [
+            {
+             "text": "Mobile app",
+             "role": "small",
+             "size": 12,
+             "font": "Helvetica Neue",
+             "weight": "bold",
+             "tone": "s2frost"
+            },
+            {
+             "text": "iOS · Android",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s2haze"
+            }
+           ]
+          }
+         }
+        ],
+        "pad": [
+         0,
+         9,
+         0,
+         9
+        ],
+        "gap": 8,
+        "align": "center"
+       },
+       "box": [
+        1.187,
+        3.3231,
+        1.5081,
+        0.5538
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s2node",
+        "stroke": "#1E4466",
+        "strokeWidth": 1,
+        "radius": 10
+       },
+       "column": {
+        "items": [
+         {
+          "icon": "waypoints",
+          "tone": "s2sky",
+          "size": 22,
+          "width": 22,
+          "height": 22
+         },
+         {
+          "text": "API Gateway",
+          "role": "small",
+          "size": 12,
+          "font": "Helvetica Neue",
+          "weight": "bold",
+          "tone": "s2frost",
+          "align": "center"
+         },
+         {
+          "text": "Routing · rate limits",
+          "role": "caption",
+          "size": 10,
+          "font": "Helvetica Neue",
+          "tone": "s2haze",
+          "align": "center"
+         }
+        ],
+        "pad": [
+         6,
+         8,
+         6,
+         8
+        ],
+        "gap": 4,
+        "align": "center",
+        "justify": "center"
+       },
+       "box": [
+        3.0162,
+        2.5846,
+        1.3622,
+        1.0154
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s2node",
+        "stroke": "#1E4466",
+        "strokeWidth": 1,
+        "radius": 10
+       },
+       "column": {
+        "items": [
+         {
+          "icon": "boxes",
+          "tone": "s2sky",
+          "size": 22,
+          "width": 22,
+          "height": 22
+         },
+         {
+          "text": "Application services",
+          "role": "small",
+          "size": 12,
+          "font": "Helvetica Neue",
+          "weight": "bold",
+          "tone": "s2frost",
+          "align": "center"
+         },
+         {
+          "text": "Microservices · gRPC",
+          "role": "caption",
+          "size": 10,
+          "font": "Helvetica Neue",
+          "tone": "s2haze",
+          "align": "center"
+         }
+        ],
+        "pad": [
+         6,
+         8,
+         6,
+         8
+        ],
+        "gap": 4,
+        "align": "center",
+        "justify": "center"
+       },
+       "box": [
+        4.8162,
+        2.4646,
+        1.4595,
+        1.2554
+       ]
+      },
+      {
+       "shape": "roundRect",
+       "decorative": true,
+       "fill": "s2violet",
+       "radius": 14,
+       "opacity": 0.14,
+       "box": [
+        6.5189,
+        1.5969,
+        2.2962,
+        0.7015
+       ]
+      },
+      {
+       "surface": {
+        "fill": "#231B4D",
+        "stroke": "s2violet",
+        "strokeWidth": 1,
+        "radius": 8
+       },
+       "row": {
+        "items": [
+         {
+          "icon": "brain-circuit",
+          "tone": "s2violet",
+          "size": 16,
+          "width": 16,
+          "height": 16
+         },
+         {
+          "column": {
+           "gap": 1,
+           "justify": "center",
+           "grow": 1,
+           "items": [
+            {
+             "text": "AI orchestrator",
+             "role": "small",
+             "size": 12,
+             "font": "Helvetica Neue",
+             "weight": "bold",
+             "tone": "s2frost"
+            },
+            {
+             "text": "Agents · tools · memory",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s2haze"
+            }
+           ]
+          }
+         }
+        ],
+        "pad": [
+         0,
+         9,
+         0,
+         9
+        ],
+        "gap": 8,
+        "align": "center"
+       },
+       "box": [
+        6.6162,
+        1.6892,
+        2.1016,
+        0.5169
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s2node",
+        "stroke": "#1E4466",
+        "strokeWidth": 1,
+        "radius": 8
+       },
+       "row": {
+        "items": [
+         {
+          "icon": "shield-check",
+          "tone": "s2sky",
+          "size": 16,
+          "width": 16,
+          "height": 16
+         },
+         {
+          "column": {
+           "gap": 1,
+           "justify": "center",
+           "grow": 1,
+           "items": [
+            {
+             "text": "Authentication",
+             "role": "small",
+             "size": 12,
+             "font": "Helvetica Neue",
+             "weight": "bold",
+             "tone": "s2frost"
+            },
+            {
+             "text": "OIDC · RBAC · SSO",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s2haze"
+            }
+           ]
+          }
+         }
+        ],
+        "pad": [
+         0,
+         9,
+         0,
+         9
+        ],
+        "gap": 8,
+        "align": "center"
+       },
+       "box": [
+        6.6162,
+        2.4646,
+        2.1016,
+        0.5169
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s2node",
+        "stroke": "#5A4514",
+        "strokeWidth": 1,
+        "radius": 8
+       },
+       "row": {
+        "items": [
+         {
+          "icon": "bell-ring",
+          "tone": "#FBBF24",
+          "size": 16,
+          "width": 16,
+          "height": 16
+         },
+         {
+          "column": {
+           "gap": 1,
+           "justify": "center",
+           "grow": 1,
+           "items": [
+            {
+             "text": "Notifications",
+             "role": "small",
+             "size": 12,
+             "font": "Helvetica Neue",
+             "weight": "bold",
+             "tone": "s2frost"
+            },
+            {
+             "text": "Push · email · SMS",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s2haze"
+            }
+           ]
+          }
+         }
+        ],
+        "pad": [
+         0,
+         9,
+         0,
+         9
+        ],
+        "gap": 8,
+        "align": "center"
+       },
+       "box": [
+        6.6162,
+        3.2215,
+        2.1016,
+        0.5169
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s2node",
+        "stroke": "#1A5552",
+        "strokeWidth": 1,
+        "radius": 8
+       },
+       "row": {
+        "items": [
+         {
+          "icon": "database-zap",
+          "tone": "s2teal",
+          "size": 16,
+          "width": 16,
+          "height": 16
+         },
+         {
+          "column": {
+           "gap": 1,
+           "justify": "center",
+           "grow": 1,
+           "items": [
+            {
+             "text": "Data service",
+             "role": "small",
+             "size": 12,
+             "font": "Helvetica Neue",
+             "weight": "bold",
+             "tone": "s2frost"
+            },
+            {
+             "text": "Queries · cache · files",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s2haze"
+            }
+           ]
+          }
+         }
+        ],
+        "pad": [
+         0,
+         9,
+         0,
+         9
+        ],
+        "gap": 8,
+        "align": "center"
+       },
+       "box": [
+        6.6162,
+        3.9692,
+        2.1016,
+        0.5169
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s2node",
+        "stroke": "#433779",
+        "strokeWidth": 1,
+        "radius": 8
+       },
+       "row": {
+        "items": [
+         {
+          "icon": "sparkles",
+          "tone": "s2violet",
+          "size": 16,
+          "width": 16,
+          "height": 16
+         },
+         {
+          "column": {
+           "gap": 1,
+           "justify": "center",
+           "grow": 1,
+           "items": [
+            {
+             "text": "LLM providers",
+             "role": "small",
+             "size": 12,
+             "font": "Helvetica Neue",
+             "weight": "bold",
+             "tone": "s2frost"
+            },
+            {
+             "text": "Claude · GPT · open models",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s2haze"
+            }
+           ]
+          }
+         }
+        ],
+        "pad": [
+         0,
+         9,
+         0,
+         9
+        ],
+        "gap": 8,
+        "align": "center"
+       },
+       "box": [
+        9.2433,
+        1.2923,
+        2.6076,
+        0.4615
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s2node",
+        "stroke": "#433779",
+        "strokeWidth": 1,
+        "radius": 8
+       },
+       "row": {
+        "items": [
+         {
+          "icon": "layers",
+          "tone": "s2violet",
+          "size": 16,
+          "width": 16,
+          "height": 16
+         },
+         {
+          "column": {
+           "gap": 1,
+           "justify": "center",
+           "grow": 1,
+           "items": [
+            {
+             "text": "Vector database",
+             "role": "small",
+             "size": 12,
+             "font": "Helvetica Neue",
+             "weight": "bold",
+             "tone": "s2frost"
+            },
+            {
+             "text": "pgvector · embeddings",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s2haze"
+            }
+           ]
+          }
+         }
+        ],
+        "pad": [
+         0,
+         9,
+         0,
+         9
+        ],
+        "gap": 8,
+        "align": "center"
+       },
+       "box": [
+        9.2433,
+        1.8277,
+        2.6076,
+        0.4615
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s2node",
+        "stroke": "#433779",
+        "strokeWidth": 1,
+        "radius": 8
+       },
+       "row": {
+        "items": [
+         {
+          "icon": "plug-zap",
+          "tone": "s2violet",
+          "size": 16,
+          "width": 16,
+          "height": 16
+         },
+         {
+          "column": {
+           "gap": 1,
+           "justify": "center",
+           "grow": 1,
+           "items": [
+            {
+             "text": "Tool / MCP services",
+             "role": "small",
+             "size": 12,
+             "font": "Helvetica Neue",
+             "weight": "bold",
+             "tone": "s2frost"
+            },
+            {
+             "text": "MCP servers · internal APIs",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s2haze"
+            }
+           ]
+          }
+         }
+        ],
+        "pad": [
+         0,
+         9,
+         0,
+         9
+        ],
+        "gap": 8,
+        "align": "center"
+       },
+       "box": [
+        9.2433,
+        2.3631,
+        2.6076,
+        0.4615
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s2node",
+        "stroke": "#1A5552",
+        "strokeWidth": 1,
+        "radius": 8
+       },
+       "row": {
+        "items": [
+         {
+          "icon": "database",
+          "tone": "s2teal",
+          "size": 16,
+          "width": 16,
+          "height": 16
+         },
+         {
+          "column": {
+           "gap": 1,
+           "justify": "center",
+           "grow": 1,
+           "items": [
+            {
+             "text": "PostgreSQL",
+             "role": "small",
+             "size": 12,
+             "font": "Helvetica Neue",
+             "weight": "bold",
+             "tone": "s2frost"
+            },
+            {
+             "text": "Primary + 2 read replicas",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s2haze"
+            }
+           ]
+          }
+         }
+        ],
+        "pad": [
+         0,
+         9,
+         0,
+         9
+        ],
+        "gap": 8,
+        "align": "center"
+       },
+       "box": [
+        9.2433,
+        3.4154,
+        2.6076,
+        0.4615
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s2node",
+        "stroke": "#1A5552",
+        "strokeWidth": 1,
+        "radius": 8
+       },
+       "row": {
+        "items": [
+         {
+          "icon": "zap",
+          "tone": "s2teal",
+          "size": 16,
+          "width": 16,
+          "height": 16
+         },
+         {
+          "column": {
+           "gap": 1,
+           "justify": "center",
+           "grow": 1,
+           "items": [
+            {
+             "text": "Redis",
+             "role": "small",
+             "size": 12,
+             "font": "Helvetica Neue",
+             "weight": "bold",
+             "tone": "s2frost"
+            },
+            {
+             "text": "Cache · sessions · queues",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s2haze"
+            }
+           ]
+          }
+         }
+        ],
+        "pad": [
+         0,
+         9,
+         0,
+         9
+        ],
+        "gap": 8,
+        "align": "center"
+       },
+       "box": [
+        9.2433,
+        3.9508,
+        2.6076,
+        0.4615
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s2node",
+        "stroke": "#1A5552",
+        "strokeWidth": 1,
+        "radius": 8
+       },
+       "row": {
+        "items": [
+         {
+          "icon": "hard-drive",
+          "tone": "s2teal",
+          "size": 16,
+          "width": 16,
+          "height": 16
+         },
+         {
+          "column": {
+           "gap": 1,
+           "justify": "center",
+           "grow": 1,
+           "items": [
+            {
+             "text": "Object storage",
+             "role": "small",
+             "size": 12,
+             "font": "Helvetica Neue",
+             "weight": "bold",
+             "tone": "s2frost"
+            },
+            {
+             "text": "S3 · documents & media",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s2haze"
+            }
+           ]
+          }
+         }
+        ],
+        "pad": [
+         0,
+         9,
+         0,
+         9
+        ],
+        "gap": 8,
+        "align": "center"
+       },
+       "box": [
+        9.2433,
+        4.4862,
+        2.6076,
+        0.4615
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "INFRASTRUCTURE LAYER",
+          "role": "label",
+          "size": 10,
+          "font": "Menlo",
+          "tone": "s2sky",
+          "tracking": 0.12,
+          "box": [
+           0.2141,
+           0.8182,
+           2.0433,
+           1.6364
+          ]
+         },
+         {
+          "text": "Runs, observes and ships everything above",
+          "role": "caption",
+          "size": 10,
+          "font": "Helvetica Neue",
+          "tone": "s2haze",
+          "box": [
+           0.2141,
+           2.4545,
+           1.946,
+           2.8636
+          ]
+         },
+         {
+          "surface": {
+           "fill": "#152040",
+           "stroke": "#2A3757",
+           "strokeWidth": 1,
+           "radius": 8
+          },
+          "row": {
+           "items": [
+            {
+             "icon": "container",
+             "tone": "s2sky",
+             "size": 18,
+             "width": 18,
+             "height": 18
+            },
+            {
+             "column": {
+              "gap": 1,
+              "justify": "center",
+              "grow": 1,
+              "items": [
+               {
+                "text": "Kubernetes",
+                "role": "small",
+                "size": 12,
+                "font": "Helvetica Neue",
+                "weight": "bold",
+                "tone": "s2frost"
+               },
+               {
+                "text": "EKS · autoscaling node pools",
+                "role": "caption",
+                "size": 10,
+                "font": "Helvetica Neue",
+                "tone": "s2haze"
+               }
+              ]
+             }
+            }
+           ],
+           "pad": [
+            0,
+            9,
+            0,
+            9
+           ],
+           "gap": 8,
+           "align": "center"
+          },
+          "box": [
+           2.3838,
+           0.8182,
+           3.0358,
+           4.3636
+          ]
+         },
+         {
+          "surface": {
+           "fill": "#152040",
+           "stroke": "#2A3757",
+           "strokeWidth": 1,
+           "radius": 8
+          },
+          "row": {
+           "items": [
+            {
+             "icon": "activity",
+             "tone": "s2violet",
+             "size": 18,
+             "width": 18,
+             "height": 18
+            },
+            {
+             "column": {
+              "gap": 1,
+              "justify": "center",
+              "grow": 1,
+              "items": [
+               {
+                "text": "Observability",
+                "role": "small",
+                "size": 12,
+                "font": "Helvetica Neue",
+                "weight": "bold",
+                "tone": "s2frost"
+               },
+               {
+                "text": "OpenTelemetry · metrics, logs, traces",
+                "role": "caption",
+                "size": 10,
+                "font": "Helvetica Neue",
+                "tone": "s2haze"
+               }
+              ]
+             }
+            }
+           ],
+           "pad": [
+            0,
+            9,
+            0,
+            9
+           ],
+           "gap": 8,
+           "align": "center"
+          },
+          "box": [
+           5.6239,
+           0.8182,
+           3.0358,
+           4.3636
+          ]
+         },
+         {
+          "surface": {
+           "fill": "#152040",
+           "stroke": "#2A3757",
+           "strokeWidth": 1,
+           "radius": 8
+          },
+          "row": {
+           "items": [
+            {
+             "icon": "git-branch",
+             "tone": "s2teal",
+             "size": 18,
+             "width": 18,
+             "height": 18
+            },
+            {
+             "column": {
+              "gap": 1,
+              "justify": "center",
+              "grow": 1,
+              "items": [
+               {
+                "text": "CI/CD",
+                "role": "small",
+                "size": 12,
+                "font": "Helvetica Neue",
+                "weight": "bold",
+                "tone": "s2frost"
+               },
+               {
+                "text": "GitHub Actions · Argo CD · canary",
+                "role": "caption",
+                "size": 10,
+                "font": "Helvetica Neue",
+                "tone": "s2haze"
+               }
+              ]
+             }
+            }
+           ],
+           "pad": [
+            0,
+            9,
+            0,
+            9
+           ],
+           "gap": 8,
+           "align": "center"
+          },
+          "box": [
+           8.864,
+           0.8182,
+           3.0358,
+           4.3636
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "#0E1730",
+        "stroke": "#2A3757",
+        "strokeWidth": 1,
+        "radius": 10
+       },
+       "box": [
+        0.0,
+        5.1877,
+        11.9997,
+        0.8123
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "data-story",
+   "message": "Acquisition is accelerating, but activation remains the biggest growth lever",
+   "background": "s3paper",
+   "notes": "Data storytelling: three numbered acts read left to right — a highlighted column chart, a retention curve and a proportional funnel — resolving into one takeaway band.",
+   "compose": {
+    "free": {
+     "items": [
+      {
+       "text": "PRODUCT ANALYTICS  ·  JANUARY – JUNE 2024",
+       "role": "label",
+       "size": 10.5,
+       "font": "Helvetica Neue",
+       "weight": "bold",
+       "tone": "s3coral",
+       "tracking": 0.18,
+       "box": [
+        0.0,
+        0.0,
+        7.7838,
+        0.2308
+       ]
+      },
+      {
+       "text": "From growth to retention: what the data tells us",
+       "role": "title",
+       "size": 32,
+       "font": "Charter",
+       "weight": "bold",
+       "tone": "s3ink",
+       "box": [
+        0.0,
+        0.24,
+        10.7027,
+        0.5908
+       ]
+      },
+      {
+       "text": "Six months of product data, three signals, and one decision.",
+       "role": "lead",
+       "size": 15,
+       "font": "Charter",
+       "italic": true,
+       "tone": "s3stone",
+       "box": [
+        0.0,
+        0.8123,
+        9.7298,
+        0.3138
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s3ink",
+       "box": [
+        0.0,
+        1.249,
+        11.9997,
+        0.0128
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s3hair",
+       "box": [
+        4.8598,
+        1.4769,
+        0.0101,
+        3.4338
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s3hair",
+       "box": [
+        8.4112,
+        1.4769,
+        0.0101,
+        3.4338
+       ]
+      },
+      {
+       "text": "01    ACQUISITION",
+       "role": "label",
+       "size": 10.5,
+       "font": "Helvetica Neue",
+       "weight": "bold",
+       "tone": "s3coral",
+       "tracking": 0.16,
+       "box": [
+        0.0,
+        1.4585,
+        4.6216,
+        0.2308
+       ]
+      },
+      {
+       "text": "Users are arriving faster every month",
+       "role": "h3",
+       "size": 17,
+       "font": "Charter",
+       "weight": "bold",
+       "tone": "s3ink",
+       "box": [
+        0.0,
+        1.7169,
+        4.6216,
+        0.3508
+       ]
+      },
+      {
+       "text": "+88%",
+       "role": "display",
+       "size": 44,
+       "font": "Charter",
+       "weight": "bold",
+       "tone": "s3ink",
+       "box": [
+        0.0,
+        2.0862,
+        1.8973,
+        0.6646
+       ]
+      },
+      {
+       "text": "monthly active users,\n42K in January, 79K in June",
+       "role": "small",
+       "size": 12,
+       "font": "Helvetica Neue",
+       "tone": "s3stone",
+       "leading": 1.3,
+       "box": [
+        1.9265,
+        2.1969,
+        2.6951,
+        0.48
+       ]
+      },
+      {
+       "chart": {
+        "data": "mau",
+        "chart": "column",
+        "highlight": "Jun",
+        "labels": "outside",
+        "axis": "hairline",
+        "alt": "Monthly active users in thousands, January to June: 42, 47, 53, 61, 68, 79; June highlighted"
+       },
+       "box": [
+        -0.0973,
+        2.7877,
+        4.7676,
+        2.1785
+       ]
+      },
+      {
+       "text": "02    RETENTION",
+       "role": "label",
+       "size": 10.5,
+       "font": "Helvetica Neue",
+       "weight": "bold",
+       "tone": "s3coral",
+       "tracking": 0.16,
+       "box": [
+        5.1081,
+        1.4585,
+        3.0649,
+        0.2308
+       ]
+      },
+      {
+       "text": "Cohorts settle by month 3",
+       "role": "h3",
+       "size": 17,
+       "font": "Charter",
+       "weight": "bold",
+       "tone": "s3ink",
+       "box": [
+        5.1081,
+        1.7169,
+        3.0649,
+        0.3508
+       ]
+      },
+      {
+       "text": "62%",
+       "role": "display",
+       "size": 44,
+       "font": "Charter",
+       "weight": "bold",
+       "tone": "s3ink",
+       "box": [
+        5.1081,
+        2.0862,
+        1.8973,
+        0.6646
+       ]
+      },
+      {
+       "text": "still active\nat month 6",
+       "role": "small",
+       "size": 12,
+       "font": "Helvetica Neue",
+       "tone": "s3stone",
+       "leading": 1.3,
+       "box": [
+        7.0346,
+        2.1969,
+        1.1384,
+        0.48
+       ]
+      },
+      {
+       "shape": {
+        "path": "M0.000 0.000 L0.200 0.180 L0.400 0.280 L0.600 0.330 L0.800 0.360 L1.000 0.380 L1 1 L0 1 Z"
+       },
+       "decorative": true,
+       "fill": "#ECE6DA",
+       "box": [
+        5.4,
+        3.0277,
+        2.627,
+        1.5323
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s3stone",
+       "box": [
+        5.4,
+        4.5552,
+        2.627,
+        0.0096
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s3hair",
+       "box": [
+        5.4,
+        3.0245,
+        2.627,
+        0.0064
+       ]
+      },
+      {
+       "text": "100",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s3stone",
+       "align": "right",
+       "box": [
+        4.9135,
+        2.9354,
+        0.3892,
+        0.1846
+       ]
+      },
+      {
+       "text": "0",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s3stone",
+       "align": "right",
+       "box": [
+        4.9135,
+        4.4585,
+        0.3892,
+        0.1846
+       ]
+      },
+      {
+       "shape": {
+        "path": "M0.000 0.000 L0.200 0.180 L0.400 0.280 L0.600 0.330 L0.800 0.360 L1.000 0.380"
+       },
+       "decorative": true,
+       "fill": "none",
+       "stroke": "s3ink",
+       "strokeWidth": 2,
+       "box": [
+        5.4,
+        3.0277,
+        2.627,
+        1.5323
+       ]
+      },
+      {
+       "shape": "ellipse",
+       "decorative": true,
+       "fill": "s3ink",
+       "box": [
+        5.3611,
+        2.9908,
+        0.0778,
+        0.0738
+       ]
+      },
+      {
+       "text": "M1",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s3stone",
+       "align": "center",
+       "box": [
+        5.1568,
+        4.6062,
+        0.4865,
+        0.2031
+       ]
+      },
+      {
+       "shape": "ellipse",
+       "decorative": true,
+       "fill": "s3ink",
+       "box": [
+        5.8865,
+        3.2666,
+        0.0778,
+        0.0738
+       ]
+      },
+      {
+       "text": "M2",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s3stone",
+       "align": "center",
+       "box": [
+        5.6822,
+        4.6062,
+        0.4865,
+        0.2031
+       ]
+      },
+      {
+       "shape": "ellipse",
+       "decorative": true,
+       "fill": "s3ink",
+       "box": [
+        6.4119,
+        3.4198,
+        0.0778,
+        0.0738
+       ]
+      },
+      {
+       "text": "M3",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s3stone",
+       "align": "center",
+       "box": [
+        6.2076,
+        4.6062,
+        0.4865,
+        0.2031
+       ]
+      },
+      {
+       "shape": "ellipse",
+       "decorative": true,
+       "fill": "s3ink",
+       "box": [
+        6.9373,
+        3.4964,
+        0.0778,
+        0.0738
+       ]
+      },
+      {
+       "text": "M4",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s3stone",
+       "align": "center",
+       "box": [
+        6.733,
+        4.6062,
+        0.4865,
+        0.2031
+       ]
+      },
+      {
+       "shape": "ellipse",
+       "decorative": true,
+       "fill": "s3ink",
+       "box": [
+        7.4627,
+        3.5424,
+        0.0778,
+        0.0738
+       ]
+      },
+      {
+       "text": "M5",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s3stone",
+       "align": "center",
+       "box": [
+        7.2584,
+        4.6062,
+        0.4865,
+        0.2031
+       ]
+      },
+      {
+       "shape": "ellipse",
+       "decorative": true,
+       "fill": "s3coral",
+       "box": [
+        7.9638,
+        3.55,
+        0.1265,
+        0.12
+       ]
+      },
+      {
+       "text": "M6",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s3stone",
+       "align": "center",
+       "box": [
+        7.7838,
+        4.6062,
+        0.4865,
+        0.2031
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s3coral",
+       "box": [
+        6.4508,
+        3.2934,
+        1.5762,
+        0.0128
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s3coral",
+       "box": [
+        6.4441,
+        3.2998,
+        0.0135,
+        0.0738
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s3coral",
+       "box": [
+        8.0203,
+        3.2998,
+        0.0135,
+        0.1994
+       ]
+      },
+      {
+       "text": "−10 pts in three months",
+       "role": "caption",
+       "size": 10.5,
+       "font": "Helvetica Neue",
+       "weight": "bold",
+       "tone": "s3coral",
+       "box": [
+        6.4022,
+        3.0506,
+        1.946,
+        0.2215
+       ]
+      },
+      {
+       "text": "62%",
+       "role": "caption",
+       "size": 10.5,
+       "font": "Helvetica Neue",
+       "weight": "bold",
+       "tone": "s3coral",
+       "align": "right",
+       "box": [
+        7.6379,
+        3.7023,
+        0.5351,
+        0.2031
+       ]
+      },
+      {
+       "text": "03    ACTIVATION",
+       "role": "label",
+       "size": 10.5,
+       "font": "Helvetica Neue",
+       "weight": "bold",
+       "tone": "s3coral",
+       "tracking": 0.16,
+       "box": [
+        8.6595,
+        1.4585,
+        3.3402,
+        0.2308
+       ]
+      },
+      {
+       "text": "Activation is the leak",
+       "role": "h3",
+       "size": 17,
+       "font": "Charter",
+       "weight": "bold",
+       "tone": "s3ink",
+       "box": [
+        8.6595,
+        1.7169,
+        3.3402,
+        0.3508
+       ]
+      },
+      {
+       "text": "8.4%",
+       "role": "display",
+       "size": 44,
+       "font": "Charter",
+       "weight": "bold",
+       "tone": "s3ink",
+       "box": [
+        8.6595,
+        2.0862,
+        1.8973,
+        0.6646
+       ]
+      },
+      {
+       "text": "of visitors become\npaying customers",
+       "role": "small",
+       "size": 12,
+       "font": "Helvetica Neue",
+       "tone": "s3stone",
+       "leading": 1.3,
+       "box": [
+        10.586,
+        2.1969,
+        1.4137,
+        0.48
+       ]
+      },
+      {
+       "text": "Visitors",
+       "role": "small",
+       "size": 12,
+       "font": "Helvetica Neue",
+       "tone": "s3ink",
+       "valign": "middle",
+       "box": [
+        8.6595,
+        2.9077,
+        0.9243,
+        0.2585
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s3ink",
+       "box": [
+        9.6325,
+        2.88,
+        1.8,
+        0.3138
+       ]
+      },
+      {
+       "text": "100K",
+       "role": "small",
+       "size": 12,
+       "font": "Helvetica Neue",
+       "weight": "regular",
+       "tone": "s3ink",
+       "valign": "middle",
+       "box": [
+        11.5103,
+        2.9077,
+        0.4894,
+        0.2585
+       ]
+      },
+      {
+       "text": "Sign-ups",
+       "role": "small",
+       "size": 12,
+       "font": "Helvetica Neue",
+       "tone": "s3ink",
+       "valign": "middle",
+       "box": [
+        8.6595,
+        3.4154,
+        0.9243,
+        0.2585
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s3ink",
+       "box": [
+        9.6325,
+        3.3877,
+        0.576,
+        0.3138
+       ]
+      },
+      {
+       "text": "32K  ·  32%",
+       "role": "small",
+       "size": 12,
+       "font": "Helvetica Neue",
+       "weight": "regular",
+       "tone": "s3ink",
+       "valign": "middle",
+       "box": [
+        10.2863,
+        3.4154,
+        1.7134,
+        0.2585
+       ]
+      },
+      {
+       "text": "Activated",
+       "role": "small",
+       "size": 12,
+       "font": "Helvetica Neue",
+       "tone": "s3ink",
+       "valign": "middle",
+       "box": [
+        8.6595,
+        3.9231,
+        0.9243,
+        0.2585
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s3coral",
+       "box": [
+        9.6325,
+        3.8954,
+        0.378,
+        0.3138
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "#F8DCCD",
+       "stroke": "s3coral",
+       "strokeWidth": 1,
+       "box": [
+        10.0105,
+        3.8954,
+        0.198,
+        0.3138
+       ]
+      },
+      {
+       "text": "11K lost",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "weight": "bold",
+       "tone": "s3coral",
+       "box": [
+        9.9618,
+        4.2185,
+        1.1676,
+        0.1846
+       ]
+      },
+      {
+       "text": "21K  ·  66%",
+       "role": "small",
+       "size": 12,
+       "font": "Helvetica Neue",
+       "weight": "bold",
+       "tone": "s3coral",
+       "valign": "middle",
+       "box": [
+        10.2863,
+        3.9231,
+        1.7134,
+        0.2585
+       ]
+      },
+      {
+       "text": "Paid",
+       "role": "small",
+       "size": 12,
+       "font": "Helvetica Neue",
+       "tone": "s3ink",
+       "valign": "middle",
+       "box": [
+        8.6595,
+        4.4308,
+        0.9243,
+        0.2585
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s3ink",
+       "box": [
+        9.6325,
+        4.4031,
+        0.1512,
+        0.3138
+       ]
+      },
+      {
+       "text": "8.4K  ·  40%",
+       "role": "small",
+       "size": 12,
+       "font": "Helvetica Neue",
+       "weight": "regular",
+       "tone": "s3ink",
+       "valign": "middle",
+       "box": [
+        9.8615,
+        4.4308,
+        2.1382,
+        0.2585
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "bleed": [
+        "left",
+        "right",
+        "bottom"
+       ],
+       "fill": "s3ink",
+       "box": [
+        0.0,
+        5.1877,
+        11.9997,
+        0.8123
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "THE TAKEAWAY",
+          "role": "label",
+          "size": 10.5,
+          "font": "Helvetica Neue",
+          "weight": "bold",
+          "tone": "#FF8A5B",
+          "tracking": 0.1,
+          "box": [
+           0.0,
+           3.0,
+           1.5568,
+           1.7045
+          ]
+         },
+         {
+          "text": "Acquisition is accelerating, but activation remains the biggest growth lever.",
+          "role": "h3",
+          "size": 19,
+          "font": "Charter",
+          "weight": "bold",
+          "tone": "s3paper",
+          "leading": 1.15,
+          "box": [
+           1.6054,
+           2.1818,
+           6.5677,
+           4.2273
+          ]
+         },
+         {
+          "shape": "rect",
+          "decorative": true,
+          "fill": "s3stone",
+          "box": [
+           8.46,
+           2.3182,
+           0.0101,
+           3.9545
+          ]
+         },
+         {
+          "text": "+1.8K",
+          "role": "display",
+          "size": 30,
+          "font": "Charter",
+          "weight": "bold",
+          "tone": "#FF8A5B",
+          "box": [
+           8.6597,
+           2.1818,
+           1.3622,
+           4.0909
+          ]
+         },
+         {
+          "text": "paid users a month if activation rises from 66% to 80%",
+          "role": "caption",
+          "size": 10.5,
+          "font": "Helvetica Neue",
+          "tone": "#CFC8BA",
+          "leading": 1.25,
+          "box": [
+           10.0024,
+           2.3182,
+           1.9976,
+           4.0909
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s3ink"
+       },
+       "box": [
+        0.0,
+        5.1877,
+        11.9997,
+        0.8123
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "product-keynote",
+   "message": "NOVA puts research, creation, analysis and automation in one AI workspace",
+   "background": "s4white",
+   "notes": "Product launch / keynote: oversized type, generous white space, a lit background and a native, fully editable device and UI mockup.",
+   "compose": {
+    "free": {
+     "items": [
+      {
+       "bleed": [
+        "left",
+        "right",
+        "top",
+        "bottom"
+       ],
+       "image": {
+        "asset": "assets/keynote-light.png",
+        "fit": "cover"
+       },
+       "decorative": true,
+       "box": [
+        0.0,
+        0.0,
+        12.0,
+        6.0
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s4violet",
+        "radius": 7
+       },
+       "column": {
+        "items": [
+         {
+          "icon": "sparkles",
+          "tone": "s4white",
+          "size": 13,
+          "width": 13,
+          "height": 13
+         }
+        ],
+        "align": "center",
+        "justify": "center"
+       },
+       "box": [
+        0.0,
+        0.0462,
+        0.2919,
+        0.2769
+       ]
+      },
+      {
+       "text": "NOVA",
+       "role": "h3",
+       "size": 15,
+       "font": "Helvetica Neue",
+       "weight": "bold",
+       "tone": "#0B0B10",
+       "tracking": 0.14,
+       "valign": "middle",
+       "box": [
+        0.3892,
+        0.0277,
+        1.2649,
+        0.3138
+       ]
+      },
+      {
+       "text": "Product        Solutions        Pricing        Resources",
+       "role": "caption",
+       "size": 11,
+       "font": "Helvetica Neue",
+       "tone": "#5D5F6E",
+       "align": "right",
+       "valign": "middle",
+       "box": [
+        6.6162,
+        0.0462,
+        5.3835,
+        0.2769
+       ]
+      },
+      {
+       "surface": {
+        "fill": "#EFEAFE",
+        "radius": 100
+       },
+       "row": {
+        "items": [
+         {
+          "icon": "sparkles",
+          "tone": "s4violet",
+          "size": 12,
+          "width": 12,
+          "height": 12
+         },
+         {
+          "text": "NOVA  ·  Your AI workspace",
+          "role": "caption",
+          "size": 11,
+          "font": "Helvetica Neue",
+          "weight": "bold",
+          "tone": "s4violet"
+         }
+        ],
+        "pad": [
+         0,
+         12,
+         0,
+         12
+        ],
+        "gap": 6,
+        "align": "center"
+       },
+       "box": [
+        0.0,
+        1.0338,
+        2.8216,
+        0.3138
+       ]
+      },
+      {
+       "text": "One workspace.",
+       "role": "title",
+       "size": 50,
+       "font": "Helvetica Neue",
+       "weight": "bold",
+       "tone": "#0B0B10",
+       "leading": 1.04,
+       "tracking": -0.025,
+       "box": [
+        0.0,
+        1.4769,
+        6.227,
+        0.7569
+       ]
+      },
+      {
+       "text": "Every idea.",
+       "role": "display",
+       "size": 50,
+       "font": "Helvetica Neue",
+       "weight": "bold",
+       "tone": "#0B0B10",
+       "leading": 1.04,
+       "tracking": -0.025,
+       "box": [
+        0.0,
+        2.1415,
+        6.227,
+        0.7569
+       ]
+      },
+      {
+       "text": "Amplified by AI.",
+       "role": "display",
+       "size": 50,
+       "font": "Helvetica Neue",
+       "weight": "bold",
+       "tone": "s4violet",
+       "leading": 1.04,
+       "tracking": -0.025,
+       "box": [
+        0.0,
+        2.8062,
+        6.227,
+        0.7569
+       ]
+      },
+      {
+       "text": "From idea to execution without leaving your workspace.",
+       "role": "lead",
+       "size": 17,
+       "font": "Helvetica Neue",
+       "tone": "#5D5F6E",
+       "leading": 1.35,
+       "box": [
+        0.0,
+        3.7662,
+        4.573,
+        0.6646
+       ]
+      },
+      {
+       "surface": {
+        "fill": "#0B0B10",
+        "radius": 100
+       },
+       "row": {
+        "items": [
+         {
+          "text": "Get started",
+          "role": "small",
+          "size": 13,
+          "font": "Helvetica Neue",
+          "weight": "bold",
+          "tone": "s4white",
+          "width": "auto"
+         },
+         {
+          "icon": "arrow-right",
+          "tone": "s4white",
+          "size": 14,
+          "width": 14,
+          "height": 14
+         }
+        ],
+        "gap": 8,
+        "align": "center",
+        "justify": "center"
+       },
+       "box": [
+        0.0,
+        4.6615,
+        1.7027,
+        0.4615
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s4white",
+        "stroke": "#CFCBDD",
+        "strokeWidth": 1,
+        "radius": 100
+       },
+       "row": {
+        "items": [
+         {
+          "icon": "circle-play",
+          "tone": "#0B0B10",
+          "size": 15,
+          "width": 15,
+          "height": 15
+         },
+         {
+          "text": "Watch the film",
+          "role": "small",
+          "size": 13,
+          "font": "Helvetica Neue",
+          "tone": "#0B0B10",
+          "width": "auto"
+         }
+        ],
+        "gap": 8,
+        "align": "center",
+        "justify": "center"
+       },
+       "box": [
+        1.8487,
+        4.6615,
+        1.8973,
+        0.4615
+       ]
+      },
+      {
+       "text": "Free for teams up to 10   ·   SOC 2 Type II   ·   Works with the tools you use",
+       "role": "caption",
+       "size": 10.5,
+       "font": "Helvetica Neue",
+       "tone": "#5D5F6E",
+       "box": [
+        0.0,
+        5.5385,
+        5.8379,
+        0.2585
+       ]
+      },
+      {
+       "shape": "ellipse",
+       "decorative": true,
+       "fill": "#0B0B10",
+       "opacity": 0.08,
+       "box": [
+        6.227,
+        4.3569,
+        5.5946,
+        0.1846
+       ]
+      },
+      {
+       "shape": "roundRect",
+       "decorative": true,
+       "fill": "#16161C",
+       "radius": 16,
+       "box": [
+        6.2757,
+        0.8769,
+        5.4487,
+        3.4338
+       ]
+      },
+      {
+       "shape": "ellipse",
+       "decorative": true,
+       "fill": "#3A3A44",
+       "box": [
+        8.9806,
+        0.9231,
+        0.0389,
+        0.0369
+       ]
+      },
+      {
+       "shape": "roundRect",
+       "decorative": true,
+       "fill": "#D5D7DE",
+       "radius": 5,
+       "box": [
+        5.9935,
+        4.2923,
+        6.0062,
+        0.1292
+       ]
+      },
+      {
+       "shape": "roundRect",
+       "decorative": true,
+       "fill": "#AEB1BB",
+       "radius": 2,
+       "box": [
+        8.6108,
+        4.2923,
+        0.7784,
+        0.0462
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "free": {
+           "items": [
+            {
+             "text": "NOVA",
+             "role": "caption",
+             "size": 11,
+             "font": "Helvetica Neue",
+             "weight": "bold",
+             "tone": "s4violet",
+             "tracking": 0.12,
+             "box": [
+              1.2,
+              0.2075,
+              9.2308,
+              0.415
+             ]
+            },
+            {
+             "surface": {
+              "fill": "#EFEAFE",
+              "radius": 6
+             },
+             "row": {
+              "items": [
+               {
+                "icon": "plus",
+                "tone": "s4violet",
+                "size": 10,
+                "width": 10,
+                "height": 10
+               },
+               {
+                "text": "New chat",
+                "role": "caption",
+                "size": 10,
+                "font": "Helvetica Neue",
+                "weight": "bold",
+                "tone": "s4violet"
+               }
+              ],
+              "pad": [
+               0,
+               8,
+               0,
+               8
+              ],
+              "gap": 4,
+              "align": "center"
+             },
+             "box": [
+              1.1077,
+              0.7608,
+              9.7846,
+              0.4496
+             ]
+            },
+            {
+             "icon": "house",
+             "tone": "s4uiMuted",
+             "size": 11,
+             "width": 11,
+             "height": 11,
+             "box": [
+              1.5692,
+              1.5908,
+              1.4769,
+              0.2767
+             ]
+            },
+            {
+             "text": "Home",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s4uiText",
+             "valign": "middle",
+             "box": [
+              3.6923,
+              1.5216,
+              7.9385,
+              0.415
+             ]
+            },
+            {
+             "icon": "search",
+             "tone": "s4uiMuted",
+             "size": 11,
+             "width": 11,
+             "height": 11,
+             "box": [
+              1.5692,
+              2.1095,
+              1.4769,
+              0.2767
+             ]
+            },
+            {
+             "text": "Search",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s4uiText",
+             "valign": "middle",
+             "box": [
+              3.6923,
+              2.0403,
+              7.9385,
+              0.415
+             ]
+            },
+            {
+             "icon": "library",
+             "tone": "s4uiMuted",
+             "size": 11,
+             "width": 11,
+             "height": 11,
+             "box": [
+              1.5692,
+              2.6282,
+              1.4769,
+              0.2767
+             ]
+            },
+            {
+             "text": "Library",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s4uiText",
+             "valign": "middle",
+             "box": [
+              3.6923,
+              2.5591,
+              7.9385,
+              0.415
+             ]
+            },
+            {
+             "icon": "bot",
+             "tone": "s4uiMuted",
+             "size": 11,
+             "width": 11,
+             "height": 11,
+             "box": [
+              1.5692,
+              3.147,
+              1.4769,
+              0.2767
+             ]
+            },
+            {
+             "text": "Agents",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s4uiText",
+             "valign": "middle",
+             "box": [
+              3.6923,
+              3.0778,
+              7.9385,
+              0.415
+             ]
+            },
+            {
+             "icon": "workflow",
+             "tone": "s4uiMuted",
+             "size": 11,
+             "width": 11,
+             "height": 11,
+             "box": [
+              1.5692,
+              3.6657,
+              1.4769,
+              0.2767
+             ]
+            },
+            {
+             "text": "Automations",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s4uiText",
+             "valign": "middle",
+             "box": [
+              3.6923,
+              3.5965,
+              7.9385,
+              0.415
+             ]
+            },
+            {
+             "shape": "ellipse",
+             "decorative": true,
+             "fill": "#C4B5FD",
+             "box": [
+              1.2,
+              5.3256,
+              2.2154,
+              0.415
+             ]
+            },
+            {
+             "text": "Alex Kim",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s4uiText",
+             "valign": "middle",
+             "box": [
+              3.9692,
+              5.3256,
+              7.3846,
+              0.415
+             ]
+            }
+           ]
+          },
+          "surface": {
+           "fill": "#F7F6FB"
+          },
+          "box": [
+           0.0,
+           0.0,
+           2.9104,
+           6.0
+          ]
+         },
+         {
+          "text": "Good morning, Alex",
+          "role": "small",
+          "size": 16,
+          "font": "Helvetica Neue",
+          "weight": "bold",
+          "tone": "s4uiText",
+          "align": "center",
+          "box": [
+           3.0896,
+           0.6916,
+           8.9552,
+           0.5879
+          ]
+         },
+         {
+          "text": "What will you build today?",
+          "role": "caption",
+          "size": 11,
+          "font": "Helvetica Neue",
+          "tone": "s4uiMuted",
+          "align": "center",
+          "box": [
+           3.0896,
+           1.245,
+           8.9552,
+           0.4496
+          ]
+         },
+         {
+          "free": {
+           "items": [
+            {
+             "icon": "sparkles",
+             "tone": "s4violet",
+             "size": 11,
+             "width": 11,
+             "height": 11,
+             "box": [
+              0.4918,
+              1.9091,
+              0.5246,
+              2.1818
+             ]
+            },
+            {
+             "text": "Turn my idea into a launch plan…",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s4uiMuted",
+             "valign": "middle",
+             "box": [
+              1.2459,
+              1.3636,
+              8.8525,
+              3.2727
+             ]
+            },
+            {
+             "surface": {
+              "fill": "s4violet",
+              "radius": 100
+             },
+             "column": {
+              "items": [
+               {
+                "icon": "arrow-up",
+                "tone": "s4white",
+                "size": 12,
+                "width": 12,
+                "height": 12
+               }
+              ],
+              "align": "center",
+              "justify": "center"
+             },
+             "box": [
+              10.8852,
+              0.9545,
+              0.9836,
+              4.0909
+             ]
+            }
+           ]
+          },
+          "surface": {
+           "fill": "s4white",
+           "stroke": "#D9D2F7",
+           "strokeWidth": 1,
+           "radius": 11,
+           "shadow": "soft"
+          },
+          "box": [
+           3.4701,
+           1.9366,
+           8.194,
+           0.7608
+          ]
+         },
+         {
+          "surface": {
+           "fill": "s4white",
+           "stroke": "#E8E6F0",
+           "strokeWidth": 0.75,
+           "radius": 8
+          },
+          "column": {
+           "items": [
+            {
+             "column": {
+              "surface": {
+               "fill": "#EFEAFE",
+               "radius": 6
+              },
+              "width": 22,
+              "height": 22,
+              "align": "center",
+              "justify": "center",
+              "items": [
+               {
+                "icon": "search",
+                "tone": "s4violet",
+                "size": 13,
+                "width": 13,
+                "height": 13
+               }
+              ]
+             }
+            },
+            {
+             "text": "Research",
+             "role": "caption",
+             "size": 10.5,
+             "font": "Helvetica Neue",
+             "weight": "bold",
+             "tone": "s4uiText"
+            },
+            {
+             "text": "Cited answers",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s4uiMuted",
+             "leading": 1.15
+            }
+           ],
+           "pad": [
+            8,
+            7,
+            6,
+            7
+           ],
+           "gap": 4
+          },
+          "box": [
+           3.3134,
+           3.0778,
+           2.0149,
+           2.1095
+          ]
+         },
+         {
+          "surface": {
+           "fill": "s4white",
+           "stroke": "#E8E6F0",
+           "strokeWidth": 0.75,
+           "radius": 8
+          },
+          "column": {
+           "items": [
+            {
+             "column": {
+              "surface": {
+               "fill": "#E0F2FE",
+               "radius": 6
+              },
+              "width": 22,
+              "height": 22,
+              "align": "center",
+              "justify": "center",
+              "items": [
+               {
+                "icon": "pen-line",
+                "tone": "#0369A1",
+                "size": 13,
+                "width": 13,
+                "height": 13
+               }
+              ]
+             }
+            },
+            {
+             "text": "Create",
+             "role": "caption",
+             "size": 10.5,
+             "font": "Helvetica Neue",
+             "weight": "bold",
+             "tone": "s4uiText"
+            },
+            {
+             "text": "Docs & slides",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s4uiMuted",
+             "leading": 1.15
+            }
+           ],
+           "pad": [
+            8,
+            7,
+            6,
+            7
+           ],
+           "gap": 4
+          },
+          "box": [
+           5.4851,
+           3.0778,
+           2.0149,
+           2.1095
+          ]
+         },
+         {
+          "surface": {
+           "fill": "s4white",
+           "stroke": "#E8E6F0",
+           "strokeWidth": 0.75,
+           "radius": 8
+          },
+          "column": {
+           "items": [
+            {
+             "column": {
+              "surface": {
+               "fill": "#FCE7F3",
+               "radius": 6
+              },
+              "width": 22,
+              "height": 22,
+              "align": "center",
+              "justify": "center",
+              "items": [
+               {
+                "icon": "chart-line",
+                "tone": "#BE185D",
+                "size": 13,
+                "width": 13,
+                "height": 13
+               }
+              ]
+             }
+            },
+            {
+             "text": "Analyze",
+             "role": "caption",
+             "size": 10.5,
+             "font": "Helvetica Neue",
+             "weight": "bold",
+             "tone": "s4uiText"
+            },
+            {
+             "text": "Live insights",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s4uiMuted",
+             "leading": 1.15
+            }
+           ],
+           "pad": [
+            8,
+            7,
+            6,
+            7
+           ],
+           "gap": 4
+          },
+          "box": [
+           7.6567,
+           3.0778,
+           2.0149,
+           2.1095
+          ]
+         },
+         {
+          "surface": {
+           "fill": "s4white",
+           "stroke": "#E8E6F0",
+           "strokeWidth": 0.75,
+           "radius": 8
+          },
+          "column": {
+           "items": [
+            {
+             "column": {
+              "surface": {
+               "fill": "#DCFCE7",
+               "radius": 6
+              },
+              "width": 22,
+              "height": 22,
+              "align": "center",
+              "justify": "center",
+              "items": [
+               {
+                "icon": "workflow",
+                "tone": "#15803D",
+                "size": 13,
+                "width": 13,
+                "height": 13
+               }
+              ]
+             }
+            },
+            {
+             "text": "Automate",
+             "role": "caption",
+             "size": 10.5,
+             "font": "Helvetica Neue",
+             "weight": "bold",
+             "tone": "s4uiText"
+            },
+            {
+             "text": "Hands-off flows",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s4uiMuted",
+             "leading": 1.15
+            }
+           ],
+           "pad": [
+            8,
+            7,
+            6,
+            7
+           ],
+           "gap": 4
+          },
+          "box": [
+           9.8284,
+           3.0778,
+           2.0149,
+           2.1095
+          ]
+         },
+         {
+          "text": "Recent   ·   Q3 launch plan   ·   Market scan",
+          "role": "caption",
+          "size": 10,
+          "font": "Helvetica Neue",
+          "tone": "s4uiMuted",
+          "box": [
+           3.3134,
+           5.4294,
+           8.5299,
+           0.415
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s4white",
+        "radius": 4
+       },
+       "box": [
+        6.3924,
+        0.9969,
+        5.2151,
+        3.2031
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s4white",
+        "radius": 12,
+        "shadow": "soft"
+       },
+       "row": {
+        "items": [
+         {
+          "column": {
+           "surface": {
+            "fill": "#DCFCE7",
+            "radius": 100
+           },
+           "width": 28,
+           "height": 28,
+           "align": "center",
+           "justify": "center",
+           "items": [
+            {
+             "icon": "check",
+             "tone": "#15803D",
+             "size": 14,
+             "width": 14,
+             "height": 14,
+             "strokeWidth": 3
+            }
+           ]
+          }
+         },
+         {
+          "column": {
+           "gap": 1,
+           "grow": 1,
+           "items": [
+            {
+             "text": "Launch plan ready",
+             "role": "caption",
+             "size": 10.5,
+             "font": "Helvetica Neue",
+             "weight": "bold",
+             "tone": "#0B0B10"
+            },
+            {
+             "text": "Drafted in 12 seconds",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "#5D5F6E"
+            }
+           ]
+          }
+         }
+        ],
+        "pad": [
+         0,
+         10,
+         0,
+         10
+        ],
+        "gap": 8,
+        "align": "center"
+       },
+       "box": [
+        5.546,
+        4.0431,
+        2.1405,
+        0.5908
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s4white",
+        "radius": 12,
+        "shadow": "soft"
+       },
+       "row": {
+        "items": [
+         {
+          "column": {
+           "surface": {
+            "fill": "#EFEAFE",
+            "radius": 100
+           },
+           "width": 26,
+           "height": 26,
+           "align": "center",
+           "justify": "center",
+           "items": [
+            {
+             "icon": "bot",
+             "tone": "s4violet",
+             "size": 14,
+             "width": 14,
+             "height": 14
+            }
+           ]
+          }
+         },
+         {
+          "column": {
+           "gap": 1,
+           "grow": 1,
+           "items": [
+            {
+             "text": "3 agents running",
+             "role": "caption",
+             "size": 10.5,
+             "font": "Helvetica Neue",
+             "weight": "bold",
+             "tone": "#0B0B10"
+            },
+            {
+             "text": "Market research",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "#5D5F6E"
+            }
+           ]
+          }
+         }
+        ],
+        "pad": [
+         0,
+         9,
+         0,
+         9
+        ],
+        "gap": 7,
+        "align": "center"
+       },
+       "box": [
+        9.9049,
+        0.5169,
+        2.0919,
+        0.5169
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "transformation",
+   "message": "Three stages and three years take us from manual work to an AI-native organization",
+   "background": "s5white",
+   "notes": "Strategy / transformation: a chevron maturity model with a maturity meter per stage, then a year-by-year roadmap with initiative lanes and milestones.",
+   "compose": {
+    "free": {
+     "items": [
+      {
+       "text": "TRANSFORMATION ROADMAP  ·  2026 – 2028",
+       "role": "label",
+       "size": 10.5,
+       "font": "Futura",
+       "weight": "bold",
+       "tone": "s5next",
+       "tracking": 0.16,
+       "box": [
+        0.0,
+        0.0,
+        6.3243,
+        0.2308
+       ]
+      },
+      {
+       "text": "From manual workflow to AI-native organization",
+       "role": "title",
+       "size": 28,
+       "font": "Futura",
+       "weight": "bold",
+       "tone": "s5ink",
+       "box": [
+        0.0,
+        0.24,
+        11.9997,
+        0.5723
+       ]
+      },
+      {
+       "text": "From fragmented tools to an autonomous, high-performance organization",
+       "role": "small",
+       "size": 14,
+       "font": "Gill Sans",
+       "tone": "#56606C",
+       "box": [
+        0.0,
+        0.7938,
+        7.2,
+        0.2954
+       ]
+      },
+      {
+       "text": "People  ×  Process  ×  AI",
+       "role": "small",
+       "size": 14,
+       "font": "Gill Sans",
+       "tone": "s5ink",
+       "align": "right",
+       "box": [
+        6.9081,
+        0.7938,
+        2.6757,
+        0.2954
+       ]
+      },
+      {
+       "text": "=  compounding impact",
+       "role": "small",
+       "size": 14,
+       "font": "Gill Sans",
+       "weight": "bold",
+       "tone": "s5next",
+       "box": [
+        9.6616,
+        0.7938,
+        2.3381,
+        0.2954
+       ]
+      },
+      {
+       "shape": "homePlate",
+       "decorative": true,
+       "fill": "#5F6E84",
+       "box": [
+        0.0,
+        1.2738,
+        4.1488,
+        0.5723
+       ]
+      },
+      {
+       "surface": {
+        "fill": "#5F6E84",
+        "opacity": 0
+       },
+       "row": {
+        "items": [
+         {
+          "text": "TODAY",
+          "role": "label",
+          "size": 10.5,
+          "font": "Futura",
+          "weight": "bold",
+          "tone": "s5white",
+          "tracking": 0.1,
+          "width": "auto"
+         },
+         {
+          "text": "Manual",
+          "role": "h3",
+          "size": 18,
+          "font": "Futura",
+          "weight": "bold",
+          "tone": "s5white"
+         }
+        ],
+        "gap": 12,
+        "align": "center"
+       },
+       "box": [
+        0.2141,
+        1.3292,
+        3.4969,
+        0.4615
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "icon": "files",
+          "tone": "#5F6E84",
+          "size": 30,
+          "width": 30,
+          "height": 30,
+          "strokeWidth": 1.75,
+          "box": [
+           0.8046,
+           0.7692,
+           1.5473,
+           1.9231
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "#5F6E84",
+          "box": [
+           3.1565,
+           1.0769,
+           0.2166,
+           0.2692
+          ]
+         },
+         {
+          "text": "Fragmented tools",
+          "role": "small",
+          "size": 13.5,
+          "font": "Gill Sans",
+          "tone": "s5ink",
+          "valign": "middle",
+          "box": [
+           3.6517,
+           0.6538,
+           7.8222,
+           1.1154
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "#5F6E84",
+          "box": [
+           3.1565,
+           2.2692,
+           0.2166,
+           0.2692
+          ]
+         },
+         {
+          "text": "Repetitive work",
+          "role": "small",
+          "size": 13.5,
+          "font": "Gill Sans",
+          "tone": "s5ink",
+          "valign": "middle",
+          "box": [
+           3.6517,
+           1.8462,
+           7.8222,
+           1.1154
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "#5F6E84",
+          "box": [
+           3.1565,
+           3.4615,
+           0.2166,
+           0.2692
+          ]
+         },
+         {
+          "text": "Slow decisions",
+          "role": "small",
+          "size": 13.5,
+          "font": "Gill Sans",
+          "tone": "s5ink",
+          "valign": "middle",
+          "box": [
+           3.6517,
+           3.0385,
+           7.8222,
+           1.1154
+          ]
+         },
+         {
+          "text": "AI MATURITY",
+          "role": "caption",
+          "size": 10,
+          "font": "Gill Sans",
+          "tone": "#56606C",
+          "tracking": 0.06,
+          "valign": "middle",
+          "box": [
+           0.8046,
+           4.6923,
+           3.4041,
+           0.8462
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "#5F6E84",
+          "box": [
+           4.3944,
+           4.9038,
+           0.3404,
+           0.4231
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "#DDE2E8",
+          "box": [
+           5.0133,
+           4.9038,
+           0.3404,
+           0.4231
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "#DDE2E8",
+          "box": [
+           5.6323,
+           4.9038,
+           0.3404,
+           0.4231
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "#DDE2E8",
+          "box": [
+           6.2512,
+           4.9038,
+           0.3404,
+           0.4231
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "#DDE2E8",
+          "box": [
+           6.8701,
+           4.9038,
+           0.3404,
+           0.4231
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "#F1F3F6",
+        "radius": 10
+       },
+       "box": [
+        0.0,
+        1.9754,
+        3.7729,
+        1.44
+       ]
+      },
+      {
+       "shape": "chevron",
+       "decorative": true,
+       "fill": "s5next",
+       "box": [
+        3.925,
+        1.2738,
+        4.1488,
+        0.5723
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s5next",
+        "opacity": 0
+       },
+       "row": {
+        "items": [
+         {
+          "text": "NEXT",
+          "role": "label",
+          "size": 10.5,
+          "font": "Futura",
+          "weight": "bold",
+          "tone": "s5white",
+          "tracking": 0.1,
+          "width": "auto"
+         },
+         {
+          "text": "AI-assisted",
+          "role": "h3",
+          "size": 18,
+          "font": "Futura",
+          "weight": "bold",
+          "tone": "s5white"
+         }
+        ],
+        "gap": 12,
+        "align": "center"
+       },
+       "box": [
+        4.3823,
+        1.3292,
+        3.2536,
+        0.4615
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "icon": "bot",
+          "tone": "s5next",
+          "size": 30,
+          "width": 30,
+          "height": 30,
+          "strokeWidth": 1.75,
+          "box": [
+           0.8046,
+           0.7692,
+           1.5473,
+           1.9231
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "s5next",
+          "box": [
+           3.1565,
+           1.0769,
+           0.2166,
+           0.2692
+          ]
+         },
+         {
+          "text": "Copilots for every team",
+          "role": "small",
+          "size": 13.5,
+          "font": "Gill Sans",
+          "tone": "s5ink",
+          "valign": "middle",
+          "box": [
+           3.6517,
+           0.6538,
+           7.8222,
+           1.1154
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "s5next",
+          "box": [
+           3.1565,
+           2.2692,
+           0.2166,
+           0.2692
+          ]
+         },
+         {
+          "text": "Connected knowledge",
+          "role": "small",
+          "size": 13.5,
+          "font": "Gill Sans",
+          "tone": "s5ink",
+          "valign": "middle",
+          "box": [
+           3.6517,
+           1.8462,
+           7.8222,
+           1.1154
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "s5next",
+          "box": [
+           3.1565,
+           3.4615,
+           0.2166,
+           0.2692
+          ]
+         },
+         {
+          "text": "Workflow automation",
+          "role": "small",
+          "size": 13.5,
+          "font": "Gill Sans",
+          "tone": "s5ink",
+          "valign": "middle",
+          "box": [
+           3.6517,
+           3.0385,
+           7.8222,
+           1.1154
+          ]
+         },
+         {
+          "text": "AI MATURITY",
+          "role": "caption",
+          "size": 10,
+          "font": "Gill Sans",
+          "tone": "#56606C",
+          "tracking": 0.06,
+          "valign": "middle",
+          "box": [
+           0.8046,
+           4.6923,
+           3.4041,
+           0.8462
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "s5next",
+          "box": [
+           4.3944,
+           4.9038,
+           0.3404,
+           0.4231
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "s5next",
+          "box": [
+           5.0133,
+           4.9038,
+           0.3404,
+           0.4231
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "s5next",
+          "box": [
+           5.6323,
+           4.9038,
+           0.3404,
+           0.4231
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "#DDE2E8",
+          "box": [
+           6.2512,
+           4.9038,
+           0.3404,
+           0.4231
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "#DDE2E8",
+          "box": [
+           6.8701,
+           4.9038,
+           0.3404,
+           0.4231
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "#E7F4F5",
+        "radius": 10
+       },
+       "box": [
+        4.1134,
+        1.9754,
+        3.7729,
+        1.44
+       ]
+      },
+      {
+       "shape": "chevron",
+       "decorative": true,
+       "fill": "s5future",
+       "box": [
+        7.85,
+        1.2738,
+        4.1488,
+        0.5723
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s5future",
+        "opacity": 0
+       },
+       "row": {
+        "items": [
+         {
+          "text": "FUTURE",
+          "role": "label",
+          "size": 10.5,
+          "font": "Futura",
+          "weight": "bold",
+          "tone": "s5white",
+          "tracking": 0.1,
+          "width": "auto"
+         },
+         {
+          "text": "AI-native",
+          "role": "h3",
+          "size": 18,
+          "font": "Futura",
+          "weight": "bold",
+          "tone": "s5white"
+         }
+        ],
+        "gap": 12,
+        "align": "center"
+       },
+       "box": [
+        8.3073,
+        1.3292,
+        3.2536,
+        0.4615
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "icon": "brain-circuit",
+          "tone": "s5future",
+          "size": 30,
+          "width": 30,
+          "height": 30,
+          "strokeWidth": 1.75,
+          "box": [
+           0.8046,
+           0.7692,
+           1.5473,
+           1.9231
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "s5future",
+          "box": [
+           3.1565,
+           1.0769,
+           0.2166,
+           0.2692
+          ]
+         },
+         {
+          "text": "Autonomous agents",
+          "role": "small",
+          "size": 13.5,
+          "font": "Gill Sans",
+          "tone": "s5ink",
+          "valign": "middle",
+          "box": [
+           3.6517,
+           0.6538,
+           7.8222,
+           1.1154
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "s5future",
+          "box": [
+           3.1565,
+           2.2692,
+           0.2166,
+           0.2692
+          ]
+         },
+         {
+          "text": "Intelligent orchestration",
+          "role": "small",
+          "size": 13.5,
+          "font": "Gill Sans",
+          "tone": "s5ink",
+          "valign": "middle",
+          "box": [
+           3.6517,
+           1.8462,
+           7.8222,
+           1.1154
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "s5future",
+          "box": [
+           3.1565,
+           3.4615,
+           0.2166,
+           0.2692
+          ]
+         },
+         {
+          "text": "Continuous optimization",
+          "role": "small",
+          "size": 13.5,
+          "font": "Gill Sans",
+          "tone": "s5ink",
+          "valign": "middle",
+          "box": [
+           3.6517,
+           3.0385,
+           7.8222,
+           1.1154
+          ]
+         },
+         {
+          "text": "AI MATURITY",
+          "role": "caption",
+          "size": 10,
+          "font": "Gill Sans",
+          "tone": "#56606C",
+          "tracking": 0.06,
+          "valign": "middle",
+          "box": [
+           0.8046,
+           4.6923,
+           3.4041,
+           0.8462
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "s5future",
+          "box": [
+           4.3944,
+           4.9038,
+           0.3404,
+           0.4231
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "s5future",
+          "box": [
+           5.0133,
+           4.9038,
+           0.3404,
+           0.4231
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "s5future",
+          "box": [
+           5.6323,
+           4.9038,
+           0.3404,
+           0.4231
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "s5future",
+          "box": [
+           6.2512,
+           4.9038,
+           0.3404,
+           0.4231
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "s5future",
+          "box": [
+           6.8701,
+           4.9038,
+           0.3404,
+           0.4231
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "#EAEFFA",
+        "radius": 10
+       },
+       "box": [
+        8.2268,
+        1.9754,
+        3.7729,
+        1.44
+       ]
+      },
+      {
+       "text": "ROADMAP",
+       "role": "label",
+       "size": 10.5,
+       "font": "Futura",
+       "weight": "bold",
+       "tone": "s5ink",
+       "tracking": 0.16,
+       "valign": "middle",
+       "box": [
+        0.0,
+        3.6185,
+        1.8487,
+        0.2769
+       ]
+      },
+      {
+       "text": "2026",
+       "role": "h2",
+       "size": 22,
+       "font": "Futura",
+       "weight": "bold",
+       "tone": "s5next",
+       "box": [
+        1.946,
+        3.5631,
+        0.8757,
+        0.4062
+       ]
+      },
+      {
+       "text": "Foundation",
+       "role": "small",
+       "size": 13.5,
+       "font": "Gill Sans",
+       "tone": "#56606C",
+       "valign": "middle",
+       "box": [
+        2.8411,
+        3.6369,
+        2.2378,
+        0.2769
+       ]
+      },
+      {
+       "shape": "roundRect",
+       "decorative": true,
+       "fill": "s5next",
+       "radius": 2,
+       "box": [
+        1.946,
+        4.0615,
+        3.2929,
+        0.0554
+       ]
+      },
+      {
+       "text": "2027",
+       "role": "h2",
+       "size": 22,
+       "font": "Futura",
+       "weight": "bold",
+       "tone": "#1F5F9E",
+       "box": [
+        5.2972,
+        3.5631,
+        0.8757,
+        0.4062
+       ]
+      },
+      {
+       "text": "Scale",
+       "role": "small",
+       "size": 13.5,
+       "font": "Gill Sans",
+       "tone": "#56606C",
+       "valign": "middle",
+       "box": [
+        6.1923,
+        3.6369,
+        2.2378,
+        0.2769
+       ]
+      },
+      {
+       "shape": "roundRect",
+       "decorative": true,
+       "fill": "#1F5F9E",
+       "radius": 2,
+       "box": [
+        5.3264,
+        4.0615,
+        3.2929,
+        0.0554
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "#DDE2E8",
+       "box": [
+        5.2921,
+        4.1354,
+        0.0101,
+        1.8462
+       ]
+      },
+      {
+       "text": "2028",
+       "role": "h2",
+       "size": 22,
+       "font": "Futura",
+       "weight": "bold",
+       "tone": "s5future",
+       "box": [
+        8.6485,
+        3.5631,
+        0.8757,
+        0.4062
+       ]
+      },
+      {
+       "text": "Autonomy",
+       "role": "small",
+       "size": 13.5,
+       "font": "Gill Sans",
+       "tone": "#56606C",
+       "valign": "middle",
+       "box": [
+        9.5436,
+        3.6369,
+        2.2378,
+        0.2769
+       ]
+      },
+      {
+       "shape": "roundRect",
+       "decorative": true,
+       "fill": "s5future",
+       "radius": 2,
+       "box": [
+        8.6776,
+        4.0615,
+        3.2929,
+        0.0554
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "#DDE2E8",
+       "box": [
+        8.6434,
+        4.1354,
+        0.0101,
+        1.8462
+       ]
+      },
+      {
+       "text": "Data & platform",
+       "role": "small",
+       "size": 12.5,
+       "font": "Gill Sans",
+       "tone": "s5ink",
+       "valign": "middle",
+       "box": [
+        0.0,
+        4.2462,
+        1.8973,
+        0.2954
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s5next",
+        "radius": 100
+       },
+       "row": {
+        "items": [
+         {
+          "text": "Unified data layer  ·  AI platform  ·  governance",
+          "role": "caption",
+          "size": 10.5,
+          "font": "Gill Sans",
+          "tone": "s5white"
+         }
+        ],
+        "pad": [
+         0,
+         12,
+         0,
+         12
+        ],
+        "align": "center"
+       },
+       "box": [
+        1.9751,
+        4.2646,
+        4.1307,
+        0.2585
+       ]
+      },
+      {
+       "text": "Copilots",
+       "role": "small",
+       "size": 12.5,
+       "font": "Gill Sans",
+       "tone": "s5ink",
+       "valign": "middle",
+       "box": [
+        0.0,
+        4.5969,
+        1.8973,
+        0.2954
+       ]
+      },
+      {
+       "surface": {
+        "fill": "#1F5F9E",
+        "radius": 100
+       },
+       "row": {
+        "items": [
+         {
+          "text": "Copilots in every function  ·  connected knowledge",
+          "role": "caption",
+          "size": 10.5,
+          "font": "Gill Sans",
+          "tone": "s5white"
+         }
+        ],
+        "pad": [
+         0,
+         12,
+         0,
+         12
+        ],
+        "align": "center"
+       },
+       "box": [
+        3.6508,
+        4.6154,
+        4.9685,
+        0.2585
+       ]
+      },
+      {
+       "text": "Agents",
+       "role": "small",
+       "size": 12.5,
+       "font": "Gill Sans",
+       "tone": "s5ink",
+       "valign": "middle",
+       "box": [
+        0.0,
+        4.9477,
+        1.8973,
+        0.2954
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s5future",
+        "radius": 100
+       },
+       "row": {
+        "items": [
+         {
+          "text": "Autonomous agents  ·  intelligent orchestration",
+          "role": "caption",
+          "size": 10.5,
+          "font": "Gill Sans",
+          "tone": "s5white"
+         }
+        ],
+        "pad": [
+         0,
+         12,
+         0,
+         12
+        ],
+        "align": "center"
+       },
+       "box": [
+        7.002,
+        4.9662,
+        4.9685,
+        0.2585
+       ]
+      },
+      {
+       "text": "People & operating model",
+       "role": "small",
+       "size": 12.5,
+       "font": "Gill Sans",
+       "tone": "s5ink",
+       "valign": "middle",
+       "box": [
+        0.0,
+        5.2985,
+        1.8973,
+        0.2954
+       ]
+      },
+      {
+       "surface": {
+        "fill": "#E6EBF2",
+        "radius": 100
+       },
+       "row": {
+        "items": [
+         {
+          "text": "Upskilling   ·   new AI-native roles   ·   continuous optimization",
+          "role": "caption",
+          "size": 10.5,
+          "font": "Gill Sans",
+          "tone": "s5ink"
+         }
+        ],
+        "pad": [
+         0,
+         12,
+         0,
+         12
+        ],
+        "align": "center"
+       },
+       "box": [
+        1.9751,
+        5.3169,
+        9.9954,
+        0.2585
+       ]
+      },
+      {
+       "text": "Milestones",
+       "role": "small",
+       "size": 12.5,
+       "font": "Gill Sans",
+       "tone": "s5ink",
+       "valign": "middle",
+       "box": [
+        0.0,
+        5.6492,
+        1.8973,
+        0.2954
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "#C98A0B",
+       "opacity": 0.6,
+       "box": [
+        3.6165,
+        4.1354,
+        0.0101,
+        1.5508
+       ]
+      },
+      {
+       "shape": "diamond",
+       "decorative": true,
+       "fill": "#C98A0B",
+       "box": [
+        3.534,
+        5.7138,
+        0.1751,
+        0.1662
+       ]
+      },
+      {
+       "text": "AI platform live",
+       "role": "caption",
+       "size": 10.5,
+       "font": "Gill Sans",
+       "weight": "bold",
+       "tone": "s5ink",
+       "valign": "middle",
+       "box": [
+        3.7578,
+        5.6677,
+        2.2378,
+        0.2585
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "#C98A0B",
+       "opacity": 0.6,
+       "box": [
+        6.9678,
+        4.1354,
+        0.0101,
+        1.5508
+       ]
+      },
+      {
+       "shape": "diamond",
+       "decorative": true,
+       "fill": "#C98A0B",
+       "box": [
+        6.8853,
+        5.7138,
+        0.1751,
+        0.1662
+       ]
+      },
+      {
+       "text": "Copilots in every team",
+       "role": "caption",
+       "size": 10.5,
+       "font": "Gill Sans",
+       "weight": "bold",
+       "tone": "s5ink",
+       "valign": "middle",
+       "box": [
+        7.109,
+        5.6677,
+        2.2378,
+        0.2585
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "#C98A0B",
+       "opacity": 0.6,
+       "box": [
+        9.4812,
+        4.1354,
+        0.0101,
+        1.5508
+       ]
+      },
+      {
+       "shape": "diamond",
+       "decorative": true,
+       "fill": "#C98A0B",
+       "box": [
+        9.3987,
+        5.7138,
+        0.1751,
+        0.1662
+       ]
+      },
+      {
+       "text": "First autonomous workflows",
+       "role": "caption",
+       "size": 10.5,
+       "font": "Gill Sans",
+       "weight": "bold",
+       "tone": "s5ink",
+       "valign": "middle",
+       "box": [
+        9.6225,
+        5.6677,
+        2.2378,
+        0.2585
+       ]
+      }
+     ]
+    }
+   }
+  }
+ ]
+}

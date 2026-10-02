@@ -1,0 +1,2171 @@
+{
+ "schema": "slide-agent.intent/1",
+ "brief": {
+  "title": "From Growth to Retention",
+  "audience": "Data storytelling audience",
+  "goal": "An 80% activation scenario yields 1.84K additional paid users.",
+  "format": "16:9"
+ },
+ "direction": {
+  "concept": "Data storytelling with Charter display typography, an intentional five-slide narrative and varied compositions.",
+  "fit": "ask"
+ },
+ "design": {
+  "language": {
+   "color": {
+    "palette": {
+     "s3paper": "#F6F3EC",
+     "s3paperDim": "#CFC8BA",
+     "s3ink": "#1B1B1F",
+     "s3stone": "#66625B",
+     "s3hair": "#D6CFC2",
+     "s3coral": "#C2410C",
+     "s3wash": "#ECE6DA",
+     "s3coralSoft": "#F8DCCD",
+     "s3coralLight": "#FF8A5B"
+    },
+    "roles": {
+     "background": "s3paper",
+     "surface": "s3wash",
+     "text": "s3ink",
+     "muted": "s3stone",
+     "accent": "s3coral",
+     "rule": "s3hair"
+    },
+    "data": [
+     "s3coral",
+     "s3ink"
+    ]
+   },
+   "type": {
+    "display": {
+     "family": "Charter",
+     "weight": 700,
+     "tracking": -0.01
+    },
+    "body": {
+     "family": "Helvetica Neue",
+     "weight": 400
+    },
+    "mono": {
+     "family": "Menlo"
+    },
+    "scale": {
+     "base": 16,
+     "ratio": 1.25
+    }
+   },
+   "space": {
+    "unit": 8,
+    "margin": 36,
+    "gutter": 16
+   },
+   "grid": {
+    "columns": 12,
+    "rows": 6
+   },
+   "shape": {
+    "radius": 10,
+    "stroke": 0
+   },
+   "texture": [],
+   "charts": {
+    "axis": "hairline",
+    "gridlines": "none",
+    "labels": "none",
+    "highlight": "s3coral",
+    "legend": "none"
+   },
+   "chrome": {
+    "slideNumber": false
+   }
+  }
+ },
+ "data": {
+  "mau": {
+   "categories": [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun"
+   ],
+   "series": [
+    {
+     "name": "MAU (K)",
+     "values": [
+      42,
+      47,
+      53,
+      61,
+      68,
+      79
+     ]
+    }
+   ],
+   "unit": "K"
+  },
+  "retention": {
+   "categories": [
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M6"
+   ],
+   "series": [
+    {
+     "name": "Retained (%)",
+     "values": [
+      100,
+      82,
+      72,
+      67,
+      64,
+      62
+     ]
+    }
+   ],
+   "unit": "%"
+  }
+ },
+ "slides": [
+  {
+   "id": "data-story",
+   "message": "Acquisition is accelerating, but activation remains the biggest growth lever",
+   "background": "s3paper",
+   "notes": "Data storytelling: three numbered acts read left to right — a highlighted column chart, a retention curve and a proportional funnel — resolving into one takeaway band.",
+   "compose": {
+    "free": {
+     "items": [
+      {
+       "text": "PRODUCT ANALYTICS  ·  JANUARY – JUNE 2026",
+       "role": "label",
+       "size": 10.5,
+       "font": "Helvetica Neue",
+       "weight": "bold",
+       "tone": "s3coral",
+       "tracking": 0.18,
+       "box": [
+        0.0,
+        0.0,
+        7.7838,
+        0.2308
+       ]
+      },
+      {
+       "text": "From growth to retention: what the data tells us",
+       "role": "title",
+       "size": 32,
+       "font": "Charter",
+       "weight": "bold",
+       "tone": "s3ink",
+       "box": [
+        0.0,
+        0.24,
+        10.7027,
+        0.5908
+       ]
+      },
+      {
+       "text": "Six months of product data, three signals, and one decision.",
+       "role": "lead",
+       "size": 15,
+       "font": "Charter",
+       "italic": true,
+       "tone": "s3stone",
+       "box": [
+        0.0,
+        0.8123,
+        9.7298,
+        0.3138
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s3ink",
+       "box": [
+        0.0,
+        1.249,
+        11.9997,
+        0.0128
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s3hair",
+       "box": [
+        4.8598,
+        1.4769,
+        0.0101,
+        3.4338
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s3hair",
+       "box": [
+        8.4112,
+        1.4769,
+        0.0101,
+        3.4338
+       ]
+      },
+      {
+       "text": "01    ACQUISITION",
+       "role": "label",
+       "size": 10.5,
+       "font": "Helvetica Neue",
+       "weight": "bold",
+       "tone": "s3coral",
+       "tracking": 0.16,
+       "box": [
+        0.0,
+        1.4585,
+        4.6216,
+        0.2308
+       ]
+      },
+      {
+       "text": "Users are arriving faster every month",
+       "role": "h3",
+       "size": 17,
+       "font": "Charter",
+       "weight": "bold",
+       "tone": "s3ink",
+       "box": [
+        0.0,
+        1.7169,
+        4.6216,
+        0.3508
+       ]
+      },
+      {
+       "text": "+88%",
+       "role": "display",
+       "size": 44,
+       "font": "Charter",
+       "weight": "bold",
+       "tone": "s3ink",
+       "box": [
+        0.0,
+        2.0862,
+        1.8973,
+        0.6646
+       ]
+      },
+      {
+       "text": "monthly active users,\n42K in January, 79K in June",
+       "role": "small",
+       "size": 12,
+       "font": "Helvetica Neue",
+       "tone": "s3stone",
+       "leading": 1.3,
+       "box": [
+        1.9265,
+        2.1969,
+        2.6951,
+        0.48
+       ]
+      },
+      {
+       "chart": {
+        "data": "mau",
+        "chart": "column",
+        "highlight": "Jun",
+        "labels": "outside",
+        "axis": "hairline",
+        "alt": "Monthly active users in thousands, January to June: 42, 47, 53, 61, 68, 79; June highlighted"
+       },
+       "box": [
+        -0.0973,
+        2.7877,
+        4.7676,
+        2.1785
+       ]
+      },
+      {
+       "text": "02    RETENTION",
+       "role": "label",
+       "size": 10.5,
+       "font": "Helvetica Neue",
+       "weight": "bold",
+       "tone": "s3coral",
+       "tracking": 0.16,
+       "box": [
+        5.1081,
+        1.4585,
+        3.0649,
+        0.2308
+       ]
+      },
+      {
+       "text": "Cohorts settle by month 3",
+       "role": "h3",
+       "size": 17,
+       "font": "Charter",
+       "weight": "bold",
+       "tone": "s3ink",
+       "box": [
+        5.1081,
+        1.7169,
+        3.0649,
+        0.3508
+       ]
+      },
+      {
+       "text": "62%",
+       "role": "display",
+       "size": 44,
+       "font": "Charter",
+       "weight": "bold",
+       "tone": "s3ink",
+       "box": [
+        5.1081,
+        2.0862,
+        1.8973,
+        0.6646
+       ]
+      },
+      {
+       "text": "still active\nat month 6",
+       "role": "small",
+       "size": 12,
+       "font": "Helvetica Neue",
+       "tone": "s3stone",
+       "leading": 1.3,
+       "box": [
+        7.0346,
+        2.1969,
+        1.1384,
+        0.48
+       ]
+      },
+      {
+       "shape": {
+        "path": "M0.000 0.000 L0.200 0.180 L0.400 0.280 L0.600 0.330 L0.800 0.360 L1.000 0.380 L1 1 L0 1 Z"
+       },
+       "decorative": true,
+       "fill": "s3wash",
+       "box": [
+        5.4,
+        3.0277,
+        2.627,
+        1.5323
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s3stone",
+       "box": [
+        5.4,
+        4.5552,
+        2.627,
+        0.0096
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s3hair",
+       "box": [
+        5.4,
+        3.0245,
+        2.627,
+        0.0064
+       ]
+      },
+      {
+       "text": "100",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s3stone",
+       "align": "right",
+       "box": [
+        4.9135,
+        2.9354,
+        0.3892,
+        0.1846
+       ]
+      },
+      {
+       "text": "0",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s3stone",
+       "align": "right",
+       "box": [
+        4.9135,
+        4.4585,
+        0.3892,
+        0.1846
+       ]
+      },
+      {
+       "shape": {
+        "path": "M0.000 0.000 L0.200 0.180 L0.400 0.280 L0.600 0.330 L0.800 0.360 L1.000 0.380"
+       },
+       "decorative": true,
+       "fill": "none",
+       "stroke": "s3ink",
+       "strokeWidth": 2,
+       "box": [
+        5.4,
+        3.0277,
+        2.627,
+        1.5323
+       ]
+      },
+      {
+       "shape": "ellipse",
+       "decorative": true,
+       "fill": "s3ink",
+       "box": [
+        5.3611,
+        2.9908,
+        0.0778,
+        0.0738
+       ]
+      },
+      {
+       "text": "M1",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s3stone",
+       "align": "center",
+       "box": [
+        5.1568,
+        4.6062,
+        0.4865,
+        0.2031
+       ]
+      },
+      {
+       "shape": "ellipse",
+       "decorative": true,
+       "fill": "s3ink",
+       "box": [
+        5.8865,
+        3.2666,
+        0.0778,
+        0.0738
+       ]
+      },
+      {
+       "text": "M2",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s3stone",
+       "align": "center",
+       "box": [
+        5.6822,
+        4.6062,
+        0.4865,
+        0.2031
+       ]
+      },
+      {
+       "shape": "ellipse",
+       "decorative": true,
+       "fill": "s3ink",
+       "box": [
+        6.4119,
+        3.4198,
+        0.0778,
+        0.0738
+       ]
+      },
+      {
+       "text": "M3",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s3stone",
+       "align": "center",
+       "box": [
+        6.2076,
+        4.6062,
+        0.4865,
+        0.2031
+       ]
+      },
+      {
+       "shape": "ellipse",
+       "decorative": true,
+       "fill": "s3ink",
+       "box": [
+        6.9373,
+        3.4964,
+        0.0778,
+        0.0738
+       ]
+      },
+      {
+       "text": "M4",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s3stone",
+       "align": "center",
+       "box": [
+        6.733,
+        4.6062,
+        0.4865,
+        0.2031
+       ]
+      },
+      {
+       "shape": "ellipse",
+       "decorative": true,
+       "fill": "s3ink",
+       "box": [
+        7.4627,
+        3.5424,
+        0.0778,
+        0.0738
+       ]
+      },
+      {
+       "text": "M5",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s3stone",
+       "align": "center",
+       "box": [
+        7.2584,
+        4.6062,
+        0.4865,
+        0.2031
+       ]
+      },
+      {
+       "shape": "ellipse",
+       "decorative": true,
+       "fill": "s3coral",
+       "box": [
+        7.9638,
+        3.55,
+        0.1265,
+        0.12
+       ]
+      },
+      {
+       "text": "M6",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s3stone",
+       "align": "center",
+       "box": [
+        7.7838,
+        4.6062,
+        0.4865,
+        0.2031
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s3coral",
+       "box": [
+        6.4508,
+        3.2934,
+        1.5762,
+        0.0128
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s3coral",
+       "box": [
+        6.4441,
+        3.2998,
+        0.0135,
+        0.0738
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s3coral",
+       "box": [
+        8.0203,
+        3.2998,
+        0.0135,
+        0.1994
+       ]
+      },
+      {
+       "text": "−10 pts in three months",
+       "role": "caption",
+       "size": 10.5,
+       "font": "Helvetica Neue",
+       "weight": "bold",
+       "tone": "s3coral",
+       "box": [
+        6.4022,
+        3.0506,
+        1.946,
+        0.2215
+       ]
+      },
+      {
+       "text": "62%",
+       "role": "caption",
+       "size": 10.5,
+       "font": "Helvetica Neue",
+       "weight": "bold",
+       "tone": "s3coral",
+       "align": "right",
+       "box": [
+        7.6379,
+        3.7023,
+        0.5351,
+        0.2031
+       ]
+      },
+      {
+       "text": "03    ACTIVATION",
+       "role": "label",
+       "size": 10.5,
+       "font": "Helvetica Neue",
+       "weight": "bold",
+       "tone": "s3coral",
+       "tracking": 0.16,
+       "box": [
+        8.6595,
+        1.4585,
+        3.3402,
+        0.2308
+       ]
+      },
+      {
+       "text": "Activation is the leak",
+       "role": "h3",
+       "size": 17,
+       "font": "Charter",
+       "weight": "bold",
+       "tone": "s3ink",
+       "box": [
+        8.6595,
+        1.7169,
+        3.3402,
+        0.3508
+       ]
+      },
+      {
+       "text": "8.4%",
+       "role": "display",
+       "size": 44,
+       "font": "Charter",
+       "weight": "bold",
+       "tone": "s3ink",
+       "box": [
+        8.6595,
+        2.0862,
+        1.8973,
+        0.6646
+       ]
+      },
+      {
+       "text": "of visitors become\npaying customers",
+       "role": "small",
+       "size": 12,
+       "font": "Helvetica Neue",
+       "tone": "s3stone",
+       "leading": 1.3,
+       "box": [
+        10.586,
+        2.1969,
+        1.4137,
+        0.48
+       ]
+      },
+      {
+       "text": "Visitors",
+       "role": "small",
+       "size": 12,
+       "font": "Helvetica Neue",
+       "tone": "s3ink",
+       "valign": "middle",
+       "box": [
+        8.6595,
+        2.9077,
+        0.9243,
+        0.2585
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s3ink",
+       "box": [
+        9.6325,
+        2.88,
+        1.8,
+        0.3138
+       ]
+      },
+      {
+       "text": "100K",
+       "role": "small",
+       "size": 12,
+       "font": "Helvetica Neue",
+       "weight": "regular",
+       "tone": "s3ink",
+       "valign": "middle",
+       "box": [
+        11.5103,
+        2.9077,
+        0.4894,
+        0.2585
+       ]
+      },
+      {
+       "text": "Sign-ups",
+       "role": "small",
+       "size": 12,
+       "font": "Helvetica Neue",
+       "tone": "s3ink",
+       "valign": "middle",
+       "box": [
+        8.6595,
+        3.4154,
+        0.9243,
+        0.2585
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s3ink",
+       "box": [
+        9.6325,
+        3.3877,
+        0.576,
+        0.3138
+       ]
+      },
+      {
+       "text": "32K  ·  32%",
+       "role": "small",
+       "size": 12,
+       "font": "Helvetica Neue",
+       "weight": "regular",
+       "tone": "s3ink",
+       "valign": "middle",
+       "box": [
+        10.2863,
+        3.4154,
+        1.7134,
+        0.2585
+       ]
+      },
+      {
+       "text": "Activated",
+       "role": "small",
+       "size": 12,
+       "font": "Helvetica Neue",
+       "tone": "s3ink",
+       "valign": "middle",
+       "box": [
+        8.6595,
+        3.9231,
+        0.9243,
+        0.2585
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s3coral",
+       "box": [
+        9.6325,
+        3.8954,
+        0.378,
+        0.3138
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s3coralSoft",
+       "stroke": "s3coral",
+       "strokeWidth": 1,
+       "box": [
+        10.0105,
+        3.8954,
+        0.198,
+        0.3138
+       ]
+      },
+      {
+       "text": "11K lost",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "weight": "bold",
+       "tone": "s3coral",
+       "box": [
+        9.9618,
+        4.2185,
+        1.1676,
+        0.1846
+       ]
+      },
+      {
+       "text": "21K  ·  66%",
+       "role": "small",
+       "size": 12,
+       "font": "Helvetica Neue",
+       "weight": "bold",
+       "tone": "s3coral",
+       "valign": "middle",
+       "box": [
+        10.2863,
+        3.9231,
+        1.7134,
+        0.2585
+       ]
+      },
+      {
+       "text": "Paid",
+       "role": "small",
+       "size": 12,
+       "font": "Helvetica Neue",
+       "tone": "s3ink",
+       "valign": "middle",
+       "box": [
+        8.6595,
+        4.4308,
+        0.9243,
+        0.2585
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s3ink",
+       "box": [
+        9.6325,
+        4.4031,
+        0.1512,
+        0.3138
+       ]
+      },
+      {
+       "text": "8.4K  ·  40%",
+       "role": "small",
+       "size": 12,
+       "font": "Helvetica Neue",
+       "weight": "regular",
+       "tone": "s3ink",
+       "valign": "middle",
+       "box": [
+        9.8615,
+        4.4308,
+        2.1382,
+        0.2585
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "bleed": [
+        "left",
+        "right",
+        "bottom"
+       ],
+       "fill": "s3ink",
+       "box": [
+        0.0,
+        5.1877,
+        11.9997,
+        0.8123
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "THE TAKEAWAY",
+          "role": "label",
+          "size": 10.5,
+          "font": "Helvetica Neue",
+          "weight": "bold",
+          "tone": "s3coralLight",
+          "tracking": 0.1,
+          "box": [
+           0.0,
+           3.0,
+           1.5568,
+           1.7045
+          ]
+         },
+         {
+          "text": "Acquisition is accelerating, but activation remains the biggest growth lever.",
+          "role": "h3",
+          "size": 19,
+          "font": "Charter",
+          "weight": "bold",
+          "tone": "s3paper",
+          "leading": 1.15,
+          "box": [
+           1.6054,
+           2.1818,
+           6.5677,
+           4.2273
+          ]
+         },
+         {
+          "shape": "rect",
+          "decorative": true,
+          "fill": "s3stone",
+          "box": [
+           8.46,
+           2.3182,
+           0.0101,
+           3.9545
+          ]
+         },
+         {
+          "text": "+1.8K",
+          "role": "display",
+          "size": 30,
+          "font": "Charter",
+          "weight": "bold",
+          "tone": "s3coralLight",
+          "box": [
+           8.6597,
+           2.1818,
+           1.3622,
+           4.0909
+          ]
+         },
+         {
+          "text": "paid users a month if activation rises from 66% to 80%",
+          "role": "caption",
+          "size": 10.5,
+          "font": "Helvetica Neue",
+          "tone": "s3paperDim",
+          "leading": 1.25,
+          "box": [
+           10.0024,
+           2.3182,
+           1.9976,
+           4.0909
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s3ink"
+       },
+       "box": [
+        0.0,
+        5.1877,
+        11.9997,
+        0.8123
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "growth",
+   "message": "MAU increased 88% in six months.",
+   "background": "s3paper",
+   "notes": "Fictional demonstration data. MAU increased 88% in six months.",
+   "compose": {
+    "free": {
+     "items": [
+      {
+       "text": "DATA STORYTELLING",
+       "role": "label",
+       "size": 10.5,
+       "font": "Helvetica Neue",
+       "tone": "s3coral",
+       "weight": "bold",
+       "box": [
+        0.0,
+        0.0,
+        9.7298,
+        0.2308
+       ]
+      },
+      {
+       "text": "Growth accelerated throughout the half.",
+       "role": "title",
+       "size": 30,
+       "font": "Charter",
+       "tone": "s3ink",
+       "weight": "bold",
+       "box": [
+        0.0,
+        0.4431,
+        11.9968,
+        0.6
+       ]
+      },
+      {
+       "text": "Monthly active users grew from 42K to 79K; the largest absolute gain came in June.",
+       "role": "small",
+       "size": 15,
+       "font": "Helvetica Neue",
+       "tone": "s3stone",
+       "box": [
+        0.0,
+        1.08,
+        11.4811,
+        0.4615
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s3hair",
+       "box": [
+        0.0,
+        5.7737,
+        11.9968,
+        0.0096
+       ]
+      },
+      {
+       "text": "From Growth to Retention  ·  Illustrative demo",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s3stone",
+       "box": [
+        0.0,
+        5.9077,
+        10.1189,
+        0.2308
+       ]
+      },
+      {
+       "text": "02 / 05",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s3stone",
+       "align": "right",
+       "box": [
+        10.9946,
+        5.9077,
+        1.0022,
+        0.2308
+       ]
+      },
+      {
+       "chart": {
+        "data": "mau",
+        "chart": "area",
+        "axis": "hairline",
+        "labels": "none",
+        "alt": "Monthly active users in thousands: 42, 47, 53, 61, 68, 79."
+       },
+       "box": [
+        -0.0486,
+        1.8462,
+        8.027,
+        3.5538
+       ]
+      },
+      {
+       "text": "+88%",
+       "role": "display",
+       "size": 44,
+       "font": "Charter",
+       "tone": "s3coral",
+       "weight": "bold",
+       "box": [
+        8.3676,
+        1.9846,
+        3.6,
+        0.7846
+       ]
+      },
+      {
+       "text": "Six-month growth",
+       "role": "h3",
+       "size": 18,
+       "font": "Charter",
+       "tone": "s3ink",
+       "weight": "bold",
+       "box": [
+        8.3676,
+        2.8338,
+        3.6,
+        0.3692
+       ]
+      },
+      {
+       "text": "37K additional monthly active users",
+       "role": "small",
+       "size": 13,
+       "font": "Helvetica Neue",
+       "tone": "s3stone",
+       "box": [
+        8.3676,
+        3.2769,
+        3.6,
+        0.5077
+       ]
+      },
+      {
+       "text": "+11K in June",
+       "role": "h3",
+       "size": 23,
+       "font": "Charter",
+       "tone": "s3coral",
+       "weight": "bold",
+       "box": [
+        8.3676,
+        4.2646,
+        3.6,
+        0.4615
+       ]
+      },
+      {
+       "text": "Momentum increases the value of fixing activation.",
+       "role": "body",
+       "size": 14,
+       "font": "Helvetica Neue",
+       "tone": "s3stone",
+       "box": [
+        8.3676,
+        4.8185,
+        3.6,
+        0.4985
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "retention",
+   "message": "The largest retention loss is the first transition.",
+   "background": "s3paper",
+   "notes": "Fictional demonstration data. The largest retention loss is the first transition.",
+   "compose": {
+    "free": {
+     "items": [
+      {
+       "text": "DATA STORYTELLING",
+       "role": "label",
+       "size": 10.5,
+       "font": "Helvetica Neue",
+       "tone": "s3coral",
+       "weight": "bold",
+       "box": [
+        0.0,
+        0.0,
+        9.7298,
+        0.2308
+       ]
+      },
+      {
+       "text": "The first month is the retention fault line.",
+       "role": "title",
+       "size": 30,
+       "font": "Charter",
+       "tone": "s3ink",
+       "weight": "bold",
+       "box": [
+        0.0,
+        0.4431,
+        11.9968,
+        0.6
+       ]
+      },
+      {
+       "text": "Retention loses 18 points first, then flattens toward a 62% month-six floor.",
+       "role": "small",
+       "size": 15,
+       "font": "Helvetica Neue",
+       "tone": "s3stone",
+       "box": [
+        0.0,
+        1.08,
+        11.4811,
+        0.4615
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s3hair",
+       "box": [
+        0.0,
+        5.7737,
+        11.9968,
+        0.0096
+       ]
+      },
+      {
+       "text": "From Growth to Retention  ·  Illustrative demo",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s3stone",
+       "box": [
+        0.0,
+        5.9077,
+        10.1189,
+        0.2308
+       ]
+      },
+      {
+       "text": "03 / 05",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s3stone",
+       "align": "right",
+       "box": [
+        10.9946,
+        5.9077,
+        1.0022,
+        0.2308
+       ]
+      },
+      {
+       "text": "Month 1",
+       "role": "small",
+       "size": 13,
+       "font": "Helvetica Neue",
+       "tone": "s3ink",
+       "box": [
+        0.0,
+        1.8462,
+        1.2162,
+        0.2769
+       ]
+      },
+      {
+       "shape": "roundRect",
+       "decorative": true,
+       "fill": "s3hair",
+       "radius": 3,
+       "box": [
+        1.4595,
+        1.9108,
+        7.6865,
+        0.2215
+       ]
+      },
+      {
+       "shape": "roundRect",
+       "decorative": true,
+       "fill": "s3ink",
+       "radius": 3,
+       "box": [
+        1.4595,
+        1.9108,
+        7.6865,
+        0.2215
+       ]
+      },
+      {
+       "text": "100%",
+       "role": "small",
+       "size": 16,
+       "font": "Helvetica Neue",
+       "tone": "s3ink",
+       "weight": "bold",
+       "box": [
+        9.4379,
+        1.8462,
+        1.2649,
+        0.3231
+       ]
+      },
+      {
+       "text": "Month 2",
+       "role": "small",
+       "size": 13,
+       "font": "Helvetica Neue",
+       "tone": "s3ink",
+       "box": [
+        0.0,
+        2.3631,
+        1.2162,
+        0.2769
+       ]
+      },
+      {
+       "shape": "roundRect",
+       "decorative": true,
+       "fill": "s3hair",
+       "radius": 3,
+       "box": [
+        1.4595,
+        2.4277,
+        7.6865,
+        0.2215
+       ]
+      },
+      {
+       "shape": "roundRect",
+       "decorative": true,
+       "fill": "s3coral",
+       "radius": 3,
+       "box": [
+        1.4595,
+        2.4277,
+        6.3029,
+        0.2215
+       ]
+      },
+      {
+       "text": "82%",
+       "role": "small",
+       "size": 16,
+       "font": "Helvetica Neue",
+       "tone": "s3ink",
+       "weight": "bold",
+       "box": [
+        9.4379,
+        2.3631,
+        1.2649,
+        0.3231
+       ]
+      },
+      {
+       "text": "Month 3",
+       "role": "small",
+       "size": 13,
+       "font": "Helvetica Neue",
+       "tone": "s3ink",
+       "box": [
+        0.0,
+        2.88,
+        1.2162,
+        0.2769
+       ]
+      },
+      {
+       "shape": "roundRect",
+       "decorative": true,
+       "fill": "s3hair",
+       "radius": 3,
+       "box": [
+        1.4595,
+        2.9446,
+        7.6865,
+        0.2215
+       ]
+      },
+      {
+       "shape": "roundRect",
+       "decorative": true,
+       "fill": "s3ink",
+       "radius": 3,
+       "box": [
+        1.4595,
+        2.9446,
+        5.5343,
+        0.2215
+       ]
+      },
+      {
+       "text": "72%",
+       "role": "small",
+       "size": 16,
+       "font": "Helvetica Neue",
+       "tone": "s3ink",
+       "weight": "bold",
+       "box": [
+        9.4379,
+        2.88,
+        1.2649,
+        0.3231
+       ]
+      },
+      {
+       "text": "Month 4",
+       "role": "small",
+       "size": 13,
+       "font": "Helvetica Neue",
+       "tone": "s3ink",
+       "box": [
+        0.0,
+        3.3969,
+        1.2162,
+        0.2769
+       ]
+      },
+      {
+       "shape": "roundRect",
+       "decorative": true,
+       "fill": "s3hair",
+       "radius": 3,
+       "box": [
+        1.4595,
+        3.4615,
+        7.6865,
+        0.2215
+       ]
+      },
+      {
+       "shape": "roundRect",
+       "decorative": true,
+       "fill": "s3ink",
+       "radius": 3,
+       "box": [
+        1.4595,
+        3.4615,
+        5.15,
+        0.2215
+       ]
+      },
+      {
+       "text": "67%",
+       "role": "small",
+       "size": 16,
+       "font": "Helvetica Neue",
+       "tone": "s3ink",
+       "weight": "bold",
+       "box": [
+        9.4379,
+        3.3969,
+        1.2649,
+        0.3231
+       ]
+      },
+      {
+       "text": "Month 5",
+       "role": "small",
+       "size": 13,
+       "font": "Helvetica Neue",
+       "tone": "s3ink",
+       "box": [
+        0.0,
+        3.9138,
+        1.2162,
+        0.2769
+       ]
+      },
+      {
+       "shape": "roundRect",
+       "decorative": true,
+       "fill": "s3hair",
+       "radius": 3,
+       "box": [
+        1.4595,
+        3.9785,
+        7.6865,
+        0.2215
+       ]
+      },
+      {
+       "shape": "roundRect",
+       "decorative": true,
+       "fill": "s3ink",
+       "radius": 3,
+       "box": [
+        1.4595,
+        3.9785,
+        4.9194,
+        0.2215
+       ]
+      },
+      {
+       "text": "64%",
+       "role": "small",
+       "size": 16,
+       "font": "Helvetica Neue",
+       "tone": "s3ink",
+       "weight": "bold",
+       "box": [
+        9.4379,
+        3.9138,
+        1.2649,
+        0.3231
+       ]
+      },
+      {
+       "text": "Month 6",
+       "role": "small",
+       "size": 13,
+       "font": "Helvetica Neue",
+       "tone": "s3ink",
+       "box": [
+        0.0,
+        4.4308,
+        1.2162,
+        0.2769
+       ]
+      },
+      {
+       "shape": "roundRect",
+       "decorative": true,
+       "fill": "s3hair",
+       "radius": 3,
+       "box": [
+        1.4595,
+        4.4954,
+        7.6865,
+        0.2215
+       ]
+      },
+      {
+       "shape": "roundRect",
+       "decorative": true,
+       "fill": "s3ink",
+       "radius": 3,
+       "box": [
+        1.4595,
+        4.4954,
+        4.7656,
+        0.2215
+       ]
+      },
+      {
+       "text": "62%",
+       "role": "small",
+       "size": 16,
+       "font": "Helvetica Neue",
+       "tone": "s3ink",
+       "weight": "bold",
+       "box": [
+        9.4379,
+        4.4308,
+        1.2649,
+        0.3231
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "Focus onboarding on reaching first value; later retention losses are substantially smaller.",
+          "role": "h3",
+          "size": 17,
+          "font": "Charter",
+          "tone": "s3coral",
+          "weight": "bold",
+          "box": [
+           0.253,
+           1.3151,
+           11.4842,
+           3.2877
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s3wash",
+        "radius": 10
+       },
+       "box": [
+        0.0,
+        5.0954,
+        11.9968,
+        0.6738
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "funnel",
+   "message": "11K sign-ups fail to reach activation.",
+   "background": "s3paper",
+   "notes": "Fictional demonstration data. 11K sign-ups fail to reach activation.",
+   "compose": {
+    "free": {
+     "items": [
+      {
+       "text": "DATA STORYTELLING",
+       "role": "label",
+       "size": 10.5,
+       "font": "Helvetica Neue",
+       "tone": "s3coral",
+       "weight": "bold",
+       "box": [
+        0.0,
+        0.0,
+        9.7298,
+        0.2308
+       ]
+      },
+      {
+       "text": "Activation is the most actionable bottleneck.",
+       "role": "title",
+       "size": 30,
+       "font": "Charter",
+       "tone": "s3ink",
+       "weight": "bold",
+       "box": [
+        0.0,
+        0.4431,
+        11.9968,
+        0.6
+       ]
+      },
+      {
+       "text": "The funnel is modeled from one month: 100K visitors, 32K sign-ups, 21K activated.",
+       "role": "small",
+       "size": 15,
+       "font": "Helvetica Neue",
+       "tone": "s3stone",
+       "box": [
+        0.0,
+        1.08,
+        11.4811,
+        0.4615
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s3hair",
+       "box": [
+        0.0,
+        5.7737,
+        11.9968,
+        0.0096
+       ]
+      },
+      {
+       "text": "From Growth to Retention  ·  Illustrative demo",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s3stone",
+       "box": [
+        0.0,
+        5.9077,
+        10.1189,
+        0.2308
+       ]
+      },
+      {
+       "text": "04 / 05",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s3stone",
+       "align": "right",
+       "box": [
+        10.9946,
+        5.9077,
+        1.0022,
+        0.2308
+       ]
+      },
+      {
+       "text": "Visitors",
+       "role": "body",
+       "size": 16,
+       "font": "Helvetica Neue",
+       "tone": "s3ink",
+       "box": [
+        0.0,
+        1.9662,
+        1.7027,
+        0.3692
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s3ink",
+       "box": [
+        1.946,
+        1.9662,
+        7.2,
+        0.3692
+       ]
+      },
+      {
+       "text": "100K",
+       "role": "h3",
+       "size": 20,
+       "font": "Charter",
+       "tone": "s3ink",
+       "weight": "bold",
+       "box": [
+        9.5352,
+        1.9662,
+        2.4616,
+        0.3692
+       ]
+      },
+      {
+       "text": "Sign-ups",
+       "role": "body",
+       "size": 16,
+       "font": "Helvetica Neue",
+       "tone": "s3ink",
+       "box": [
+        0.0,
+        2.5662,
+        1.7027,
+        0.3692
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s3ink",
+       "box": [
+        1.946,
+        2.5662,
+        2.304,
+        0.3692
+       ]
+      },
+      {
+       "text": "32K",
+       "role": "h3",
+       "size": 20,
+       "font": "Charter",
+       "tone": "s3ink",
+       "weight": "bold",
+       "box": [
+        9.5352,
+        2.5662,
+        2.4616,
+        0.3692
+       ]
+      },
+      {
+       "text": "Activated",
+       "role": "body",
+       "size": 16,
+       "font": "Helvetica Neue",
+       "tone": "s3ink",
+       "box": [
+        0.0,
+        3.1662,
+        1.7027,
+        0.3692
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s3coral",
+       "box": [
+        1.946,
+        3.1662,
+        1.512,
+        0.3692
+       ]
+      },
+      {
+       "text": "21K",
+       "role": "h3",
+       "size": 20,
+       "font": "Charter",
+       "tone": "s3ink",
+       "weight": "bold",
+       "box": [
+        9.5352,
+        3.1662,
+        2.4616,
+        0.3692
+       ]
+      },
+      {
+       "text": "Paid",
+       "role": "body",
+       "size": 16,
+       "font": "Helvetica Neue",
+       "tone": "s3ink",
+       "box": [
+        0.0,
+        3.7662,
+        1.7027,
+        0.3692
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s3ink",
+       "box": [
+        1.946,
+        3.7662,
+        0.6048,
+        0.3692
+       ]
+      },
+      {
+       "text": "8.4K",
+       "role": "h3",
+       "size": 20,
+       "font": "Charter",
+       "tone": "s3ink",
+       "weight": "bold",
+       "box": [
+        9.5352,
+        3.7662,
+        2.4616,
+        0.3692
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "11K sign-ups never activate. Fix the first successful workflow before buying more traffic.",
+          "role": "h3",
+          "size": 17,
+          "font": "Charter",
+          "tone": "s3coral",
+          "weight": "bold",
+          "box": [
+           0.253,
+           1.3151,
+           11.4842,
+           3.2877
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s3wash",
+        "radius": 10
+       },
+       "box": [
+        0.0,
+        4.8185,
+        11.9968,
+        0.6738
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "experiment",
+   "message": "An 80% activation scenario yields 1.84K additional paid users.",
+   "background": "s3paper",
+   "notes": "Fictional demonstration data. An 80% activation scenario yields 1.84K additional paid users.",
+   "compose": {
+    "free": {
+     "items": [
+      {
+       "text": "DATA STORYTELLING",
+       "role": "label",
+       "size": 10.5,
+       "font": "Helvetica Neue",
+       "tone": "s3coral",
+       "weight": "bold",
+       "box": [
+        0.0,
+        0.0,
+        9.7298,
+        0.2308
+       ]
+      },
+      {
+       "text": "An activation experiment can unlock 1.8K paid users.",
+       "role": "title",
+       "size": 30,
+       "font": "Charter",
+       "tone": "s3ink",
+       "weight": "bold",
+       "box": [
+        0.0,
+        0.4431,
+        11.9968,
+        0.6
+       ]
+      },
+      {
+       "text": "Scenario holds 32K sign-ups and 40% activated-to-paid conversion constant.",
+       "role": "small",
+       "size": 15,
+       "font": "Helvetica Neue",
+       "tone": "s3stone",
+       "box": [
+        0.0,
+        1.08,
+        11.4811,
+        0.4615
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s3hair",
+       "box": [
+        0.0,
+        5.7737,
+        11.9968,
+        0.0096
+       ]
+      },
+      {
+       "text": "From Growth to Retention  ·  Illustrative demo",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s3stone",
+       "box": [
+        0.0,
+        5.9077,
+        10.1189,
+        0.2308
+       ]
+      },
+      {
+       "text": "05 / 05",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s3stone",
+       "align": "right",
+       "box": [
+        10.9946,
+        5.9077,
+        1.0022,
+        0.2308
+       ]
+      },
+      {
+       "text": "65.6%",
+       "role": "display",
+       "size": 44,
+       "font": "Charter",
+       "tone": "s3coral",
+       "weight": "bold",
+       "box": [
+        0.0,
+        1.8923,
+        3.6973,
+        0.7846
+       ]
+      },
+      {
+       "text": "Baseline activation",
+       "role": "h3",
+       "size": 18,
+       "font": "Charter",
+       "tone": "s3ink",
+       "weight": "bold",
+       "box": [
+        0.0,
+        2.7415,
+        3.6973,
+        0.3692
+       ]
+      },
+      {
+       "text": "21K activated / 32K sign-ups",
+       "role": "small",
+       "size": 13,
+       "font": "Helvetica Neue",
+       "tone": "s3stone",
+       "box": [
+        0.0,
+        3.1846,
+        3.6973,
+        0.5077
+       ]
+      },
+      {
+       "text": "80%",
+       "role": "display",
+       "size": 44,
+       "font": "Charter",
+       "tone": "s3coral",
+       "weight": "bold",
+       "box": [
+        4.1351,
+        1.8923,
+        3.6973,
+        0.7846
+       ]
+      },
+      {
+       "text": "Target activation",
+       "role": "h3",
+       "size": 18,
+       "font": "Charter",
+       "tone": "s3ink",
+       "weight": "bold",
+       "box": [
+        4.1351,
+        2.7415,
+        3.6973,
+        0.3692
+       ]
+      },
+      {
+       "text": "25.6K activated at the same traffic",
+       "role": "small",
+       "size": 13,
+       "font": "Helvetica Neue",
+       "tone": "s3stone",
+       "box": [
+        4.1351,
+        3.1846,
+        3.6973,
+        0.5077
+       ]
+      },
+      {
+       "text": "+1.84K",
+       "role": "display",
+       "size": 44,
+       "font": "Charter",
+       "tone": "s3coral",
+       "weight": "bold",
+       "box": [
+        8.2703,
+        1.8923,
+        3.6973,
+        0.7846
+       ]
+      },
+      {
+       "text": "Modeled paid lift",
+       "role": "h3",
+       "size": 18,
+       "font": "Charter",
+       "tone": "s3ink",
+       "weight": "bold",
+       "box": [
+        8.2703,
+        2.7415,
+        3.6973,
+        0.3692
+       ]
+      },
+      {
+       "text": "10.24K vs. 8.4K paid users",
+       "role": "small",
+       "size": 13,
+       "font": "Helvetica Neue",
+       "tone": "s3stone",
+       "box": [
+        8.2703,
+        3.1846,
+        3.6973,
+        0.5077
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s3hair",
+       "box": [
+        0.0,
+        4.0106,
+        11.9968,
+        0.0096
+       ]
+      },
+      {
+       "text": "TEST",
+       "role": "label",
+       "size": 11,
+       "font": "Helvetica Neue",
+       "tone": "s3coral",
+       "weight": "bold",
+       "box": [
+        0.0,
+        4.2277,
+        3.6973,
+        0.3508
+       ]
+      },
+      {
+       "text": "Guided first workflow",
+       "role": "h3",
+       "size": 17,
+       "font": "Charter",
+       "tone": "s3ink",
+       "weight": "bold",
+       "box": [
+        0.0,
+        4.68,
+        3.6973,
+        0.5538
+       ]
+      },
+      {
+       "text": "PRIMARY MEASURE",
+       "role": "label",
+       "size": 11,
+       "font": "Helvetica Neue",
+       "tone": "s3coral",
+       "weight": "bold",
+       "box": [
+        4.1351,
+        4.2277,
+        3.6973,
+        0.3508
+       ]
+      },
+      {
+       "text": "Activation within 7 days",
+       "role": "h3",
+       "size": 17,
+       "font": "Charter",
+       "tone": "s3ink",
+       "weight": "bold",
+       "box": [
+        4.1351,
+        4.68,
+        3.6973,
+        0.5538
+       ]
+      },
+      {
+       "text": "GUARDRAIL",
+       "role": "label",
+       "size": 11,
+       "font": "Helvetica Neue",
+       "tone": "s3coral",
+       "weight": "bold",
+       "box": [
+        8.2703,
+        4.2277,
+        3.6973,
+        0.3508
+       ]
+      },
+      {
+       "text": "30-day retention",
+       "role": "h3",
+       "size": 17,
+       "font": "Charter",
+       "tone": "s3ink",
+       "weight": "bold",
+       "box": [
+        8.2703,
+        4.68,
+        3.6973,
+        0.5538
+       ]
+      }
+     ]
+    }
+   }
+  }
+ ]
+}

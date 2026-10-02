@@ -1,0 +1,312 @@
+{
+ "$description": "Slide Agent theme (authored); compiler 2.0.0",
+ "color": {
+  "palette": {
+   "s3paper": {
+    "$type": "color",
+    "$value": {
+     "colorSpace": "srgb",
+     "hex": "#F6F3EC"
+    }
+   },
+   "s3paperDim": {
+    "$type": "color",
+    "$value": {
+     "colorSpace": "srgb",
+     "hex": "#CFC8BA"
+    }
+   },
+   "s3ink": {
+    "$type": "color",
+    "$value": {
+     "colorSpace": "srgb",
+     "hex": "#1B1B1F"
+    }
+   },
+   "s3stone": {
+    "$type": "color",
+    "$value": {
+     "colorSpace": "srgb",
+     "hex": "#66625B"
+    }
+   },
+   "s3hair": {
+    "$type": "color",
+    "$value": {
+     "colorSpace": "srgb",
+     "hex": "#D6CFC2"
+    }
+   },
+   "s3coral": {
+    "$type": "color",
+    "$value": {
+     "colorSpace": "srgb",
+     "hex": "#2F5BFF"
+    }
+   },
+   "s3wash": {
+    "$type": "color",
+    "$value": {
+     "colorSpace": "srgb",
+     "hex": "#ECE6DA"
+    }
+   },
+   "s3coralSoft": {
+    "$type": "color",
+    "$value": {
+     "colorSpace": "srgb",
+     "hex": "#E6ECFF"
+    }
+   },
+   "s3coralLight": {
+    "$type": "color",
+    "$value": {
+     "colorSpace": "srgb",
+     "hex": "#86A0FF"
+    }
+   }
+  },
+  "role": {
+   "background": {
+    "$type": "color",
+    "$value": "{color.palette.s3paper}"
+   },
+   "surface": {
+    "$type": "color",
+    "$value": "{color.palette.s3wash}"
+   },
+   "text": {
+    "$type": "color",
+    "$value": "{color.palette.s3ink}"
+   },
+   "muted": {
+    "$type": "color",
+    "$value": "{color.palette.s3stone}"
+   },
+   "accent": {
+    "$type": "color",
+    "$value": "{color.palette.s3coral}"
+   },
+   "accentAlt": {
+    "$type": "color",
+    "$value": "{color.palette.s3coral}"
+   },
+   "rule": {
+    "$type": "color",
+    "$value": "{color.palette.s3hair}"
+   }
+  },
+  "data": {
+   "series1": {
+    "$type": "color",
+    "$value": {
+     "colorSpace": "srgb",
+     "hex": "#2F5BFF"
+    }
+   },
+   "series2": {
+    "$type": "color",
+    "$value": {
+     "colorSpace": "srgb",
+     "hex": "#1B1B1F"
+    }
+   }
+  }
+ },
+ "font": {
+  "family": {
+   "display": {
+    "$type": "fontFamily",
+    "$value": [
+     "Charter"
+    ]
+   },
+   "body": {
+    "$type": "fontFamily",
+    "$value": [
+     "Helvetica Neue"
+    ]
+   },
+   "mono": {
+    "$type": "fontFamily",
+    "$value": [
+     "Menlo"
+    ]
+   }
+  },
+  "size": {
+   "display": {
+    "$type": "dimension",
+    "$value": {
+     "value": 61,
+     "unit": "pt"
+    }
+   },
+   "title": {
+    "$type": "dimension",
+    "$value": {
+     "value": 31.5,
+     "unit": "pt"
+    }
+   },
+   "subtitle": {
+    "$type": "dimension",
+    "$value": {
+     "value": 22.5,
+     "unit": "pt"
+    }
+   },
+   "h2": {
+    "$type": "dimension",
+    "$value": {
+     "value": 25,
+     "unit": "pt"
+    }
+   },
+   "h3": {
+    "$type": "dimension",
+    "$value": {
+     "value": 20,
+     "unit": "pt"
+    }
+   },
+   "lead": {
+    "$type": "dimension",
+    "$value": {
+     "value": 20,
+     "unit": "pt"
+    }
+   },
+   "body": {
+    "$type": "dimension",
+    "$value": {
+     "value": 16,
+     "unit": "pt"
+    }
+   },
+   "small": {
+    "$type": "dimension",
+    "$value": {
+     "value": 13,
+     "unit": "pt"
+    }
+   },
+   "caption": {
+    "$type": "dimension",
+    "$value": {
+     "value": 11.5,
+     "unit": "pt"
+    }
+   },
+   "label": {
+    "$type": "dimension",
+    "$value": {
+     "value": 11.5,
+     "unit": "pt"
+    }
+   },
+   "quote": {
+    "$type": "dimension",
+    "$value": {
+     "value": 25,
+     "unit": "pt"
+    }
+   }
+  }
+ },
+ "space": {
+  "unit": {
+   "$type": "dimension",
+   "$value": {
+    "value": 8,
+    "unit": "pt"
+   }
+  },
+  "margin": {
+   "$type": "dimension",
+   "$value": {
+    "value": 36,
+    "unit": "pt"
+   }
+  },
+  "gutter": {
+   "$type": "dimension",
+   "$value": {
+    "value": 16,
+    "unit": "pt"
+   }
+  }
+ },
+ "$extensions": {
+  "dev.slide-agent.language": {
+   "color": {
+    "palette": {
+     "s3paper": "#F6F3EC",
+     "s3paperDim": "#CFC8BA",
+     "s3ink": "#1B1B1F",
+     "s3stone": "#66625B",
+     "s3hair": "#D6CFC2",
+     "s3coral": "#2F5BFF",
+     "s3wash": "#ECE6DA",
+     "s3coralSoft": "#E6ECFF",
+     "s3coralLight": "#86A0FF"
+    },
+    "roles": {
+     "background": "s3paper",
+     "surface": "s3wash",
+     "text": "s3ink",
+     "muted": "s3stone",
+     "accent": "s3coral",
+     "rule": "s3hair"
+    },
+    "data": [
+     "s3coral",
+     "s3ink"
+    ]
+   },
+   "type": {
+    "display": {
+     "family": "Charter",
+     "weight": 700,
+     "tracking": -0.01
+    },
+    "body": {
+     "family": "Helvetica Neue",
+     "weight": 400
+    },
+    "mono": {
+     "family": "Menlo"
+    },
+    "scale": {
+     "base": 16,
+     "ratio": 1.25
+    }
+   },
+   "space": {
+    "unit": 8,
+    "margin": 36,
+    "gutter": 16
+   },
+   "grid": {
+    "columns": 12,
+    "rows": 6
+   },
+   "shape": {
+    "radius": 10,
+    "stroke": 0
+   },
+   "texture": [],
+   "charts": {
+    "axis": "hairline",
+    "gridlines": "none",
+    "labels": "none",
+    "highlight": "s3coral",
+    "legend": "none"
+   },
+   "chrome": {
+    "slideNumber": false
+   }
+  },
+  "dev.slide-agent.hash": "757837f4c44b0230"
+ }
+}

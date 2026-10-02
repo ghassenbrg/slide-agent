@@ -1,0 +1,2245 @@
+{
+ "schema": "slide-agent.intent/1",
+ "brief": {
+  "title": "NOVA — Your AI Workspace",
+  "audience": "Product launch audience",
+  "goal": "NOVA turns ideas into connected action.",
+  "format": "16:9"
+ },
+ "direction": {
+  "concept": "Product launch with Helvetica Neue display typography, an intentional five-slide narrative and varied compositions.",
+  "fit": "ask"
+ },
+ "design": {
+  "language": {
+   "color": {
+    "palette": {
+     "s4white": "#FFFFFF",
+     "s4ink": "#0B0B10",
+     "s4gray": "#5D5F6E",
+     "s4violet": "#6D28D9",
+     "s4lav": "#EFEAFE",
+     "s4stroke": "#CFCBDD",
+     "s4bezel": "#16161C",
+     "s4cam": "#3A3A44",
+     "s4base": "#D5D7DE",
+     "s4baseDark": "#AEB1BB",
+     "s4uiSide": "#F7F6FB",
+     "s4uiLine": "#E8E6F0",
+     "s4uiText": "#1F1D2B",
+     "s4uiMuted": "#6E6C80",
+     "s4promptLine": "#D9D2F7",
+     "s4avatar": "#C4B5FD",
+     "s4sky": "#0369A1",
+     "s4skyTint": "#E0F2FE",
+     "s4rose": "#BE185D",
+     "s4roseTint": "#FCE7F3",
+     "s4mint": "#15803D",
+     "s4mintTint": "#DCFCE7"
+    },
+    "roles": {
+     "background": "s4white",
+     "surface": "s4lav",
+     "text": "s4ink",
+     "muted": "s4gray",
+     "accent": "s4violet",
+     "rule": "s4uiLine"
+    },
+    "data": [
+     "s4violet",
+     "s4ink"
+    ]
+   },
+   "type": {
+    "display": {
+     "family": "Helvetica Neue",
+     "weight": 700,
+     "tracking": -0.01
+    },
+    "body": {
+     "family": "Helvetica Neue",
+     "weight": 400
+    },
+    "mono": {
+     "family": "Menlo"
+    },
+    "scale": {
+     "base": 16,
+     "ratio": 1.25
+    }
+   },
+   "space": {
+    "unit": 8,
+    "margin": 36,
+    "gutter": 16
+   },
+   "grid": {
+    "columns": 12,
+    "rows": 6
+   },
+   "shape": {
+    "radius": 10,
+    "stroke": 0
+   },
+   "texture": [
+    {
+     "id": "lighting",
+     "primitive": "gradient-wash",
+     "params": {
+      "from": "s4white",
+      "to": "s4lav",
+      "angle": 315,
+      "opacity": 0.8
+     }
+    }
+   ],
+   "charts": {
+    "axis": "hairline",
+    "gridlines": "none",
+    "labels": "none",
+    "highlight": "s4violet",
+    "legend": "none"
+   },
+   "chrome": {
+    "slideNumber": false
+   }
+  }
+ },
+ "data": {},
+ "slides": [
+  {
+   "id": "product-keynote",
+   "message": "NOVA puts research, creation, analysis and automation in one AI workspace",
+   "background": "s4white",
+   "notes": "Product launch / keynote: oversized type, generous white space, a lit background and a native, fully editable device and UI mockup.",
+   "compose": {
+    "free": {
+     "items": [
+      {
+       "bleed": [
+        "left",
+        "right",
+        "top",
+        "bottom"
+       ],
+       "decorative": true,
+       "texture": "lighting",
+       "box": [
+        0.0,
+        0.0,
+        12.0,
+        6.0
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s4violet",
+        "radius": 7
+       },
+       "column": {
+        "items": [
+         {
+          "icon": "sparkles",
+          "tone": "s4white",
+          "size": 13,
+          "width": 13,
+          "height": 13
+         }
+        ],
+        "align": "center",
+        "justify": "center"
+       },
+       "box": [
+        0.0,
+        0.0462,
+        0.2919,
+        0.2769
+       ]
+      },
+      {
+       "text": "NOVA",
+       "role": "h3",
+       "size": 15,
+       "font": "Helvetica Neue",
+       "weight": "bold",
+       "tone": "s4ink",
+       "tracking": 0.14,
+       "valign": "middle",
+       "box": [
+        0.3892,
+        0.0277,
+        1.2649,
+        0.3138
+       ]
+      },
+      {
+       "text": "Product        Solutions        Pricing        Resources",
+       "role": "caption",
+       "size": 11,
+       "font": "Helvetica Neue",
+       "tone": "s4gray",
+       "align": "right",
+       "valign": "middle",
+       "box": [
+        6.6162,
+        0.0462,
+        5.3835,
+        0.2769
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s4lav",
+        "radius": 100
+       },
+       "row": {
+        "items": [
+         {
+          "icon": "sparkles",
+          "tone": "s4violet",
+          "size": 12,
+          "width": 12,
+          "height": 12
+         },
+         {
+          "text": "NOVA  ·  Your AI workspace",
+          "role": "caption",
+          "size": 11,
+          "font": "Helvetica Neue",
+          "weight": "bold",
+          "tone": "s4violet"
+         }
+        ],
+        "pad": [
+         0,
+         12,
+         0,
+         12
+        ],
+        "gap": 6,
+        "align": "center"
+       },
+       "box": [
+        0.0,
+        1.0338,
+        2.8216,
+        0.3138
+       ]
+      },
+      {
+       "text": "One workspace.",
+       "role": "title",
+       "size": 50,
+       "font": "Helvetica Neue",
+       "weight": "bold",
+       "tone": "s4ink",
+       "leading": 1.04,
+       "tracking": -0.025,
+       "box": [
+        0.0,
+        1.4769,
+        6.227,
+        0.7569
+       ]
+      },
+      {
+       "text": "Every idea.",
+       "role": "display",
+       "size": 50,
+       "font": "Helvetica Neue",
+       "weight": "bold",
+       "tone": "s4ink",
+       "leading": 1.04,
+       "tracking": -0.025,
+       "box": [
+        0.0,
+        2.1415,
+        6.227,
+        0.7569
+       ]
+      },
+      {
+       "text": "Amplified by AI.",
+       "role": "display",
+       "size": 50,
+       "font": "Helvetica Neue",
+       "weight": "bold",
+       "tone": "s4violet",
+       "leading": 1.04,
+       "tracking": -0.025,
+       "box": [
+        0.0,
+        2.8062,
+        6.227,
+        0.7569
+       ]
+      },
+      {
+       "text": "From idea to execution without leaving your workspace.",
+       "role": "lead",
+       "size": 17,
+       "font": "Helvetica Neue",
+       "tone": "s4gray",
+       "leading": 1.35,
+       "box": [
+        0.0,
+        3.7662,
+        4.573,
+        0.6646
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s4ink",
+        "radius": 100
+       },
+       "row": {
+        "items": [
+         {
+          "text": "Get started",
+          "role": "small",
+          "size": 13,
+          "font": "Helvetica Neue",
+          "weight": "bold",
+          "tone": "s4white",
+          "width": "auto"
+         },
+         {
+          "icon": "arrow-right",
+          "tone": "s4white",
+          "size": 14,
+          "width": 14,
+          "height": 14
+         }
+        ],
+        "gap": 8,
+        "align": "center",
+        "justify": "center"
+       },
+       "box": [
+        0.0,
+        4.6615,
+        1.7027,
+        0.4615
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s4white",
+        "stroke": "s4stroke",
+        "strokeWidth": 1,
+        "radius": 100
+       },
+       "row": {
+        "items": [
+         {
+          "icon": "circle-play",
+          "tone": "s4ink",
+          "size": 15,
+          "width": 15,
+          "height": 15
+         },
+         {
+          "text": "Watch the film",
+          "role": "small",
+          "size": 13,
+          "font": "Helvetica Neue",
+          "tone": "s4ink",
+          "width": "auto"
+         }
+        ],
+        "gap": 8,
+        "align": "center",
+        "justify": "center"
+       },
+       "box": [
+        1.8487,
+        4.6615,
+        1.8973,
+        0.4615
+       ]
+      },
+      {
+       "text": "Free for teams up to 10   ·   SOC 2 Type II   ·   Works with the tools you use",
+       "role": "caption",
+       "size": 10.5,
+       "font": "Helvetica Neue",
+       "tone": "s4gray",
+       "box": [
+        0.0,
+        5.5385,
+        5.8379,
+        0.2585
+       ]
+      },
+      {
+       "shape": "ellipse",
+       "decorative": true,
+       "fill": "s4ink",
+       "opacity": 0.08,
+       "box": [
+        6.227,
+        4.3569,
+        5.5946,
+        0.1846
+       ]
+      },
+      {
+       "shape": "roundRect",
+       "decorative": true,
+       "fill": "s4bezel",
+       "radius": 16,
+       "box": [
+        6.2757,
+        0.8769,
+        5.4487,
+        3.4338
+       ]
+      },
+      {
+       "shape": "ellipse",
+       "decorative": true,
+       "fill": "s4cam",
+       "box": [
+        8.9806,
+        0.9231,
+        0.0389,
+        0.0369
+       ]
+      },
+      {
+       "shape": "roundRect",
+       "decorative": true,
+       "fill": "s4base",
+       "radius": 5,
+       "box": [
+        5.9935,
+        4.2923,
+        6.0062,
+        0.1292
+       ]
+      },
+      {
+       "shape": "roundRect",
+       "decorative": true,
+       "fill": "s4baseDark",
+       "radius": 2,
+       "box": [
+        8.6108,
+        4.2923,
+        0.7784,
+        0.0462
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "free": {
+           "items": [
+            {
+             "text": "NOVA",
+             "role": "caption",
+             "size": 11,
+             "font": "Helvetica Neue",
+             "weight": "bold",
+             "tone": "s4violet",
+             "tracking": 0.12,
+             "box": [
+              1.2,
+              0.2075,
+              9.2308,
+              0.415
+             ]
+            },
+            {
+             "surface": {
+              "fill": "s4lav",
+              "radius": 6
+             },
+             "row": {
+              "items": [
+               {
+                "icon": "plus",
+                "tone": "s4violet",
+                "size": 10,
+                "width": 10,
+                "height": 10
+               },
+               {
+                "text": "New chat",
+                "role": "caption",
+                "size": 10,
+                "font": "Helvetica Neue",
+                "weight": "bold",
+                "tone": "s4violet"
+               }
+              ],
+              "pad": [
+               0,
+               8,
+               0,
+               8
+              ],
+              "gap": 4,
+              "align": "center"
+             },
+             "box": [
+              1.1077,
+              0.7608,
+              9.7846,
+              0.4496
+             ]
+            },
+            {
+             "icon": "house",
+             "tone": "s4uiMuted",
+             "size": 11,
+             "width": 11,
+             "height": 11,
+             "box": [
+              1.5692,
+              1.5908,
+              1.4769,
+              0.2767
+             ]
+            },
+            {
+             "text": "Home",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s4uiText",
+             "valign": "middle",
+             "box": [
+              3.6923,
+              1.5216,
+              7.9385,
+              0.415
+             ]
+            },
+            {
+             "icon": "search",
+             "tone": "s4uiMuted",
+             "size": 11,
+             "width": 11,
+             "height": 11,
+             "box": [
+              1.5692,
+              2.1095,
+              1.4769,
+              0.2767
+             ]
+            },
+            {
+             "text": "Search",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s4uiText",
+             "valign": "middle",
+             "box": [
+              3.6923,
+              2.0403,
+              7.9385,
+              0.415
+             ]
+            },
+            {
+             "icon": "library",
+             "tone": "s4uiMuted",
+             "size": 11,
+             "width": 11,
+             "height": 11,
+             "box": [
+              1.5692,
+              2.6282,
+              1.4769,
+              0.2767
+             ]
+            },
+            {
+             "text": "Library",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s4uiText",
+             "valign": "middle",
+             "box": [
+              3.6923,
+              2.5591,
+              7.9385,
+              0.415
+             ]
+            },
+            {
+             "icon": "bot",
+             "tone": "s4uiMuted",
+             "size": 11,
+             "width": 11,
+             "height": 11,
+             "box": [
+              1.5692,
+              3.147,
+              1.4769,
+              0.2767
+             ]
+            },
+            {
+             "text": "Agents",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s4uiText",
+             "valign": "middle",
+             "box": [
+              3.6923,
+              3.0778,
+              7.9385,
+              0.415
+             ]
+            },
+            {
+             "icon": "workflow",
+             "tone": "s4uiMuted",
+             "size": 11,
+             "width": 11,
+             "height": 11,
+             "box": [
+              1.5692,
+              3.6657,
+              1.4769,
+              0.2767
+             ]
+            },
+            {
+             "text": "Automations",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s4uiText",
+             "valign": "middle",
+             "box": [
+              3.6923,
+              3.5965,
+              7.9385,
+              0.415
+             ]
+            },
+            {
+             "shape": "ellipse",
+             "decorative": true,
+             "fill": "s4avatar",
+             "box": [
+              1.2,
+              5.3256,
+              2.2154,
+              0.415
+             ]
+            },
+            {
+             "text": "Alex Kim",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s4uiText",
+             "valign": "middle",
+             "box": [
+              3.9692,
+              5.3256,
+              7.3846,
+              0.415
+             ]
+            }
+           ]
+          },
+          "surface": {
+           "fill": "s4uiSide"
+          },
+          "box": [
+           0.0,
+           0.0,
+           2.9104,
+           6.0
+          ]
+         },
+         {
+          "text": "Good morning, Alex",
+          "role": "small",
+          "size": 16,
+          "font": "Helvetica Neue",
+          "weight": "bold",
+          "tone": "s4uiText",
+          "align": "center",
+          "box": [
+           3.0896,
+           0.6916,
+           8.9552,
+           0.5879
+          ]
+         },
+         {
+          "text": "What will you build today?",
+          "role": "caption",
+          "size": 11,
+          "font": "Helvetica Neue",
+          "tone": "s4uiMuted",
+          "align": "center",
+          "box": [
+           3.0896,
+           1.245,
+           8.9552,
+           0.4496
+          ]
+         },
+         {
+          "free": {
+           "items": [
+            {
+             "icon": "sparkles",
+             "tone": "s4violet",
+             "size": 11,
+             "width": 11,
+             "height": 11,
+             "box": [
+              0.4918,
+              1.9091,
+              0.5246,
+              2.1818
+             ]
+            },
+            {
+             "text": "Turn my idea into a launch plan…",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s4uiMuted",
+             "valign": "middle",
+             "box": [
+              1.2459,
+              1.3636,
+              8.8525,
+              3.2727
+             ]
+            },
+            {
+             "surface": {
+              "fill": "s4violet",
+              "radius": 100
+             },
+             "column": {
+              "items": [
+               {
+                "icon": "arrow-up",
+                "tone": "s4white",
+                "size": 12,
+                "width": 12,
+                "height": 12
+               }
+              ],
+              "align": "center",
+              "justify": "center"
+             },
+             "box": [
+              10.8852,
+              0.9545,
+              0.9836,
+              4.0909
+             ]
+            }
+           ]
+          },
+          "surface": {
+           "fill": "s4white",
+           "stroke": "s4promptLine",
+           "strokeWidth": 1,
+           "radius": 11,
+           "shadow": "soft"
+          },
+          "box": [
+           3.4701,
+           1.9366,
+           8.194,
+           0.7608
+          ]
+         },
+         {
+          "surface": {
+           "fill": "s4white",
+           "stroke": "s4uiLine",
+           "strokeWidth": 0.75,
+           "radius": 8
+          },
+          "column": {
+           "items": [
+            {
+             "column": {
+              "surface": {
+               "fill": "s4lav",
+               "radius": 6
+              },
+              "width": 22,
+              "height": 22,
+              "align": "center",
+              "justify": "center",
+              "items": [
+               {
+                "icon": "search",
+                "tone": "s4violet",
+                "size": 13,
+                "width": 13,
+                "height": 13
+               }
+              ]
+             }
+            },
+            {
+             "text": "Research",
+             "role": "caption",
+             "size": 10.5,
+             "font": "Helvetica Neue",
+             "weight": "bold",
+             "tone": "s4uiText"
+            },
+            {
+             "text": "Cited answers",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s4uiMuted",
+             "leading": 1.15
+            }
+           ],
+           "pad": [
+            8,
+            7,
+            6,
+            7
+           ],
+           "gap": 4
+          },
+          "box": [
+           3.3134,
+           3.0778,
+           2.0149,
+           2.1095
+          ]
+         },
+         {
+          "surface": {
+           "fill": "s4white",
+           "stroke": "s4uiLine",
+           "strokeWidth": 0.75,
+           "radius": 8
+          },
+          "column": {
+           "items": [
+            {
+             "column": {
+              "surface": {
+               "fill": "s4skyTint",
+               "radius": 6
+              },
+              "width": 22,
+              "height": 22,
+              "align": "center",
+              "justify": "center",
+              "items": [
+               {
+                "icon": "pen-line",
+                "tone": "s4sky",
+                "size": 13,
+                "width": 13,
+                "height": 13
+               }
+              ]
+             }
+            },
+            {
+             "text": "Create",
+             "role": "caption",
+             "size": 10.5,
+             "font": "Helvetica Neue",
+             "weight": "bold",
+             "tone": "s4uiText"
+            },
+            {
+             "text": "Docs & slides",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s4uiMuted",
+             "leading": 1.15
+            }
+           ],
+           "pad": [
+            8,
+            7,
+            6,
+            7
+           ],
+           "gap": 4
+          },
+          "box": [
+           5.4851,
+           3.0778,
+           2.0149,
+           2.1095
+          ]
+         },
+         {
+          "surface": {
+           "fill": "s4white",
+           "stroke": "s4uiLine",
+           "strokeWidth": 0.75,
+           "radius": 8
+          },
+          "column": {
+           "items": [
+            {
+             "column": {
+              "surface": {
+               "fill": "s4roseTint",
+               "radius": 6
+              },
+              "width": 22,
+              "height": 22,
+              "align": "center",
+              "justify": "center",
+              "items": [
+               {
+                "icon": "chart-line",
+                "tone": "s4rose",
+                "size": 13,
+                "width": 13,
+                "height": 13
+               }
+              ]
+             }
+            },
+            {
+             "text": "Analyze",
+             "role": "caption",
+             "size": 10.5,
+             "font": "Helvetica Neue",
+             "weight": "bold",
+             "tone": "s4uiText"
+            },
+            {
+             "text": "Live insights",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s4uiMuted",
+             "leading": 1.15
+            }
+           ],
+           "pad": [
+            8,
+            7,
+            6,
+            7
+           ],
+           "gap": 4
+          },
+          "box": [
+           7.6567,
+           3.0778,
+           2.0149,
+           2.1095
+          ]
+         },
+         {
+          "surface": {
+           "fill": "s4white",
+           "stroke": "s4uiLine",
+           "strokeWidth": 0.75,
+           "radius": 8
+          },
+          "column": {
+           "items": [
+            {
+             "column": {
+              "surface": {
+               "fill": "s4mintTint",
+               "radius": 6
+              },
+              "width": 22,
+              "height": 22,
+              "align": "center",
+              "justify": "center",
+              "items": [
+               {
+                "icon": "workflow",
+                "tone": "s4mint",
+                "size": 13,
+                "width": 13,
+                "height": 13
+               }
+              ]
+             }
+            },
+            {
+             "text": "Automate",
+             "role": "caption",
+             "size": 10.5,
+             "font": "Helvetica Neue",
+             "weight": "bold",
+             "tone": "s4uiText"
+            },
+            {
+             "text": "Hands-off flows",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s4uiMuted",
+             "leading": 1.15
+            }
+           ],
+           "pad": [
+            8,
+            7,
+            6,
+            7
+           ],
+           "gap": 4
+          },
+          "box": [
+           9.8284,
+           3.0778,
+           2.0149,
+           2.1095
+          ]
+         },
+         {
+          "text": "Recent   ·   Q3 launch plan   ·   Market scan",
+          "role": "caption",
+          "size": 10,
+          "font": "Helvetica Neue",
+          "tone": "s4uiMuted",
+          "box": [
+           3.3134,
+           5.4294,
+           8.5299,
+           0.415
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s4white",
+        "radius": 4
+       },
+       "box": [
+        6.3924,
+        0.9969,
+        5.2151,
+        3.2031
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s4white",
+        "radius": 12,
+        "shadow": "soft"
+       },
+       "row": {
+        "items": [
+         {
+          "column": {
+           "surface": {
+            "fill": "s4mintTint",
+            "radius": 100
+           },
+           "width": 28,
+           "height": 28,
+           "align": "center",
+           "justify": "center",
+           "items": [
+            {
+             "icon": "check",
+             "tone": "s4mint",
+             "size": 14,
+             "width": 14,
+             "height": 14,
+             "strokeWidth": 3
+            }
+           ]
+          }
+         },
+         {
+          "column": {
+           "gap": 1,
+           "grow": 1,
+           "items": [
+            {
+             "text": "Launch plan ready",
+             "role": "caption",
+             "size": 10.5,
+             "font": "Helvetica Neue",
+             "weight": "bold",
+             "tone": "s4ink"
+            },
+            {
+             "text": "Drafted in 12 seconds",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s4gray"
+            }
+           ]
+          }
+         }
+        ],
+        "pad": [
+         0,
+         10,
+         0,
+         10
+        ],
+        "gap": 8,
+        "align": "center"
+       },
+       "box": [
+        5.546,
+        4.0431,
+        2.1405,
+        0.5908
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s4white",
+        "radius": 12,
+        "shadow": "soft"
+       },
+       "row": {
+        "items": [
+         {
+          "column": {
+           "surface": {
+            "fill": "s4lav",
+            "radius": 100
+           },
+           "width": 26,
+           "height": 26,
+           "align": "center",
+           "justify": "center",
+           "items": [
+            {
+             "icon": "bot",
+             "tone": "s4violet",
+             "size": 14,
+             "width": 14,
+             "height": 14
+            }
+           ]
+          }
+         },
+         {
+          "column": {
+           "gap": 1,
+           "grow": 1,
+           "items": [
+            {
+             "text": "3 agents running",
+             "role": "caption",
+             "size": 10.5,
+             "font": "Helvetica Neue",
+             "weight": "bold",
+             "tone": "s4ink"
+            },
+            {
+             "text": "Market research",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s4gray"
+            }
+           ]
+          }
+         }
+        ],
+        "pad": [
+         0,
+         9,
+         0,
+         9
+        ],
+        "gap": 7,
+        "align": "center"
+       },
+       "box": [
+        9.9049,
+        0.5169,
+        2.0919,
+        0.5169
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "promise",
+   "message": "NOVA removes context switching between ideas and actions.",
+   "background": "s4white",
+   "notes": "Fictional demonstration data. NOVA removes context switching between ideas and actions.",
+   "compose": {
+    "free": {
+     "items": [
+      {
+       "text": "PRODUCT LAUNCH",
+       "role": "label",
+       "size": 10.5,
+       "font": "Helvetica Neue",
+       "tone": "s4violet",
+       "weight": "bold",
+       "box": [
+        0.0,
+        0.0,
+        9.7298,
+        0.2308
+       ]
+      },
+      {
+       "text": "Your ideas should move faster than your tabs.",
+       "role": "title",
+       "size": 30,
+       "font": "Helvetica Neue",
+       "tone": "s4ink",
+       "weight": "bold",
+       "box": [
+        0.0,
+        0.4431,
+        11.9968,
+        0.6
+       ]
+      },
+      {
+       "text": "NOVA brings context, creation and execution into one workspace.",
+       "role": "small",
+       "size": 15,
+       "font": "Helvetica Neue",
+       "tone": "s4gray",
+       "box": [
+        0.0,
+        1.08,
+        11.4811,
+        0.4615
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s4uiLine",
+       "box": [
+        0.0,
+        5.7737,
+        11.9968,
+        0.0096
+       ]
+      },
+      {
+       "text": "NOVA — Your AI Workspace  ·  Illustrative demo",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s4gray",
+       "box": [
+        0.0,
+        5.9077,
+        10.1189,
+        0.2308
+       ]
+      },
+      {
+       "text": "02 / 05",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s4gray",
+       "align": "right",
+       "box": [
+        10.9946,
+        5.9077,
+        1.0022,
+        0.2308
+       ]
+      },
+      {
+       "text": "Less switching.\nMore making.",
+       "role": "display",
+       "size": 42,
+       "font": "Helvetica Neue",
+       "tone": "s4ink",
+       "weight": "bold",
+       "leading": 1.08,
+       "box": [
+        0.0,
+        2.0677,
+        5.3514,
+        1.5231
+       ]
+      },
+      {
+       "text": "Keep your research, drafts, data and next actions connected.",
+       "role": "body",
+       "size": 20,
+       "font": "Helvetica Neue",
+       "tone": "s4gray",
+       "box": [
+        0.0,
+        3.9692,
+        5.0595,
+        0.8308
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "One context",
+          "role": "h3",
+          "size": 19,
+          "font": "Helvetica Neue",
+          "tone": "s4violet",
+          "weight": "bold",
+          "box": [
+           0.5329,
+           0.6593,
+           10.9342,
+           2.3077
+          ]
+         },
+         {
+          "text": "Knowledge follows the work.",
+          "role": "small",
+          "size": 12,
+          "font": "Helvetica Neue",
+          "tone": "s4gray",
+          "box": [
+           0.5329,
+           3.4286,
+           10.9342,
+           1.7802
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s4lav",
+        "radius": 10
+       },
+       "box": [
+        6.0811,
+        1.9846,
+        5.9157,
+        0.84
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "One canvas",
+          "role": "h3",
+          "size": 19,
+          "font": "Helvetica Neue",
+          "tone": "s4violet",
+          "weight": "bold",
+          "box": [
+           0.5329,
+           0.6593,
+           10.9342,
+           2.3077
+          ]
+         },
+         {
+          "text": "Ideas become usable artifacts.",
+          "role": "small",
+          "size": 12,
+          "font": "Helvetica Neue",
+          "tone": "s4gray",
+          "box": [
+           0.5329,
+           3.4286,
+           10.9342,
+           1.7802
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s4lav",
+        "radius": 10
+       },
+       "box": [
+        6.0811,
+        3.0277,
+        5.9157,
+        0.84
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "One flow",
+          "role": "h3",
+          "size": 19,
+          "font": "Helvetica Neue",
+          "tone": "s4violet",
+          "weight": "bold",
+          "box": [
+           0.5329,
+           0.6593,
+           10.9342,
+           2.3077
+          ]
+         },
+         {
+          "text": "Actions continue after the draft.",
+          "role": "small",
+          "size": 12,
+          "font": "Helvetica Neue",
+          "tone": "s4gray",
+          "box": [
+           0.5329,
+           3.4286,
+           10.9342,
+           1.7802
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s4lav",
+        "radius": 10
+       },
+       "box": [
+        6.0811,
+        4.0708,
+        5.9157,
+        0.84
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "capabilities",
+   "message": "Research, create, analyze and automate share one canvas.",
+   "background": "s4white",
+   "notes": "Fictional demonstration data. Research, create, analyze and automate share one canvas.",
+   "compose": {
+    "free": {
+     "items": [
+      {
+       "text": "PRODUCT LAUNCH",
+       "role": "label",
+       "size": 10.5,
+       "font": "Helvetica Neue",
+       "tone": "s4violet",
+       "weight": "bold",
+       "box": [
+        0.0,
+        0.0,
+        9.7298,
+        0.2308
+       ]
+      },
+      {
+       "text": "Four capabilities. One connected canvas.",
+       "role": "title",
+       "size": 30,
+       "font": "Helvetica Neue",
+       "tone": "s4ink",
+       "weight": "bold",
+       "box": [
+        0.0,
+        0.4431,
+        11.9968,
+        0.6
+       ]
+      },
+      {
+       "text": "Every capability builds on the context already in your workspace.",
+       "role": "small",
+       "size": 15,
+       "font": "Helvetica Neue",
+       "tone": "s4gray",
+       "box": [
+        0.0,
+        1.08,
+        11.4811,
+        0.4615
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s4uiLine",
+       "box": [
+        0.0,
+        5.7737,
+        11.9968,
+        0.0096
+       ]
+      },
+      {
+       "text": "NOVA — Your AI Workspace  ·  Illustrative demo",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s4gray",
+       "box": [
+        0.0,
+        5.9077,
+        10.1189,
+        0.2308
+       ]
+      },
+      {
+       "text": "03 / 05",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s4gray",
+       "align": "right",
+       "box": [
+        10.9946,
+        5.9077,
+        1.0022,
+        0.2308
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "icon": "search",
+          "tone": "s4violet",
+          "size": 25,
+          "width": 25,
+          "height": 25,
+          "box": [
+           0.5545,
+           0.9259,
+           0.7129,
+           1.3333
+          ]
+         },
+         {
+          "text": "Research",
+          "role": "h3",
+          "size": 24,
+          "font": "Helvetica Neue",
+          "tone": "s4ink",
+          "weight": "bold",
+          "box": [
+           1.7822,
+           0.7407,
+           9.604,
+           1.7778
+          ]
+         },
+         {
+          "text": "Find evidence and keep sources attached.",
+          "role": "body",
+          "size": 16,
+          "font": "Helvetica Neue",
+          "tone": "s4gray",
+          "box": [
+           1.7822,
+           3.2593,
+           9.604,
+           2.037
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s4lav",
+        "radius": 10
+       },
+       "box": [
+        0.0,
+        1.8185,
+        5.8962,
+        1.4954
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "icon": "pen-line",
+          "tone": "s4violet",
+          "size": 25,
+          "width": 25,
+          "height": 25,
+          "box": [
+           0.5545,
+           0.9259,
+           0.7129,
+           1.3333
+          ]
+         },
+         {
+          "text": "Create",
+          "role": "h3",
+          "size": 24,
+          "font": "Helvetica Neue",
+          "tone": "s4ink",
+          "weight": "bold",
+          "box": [
+           1.7822,
+           0.7407,
+           9.604,
+           1.7778
+          ]
+         },
+         {
+          "text": "Turn raw thinking into documents and slides.",
+          "role": "body",
+          "size": 16,
+          "font": "Helvetica Neue",
+          "tone": "s4gray",
+          "box": [
+           1.7822,
+           3.2593,
+           9.604,
+           2.037
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s4lav",
+        "radius": 10
+       },
+       "box": [
+        6.1006,
+        1.8185,
+        5.8962,
+        1.4954
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "icon": "chart-line",
+          "tone": "s4violet",
+          "size": 25,
+          "width": 25,
+          "height": 25,
+          "box": [
+           0.5545,
+           0.9259,
+           0.7129,
+           1.3333
+          ]
+         },
+         {
+          "text": "Analyze",
+          "role": "h3",
+          "size": 24,
+          "font": "Helvetica Neue",
+          "tone": "s4ink",
+          "weight": "bold",
+          "box": [
+           1.7822,
+           0.7407,
+           9.604,
+           1.7778
+          ]
+         },
+         {
+          "text": "Ask questions of data and explain the result.",
+          "role": "body",
+          "size": 16,
+          "font": "Helvetica Neue",
+          "tone": "s4gray",
+          "box": [
+           1.7822,
+           3.2593,
+           9.604,
+           2.037
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s4lav",
+        "radius": 10
+       },
+       "box": [
+        0.0,
+        3.5077,
+        5.8962,
+        1.4954
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "icon": "workflow",
+          "tone": "s4violet",
+          "size": 25,
+          "width": 25,
+          "height": 25,
+          "box": [
+           0.5545,
+           0.9259,
+           0.7129,
+           1.3333
+          ]
+         },
+         {
+          "text": "Automate",
+          "role": "h3",
+          "size": 24,
+          "font": "Helvetica Neue",
+          "tone": "s4ink",
+          "weight": "bold",
+          "box": [
+           1.7822,
+           0.7407,
+           9.604,
+           1.7778
+          ]
+         },
+         {
+          "text": "Hand off repeatable steps to governed agents.",
+          "role": "body",
+          "size": 16,
+          "font": "Helvetica Neue",
+          "tone": "s4gray",
+          "box": [
+           1.7822,
+           3.2593,
+           9.604,
+           2.037
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s4lav",
+        "radius": 10
+       },
+       "box": [
+        6.1006,
+        3.5077,
+        5.8962,
+        1.4954
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "workflow",
+   "message": "A connected workflow turns market research into a launch plan.",
+   "background": "s4white",
+   "notes": "Fictional demonstration data. A connected workflow turns market research into a launch plan.",
+   "compose": {
+    "free": {
+     "items": [
+      {
+       "text": "PRODUCT LAUNCH",
+       "role": "label",
+       "size": 10.5,
+       "font": "Helvetica Neue",
+       "tone": "s4violet",
+       "weight": "bold",
+       "box": [
+        0.0,
+        0.0,
+        9.7298,
+        0.2308
+       ]
+      },
+      {
+       "text": "A launch plan, from first thought to next action.",
+       "role": "title",
+       "size": 30,
+       "font": "Helvetica Neue",
+       "tone": "s4ink",
+       "weight": "bold",
+       "box": [
+        0.0,
+        0.4431,
+        11.9968,
+        0.6
+       ]
+      },
+      {
+       "text": "An illustrative workflow: research a market, create a plan, then hand off the follow-through.",
+       "role": "small",
+       "size": 15,
+       "font": "Helvetica Neue",
+       "tone": "s4gray",
+       "box": [
+        0.0,
+        1.08,
+        11.4811,
+        0.4615
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s4uiLine",
+       "box": [
+        0.0,
+        5.7737,
+        11.9968,
+        0.0096
+       ]
+      },
+      {
+       "text": "NOVA — Your AI Workspace  ·  Illustrative demo",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s4gray",
+       "box": [
+        0.0,
+        5.9077,
+        10.1189,
+        0.2308
+       ]
+      },
+      {
+       "text": "04 / 05",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s4gray",
+       "align": "right",
+       "box": [
+        10.9946,
+        5.9077,
+        1.0022,
+        0.2308
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "01",
+          "role": "small",
+          "size": 13,
+          "font": "Helvetica Neue",
+          "tone": "s4violet",
+          "weight": "bold",
+          "box": [
+           0.8392,
+           0.5143,
+           10.3217,
+           1.0
+          ]
+         },
+         {
+          "text": "Ask",
+          "role": "h3",
+          "size": 18,
+          "font": "Helvetica Neue",
+          "tone": "s4ink",
+          "weight": "bold",
+          "box": [
+           0.8392,
+           2.0,
+           10.3217,
+           1.3714
+          ]
+         },
+         {
+          "text": "“Explore the market for our new product.”",
+          "role": "small",
+          "size": 13,
+          "font": "Helvetica Neue",
+          "tone": "s4gray",
+          "box": [
+           0.8392,
+           3.5143,
+           10.3217,
+           1.7714
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s4lav",
+        "radius": 10
+       },
+       "box": [
+        0.0,
+        2.0308,
+        2.7827,
+        1.9385
+       ]
+      },
+      {
+       "shape": "chevron",
+       "decorative": true,
+       "fill": "s4violet",
+       "box": [
+        2.8508,
+        2.8338,
+        0.1459,
+        0.2215
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "02",
+          "role": "small",
+          "size": 13,
+          "font": "Helvetica Neue",
+          "tone": "s4violet",
+          "weight": "bold",
+          "box": [
+           0.8392,
+           0.5143,
+           10.3217,
+           1.0
+          ]
+         },
+         {
+          "text": "Shape",
+          "role": "h3",
+          "size": 18,
+          "font": "Helvetica Neue",
+          "tone": "s4ink",
+          "weight": "bold",
+          "box": [
+           0.8392,
+           2.0,
+           10.3217,
+           1.3714
+          ]
+         },
+         {
+          "text": "Combine source evidence into a launch brief.",
+          "role": "small",
+          "size": 13,
+          "font": "Helvetica Neue",
+          "tone": "s4gray",
+          "box": [
+           0.8392,
+           3.5143,
+           10.3217,
+           1.7714
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s4lav",
+        "radius": 10
+       },
+       "box": [
+        3.0746,
+        2.0308,
+        2.7827,
+        1.9385
+       ]
+      },
+      {
+       "shape": "chevron",
+       "decorative": true,
+       "fill": "s4violet",
+       "box": [
+        5.9254,
+        2.8338,
+        0.1459,
+        0.2215
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "03",
+          "role": "small",
+          "size": 13,
+          "font": "Helvetica Neue",
+          "tone": "s4violet",
+          "weight": "bold",
+          "box": [
+           0.8392,
+           0.5143,
+           10.3217,
+           1.0
+          ]
+         },
+         {
+          "text": "Create",
+          "role": "h3",
+          "size": 18,
+          "font": "Helvetica Neue",
+          "tone": "s4ink",
+          "weight": "bold",
+          "box": [
+           0.8392,
+           2.0,
+           10.3217,
+           1.3714
+          ]
+         },
+         {
+          "text": "Draft the launch plan and supporting assets.",
+          "role": "small",
+          "size": 13,
+          "font": "Helvetica Neue",
+          "tone": "s4gray",
+          "box": [
+           0.8392,
+           3.5143,
+           10.3217,
+           1.7714
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s4lav",
+        "radius": 10
+       },
+       "box": [
+        6.1492,
+        2.0308,
+        2.7827,
+        1.9385
+       ]
+      },
+      {
+       "shape": "chevron",
+       "decorative": true,
+       "fill": "s4violet",
+       "box": [
+        9.0,
+        2.8338,
+        0.1459,
+        0.2215
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "04",
+          "role": "small",
+          "size": 13,
+          "font": "Helvetica Neue",
+          "tone": "s4violet",
+          "weight": "bold",
+          "box": [
+           0.8392,
+           0.5143,
+           10.3217,
+           1.0
+          ]
+         },
+         {
+          "text": "Run",
+          "role": "h3",
+          "size": 18,
+          "font": "Helvetica Neue",
+          "tone": "s4ink",
+          "weight": "bold",
+          "box": [
+           0.8392,
+           2.0,
+           10.3217,
+           1.3714
+          ]
+         },
+         {
+          "text": "Track actions with approvals and clear owners.",
+          "role": "small",
+          "size": 13,
+          "font": "Helvetica Neue",
+          "tone": "s4gray",
+          "box": [
+           0.8392,
+           3.5143,
+           10.3217,
+           1.7714
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s4lav",
+        "radius": 10
+       },
+       "box": [
+        9.2238,
+        2.0308,
+        2.7827,
+        1.9385
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "From idea to execution without leaving your workspace.",
+          "role": "h3",
+          "size": 17,
+          "font": "Helvetica Neue",
+          "tone": "s4violet",
+          "weight": "bold",
+          "box": [
+           0.253,
+           1.3151,
+           11.4842,
+           3.2877
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s4lav",
+        "radius": 10
+       },
+       "box": [
+        0.0,
+        4.8185,
+        11.9968,
+        0.6738
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "closing",
+   "message": "NOVA turns ideas into connected action.",
+   "background": "s4white",
+   "notes": "Fictional demonstration data. NOVA turns ideas into connected action.",
+   "compose": {
+    "free": {
+     "items": [
+      {
+       "text": "NOVA",
+       "role": "h3",
+       "size": 18,
+       "font": "Helvetica Neue",
+       "tone": "s4violet",
+       "weight": "bold",
+       "align": "center",
+       "box": [
+        0.0,
+        0.1385,
+        11.9968,
+        0.3692
+       ]
+      },
+      {
+       "text": "Make room for",
+       "role": "title",
+       "size": 52,
+       "font": "Helvetica Neue",
+       "tone": "s4ink",
+       "weight": "bold",
+       "align": "center",
+       "box": [
+        0.4865,
+        1.5046,
+        11.0238,
+        0.7846
+       ]
+      },
+      {
+       "text": "your next big idea.",
+       "role": "display",
+       "size": 52,
+       "font": "Helvetica Neue",
+       "tone": "s4violet",
+       "weight": "bold",
+       "align": "center",
+       "box": [
+        0.4865,
+        2.3354,
+        11.0238,
+        0.8308
+       ]
+      },
+      {
+       "text": "Research. Create. Analyze. Automate.",
+       "role": "body",
+       "size": 21,
+       "font": "Helvetica Neue",
+       "tone": "s4gray",
+       "align": "center",
+       "box": [
+        1.4595,
+        3.5538,
+        9.0779,
+        0.6462
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "Your AI workspace",
+          "role": "h3",
+          "size": 18,
+          "font": "Helvetica Neue",
+          "tone": "s4violet",
+          "weight": "bold",
+          "align": "center",
+          "box": [
+           0.5955,
+           1.3433,
+           10.8089,
+           3.2239
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s4lav",
+        "radius": 10
+       },
+       "box": [
+        4.0378,
+        4.6615,
+        3.9211,
+        0.6185
+       ]
+      },
+      {
+       "text": "Fictional product concept  ·  Slide Agent showcase  ·  05 / 05",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s4gray",
+       "align": "center",
+       "box": [
+        0.0,
+        5.9077,
+        11.9968,
+        0.2308
+       ]
+      }
+     ]
+    }
+   }
+  }
+ ]
+}

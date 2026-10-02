@@ -1,0 +1,2544 @@
+{
+ "schema": "slide-agent.intent/1",
+ "brief": {
+  "title": "Project Atlas — Q4 Executive Review",
+  "audience": "Executive dashboard audience",
+  "goal": "Approve a $0.6M capacity reserve by December 6.",
+  "format": "16:9"
+ },
+ "direction": {
+  "concept": "Executive dashboard with Avenir Next display typography, an intentional five-slide narrative and varied compositions.",
+  "fit": "ask"
+ },
+ "design": {
+  "language": {
+   "color": {
+    "palette": {
+     "s1bg": "#F3F5F9",
+     "s1white": "#FFFFFF",
+     "s1navy": "#0F1B33",
+     "s1slate": "#5B6478",
+     "s1track": "#E7EBF2",
+     "s1blue": "#2563EB",
+     "s1blueSoft": "#E9F0FE",
+     "s1sky": "#9CC3FF",
+     "s1violet": "#7C3AED",
+     "s1violetSoft": "#F1EAFE",
+     "s1amber": "#E08A0B",
+     "s1amberIcon": "#B86A00",
+     "s1amberSoft": "#FDF1DE",
+     "s1amberPill": "#FBE2BE",
+     "s1amberText": "#9A4D06",
+     "s1green": "#16A34A",
+     "s1greenSoft": "#E6F5EC",
+     "s1greenText": "#157A3B",
+     "s1red": "#DC2626",
+     "s1redSoft": "#FDEEEE",
+     "s1redText": "#B91C1C",
+     "s1planned": "#B8C0CC"
+    },
+    "roles": {
+     "background": "s1bg",
+     "surface": "s1white",
+     "text": "s1navy",
+     "muted": "s1slate",
+     "accent": "s1blue",
+     "rule": "s1track"
+    },
+    "data": [
+     "s1blue",
+     "s1navy"
+    ]
+   },
+   "type": {
+    "display": {
+     "family": "Avenir Next",
+     "weight": 700,
+     "tracking": -0.01
+    },
+    "body": {
+     "family": "Avenir Next",
+     "weight": 400
+    },
+    "mono": {
+     "family": "Menlo"
+    },
+    "scale": {
+     "base": 16,
+     "ratio": 1.25
+    }
+   },
+   "space": {
+    "unit": 8,
+    "margin": 36,
+    "gutter": 16
+   },
+   "grid": {
+    "columns": 12,
+    "rows": 6
+   },
+   "shape": {
+    "radius": 10,
+    "stroke": 0
+   },
+   "texture": [],
+   "charts": {
+    "axis": "hairline",
+    "gridlines": "none",
+    "labels": "none",
+    "highlight": "s1blue",
+    "legend": "none"
+   },
+   "chrome": {
+    "slideNumber": false
+   }
+  }
+ },
+ "data": {},
+ "slides": [
+  {
+   "id": "executive-dashboard",
+   "message": "Project Atlas is on track; GPU capacity is the one risk to the Q2 launch",
+   "background": "s1bg",
+   "notes": "Executive / project-management dashboard: KPI cards, progress rings, workstream bars, a milestone timeline, the key risk and the decision needed.",
+   "compose": {
+    "free": {
+     "items": [
+      {
+       "icon": "mountain",
+       "tone": "s1blue",
+       "size": 18,
+       "width": 18,
+       "height": 18,
+       "box": [
+        0.0,
+        0.0277,
+        0.253,
+        0.24
+       ]
+      },
+      {
+       "text": "ATLAS",
+       "role": "label",
+       "font": "Avenir Next",
+       "size": 12,
+       "weight": "bold",
+       "tone": "s1navy",
+       "tracking": 0.25,
+       "valign": "middle",
+       "box": [
+        0.3308,
+        0.0,
+        1.4595,
+        0.2769
+       ]
+      },
+      {
+       "text": "Q4 2026     |     Steering Committee     |     28 Nov",
+       "role": "label",
+       "font": "Avenir Next",
+       "size": 11,
+       "tone": "s1slate",
+       "align": "right",
+       "valign": "middle",
+       "box": [
+        6.1589,
+        0.0,
+        5.8379,
+        0.2769
+       ]
+      },
+      {
+       "text": "Project Atlas — Q4 Executive Status",
+       "role": "title",
+       "font": "Avenir Next",
+       "size": 30,
+       "weight": "bold",
+       "tone": "s1navy",
+       "box": [
+        0.0,
+        0.3692,
+        9.7298,
+        0.5723
+       ]
+      },
+      {
+       "text": "Building the next-generation AI platform for a more productive enterprise",
+       "role": "small",
+       "font": "Avenir Next",
+       "size": 13,
+       "tone": "s1slate",
+       "box": [
+        0.0,
+        0.9231,
+        9.7298,
+        0.2954
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "icon": "circle-check",
+          "tone": "s1greenText",
+          "size": 36,
+          "width": 36,
+          "height": 36,
+          "strokeWidth": 2.25,
+          "box": [
+           1.0638,
+           1.8462,
+           2.0457,
+           2.3077
+          ]
+         },
+         {
+          "text": "ON TRACK",
+          "role": "h3",
+          "font": "Avenir Next",
+          "size": 20,
+          "weight": "bold",
+          "tone": "s1greenText",
+          "tracking": 0.04,
+          "box": [
+           3.7641,
+           1.1077,
+           7.7736,
+           1.8462
+          ]
+         },
+         {
+          "text": "Overall project health",
+          "role": "small",
+          "font": "Avenir Next",
+          "size": 12,
+          "tone": "s1navy",
+          "box": [
+           3.7641,
+           2.9077,
+           7.7736,
+           1.2923
+          ]
+         },
+         {
+          "text": "Unchanged since Q3",
+          "role": "caption",
+          "font": "Avenir Next",
+          "size": 10.5,
+          "tone": "s1slate",
+          "box": [
+           3.7641,
+           4.0615,
+           7.7736,
+           1.2
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s1greenSoft",
+        "radius": 10
+       },
+       "box": [
+        0.0,
+        1.3846,
+        2.8537,
+        1.2
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "Completion",
+          "role": "small",
+          "font": "Avenir Next",
+          "size": 12,
+          "tone": "s1slate",
+          "box": [
+           1.0638,
+           0.9231,
+           6.9553,
+           1.2
+          ]
+         },
+         {
+          "text": "72%",
+          "role": "display",
+          "font": "Avenir Next",
+          "size": 36,
+          "weight": "bold",
+          "tone": "s1navy",
+          "box": [
+           1.0638,
+           2.0308,
+           6.9553,
+           2.8615
+          ]
+         },
+         {
+          "text": "of scope delivered",
+          "role": "caption",
+          "font": "Avenir Next",
+          "size": 11,
+          "tone": "s1slate",
+          "box": [
+           1.0638,
+           4.5231,
+           7.569,
+           1.1077
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "none",
+          "stroke": "s1track",
+          "strokeWidth": 7,
+          "box": [
+           7.61,
+           1.1077,
+           3.3549,
+           3.7846
+          ]
+         },
+         {
+          "shape": {
+           "path": "M0.5 0 A0.5 0.5 0 1 1 0.0089 0.5937"
+          },
+          "decorative": true,
+          "fill": "none",
+          "stroke": "s1blue",
+          "strokeWidth": 7,
+          "box": [
+           7.61,
+           1.1077,
+           3.3549,
+           3.7846
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s1white",
+        "radius": 10,
+        "shadow": "soft"
+       },
+       "box": [
+        3.0483,
+        1.3846,
+        2.8537,
+        1.2
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "Budget used",
+          "role": "small",
+          "font": "Avenir Next",
+          "size": 12,
+          "tone": "s1slate",
+          "box": [
+           1.0638,
+           0.9231,
+           6.9553,
+           1.2
+          ]
+         },
+         {
+          "text": "64%",
+          "role": "display",
+          "font": "Avenir Next",
+          "size": 36,
+          "weight": "bold",
+          "tone": "s1navy",
+          "box": [
+           1.0638,
+           2.0308,
+           6.9553,
+           2.8615
+          ]
+         },
+         {
+          "text": "$4.1M of $6.4M",
+          "role": "caption",
+          "font": "Avenir Next",
+          "size": 11,
+          "tone": "s1slate",
+          "box": [
+           1.0638,
+           4.5231,
+           7.569,
+           1.1077
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "none",
+          "stroke": "s1track",
+          "strokeWidth": 7,
+          "box": [
+           7.61,
+           1.1077,
+           3.3549,
+           3.7846
+          ]
+         },
+         {
+          "shape": {
+           "path": "M0.5 0 A0.5 0.5 0 1 1 0.1147 0.8187"
+          },
+          "decorative": true,
+          "fill": "none",
+          "stroke": "s1violet",
+          "strokeWidth": 7,
+          "box": [
+           7.61,
+           1.1077,
+           3.3549,
+           3.7846
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s1white",
+        "radius": 10,
+        "shadow": "soft"
+       },
+       "box": [
+        6.0976,
+        1.3846,
+        2.8537,
+        1.2
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s1navy",
+        "radius": 10,
+        "shadow": "soft"
+       },
+       "column": {
+        "items": [
+         {
+          "text": "BOTTOM LINE",
+          "role": "label",
+          "size": 10,
+          "font": "Avenir Next",
+          "weight": "bold",
+          "tone": "s1sky",
+          "tracking": 0.2
+         },
+         {
+          "text": "MVP ships on time. GPU capacity is the one risk to a Q2 launch.",
+          "role": "body",
+          "size": 14,
+          "font": "Avenir Next",
+          "weight": "bold",
+          "tone": "s1white",
+          "leading": 1.25
+         }
+        ],
+        "pad": [
+         0,
+         18,
+         0,
+         18
+        ],
+        "gap": 6,
+        "justify": "center"
+       },
+       "box": [
+        9.146,
+        1.3846,
+        2.8537,
+        1.2
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "Workstream progress",
+          "role": "h3",
+          "font": "Avenir Next",
+          "size": 15,
+          "weight": "bold",
+          "tone": "s1navy",
+          "box": [
+           0.5508,
+           0.5053,
+           6.8852,
+           1.0105
+          ]
+         },
+         {
+          "text": "% complete  ·  status",
+          "role": "caption",
+          "font": "Avenir Next",
+          "size": 10,
+          "tone": "s1slate",
+          "align": "right",
+          "box": [
+           6.4918,
+           0.6,
+           5.0754,
+           0.8842
+          ]
+         },
+         {
+          "surface": {
+           "fill": "s1blueSoft",
+           "radius": 7
+          },
+          "column": {
+           "items": [
+            {
+             "icon": "package",
+             "tone": "s1blue",
+             "size": 13,
+             "width": 13,
+             "height": 13
+            }
+           ],
+           "align": "center",
+           "justify": "center"
+          },
+          "box": [
+           0.5508,
+           1.8316,
+           0.6689,
+           1.0737
+          ]
+         },
+         {
+          "text": "Product",
+          "role": "small",
+          "font": "Avenir Next",
+          "size": 12.5,
+          "tone": "s1navy",
+          "valign": "middle",
+          "box": [
+           1.4557,
+           1.8947,
+           2.8525,
+           0.9474
+          ]
+         },
+         {
+          "shape": "roundRect",
+          "decorative": true,
+          "fill": "s1track",
+          "radius": 3,
+          "box": [
+           4.4262,
+           2.2105,
+           4.5246,
+           0.3158
+          ]
+         },
+         {
+          "shape": "roundRect",
+          "decorative": true,
+          "fill": "s1blue",
+          "radius": 3,
+          "box": [
+           4.4262,
+           2.2105,
+           3.7102,
+           0.3158
+          ]
+         },
+         {
+          "text": "82%",
+          "role": "small",
+          "font": "Avenir Next",
+          "size": 12.5,
+          "weight": "bold",
+          "tone": "s1navy",
+          "align": "right",
+          "valign": "middle",
+          "box": [
+           9.0098,
+           1.8947,
+           1.082,
+           0.9474
+          ]
+         },
+         {
+          "surface": {
+           "fill": "s1greenSoft",
+           "radius": 100
+          },
+          "column": {
+           "items": [
+            {
+             "text": "On track",
+             "role": "caption",
+             "size": 10,
+             "font": "Avenir Next",
+             "weight": "bold",
+             "tone": "s1greenText",
+             "align": "center"
+            }
+           ],
+           "justify": "center"
+          },
+          "box": [
+           10.2689,
+           1.9895,
+           1.2984,
+           0.7579
+          ]
+         },
+         {
+          "surface": {
+           "fill": "s1violetSoft",
+           "radius": 7
+          },
+          "column": {
+           "items": [
+            {
+             "icon": "code",
+             "tone": "s1violet",
+             "size": 13,
+             "width": 13,
+             "height": 13
+            }
+           ],
+           "align": "center",
+           "justify": "center"
+          },
+          "box": [
+           0.5508,
+           3.1895,
+           0.6689,
+           1.0737
+          ]
+         },
+         {
+          "text": "Engineering",
+          "role": "small",
+          "font": "Avenir Next",
+          "size": 12.5,
+          "tone": "s1navy",
+          "valign": "middle",
+          "box": [
+           1.4557,
+           3.2526,
+           2.8525,
+           0.9474
+          ]
+         },
+         {
+          "shape": "roundRect",
+          "decorative": true,
+          "fill": "s1track",
+          "radius": 3,
+          "box": [
+           4.4262,
+           3.5684,
+           4.5246,
+           0.3158
+          ]
+         },
+         {
+          "shape": "roundRect",
+          "decorative": true,
+          "fill": "s1violet",
+          "radius": 3,
+          "box": [
+           4.4262,
+           3.5684,
+           3.3482,
+           0.3158
+          ]
+         },
+         {
+          "text": "74%",
+          "role": "small",
+          "font": "Avenir Next",
+          "size": 12.5,
+          "weight": "bold",
+          "tone": "s1navy",
+          "align": "right",
+          "valign": "middle",
+          "box": [
+           9.0098,
+           3.2526,
+           1.082,
+           0.9474
+          ]
+         },
+         {
+          "surface": {
+           "fill": "s1greenSoft",
+           "radius": 100
+          },
+          "column": {
+           "items": [
+            {
+             "text": "On track",
+             "role": "caption",
+             "size": 10,
+             "font": "Avenir Next",
+             "weight": "bold",
+             "tone": "s1greenText",
+             "align": "center"
+            }
+           ],
+           "justify": "center"
+          },
+          "box": [
+           10.2689,
+           3.3474,
+           1.2984,
+           0.7579
+          ]
+         },
+         {
+          "surface": {
+           "fill": "s1amberSoft",
+           "radius": 7
+          },
+          "column": {
+           "items": [
+            {
+             "icon": "megaphone",
+             "tone": "s1amberIcon",
+             "size": 13,
+             "width": 13,
+             "height": 13
+            }
+           ],
+           "align": "center",
+           "justify": "center"
+          },
+          "box": [
+           0.5508,
+           4.5474,
+           0.6689,
+           1.0737
+          ]
+         },
+         {
+          "text": "Go-to-Market",
+          "role": "small",
+          "font": "Avenir Next",
+          "size": 12.5,
+          "tone": "s1navy",
+          "valign": "middle",
+          "box": [
+           1.4557,
+           4.6105,
+           2.8525,
+           0.9474
+          ]
+         },
+         {
+          "shape": "roundRect",
+          "decorative": true,
+          "fill": "s1track",
+          "radius": 3,
+          "box": [
+           4.4262,
+           4.9263,
+           4.5246,
+           0.3158
+          ]
+         },
+         {
+          "shape": "roundRect",
+          "decorative": true,
+          "fill": "s1amber",
+          "radius": 3,
+          "box": [
+           4.4262,
+           4.9263,
+           2.6243,
+           0.3158
+          ]
+         },
+         {
+          "text": "58%",
+          "role": "small",
+          "font": "Avenir Next",
+          "size": 12.5,
+          "weight": "bold",
+          "tone": "s1navy",
+          "align": "right",
+          "valign": "middle",
+          "box": [
+           9.0098,
+           4.6105,
+           1.082,
+           0.9474
+          ]
+         },
+         {
+          "surface": {
+           "fill": "s1amberSoft",
+           "radius": 100
+          },
+          "column": {
+           "items": [
+            {
+             "text": "Watch",
+             "role": "caption",
+             "size": 10,
+             "font": "Avenir Next",
+             "weight": "bold",
+             "tone": "s1amberText",
+             "align": "center"
+            }
+           ],
+           "justify": "center"
+          },
+          "box": [
+           10.2689,
+           4.7053,
+           1.2984,
+           0.7579
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s1white",
+        "radius": 10,
+        "shadow": "soft"
+       },
+       "box": [
+        0.0,
+        2.7692,
+        5.9352,
+        1.7538
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "Key milestones",
+          "role": "h3",
+          "font": "Avenir Next",
+          "size": 15,
+          "weight": "bold",
+          "tone": "s1navy",
+          "box": [
+           0.5569,
+           0.5053,
+           6.9617,
+           1.0105
+          ]
+         },
+         {
+          "shape": "roundRect",
+          "decorative": true,
+          "fill": "s1track",
+          "radius": 2,
+          "box": [
+           0.7956,
+           2.9211,
+           10.4426,
+           0.1579
+          ]
+         },
+         {
+          "shape": "roundRect",
+          "decorative": true,
+          "fill": "s1blue",
+          "radius": 2,
+          "box": [
+           0.7956,
+           2.9211,
+           4.356,
+           0.1579
+          ]
+         },
+         {
+          "text": "Sep 30",
+          "role": "caption",
+          "font": "Avenir Next",
+          "size": 10.5,
+          "tone": "s1slate",
+          "align": "center",
+          "box": [
+           0.2984,
+           1.6421,
+           3.1825,
+           0.7579
+          ]
+         },
+         {
+          "surface": {
+           "fill": "s1green",
+           "radius": 100
+          },
+          "column": {
+           "items": [
+            {
+             "icon": "check",
+             "tone": "s1white",
+             "size": 12,
+             "width": 12,
+             "height": 12,
+             "strokeWidth": 3
+            }
+           ],
+           "align": "center",
+           "justify": "center"
+          },
+          "box": [
+           1.5912,
+           2.5263,
+           0.5967,
+           0.9474
+          ]
+         },
+         {
+          "text": "Foundation",
+          "role": "small",
+          "font": "Avenir Next",
+          "size": 13,
+          "weight": "bold",
+          "tone": "s1navy",
+          "align": "center",
+          "box": [
+           0.1989,
+           3.8526,
+           3.3814,
+           0.8842
+          ]
+         },
+         {
+          "text": "Complete",
+          "role": "caption",
+          "font": "Avenir Next",
+          "size": 10.5,
+          "tone": "s1greenText",
+          "align": "center",
+          "box": [
+           0.1989,
+           4.7053,
+           3.3814,
+           0.7579
+          ]
+         },
+         {
+          "text": "Dec 15",
+          "role": "caption",
+          "font": "Avenir Next",
+          "size": 10.5,
+          "tone": "s1slate",
+          "align": "center",
+          "box": [
+           4.4754,
+           1.6421,
+           3.1825,
+           0.7579
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "s1blueSoft",
+          "box": [
+           5.5694,
+           2.2105,
+           0.9945,
+           1.5789
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "s1blue",
+          "box": [
+           5.7683,
+           2.5263,
+           0.5967,
+           0.9474
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "s1white",
+          "box": [
+           5.9672,
+           2.8421,
+           0.1989,
+           0.3158
+          ]
+         },
+         {
+          "text": "MVP release",
+          "role": "small",
+          "font": "Avenir Next",
+          "size": 13,
+          "weight": "bold",
+          "tone": "s1navy",
+          "align": "center",
+          "box": [
+           4.3759,
+           3.8526,
+           3.3814,
+           0.8842
+          ]
+         },
+         {
+          "text": "In progress",
+          "role": "caption",
+          "font": "Avenir Next",
+          "size": 10.5,
+          "tone": "s1blue",
+          "align": "center",
+          "box": [
+           4.3759,
+           4.7053,
+           3.3814,
+           0.7579
+          ]
+         },
+         {
+          "text": "Feb 15",
+          "role": "caption",
+          "font": "Avenir Next",
+          "size": 10.5,
+          "tone": "s1slate",
+          "align": "center",
+          "box": [
+           8.6524,
+           1.6421,
+           3.1825,
+           0.7579
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "s1white",
+          "stroke": "s1planned",
+          "strokeWidth": 1.75,
+          "box": [
+           9.9851,
+           2.5895,
+           0.5172,
+           0.8211
+          ]
+         },
+         {
+          "text": "Public beta",
+          "role": "small",
+          "font": "Avenir Next",
+          "size": 13,
+          "weight": "bold",
+          "tone": "s1navy",
+          "align": "center",
+          "box": [
+           8.553,
+           3.8526,
+           3.3814,
+           0.8842
+          ]
+         },
+         {
+          "text": "Planned",
+          "role": "caption",
+          "font": "Avenir Next",
+          "size": 10.5,
+          "tone": "s1slate",
+          "align": "center",
+          "box": [
+           8.553,
+           4.7053,
+           3.3814,
+           0.7579
+          ]
+         },
+         {
+          "surface": {
+           "fill": "s1navy",
+           "radius": 100
+          },
+          "column": {
+           "items": [
+            {
+             "text": "TODAY",
+             "role": "caption",
+             "size": 10,
+             "font": "Avenir Next",
+             "weight": "bold",
+             "tone": "s1white",
+             "align": "center",
+             "tracking": 0.05
+            }
+           ],
+           "justify": "center"
+          },
+          "box": [
+           4.4953,
+           2.6526,
+           1.1537,
+           0.6947
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s1white",
+        "radius": 10,
+        "shadow": "soft"
+       },
+       "box": [
+        6.1297,
+        2.7692,
+        5.87,
+        1.7538
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "surface": {
+           "fill": "s1white",
+           "radius": 7
+          },
+          "column": {
+           "items": [
+            {
+             "icon": "triangle-alert",
+             "tone": "s1red",
+             "size": 19,
+             "width": 19,
+             "height": 19
+            }
+           ],
+           "align": "center",
+           "justify": "center"
+          },
+          "box": [
+           0.5508,
+           1.1143,
+           0.9049,
+           1.9714
+          ]
+         },
+         {
+          "text": "KEY RISK",
+          "role": "label",
+          "font": "Avenir Next",
+          "size": 10.5,
+          "weight": "bold",
+          "tone": "s1redText",
+          "tracking": 0.15,
+          "valign": "middle",
+          "box": [
+           1.8492,
+           0.9857,
+           2.5574,
+           1.1143
+          ]
+         },
+         {
+          "surface": {
+           "fill": "s1amberPill",
+           "radius": 100
+          },
+          "column": {
+           "items": [
+            {
+             "text": "Medium",
+             "role": "caption",
+             "size": 10,
+             "font": "Avenir Next",
+             "weight": "bold",
+             "tone": "s1amberText",
+             "align": "center"
+            }
+           ],
+           "justify": "center"
+          },
+          "box": [
+           3.9344,
+           1.0286,
+           1.5344,
+           1.0286
+          ]
+         },
+         {
+          "text": "GPU capacity from our third-party provider is not yet confirmed for Q1",
+          "role": "small",
+          "font": "Avenir Next",
+          "size": 13.5,
+          "weight": "bold",
+          "tone": "s1navy",
+          "leading": 1.2,
+          "box": [
+           1.8492,
+           2.2286,
+           9.7377,
+           2.1429
+          ]
+         },
+         {
+          "text": "If unresolved, the public beta slips four to six weeks",
+          "role": "caption",
+          "font": "Avenir Next",
+          "size": 11,
+          "tone": "s1slate",
+          "box": [
+           1.8492,
+           4.4143,
+           9.7377,
+           1.1143
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s1redSoft",
+        "radius": 10
+       },
+       "box": [
+        0.0,
+        4.7077,
+        5.9352,
+        1.2923
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "surface": {
+           "fill": "s1white",
+           "radius": 7
+          },
+          "column": {
+           "items": [
+            {
+             "icon": "gavel",
+             "tone": "s1blue",
+             "size": 19,
+             "width": 19,
+             "height": 19
+            }
+           ],
+           "align": "center",
+           "justify": "center"
+          },
+          "box": [
+           0.5569,
+           1.1143,
+           0.915,
+           1.9714
+          ]
+         },
+         {
+          "text": "NEXT DECISION",
+          "role": "label",
+          "font": "Avenir Next",
+          "size": 10.5,
+          "weight": "bold",
+          "tone": "s1blue",
+          "tracking": 0.15,
+          "valign": "middle",
+          "box": [
+           1.8697,
+           0.9857,
+           3.1825,
+           1.1143
+          ]
+         },
+         {
+          "surface": {
+           "fill": "s1white",
+           "radius": 100
+          },
+          "column": {
+           "items": [
+            {
+             "text": "By Dec 6",
+             "role": "caption",
+             "size": 10,
+             "font": "Avenir Next",
+             "weight": "bold",
+             "tone": "s1blue",
+             "align": "center"
+            }
+           ],
+           "justify": "center"
+          },
+          "box": [
+           5.1318,
+           1.0286,
+           1.7902,
+           1.0286
+          ]
+         },
+         {
+          "text": "Approve a $0.6M reserve for dedicated GPU capacity",
+          "role": "small",
+          "font": "Avenir Next",
+          "size": 13.5,
+          "weight": "bold",
+          "tone": "s1navy",
+          "leading": 1.2,
+          "box": [
+           1.8697,
+           2.2286,
+           9.6469,
+           2.1429
+          ]
+         },
+         {
+          "text": "Secures the Feb 15 beta and de-risks the Q2 launch",
+          "role": "caption",
+          "font": "Avenir Next",
+          "size": 11,
+          "tone": "s1slate",
+          "box": [
+           1.8697,
+           4.4143,
+           9.6469,
+           1.1143
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s1blueSoft",
+        "radius": 10
+       },
+       "box": [
+        6.1297,
+        4.7077,
+        5.87,
+        1.2923
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "workstreams",
+   "message": "Workstreams converge on a single capacity dependency.",
+   "background": "s1bg",
+   "notes": "Fictional demonstration data. Workstreams converge on a single capacity dependency.",
+   "compose": {
+    "free": {
+     "items": [
+      {
+       "text": "EXECUTIVE DASHBOARD",
+       "role": "label",
+       "size": 10.5,
+       "font": "Avenir Next",
+       "tone": "s1blue",
+       "weight": "bold",
+       "box": [
+        0.0,
+        0.0,
+        9.7298,
+        0.2308
+       ]
+      },
+      {
+       "text": "Three workstreams. One critical dependency.",
+       "role": "title",
+       "size": 30,
+       "font": "Avenir Next",
+       "tone": "s1navy",
+       "weight": "bold",
+       "box": [
+        0.0,
+        0.4431,
+        11.9968,
+        0.6
+       ]
+      },
+      {
+       "text": "Product is ready; engineering and go-to-market converge on the beta gate.",
+       "role": "small",
+       "size": 15,
+       "font": "Avenir Next",
+       "tone": "s1slate",
+       "box": [
+        0.0,
+        1.08,
+        11.4811,
+        0.4615
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s1track",
+       "box": [
+        0.0,
+        5.7737,
+        11.9968,
+        0.0096
+       ]
+      },
+      {
+       "text": "Project Atlas — Q4 Executive Review  ·  Illustrative demo",
+       "role": "caption",
+       "size": 10,
+       "font": "Avenir Next",
+       "tone": "s1slate",
+       "box": [
+        0.0,
+        5.9077,
+        10.1189,
+        0.2308
+       ]
+      },
+      {
+       "text": "02 / 05",
+       "role": "caption",
+       "size": 10,
+       "font": "Avenir Next",
+       "tone": "s1slate",
+       "align": "right",
+       "box": [
+        10.9946,
+        5.9077,
+        1.0022,
+        0.2308
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "Product",
+          "role": "h3",
+          "size": 20,
+          "font": "Avenir Next",
+          "tone": "s1navy",
+          "weight": "bold",
+          "box": [
+           0.7557,
+           0.5188,
+           10.4887,
+           1.015
+          ]
+         },
+         {
+          "text": "82%",
+          "role": "display",
+          "size": 42,
+          "font": "Avenir Next",
+          "tone": "s1navy",
+          "weight": "bold",
+          "box": [
+           0.7557,
+           1.8496,
+           10.4887,
+           1.6466
+          ]
+         },
+         {
+          "shape": "roundRect",
+          "decorative": true,
+          "fill": "s1track",
+          "radius": 3,
+          "box": [
+           0.7557,
+           3.6767,
+           10.4887,
+           0.3158
+          ]
+         },
+         {
+          "shape": "roundRect",
+          "decorative": true,
+          "fill": "s1blue",
+          "radius": 3,
+          "box": [
+           0.7557,
+           3.6767,
+           8.6007,
+           0.3158
+          ]
+         },
+         {
+          "text": "Validated scope and UX",
+          "role": "small",
+          "size": 12,
+          "font": "Avenir Next",
+          "tone": "s1slate",
+          "box": [
+           0.7557,
+           4.4662,
+           10.4887,
+           0.7895
+          ]
+         },
+         {
+          "text": "Owner: Maya Chen",
+          "role": "caption",
+          "size": 10.5,
+          "font": "Avenir Next",
+          "tone": "s1slate",
+          "box": [
+           0.7557,
+           5.3008,
+           10.4887,
+           0.5414
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s1white",
+        "radius": 10
+       },
+       "box": [
+        0.0,
+        1.8923,
+        3.8627,
+        2.4554
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "Engineering",
+          "role": "h3",
+          "size": 20,
+          "font": "Avenir Next",
+          "tone": "s1navy",
+          "weight": "bold",
+          "box": [
+           0.7557,
+           0.5188,
+           10.4887,
+           1.015
+          ]
+         },
+         {
+          "text": "74%",
+          "role": "display",
+          "size": 42,
+          "font": "Avenir Next",
+          "tone": "s1navy",
+          "weight": "bold",
+          "box": [
+           0.7557,
+           1.8496,
+           10.4887,
+           1.6466
+          ]
+         },
+         {
+          "shape": "roundRect",
+          "decorative": true,
+          "fill": "s1track",
+          "radius": 3,
+          "box": [
+           0.7557,
+           3.6767,
+           10.4887,
+           0.3158
+          ]
+         },
+         {
+          "shape": "roundRect",
+          "decorative": true,
+          "fill": "s1violet",
+          "radius": 3,
+          "box": [
+           0.7557,
+           3.6767,
+           7.7616,
+           0.3158
+          ]
+         },
+         {
+          "text": "API, inference and hardening",
+          "role": "small",
+          "size": 12,
+          "font": "Avenir Next",
+          "tone": "s1slate",
+          "box": [
+           0.7557,
+           4.4662,
+           10.4887,
+           0.7895
+          ]
+         },
+         {
+          "text": "Owner: Leo Martins",
+          "role": "caption",
+          "size": 10.5,
+          "font": "Avenir Next",
+          "tone": "s1slate",
+          "box": [
+           0.7557,
+           5.3008,
+           10.4887,
+           0.5414
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s1white",
+        "radius": 10
+       },
+       "box": [
+        4.067,
+        1.8923,
+        3.8627,
+        2.4554
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "Go-to-Market",
+          "role": "h3",
+          "size": 20,
+          "font": "Avenir Next",
+          "tone": "s1navy",
+          "weight": "bold",
+          "box": [
+           0.7557,
+           0.5188,
+           10.4887,
+           1.015
+          ]
+         },
+         {
+          "text": "58%",
+          "role": "display",
+          "size": 42,
+          "font": "Avenir Next",
+          "tone": "s1navy",
+          "weight": "bold",
+          "box": [
+           0.7557,
+           1.8496,
+           10.4887,
+           1.6466
+          ]
+         },
+         {
+          "shape": "roundRect",
+          "decorative": true,
+          "fill": "s1track",
+          "radius": 3,
+          "box": [
+           0.7557,
+           3.6767,
+           10.4887,
+           0.3158
+          ]
+         },
+         {
+          "shape": "roundRect",
+          "decorative": true,
+          "fill": "s1amber",
+          "radius": 3,
+          "box": [
+           0.7557,
+           3.6767,
+           6.0834,
+           0.3158
+          ]
+         },
+         {
+          "text": "Enablement and beta demand",
+          "role": "small",
+          "size": 12,
+          "font": "Avenir Next",
+          "tone": "s1slate",
+          "box": [
+           0.7557,
+           4.4662,
+           10.4887,
+           0.7895
+          ]
+         },
+         {
+          "text": "Owner: Priya Shah",
+          "role": "caption",
+          "size": 10.5,
+          "font": "Avenir Next",
+          "tone": "s1slate",
+          "box": [
+           0.7557,
+           5.3008,
+           10.4887,
+           0.5414
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s1white",
+        "radius": 10
+       },
+       "box": [
+        8.1341,
+        1.8923,
+        3.8627,
+        2.4554
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "Shared dependency: GPU capacity must be secured before integrated beta testing.",
+          "role": "h3",
+          "size": 17,
+          "font": "Avenir Next",
+          "tone": "s1blue",
+          "weight": "bold",
+          "box": [
+           0.253,
+           1.3151,
+           11.4842,
+           3.2877
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s1white",
+        "radius": 10
+       },
+       "box": [
+        0.0,
+        4.8185,
+        11.9968,
+        0.6738
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "budget",
+   "message": "72% delivery with 64% budget consumption.",
+   "background": "s1bg",
+   "notes": "Fictional demonstration data. 72% delivery with 64% budget consumption.",
+   "compose": {
+    "free": {
+     "items": [
+      {
+       "text": "EXECUTIVE DASHBOARD",
+       "role": "label",
+       "size": 10.5,
+       "font": "Avenir Next",
+       "tone": "s1blue",
+       "weight": "bold",
+       "box": [
+        0.0,
+        0.0,
+        9.7298,
+        0.2308
+       ]
+      },
+      {
+       "text": "Delivery is ahead of budget consumption.",
+       "role": "title",
+       "size": 30,
+       "font": "Avenir Next",
+       "tone": "s1navy",
+       "weight": "bold",
+       "box": [
+        0.0,
+        0.4431,
+        11.9968,
+        0.6
+       ]
+      },
+      {
+       "text": "A controlled reserve can protect the beta without changing the approved envelope.",
+       "role": "small",
+       "size": 15,
+       "font": "Avenir Next",
+       "tone": "s1slate",
+       "box": [
+        0.0,
+        1.08,
+        11.4811,
+        0.4615
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s1track",
+       "box": [
+        0.0,
+        5.7737,
+        11.9968,
+        0.0096
+       ]
+      },
+      {
+       "text": "Project Atlas — Q4 Executive Review  ·  Illustrative demo",
+       "role": "caption",
+       "size": 10,
+       "font": "Avenir Next",
+       "tone": "s1slate",
+       "box": [
+        0.0,
+        5.9077,
+        10.1189,
+        0.2308
+       ]
+      },
+      {
+       "text": "03 / 05",
+       "role": "caption",
+       "size": 10,
+       "font": "Avenir Next",
+       "tone": "s1slate",
+       "align": "right",
+       "box": [
+        10.9946,
+        5.9077,
+        1.0022,
+        0.2308
+       ]
+      },
+      {
+       "text": "$6.4M",
+       "role": "display",
+       "size": 44,
+       "font": "Avenir Next",
+       "tone": "s1blue",
+       "weight": "bold",
+       "box": [
+        0.0,
+        1.9846,
+        3.6973,
+        0.7846
+       ]
+      },
+      {
+       "text": "Approved envelope",
+       "role": "h3",
+       "size": 18,
+       "font": "Avenir Next",
+       "tone": "s1navy",
+       "weight": "bold",
+       "box": [
+        0.0,
+        2.8338,
+        3.6973,
+        0.3692
+       ]
+      },
+      {
+       "text": "Total project funding",
+       "role": "small",
+       "size": 13,
+       "font": "Avenir Next",
+       "tone": "s1slate",
+       "box": [
+        0.0,
+        3.2769,
+        3.6973,
+        0.5077
+       ]
+      },
+      {
+       "text": "$4.1M",
+       "role": "display",
+       "size": 44,
+       "font": "Avenir Next",
+       "tone": "s1blue",
+       "weight": "bold",
+       "box": [
+        4.1351,
+        1.9846,
+        3.6973,
+        0.7846
+       ]
+      },
+      {
+       "text": "Used to date",
+       "role": "h3",
+       "size": 18,
+       "font": "Avenir Next",
+       "tone": "s1navy",
+       "weight": "bold",
+       "box": [
+        4.1351,
+        2.8338,
+        3.6973,
+        0.3692
+       ]
+      },
+      {
+       "text": "64% of approved budget",
+       "role": "small",
+       "size": 13,
+       "font": "Avenir Next",
+       "tone": "s1slate",
+       "box": [
+        4.1351,
+        3.2769,
+        3.6973,
+        0.5077
+       ]
+      },
+      {
+       "text": "$2.3M",
+       "role": "display",
+       "size": 44,
+       "font": "Avenir Next",
+       "tone": "s1blue",
+       "weight": "bold",
+       "box": [
+        8.2703,
+        1.9846,
+        3.6973,
+        0.7846
+       ]
+      },
+      {
+       "text": "Remaining",
+       "role": "h3",
+       "size": 18,
+       "font": "Avenir Next",
+       "tone": "s1navy",
+       "weight": "bold",
+       "box": [
+        8.2703,
+        2.8338,
+        3.6973,
+        0.3692
+       ]
+      },
+      {
+       "text": "Includes a proposed $0.6M reserve",
+       "role": "small",
+       "size": 13,
+       "font": "Avenir Next",
+       "tone": "s1slate",
+       "box": [
+        8.2703,
+        3.2769,
+        3.6973,
+        0.5077
+       ]
+      },
+      {
+       "text": "Scope delivered",
+       "role": "small",
+       "size": 13,
+       "font": "Avenir Next",
+       "tone": "s1navy",
+       "box": [
+        0.0,
+        4.1815,
+        2.0432,
+        0.3231
+       ]
+      },
+      {
+       "shape": "roundRect",
+       "decorative": true,
+       "fill": "s1track",
+       "radius": 3,
+       "box": [
+        2.2865,
+        4.2738,
+        8.0757,
+        0.1292
+       ]
+      },
+      {
+       "shape": "roundRect",
+       "decorative": true,
+       "fill": "s1blue",
+       "radius": 3,
+       "box": [
+        2.2865,
+        4.2738,
+        5.8145,
+        0.1292
+       ]
+      },
+      {
+       "text": "72%",
+       "role": "small",
+       "size": 14,
+       "font": "Avenir Next",
+       "tone": "s1navy",
+       "weight": "bold",
+       "align": "right",
+       "box": [
+        10.7027,
+        4.1815,
+        1.2941,
+        0.3231
+       ]
+      },
+      {
+       "text": "Budget consumed",
+       "role": "small",
+       "size": 13,
+       "font": "Avenir Next",
+       "tone": "s1navy",
+       "box": [
+        0.0,
+        4.68,
+        2.0432,
+        0.3231
+       ]
+      },
+      {
+       "shape": "roundRect",
+       "decorative": true,
+       "fill": "s1track",
+       "radius": 3,
+       "box": [
+        2.2865,
+        4.7723,
+        8.0757,
+        0.1292
+       ]
+      },
+      {
+       "shape": "roundRect",
+       "decorative": true,
+       "fill": "s1violet",
+       "radius": 3,
+       "box": [
+        2.2865,
+        4.7723,
+        5.1684,
+        0.1292
+       ]
+      },
+      {
+       "text": "64%",
+       "role": "small",
+       "size": 14,
+       "font": "Avenir Next",
+       "tone": "s1navy",
+       "weight": "bold",
+       "align": "right",
+       "box": [
+        10.7027,
+        4.68,
+        1.2941,
+        0.3231
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "risk",
+   "message": "Capacity risk has a dated mitigation plan.",
+   "background": "s1bg",
+   "notes": "Fictional demonstration data. Capacity risk has a dated mitigation plan.",
+   "compose": {
+    "free": {
+     "items": [
+      {
+       "text": "EXECUTIVE DASHBOARD",
+       "role": "label",
+       "size": 10.5,
+       "font": "Avenir Next",
+       "tone": "s1blue",
+       "weight": "bold",
+       "box": [
+        0.0,
+        0.0,
+        9.7298,
+        0.2308
+       ]
+      },
+      {
+       "text": "A narrow risk window. A practical mitigation.",
+       "role": "title",
+       "size": 30,
+       "font": "Avenir Next",
+       "tone": "s1navy",
+       "weight": "bold",
+       "box": [
+        0.0,
+        0.4431,
+        11.9968,
+        0.6
+       ]
+      },
+      {
+       "text": "Treat capacity as a sourcing decision with a clear owner and deadline.",
+       "role": "small",
+       "size": 15,
+       "font": "Avenir Next",
+       "tone": "s1slate",
+       "box": [
+        0.0,
+        1.08,
+        11.4811,
+        0.4615
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s1track",
+       "box": [
+        0.0,
+        5.7737,
+        11.9968,
+        0.0096
+       ]
+      },
+      {
+       "text": "Project Atlas — Q4 Executive Review  ·  Illustrative demo",
+       "role": "caption",
+       "size": 10,
+       "font": "Avenir Next",
+       "tone": "s1slate",
+       "box": [
+        0.0,
+        5.9077,
+        10.1189,
+        0.2308
+       ]
+      },
+      {
+       "text": "04 / 05",
+       "role": "caption",
+       "size": 10,
+       "font": "Avenir Next",
+       "tone": "s1slate",
+       "align": "right",
+       "box": [
+        10.9946,
+        5.9077,
+        1.0022,
+        0.2308
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "MEDIUM RISK",
+          "role": "label",
+          "size": 11,
+          "font": "Avenir Next",
+          "tone": "s1blue",
+          "weight": "bold",
+          "box": [
+           0.6545,
+           0.4737,
+           10.6909,
+           0.4737
+          ]
+         },
+         {
+          "text": "GPU allocation remains unconfirmed.",
+          "role": "h2",
+          "size": 27,
+          "font": "Avenir Next",
+          "tone": "s1navy",
+          "weight": "bold",
+          "box": [
+           0.6545,
+           1.2632,
+           10.6909,
+           1.8947
+          ]
+         },
+         {
+          "text": "Exposure: public beta slips four to six weeks if supply is not secured.",
+          "role": "body",
+          "size": 16,
+          "font": "Avenir Next",
+          "tone": "s1slate",
+          "box": [
+           0.6545,
+           3.6316,
+           10.6909,
+           1.1053
+          ]
+         },
+         {
+          "text": "Owner: Engineering + Procurement",
+          "role": "small",
+          "size": 12,
+          "font": "Avenir Next",
+          "tone": "s1navy",
+          "weight": "bold",
+          "box": [
+           0.6545,
+           5.1789,
+           10.6909,
+           0.4737
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s1redSoft",
+        "radius": 10
+       },
+       "box": [
+        0.0,
+        1.8923,
+        5.3514,
+        3.5077
+       ]
+      },
+      {
+       "text": "DEC 2",
+       "role": "label",
+       "size": 11,
+       "font": "Avenir Next",
+       "tone": "s1blue",
+       "weight": "bold",
+       "box": [
+        5.8379,
+        1.9846,
+        1.1189,
+        0.2769
+       ]
+      },
+      {
+       "text": "Validate capacity",
+       "role": "h3",
+       "size": 20,
+       "font": "Avenir Next",
+       "tone": "s1navy",
+       "weight": "bold",
+       "box": [
+        7.1514,
+        1.9846,
+        4.573,
+        0.3692
+       ]
+      },
+      {
+       "text": "Confirm regional supply and performance.",
+       "role": "body",
+       "size": 14,
+       "font": "Avenir Next",
+       "tone": "s1slate",
+       "box": [
+        7.1514,
+        2.4092,
+        4.573,
+        0.5077
+       ]
+      },
+      {
+       "text": "DEC 6",
+       "role": "label",
+       "size": 11,
+       "font": "Avenir Next",
+       "tone": "s1blue",
+       "weight": "bold",
+       "box": [
+        5.8379,
+        3.0923,
+        1.1189,
+        0.2769
+       ]
+      },
+      {
+       "text": "Approve reserve",
+       "role": "h3",
+       "size": 20,
+       "font": "Avenir Next",
+       "tone": "s1navy",
+       "weight": "bold",
+       "box": [
+        7.1514,
+        3.0923,
+        4.573,
+        0.3692
+       ]
+      },
+      {
+       "text": "Commit $0.6M for dedicated allocation.",
+       "role": "body",
+       "size": 14,
+       "font": "Avenir Next",
+       "tone": "s1slate",
+       "box": [
+        7.1514,
+        3.5169,
+        4.573,
+        0.5077
+       ]
+      },
+      {
+       "text": "DEC 12",
+       "role": "label",
+       "size": 11,
+       "font": "Avenir Next",
+       "tone": "s1blue",
+       "weight": "bold",
+       "box": [
+        5.8379,
+        4.2,
+        1.1189,
+        0.2769
+       ]
+      },
+      {
+       "text": "Close contract",
+       "role": "h3",
+       "size": 20,
+       "font": "Avenir Next",
+       "tone": "s1navy",
+       "weight": "bold",
+       "box": [
+        7.1514,
+        4.2,
+        4.573,
+        0.3692
+       ]
+      },
+      {
+       "text": "Secure supply before the beta test gate.",
+       "role": "body",
+       "size": 14,
+       "font": "Avenir Next",
+       "tone": "s1slate",
+       "box": [
+        7.1514,
+        4.6246,
+        4.573,
+        0.5077
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "decision",
+   "message": "Approve a $0.6M capacity reserve by December 6.",
+   "background": "s1bg",
+   "notes": "Fictional demonstration data. Approve a $0.6M capacity reserve by December 6.",
+   "compose": {
+    "free": {
+     "items": [
+      {
+       "text": "EXECUTIVE DASHBOARD",
+       "role": "label",
+       "size": 10.5,
+       "font": "Avenir Next",
+       "tone": "s1blue",
+       "weight": "bold",
+       "box": [
+        0.0,
+        0.0,
+        9.7298,
+        0.2308
+       ]
+      },
+      {
+       "text": "Approve the reserve. Protect the launch.",
+       "role": "title",
+       "size": 30,
+       "font": "Avenir Next",
+       "tone": "s1navy",
+       "weight": "bold",
+       "box": [
+        0.0,
+        0.4431,
+        11.9968,
+        0.6
+       ]
+      },
+      {
+       "text": "Decision required by December 6, 2026. Proposed release remains Q2 2027.",
+       "role": "small",
+       "size": 15,
+       "font": "Avenir Next",
+       "tone": "s1slate",
+       "box": [
+        0.0,
+        1.08,
+        11.4811,
+        0.4615
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s1track",
+       "box": [
+        0.0,
+        5.7737,
+        11.9968,
+        0.0096
+       ]
+      },
+      {
+       "text": "Project Atlas — Q4 Executive Review  ·  Illustrative demo",
+       "role": "caption",
+       "size": 10,
+       "font": "Avenir Next",
+       "tone": "s1slate",
+       "box": [
+        0.0,
+        5.9077,
+        10.1189,
+        0.2308
+       ]
+      },
+      {
+       "text": "05 / 05",
+       "role": "caption",
+       "size": 10,
+       "font": "Avenir Next",
+       "tone": "s1slate",
+       "align": "right",
+       "box": [
+        10.9946,
+        5.9077,
+        1.0022,
+        0.2308
+       ]
+      },
+      {
+       "text": "$0.6M",
+       "role": "display",
+       "size": 44,
+       "font": "Avenir Next",
+       "tone": "s1blue",
+       "weight": "bold",
+       "box": [
+        0.0,
+        1.9569,
+        4.9622,
+        0.7846
+       ]
+      },
+      {
+       "text": "Capacity reserve",
+       "role": "h3",
+       "size": 18,
+       "font": "Avenir Next",
+       "tone": "s1navy",
+       "weight": "bold",
+       "box": [
+        0.0,
+        2.8062,
+        4.9622,
+        0.3692
+       ]
+      },
+      {
+       "text": "Dedicated GPUs for beta and scale-up",
+       "role": "small",
+       "size": 13,
+       "font": "Avenir Next",
+       "tone": "s1slate",
+       "box": [
+        0.0,
+        3.2492,
+        4.9622,
+        0.5077
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "Approval conditions",
+          "role": "h3",
+          "size": 21,
+          "font": "Avenir Next",
+          "tone": "s1navy",
+          "weight": "bold",
+          "box": [
+           0.6532,
+           0.7615,
+           10.6936,
+           0.9231
+          ]
+         },
+         {
+          "text": "Capacity confirmed in writing\nContract stays within approved budget\nPerformance validated before release",
+          "role": "body",
+          "size": 16,
+          "font": "Avenir Next",
+          "tone": "s1navy",
+          "leading": 1.35,
+          "box": [
+           0.6532,
+           2.2385,
+           10.6936,
+           2.8154
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s1white",
+        "radius": 10
+       },
+       "box": [
+        5.7406,
+        1.8462,
+        6.2562,
+        2.4
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "Next gate: December 15 MVP release, followed by the February 15 public beta.",
+          "role": "h3",
+          "size": 17,
+          "font": "Avenir Next",
+          "tone": "s1blue",
+          "weight": "bold",
+          "box": [
+           0.253,
+           1.3151,
+           11.4842,
+           3.2877
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s1white",
+        "radius": 10
+       },
+       "box": [
+        0.0,
+        4.8185,
+        11.9968,
+        0.6738
+       ]
+      }
+     ]
+    }
+   }
+  }
+ ]
+}

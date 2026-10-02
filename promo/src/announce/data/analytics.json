@@ -1,0 +1,7826 @@
+{
+ "schema": "slide-agent.scene/2",
+ "engine": "1.0.0",
+ "format": "16:9",
+ "size": {
+  "width": 13.333333,
+  "height": 7.5
+ },
+ "title": "From Growth to Retention",
+ "language": "en",
+ "theme": {
+  "colors": {
+   "lt1": "F6F3EC",
+   "dk1": "1B1B1F",
+   "lt2": "ECE6DA",
+   "dk2": "66625B",
+   "accent1": "C2410C",
+   "accent2": "CFC8BA",
+   "accent3": "D6CFC2",
+   "accent4": "F8DCCD",
+   "accent5": "FF8A5B",
+   "accent6": "FDA184",
+   "hlink": "C2410C",
+   "folHlink": "66625B"
+  },
+  "fonts": {
+   "major": "Charter",
+   "minor": "Helvetica Neue",
+   "mono": "Menlo"
+  }
+ },
+ "fonts": [
+  {
+   "family": "Charter",
+   "role": "display",
+   "resolved": "Charter",
+   "file": "/System/Library/Fonts/Supplemental/Charter.ttc",
+   "sha256": "6ab86ae2c687f80652a8afdc851b3e3234c5ae702e307c0593adfcc63079e19f",
+   "embeddable": true,
+   "embed": true,
+   "metrics": "font-file"
+  },
+  {
+   "family": "Helvetica Neue",
+   "role": "body",
+   "resolved": "Helvetica Neue",
+   "file": "/System/Library/Fonts/HelveticaNeue.ttc",
+   "sha256": "a43317500f5c8086ebbe479b32e86f53ce7c075c14283aa9894cc23be5bfd8e2",
+   "embeddable": true,
+   "embed": true,
+   "metrics": "font-file"
+  },
+  {
+   "family": "Menlo",
+   "role": "mono",
+   "resolved": "Menlo",
+   "file": "/System/Library/Fonts/Menlo.ttc",
+   "sha256": "dc256e0b39c2a6fec947129d421fef41b8b429f58f9b6e5d1b148c87f775c1f6",
+   "embeddable": true,
+   "embed": true,
+   "metrics": "font-file"
+  }
+ ],
+ "slides": [
+  {
+   "id": "data-story",
+   "index": 0,
+   "message": "Acquisition is accelerating, but activation remains the biggest growth lever",
+   "mode": "compose",
+   "layout": "title-only",
+   "background": {
+    "hex": "F6F3EC",
+    "slot": "lt1",
+    "token": "s3paper"
+   },
+   "elements": [
+    {
+     "kind": "text",
+     "id": "data-story/text1",
+     "role": "label",
+     "typeRole": "label",
+     "frame": {
+      "x": 0.5,
+      "y": 0.5,
+      "w": 8,
+      "h": 0.25
+     },
+     "z": 0,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "PRODUCT ANALYTICS  ·  JANUARY – JUNE 2026"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 700,
+      "size": 10.5,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "C2410C",
+       "slot": "accent1",
+       "token": "s3coral"
+      },
+      "align": "left",
+      "valign": "top",
+      "tracking": 0.18,
+      "leading": 1.2,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/0"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 0,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "data-story/text2",
+     "role": "title",
+     "typeRole": "title",
+     "frame": {
+      "x": 0.5,
+      "y": 0.76,
+      "w": 11,
+      "h": 0.64
+     },
+     "z": 1,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "From growth to retention: what the data tells us"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Charter",
+      "family": "Charter",
+      "weight": 700,
+      "size": 32,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.05,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/1"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "placeholder": {
+      "type": "title"
+     },
+     "readingIndex": 1,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "data-story/text3",
+     "role": "body",
+     "typeRole": "lead",
+     "frame": {
+      "x": 0.5,
+      "y": 1.38,
+      "w": 10.0001,
+      "h": 0.3399
+     },
+     "z": 2,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "Six months of product data, three signals, and one decision."
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Charter",
+      "family": "Charter",
+      "weight": 400,
+      "size": 15,
+      "bold": false,
+      "italic": true,
+      "color": {
+       "hex": "66625B",
+       "slot": "dk2",
+       "token": "s3stone"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.3,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/2"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 2,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "data-story/shape4",
+     "role": "decorative",
+     "frame": {
+      "x": 0.5,
+      "y": 1.8531,
+      "w": 12.333,
+      "h": 0.0139
+     },
+     "z": 3,
+     "style": {
+      "preset": "rect",
+      "fill": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      }
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/3"
+     },
+     "decorative": true,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "data-story/shape5",
+     "role": "decorative",
+     "frame": {
+      "x": 5.4948,
+      "y": 2.1,
+      "w": 0.0104,
+      "h": 3.72
+     },
+     "z": 4,
+     "style": {
+      "preset": "rect",
+      "fill": {
+       "hex": "D6CFC2",
+       "slot": "accent3",
+       "token": "s3hair"
+      }
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/4"
+     },
+     "decorative": true,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "data-story/shape6",
+     "role": "decorative",
+     "frame": {
+      "x": 9.1448,
+      "y": 2.1,
+      "w": 0.0104,
+      "h": 3.72
+     },
+     "z": 5,
+     "style": {
+      "preset": "rect",
+      "fill": {
+       "hex": "D6CFC2",
+       "slot": "accent3",
+       "token": "s3hair"
+      }
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/5"
+     },
+     "decorative": true,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "data-story/text7",
+     "role": "label",
+     "typeRole": "label",
+     "frame": {
+      "x": 0.5,
+      "y": 2.08,
+      "w": 4.75,
+      "h": 0.25
+     },
+     "z": 6,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "01    ACQUISITION"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 700,
+      "size": 10.5,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "C2410C",
+       "slot": "accent1",
+       "token": "s3coral"
+      },
+      "align": "left",
+      "valign": "top",
+      "tracking": 0.16,
+      "leading": 1.2,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/6"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 3,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "data-story/text8",
+     "role": "body",
+     "typeRole": "h3",
+     "frame": {
+      "x": 0.5,
+      "y": 2.36,
+      "w": 4.75,
+      "h": 0.38
+     },
+     "z": 7,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "Users are arriving faster every month"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Charter",
+      "family": "Charter",
+      "weight": 700,
+      "size": 17,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.18,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/7"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 4,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "data-story/text9",
+     "role": "metric",
+     "typeRole": "display",
+     "frame": {
+      "x": 0.5,
+      "y": 2.76,
+      "w": 1.95,
+      "h": 0.72
+     },
+     "z": 8,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "+88%"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Charter",
+      "family": "Charter",
+      "weight": 700,
+      "size": 44,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 0.95,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/8"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 5,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "data-story/text10",
+     "role": "body",
+     "typeRole": "small",
+     "frame": {
+      "x": 2.48,
+      "y": 2.88,
+      "w": 2.77,
+      "h": 0.52
+     },
+     "z": 9,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "monthly active users,"
+        }
+       ]
+      },
+      {
+       "runs": [
+        {
+         "text": "42K in January, 79K in June"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 12,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "66625B",
+       "slot": "dk2",
+       "token": "s3stone"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.3,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/9"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 2
+     },
+     "ground": "s3paper",
+     "readingIndex": 6,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "chart",
+     "id": "data-story/chart11",
+     "role": "data",
+     "frame": {
+      "x": 0.4,
+      "y": 3.52,
+      "w": 4.9,
+      "h": 2.36
+     },
+     "z": 10,
+     "chart": "column",
+     "data": {
+      "categories": [
+       "Jan",
+       "Feb",
+       "Mar",
+       "Apr",
+       "May",
+       "Jun"
+      ],
+      "series": [
+       {
+        "name": "MAU (K)",
+        "values": [
+         42,
+         47,
+         53,
+         61,
+         68,
+         79
+        ]
+       }
+      ],
+      "unit": "K"
+     },
+     "colors": [
+      {
+       "hex": "C2410C",
+       "slot": "accent1",
+       "token": "s3coral"
+      }
+     ],
+     "highlight": [
+      5
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "size": 13,
+      "text": {
+       "hex": "1B1B1F",
+       "token": "text",
+       "slot": "dk1"
+      },
+      "muted": {
+       "hex": "66625B",
+       "token": "muted",
+       "slot": "dk2"
+      },
+      "rule": {
+       "hex": "D6CFC2",
+       "token": "rule",
+       "slot": "accent3"
+      },
+      "axis": "hairline",
+      "gridlines": "none",
+      "labels": "outside",
+      "legend": "none",
+      "highlight": {
+       "hex": "C2410C",
+       "slot": "accent1",
+       "token": "s3coral"
+      }
+     },
+     "alt": "Monthly active users in thousands, January to June: 42, 47, 53, 61, 68, 79; June highlighted",
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/10"
+     },
+     "readingIndex": 7,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "data-story/text12",
+     "role": "label",
+     "typeRole": "label",
+     "frame": {
+      "x": 5.75,
+      "y": 2.08,
+      "w": 3.15,
+      "h": 0.25
+     },
+     "z": 11,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "02    RETENTION"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 700,
+      "size": 10.5,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "C2410C",
+       "slot": "accent1",
+       "token": "s3coral"
+      },
+      "align": "left",
+      "valign": "top",
+      "tracking": 0.16,
+      "leading": 1.2,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/11"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 8,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "data-story/text13",
+     "role": "body",
+     "typeRole": "h3",
+     "frame": {
+      "x": 5.75,
+      "y": 2.36,
+      "w": 3.15,
+      "h": 0.38
+     },
+     "z": 12,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "Cohorts settle by month 3"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Charter",
+      "family": "Charter",
+      "weight": 700,
+      "size": 17,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.18,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/12"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 9,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "data-story/text14",
+     "role": "metric",
+     "typeRole": "display",
+     "frame": {
+      "x": 5.75,
+      "y": 2.76,
+      "w": 1.95,
+      "h": 0.72
+     },
+     "z": 13,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "62%"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Charter",
+      "family": "Charter",
+      "weight": 700,
+      "size": 44,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 0.95,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/13"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 10,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "data-story/text15",
+     "role": "body",
+     "typeRole": "small",
+     "frame": {
+      "x": 7.73,
+      "y": 2.88,
+      "w": 1.17,
+      "h": 0.52
+     },
+     "z": 14,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "still active"
+        }
+       ]
+      },
+      {
+       "runs": [
+        {
+         "text": "at month 6"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 12,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "66625B",
+       "slot": "dk2",
+       "token": "s3stone"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.3,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/14"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 2
+     },
+     "ground": "s3paper",
+     "readingIndex": 11,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "data-story/shape16",
+     "role": "decorative",
+     "frame": {
+      "x": 6.05,
+      "y": 3.78,
+      "w": 2.7,
+      "h": 1.66
+     },
+     "z": 15,
+     "style": {
+      "preset": "custom",
+      "fill": {
+       "hex": "ECE6DA",
+       "slot": "lt2",
+       "token": "s3wash"
+      },
+      "path": "M0.000 0.000 L0.200 0.180 L0.400 0.280 L0.600 0.330 L0.800 0.360 L1.000 0.380 L1 1 L0 1 Z"
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/15"
+     },
+     "decorative": true,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "data-story/shape17",
+     "role": "decorative",
+     "frame": {
+      "x": 6.05,
+      "y": 5.4348,
+      "w": 2.7,
+      "h": 0.0104
+     },
+     "z": 16,
+     "style": {
+      "preset": "rect",
+      "fill": {
+       "hex": "66625B",
+       "slot": "dk2",
+       "token": "s3stone"
+      }
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/16"
+     },
+     "decorative": true,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "data-story/shape18",
+     "role": "decorative",
+     "frame": {
+      "x": 6.05,
+      "y": 3.7765,
+      "w": 2.7,
+      "h": 0.0069
+     },
+     "z": 17,
+     "style": {
+      "preset": "rect",
+      "fill": {
+       "hex": "D6CFC2",
+       "slot": "accent3",
+       "token": "s3hair"
+      }
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/17"
+     },
+     "decorative": true,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "data-story/text19",
+     "role": "caption",
+     "typeRole": "caption",
+     "frame": {
+      "x": 5.55,
+      "y": 3.68,
+      "w": 0.4,
+      "h": 0.2
+     },
+     "z": 18,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "100"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 10,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "66625B",
+       "slot": "dk2",
+       "token": "s3stone"
+      },
+      "align": "right",
+      "valign": "top",
+      "leading": 1.25,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/18"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 12,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "data-story/text20",
+     "role": "caption",
+     "typeRole": "caption",
+     "frame": {
+      "x": 5.55,
+      "y": 5.33,
+      "w": 0.4,
+      "h": 0.2
+     },
+     "z": 19,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "0"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 10,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "66625B",
+       "slot": "dk2",
+       "token": "s3stone"
+      },
+      "align": "right",
+      "valign": "top",
+      "leading": 1.25,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/19"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 13,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "data-story/shape21",
+     "role": "decorative",
+     "frame": {
+      "x": 6.05,
+      "y": 3.78,
+      "w": 2.7,
+      "h": 1.66
+     },
+     "z": 20,
+     "style": {
+      "preset": "custom",
+      "stroke": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "strokeWidth": 2,
+      "path": "M0.000 0.000 L0.200 0.180 L0.400 0.280 L0.600 0.330 L0.800 0.360 L1.000 0.380"
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/20"
+     },
+     "decorative": true,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "data-story/shape22",
+     "role": "decorative",
+     "frame": {
+      "x": 6.01,
+      "y": 3.74,
+      "w": 0.08,
+      "h": 0.0799
+     },
+     "z": 21,
+     "style": {
+      "preset": "ellipse",
+      "fill": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      }
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/21"
+     },
+     "decorative": true,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "data-story/text23",
+     "role": "caption",
+     "typeRole": "caption",
+     "frame": {
+      "x": 5.8,
+      "y": 5.4901,
+      "w": 0.5,
+      "h": 0.22
+     },
+     "z": 22,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "M1"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 10,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "66625B",
+       "slot": "dk2",
+       "token": "s3stone"
+      },
+      "align": "center",
+      "valign": "top",
+      "leading": 1.25,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/22"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 14,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "data-story/shape24",
+     "role": "decorative",
+     "frame": {
+      "x": 6.55,
+      "y": 4.0388,
+      "w": 0.08,
+      "h": 0.0799
+     },
+     "z": 23,
+     "style": {
+      "preset": "ellipse",
+      "fill": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      }
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/23"
+     },
+     "decorative": true,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "data-story/text25",
+     "role": "caption",
+     "typeRole": "caption",
+     "frame": {
+      "x": 6.34,
+      "y": 5.4901,
+      "w": 0.5,
+      "h": 0.22
+     },
+     "z": 24,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "M2"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 10,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "66625B",
+       "slot": "dk2",
+       "token": "s3stone"
+      },
+      "align": "center",
+      "valign": "top",
+      "leading": 1.25,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/24"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 15,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "data-story/shape26",
+     "role": "decorative",
+     "frame": {
+      "x": 7.09,
+      "y": 4.2048,
+      "w": 0.08,
+      "h": 0.0799
+     },
+     "z": 25,
+     "style": {
+      "preset": "ellipse",
+      "fill": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      }
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/25"
+     },
+     "decorative": true,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "data-story/text27",
+     "role": "caption",
+     "typeRole": "caption",
+     "frame": {
+      "x": 6.88,
+      "y": 5.4901,
+      "w": 0.5,
+      "h": 0.22
+     },
+     "z": 26,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "M3"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 10,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "66625B",
+       "slot": "dk2",
+       "token": "s3stone"
+      },
+      "align": "center",
+      "valign": "top",
+      "leading": 1.25,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/26"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 16,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "data-story/shape28",
+     "role": "decorative",
+     "frame": {
+      "x": 7.63,
+      "y": 4.2878,
+      "w": 0.08,
+      "h": 0.0799
+     },
+     "z": 27,
+     "style": {
+      "preset": "ellipse",
+      "fill": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      }
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/27"
+     },
+     "decorative": true,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "data-story/text29",
+     "role": "caption",
+     "typeRole": "caption",
+     "frame": {
+      "x": 7.42,
+      "y": 5.4901,
+      "w": 0.5,
+      "h": 0.22
+     },
+     "z": 28,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "M4"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 10,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "66625B",
+       "slot": "dk2",
+       "token": "s3stone"
+      },
+      "align": "center",
+      "valign": "top",
+      "leading": 1.25,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/28"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 17,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "data-story/shape30",
+     "role": "decorative",
+     "frame": {
+      "x": 8.17,
+      "y": 4.3376,
+      "w": 0.08,
+      "h": 0.0799
+     },
+     "z": 29,
+     "style": {
+      "preset": "ellipse",
+      "fill": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      }
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/29"
+     },
+     "decorative": true,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "data-story/text31",
+     "role": "caption",
+     "typeRole": "caption",
+     "frame": {
+      "x": 7.96,
+      "y": 5.4901,
+      "w": 0.5,
+      "h": 0.22
+     },
+     "z": 30,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "M5"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 10,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "66625B",
+       "slot": "dk2",
+       "token": "s3stone"
+      },
+      "align": "center",
+      "valign": "top",
+      "leading": 1.25,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/30"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 18,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "data-story/shape32",
+     "role": "decorative",
+     "frame": {
+      "x": 8.685,
+      "y": 4.3458,
+      "w": 0.13,
+      "h": 0.13
+     },
+     "z": 31,
+     "style": {
+      "preset": "ellipse",
+      "fill": {
+       "hex": "C2410C",
+       "slot": "accent1",
+       "token": "s3coral"
+      }
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/31"
+     },
+     "decorative": true,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "data-story/text33",
+     "role": "caption",
+     "typeRole": "caption",
+     "frame": {
+      "x": 8.5,
+      "y": 5.4901,
+      "w": 0.5,
+      "h": 0.22
+     },
+     "z": 32,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "M6"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 10,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "66625B",
+       "slot": "dk2",
+       "token": "s3stone"
+      },
+      "align": "center",
+      "valign": "top",
+      "leading": 1.25,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/32"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 19,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "data-story/shape34",
+     "role": "decorative",
+     "frame": {
+      "x": 7.13,
+      "y": 4.0679,
+      "w": 1.62,
+      "h": 0.0139
+     },
+     "z": 33,
+     "style": {
+      "preset": "rect",
+      "fill": {
+       "hex": "C2410C",
+       "slot": "accent1",
+       "token": "s3coral"
+      }
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/33"
+     },
+     "decorative": true,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "data-story/shape35",
+     "role": "decorative",
+     "frame": {
+      "x": 7.1231,
+      "y": 4.0748,
+      "w": 0.0139,
+      "h": 0.0799
+     },
+     "z": 34,
+     "style": {
+      "preset": "rect",
+      "fill": {
+       "hex": "C2410C",
+       "slot": "accent1",
+       "token": "s3coral"
+      }
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/34"
+     },
+     "decorative": true,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "data-story/shape36",
+     "role": "decorative",
+     "frame": {
+      "x": 8.7431,
+      "y": 4.0748,
+      "w": 0.0139,
+      "h": 0.216
+     },
+     "z": 35,
+     "style": {
+      "preset": "rect",
+      "fill": {
+       "hex": "C2410C",
+       "slot": "accent1",
+       "token": "s3coral"
+      }
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/35"
+     },
+     "decorative": true,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "data-story/text37",
+     "role": "caption",
+     "typeRole": "caption",
+     "frame": {
+      "x": 7.08,
+      "y": 3.8048,
+      "w": 2.0001,
+      "h": 0.24
+     },
+     "z": 36,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "−10 pts in three months"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 700,
+      "size": 10.5,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "C2410C",
+       "slot": "accent1",
+       "token": "s3coral"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.25,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/36"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 20,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "data-story/text38",
+     "role": "caption",
+     "typeRole": "caption",
+     "frame": {
+      "x": 8.3501,
+      "y": 4.5108,
+      "w": 0.55,
+      "h": 0.22
+     },
+     "z": 37,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "62%"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 700,
+      "size": 10.5,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "C2410C",
+       "slot": "accent1",
+       "token": "s3coral"
+      },
+      "align": "right",
+      "valign": "top",
+      "leading": 1.25,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/37"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 21,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "data-story/text39",
+     "role": "label",
+     "typeRole": "label",
+     "frame": {
+      "x": 9.4,
+      "y": 2.08,
+      "w": 3.433,
+      "h": 0.25
+     },
+     "z": 38,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "03    ACTIVATION"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 700,
+      "size": 10.5,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "C2410C",
+       "slot": "accent1",
+       "token": "s3coral"
+      },
+      "align": "left",
+      "valign": "top",
+      "tracking": 0.16,
+      "leading": 1.2,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/38"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 22,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "data-story/text40",
+     "role": "body",
+     "typeRole": "h3",
+     "frame": {
+      "x": 9.4,
+      "y": 2.36,
+      "w": 3.433,
+      "h": 0.38
+     },
+     "z": 39,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "Activation is the leak"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Charter",
+      "family": "Charter",
+      "weight": 700,
+      "size": 17,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.18,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/39"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 23,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "data-story/text41",
+     "role": "metric",
+     "typeRole": "display",
+     "frame": {
+      "x": 9.4,
+      "y": 2.76,
+      "w": 1.95,
+      "h": 0.72
+     },
+     "z": 40,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "8.4%"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Charter",
+      "family": "Charter",
+      "weight": 700,
+      "size": 44,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 0.95,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/40"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 24,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "data-story/text42",
+     "role": "body",
+     "typeRole": "small",
+     "frame": {
+      "x": 11.3801,
+      "y": 2.88,
+      "w": 1.453,
+      "h": 0.52
+     },
+     "z": 41,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "of visitors become"
+        }
+       ]
+      },
+      {
+       "runs": [
+        {
+         "text": "paying customers"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 12,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "66625B",
+       "slot": "dk2",
+       "token": "s3stone"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.3,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/41"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 2
+     },
+     "ground": "s3paper",
+     "readingIndex": 25,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "data-story/text43",
+     "role": "body",
+     "typeRole": "small",
+     "frame": {
+      "x": 9.4,
+      "y": 3.65,
+      "w": 0.95,
+      "h": 0.28
+     },
+     "z": 42,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "Visitors"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 12,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "middle",
+      "leading": 1.3,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/42"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 26,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "data-story/shape44",
+     "role": "decorative",
+     "frame": {
+      "x": 10.4001,
+      "y": 3.62,
+      "w": 1.85,
+      "h": 0.3399
+     },
+     "z": 43,
+     "style": {
+      "preset": "rect",
+      "fill": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      }
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/43"
+     },
+     "decorative": true,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "data-story/text45",
+     "role": "body",
+     "typeRole": "small",
+     "frame": {
+      "x": 12.33,
+      "y": 3.65,
+      "w": 0.503,
+      "h": 0.28
+     },
+     "z": 44,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "100K"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 12,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "middle",
+      "leading": 1.3,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/44"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 27,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "data-story/text46",
+     "role": "body",
+     "typeRole": "small",
+     "frame": {
+      "x": 9.4,
+      "y": 4.2,
+      "w": 0.95,
+      "h": 0.28
+     },
+     "z": 45,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "Sign-ups"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 12,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "middle",
+      "leading": 1.3,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/45"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 28,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "data-story/shape47",
+     "role": "decorative",
+     "frame": {
+      "x": 10.4001,
+      "y": 4.17,
+      "w": 0.592,
+      "h": 0.3399
+     },
+     "z": 46,
+     "style": {
+      "preset": "rect",
+      "fill": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      }
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/46"
+     },
+     "decorative": true,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "data-story/text48",
+     "role": "body",
+     "typeRole": "small",
+     "frame": {
+      "x": 11.072,
+      "y": 4.2,
+      "w": 1.761,
+      "h": 0.28
+     },
+     "z": 47,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "32K  ·  32%"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 12,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "middle",
+      "leading": 1.3,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/47"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 29,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "data-story/text49",
+     "role": "body",
+     "typeRole": "small",
+     "frame": {
+      "x": 9.4,
+      "y": 4.75,
+      "w": 0.95,
+      "h": 0.28
+     },
+     "z": 48,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "Activated"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 12,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "middle",
+      "leading": 1.3,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/48"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 30,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "data-story/shape50",
+     "role": "decorative",
+     "frame": {
+      "x": 10.4001,
+      "y": 4.72,
+      "w": 0.3885,
+      "h": 0.3399
+     },
+     "z": 49,
+     "style": {
+      "preset": "rect",
+      "fill": {
+       "hex": "C2410C",
+       "slot": "accent1",
+       "token": "s3coral"
+      }
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/49"
+     },
+     "decorative": true,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "data-story/shape51",
+     "role": "decorative",
+     "frame": {
+      "x": 10.7886,
+      "y": 4.72,
+      "w": 0.2035,
+      "h": 0.3399
+     },
+     "z": 50,
+     "style": {
+      "preset": "rect",
+      "fill": {
+       "hex": "F8DCCD",
+       "slot": "accent4",
+       "token": "s3coralSoft"
+      },
+      "stroke": {
+       "hex": "C2410C",
+       "slot": "accent1",
+       "token": "s3coral"
+      },
+      "strokeWidth": 1
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/50"
+     },
+     "decorative": true,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "data-story/text52",
+     "role": "caption",
+     "typeRole": "caption",
+     "frame": {
+      "x": 10.7385,
+      "y": 5.07,
+      "w": 1.2,
+      "h": 0.2
+     },
+     "z": 51,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "11K lost"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 700,
+      "size": 10,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "C2410C",
+       "slot": "accent1",
+       "token": "s3coral"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.25,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/51"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 31,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "data-story/text53",
+     "role": "body",
+     "typeRole": "small",
+     "frame": {
+      "x": 11.072,
+      "y": 4.75,
+      "w": 1.761,
+      "h": 0.28
+     },
+     "z": 52,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "21K  ·  66%"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 700,
+      "size": 12,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "C2410C",
+       "slot": "accent1",
+       "token": "s3coral"
+      },
+      "align": "left",
+      "valign": "middle",
+      "leading": 1.3,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/52"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 32,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "data-story/text54",
+     "role": "body",
+     "typeRole": "small",
+     "frame": {
+      "x": 9.4,
+      "y": 5.3,
+      "w": 0.95,
+      "h": 0.28
+     },
+     "z": 53,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "Paid"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 12,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "middle",
+      "leading": 1.3,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/53"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 33,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "data-story/shape55",
+     "role": "decorative",
+     "frame": {
+      "x": 10.4001,
+      "y": 5.27,
+      "w": 0.1554,
+      "h": 0.3399
+     },
+     "z": 54,
+     "style": {
+      "preset": "rect",
+      "fill": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      }
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/54"
+     },
+     "decorative": true,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "data-story/text56",
+     "role": "body",
+     "typeRole": "small",
+     "frame": {
+      "x": 10.6354,
+      "y": 5.3,
+      "w": 2.1976,
+      "h": 0.28
+     },
+     "z": 55,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "8.4K  ·  40%"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 12,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "middle",
+      "leading": 1.3,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/55"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 34,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "data-story/shape57",
+     "role": "decorative",
+     "frame": {
+      "x": 0,
+      "y": 6.12,
+      "w": 13.3333,
+      "h": 1.38
+     },
+     "z": 56,
+     "style": {
+      "preset": "rect",
+      "fill": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      }
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/56"
+     },
+     "decorative": true,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "data-story/free58-surface",
+     "role": "container",
+     "frame": {
+      "x": 0.5,
+      "y": 6.12,
+      "w": 12.333,
+      "h": 0.88
+     },
+     "z": 57,
+     "style": {
+      "preset": "rect",
+      "fill": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      }
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/57"
+     },
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "data-story/text59",
+     "role": "label",
+     "typeRole": "label",
+     "frame": {
+      "x": 0.5,
+      "y": 6.56,
+      "w": 1.6,
+      "h": 0.25
+     },
+     "z": 58,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "THE TAKEAWAY"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 700,
+      "size": 10.5,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "FF8A5B",
+       "slot": "accent5",
+       "token": "s3coralLight"
+      },
+      "align": "left",
+      "valign": "top",
+      "tracking": 0.1,
+      "leading": 1.2,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/57/free/items/0"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3ink",
+     "readingIndex": 35,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "data-story/text60",
+     "role": "body",
+     "typeRole": "h3",
+     "frame": {
+      "x": 2.15,
+      "y": 6.44,
+      "w": 6.75,
+      "h": 0.62
+     },
+     "z": 59,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "Acquisition is accelerating, but activation remains the biggest growth lever."
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Charter",
+      "family": "Charter",
+      "weight": 700,
+      "size": 19,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "F6F3EC",
+       "slot": "lt1",
+       "token": "s3paper"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.15,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/57/free/items/1"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 2
+     },
+     "ground": "s3ink",
+     "readingIndex": 36,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "data-story/shape61",
+     "role": "decorative",
+     "frame": {
+      "x": 9.1948,
+      "y": 6.46,
+      "w": 0.0104,
+      "h": 0.58
+     },
+     "z": 60,
+     "style": {
+      "preset": "rect",
+      "fill": {
+       "hex": "66625B",
+       "slot": "dk2",
+       "token": "s3stone"
+      }
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/57/free/items/2"
+     },
+     "decorative": true,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "data-story/text62",
+     "role": "metric",
+     "typeRole": "display",
+     "frame": {
+      "x": 9.4,
+      "y": 6.44,
+      "w": 1.4,
+      "h": 0.6
+     },
+     "z": 61,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "+1.8K"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Charter",
+      "family": "Charter",
+      "weight": 700,
+      "size": 30,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "FF8A5B",
+       "slot": "accent5",
+       "token": "s3coralLight"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 0.95,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/57/free/items/3"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3ink",
+     "readingIndex": 37,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "data-story/text63",
+     "role": "caption",
+     "typeRole": "caption",
+     "frame": {
+      "x": 10.78,
+      "y": 6.46,
+      "w": 2.053,
+      "h": 0.6
+     },
+     "z": 62,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "paid users a month if activation rises from 66% to 80%"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 10.5,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "CFC8BA",
+       "slot": "accent2",
+       "token": "s3paperDim"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.25,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/0/compose/free/items/57/free/items/4"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 3
+     },
+     "ground": "s3ink",
+     "readingIndex": 38,
+     "overlapAllowed": true
+    }
+   ],
+   "notes": "Data storytelling: three numbered acts read left to right — a highlighted column chart, a retention curve and a proportional funnel — resolving into one takeaway band.",
+   "signature": [
+    0.211,
+    0.384,
+    0.384,
+    0.384,
+    0.384,
+    0.384,
+    0.384,
+    0.351,
+    0.291,
+    0.291,
+    0.102,
+    0,
+    0.287,
+    0.522,
+    0.522,
+    0.522,
+    0.516,
+    0.518,
+    0.522,
+    0.522,
+    0.512,
+    0.418,
+    0.133,
+    0.014,
+    0.459,
+    0.834,
+    0.539,
+    0.47,
+    0.342,
+    0.688,
+    0.803,
+    0.47,
+    0.456,
+    0.834,
+    0.543,
+    0.258,
+    0.635,
+    1.037,
+    0.861,
+    0.819,
+    0.627,
+    0.367,
+    0.491,
+    0.298,
+    0.299,
+    0.428,
+    0.244,
+    0.156,
+    0.64,
+    1,
+    1,
+    1,
+    0.771,
+    0.169,
+    0.301,
+    0.295,
+    0.163,
+    0.179,
+    0.339,
+    0.164,
+    0.411,
+    0.632,
+    0.632,
+    0.632,
+    0.521,
+    0.221,
+    0.226,
+    0.223,
+    0.218,
+    0.242,
+    0.269,
+    0.167,
+    0.304,
+    0.442,
+    0.684,
+    0.684,
+    0.684,
+    0.684,
+    0.684,
+    0.684,
+    0.734,
+    0.911,
+    0.505,
+    0.345
+   ],
+   "density": 0.493,
+   "findings": [],
+   "hash": "fe0834e3be801ef5"
+  },
+  {
+   "id": "growth",
+   "index": 1,
+   "message": "MAU increased 88% in six months.",
+   "mode": "compose",
+   "layout": "title-only",
+   "background": {
+    "hex": "F6F3EC",
+    "slot": "lt1",
+    "token": "s3paper"
+   },
+   "elements": [
+    {
+     "kind": "text",
+     "id": "growth/text1",
+     "role": "label",
+     "typeRole": "label",
+     "frame": {
+      "x": 0.5,
+      "y": 0.5,
+      "w": 10.0001,
+      "h": 0.25
+     },
+     "z": 0,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "DATA STORYTELLING"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 700,
+      "size": 10.5,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "C2410C",
+       "slot": "accent1",
+       "token": "s3coral"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.2,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/1/compose/free/items/0"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 0,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "growth/text2",
+     "role": "title",
+     "typeRole": "title",
+     "frame": {
+      "x": 0.5,
+      "y": 0.98,
+      "w": 12.33,
+      "h": 0.65
+     },
+     "z": 1,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "Growth accelerated throughout the half."
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Charter",
+      "family": "Charter",
+      "weight": 700,
+      "size": 30,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.05,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/1/compose/free/items/1"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "placeholder": {
+      "type": "title"
+     },
+     "readingIndex": 1,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "growth/text3",
+     "role": "body",
+     "typeRole": "small",
+     "frame": {
+      "x": 0.5,
+      "y": 1.67,
+      "w": 11.8,
+      "h": 0.5
+     },
+     "z": 2,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "Monthly active users grew from 42K to 79K; the largest absolute gain came in June."
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 15,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "66625B",
+       "slot": "dk2",
+       "token": "s3stone"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.3,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/1/compose/free/items/2"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 2,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "growth/shape4",
+     "role": "decorative",
+     "frame": {
+      "x": 0.5,
+      "y": 6.7548,
+      "w": 12.33,
+      "h": 0.0104
+     },
+     "z": 3,
+     "style": {
+      "preset": "rect",
+      "fill": {
+       "hex": "D6CFC2",
+       "slot": "accent3",
+       "token": "s3hair"
+      }
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/1/compose/free/items/3"
+     },
+     "decorative": true,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "growth/text5",
+     "role": "caption",
+     "typeRole": "caption",
+     "frame": {
+      "x": 0.5,
+      "y": 6.9,
+      "w": 10.4,
+      "h": 0.25
+     },
+     "z": 4,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "From Growth to Retention  ·  Illustrative demo"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 10,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "66625B",
+       "slot": "dk2",
+       "token": "s3stone"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.25,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/1/compose/free/items/4"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 3,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "growth/text6",
+     "role": "caption",
+     "typeRole": "caption",
+     "frame": {
+      "x": 11.8,
+      "y": 6.9,
+      "w": 1.03,
+      "h": 0.25
+     },
+     "z": 5,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "02 / 05"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 10,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "66625B",
+       "slot": "dk2",
+       "token": "s3stone"
+      },
+      "align": "right",
+      "valign": "top",
+      "leading": 1.25,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/1/compose/free/items/5"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 4,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "chart",
+     "id": "growth/chart7",
+     "role": "data",
+     "frame": {
+      "x": 0.4501,
+      "y": 2.5001,
+      "w": 8.25,
+      "h": 3.85
+     },
+     "z": 6,
+     "chart": "area",
+     "data": {
+      "categories": [
+       "Jan",
+       "Feb",
+       "Mar",
+       "Apr",
+       "May",
+       "Jun"
+      ],
+      "series": [
+       {
+        "name": "MAU (K)",
+        "values": [
+         42,
+         47,
+         53,
+         61,
+         68,
+         79
+        ]
+       }
+      ],
+      "unit": "K"
+     },
+     "colors": [
+      {
+       "hex": "C2410C",
+       "slot": "accent1",
+       "token": "s3coral"
+      }
+     ],
+     "highlight": [],
+     "style": {
+      "font": "Helvetica Neue",
+      "size": 13,
+      "text": {
+       "hex": "1B1B1F",
+       "token": "text",
+       "slot": "dk1"
+      },
+      "muted": {
+       "hex": "66625B",
+       "token": "muted",
+       "slot": "dk2"
+      },
+      "rule": {
+       "hex": "D6CFC2",
+       "token": "rule",
+       "slot": "accent3"
+      },
+      "axis": "hairline",
+      "gridlines": "none",
+      "labels": "none",
+      "legend": "none"
+     },
+     "alt": "Monthly active users in thousands: 42, 47, 53, 61, 68, 79.",
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/1/compose/free/items/6"
+     },
+     "readingIndex": 5,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "growth/text8",
+     "role": "metric",
+     "typeRole": "display",
+     "frame": {
+      "x": 9.1,
+      "y": 2.65,
+      "w": 3.7,
+      "h": 0.85
+     },
+     "z": 7,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "+88%"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Charter",
+      "family": "Charter",
+      "weight": 700,
+      "size": 44,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "C2410C",
+       "slot": "accent1",
+       "token": "s3coral"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 0.95,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/1/compose/free/items/7"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 6,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "growth/text9",
+     "role": "body",
+     "typeRole": "h3",
+     "frame": {
+      "x": 9.1,
+      "y": 3.57,
+      "w": 3.7,
+      "h": 0.4
+     },
+     "z": 8,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "Six-month growth"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Charter",
+      "family": "Charter",
+      "weight": 700,
+      "size": 18,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.18,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/1/compose/free/items/8"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 7,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "growth/text10",
+     "role": "body",
+     "typeRole": "small",
+     "frame": {
+      "x": 9.1,
+      "y": 4.05,
+      "w": 3.7,
+      "h": 0.55
+     },
+     "z": 9,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "37K additional monthly active users"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 13,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "66625B",
+       "slot": "dk2",
+       "token": "s3stone"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.3,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/1/compose/free/items/9"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 8,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "growth/text11",
+     "role": "body",
+     "typeRole": "h3",
+     "frame": {
+      "x": 9.1,
+      "y": 5.12,
+      "w": 3.7,
+      "h": 0.5
+     },
+     "z": 10,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "+11K in June"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Charter",
+      "family": "Charter",
+      "weight": 700,
+      "size": 23,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "C2410C",
+       "slot": "accent1",
+       "token": "s3coral"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.18,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/1/compose/free/items/10"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 9,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "growth/text12",
+     "role": "body",
+     "typeRole": "body",
+     "frame": {
+      "x": 9.1,
+      "y": 5.72,
+      "w": 3.7,
+      "h": 0.54
+     },
+     "z": 11,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "Momentum increases the value of fixing activation."
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 14,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "66625B",
+       "slot": "dk2",
+       "token": "s3stone"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.3,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/1/compose/free/items/11"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 2
+     },
+     "ground": "s3paper",
+     "readingIndex": 10,
+     "overlapAllowed": true
+    }
+   ],
+   "notes": "Fictional demonstration data. MAU increased 88% in six months.",
+   "signature": [
+    0.098,
+    0.179,
+    0.179,
+    0.179,
+    0.179,
+    0.179,
+    0.179,
+    0.179,
+    0.179,
+    0.127,
+    0.085,
+    0.047,
+    0.432,
+    0.786,
+    0.786,
+    0.786,
+    0.786,
+    0.786,
+    0.786,
+    0.786,
+    0.786,
+    0.786,
+    0.786,
+    0.304,
+    0.405,
+    0.682,
+    0.682,
+    0.682,
+    0.682,
+    0.682,
+    0.682,
+    0.569,
+    0.57,
+    0.7,
+    0.7,
+    0.357,
+    0.595,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0.83,
+    0.569,
+    0.703,
+    0.703,
+    0.365,
+    0.595,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0.83,
+    0.25,
+    0.309,
+    0.309,
+    0.161,
+    0.551,
+    0.927,
+    0.927,
+    0.927,
+    0.927,
+    0.927,
+    0.927,
+    0.769,
+    0.364,
+    0.45,
+    0.45,
+    0.234,
+    0.039,
+    0.071,
+    0.071,
+    0.071,
+    0.071,
+    0.071,
+    0.071,
+    0.071,
+    0.071,
+    0.058,
+    0.028,
+    0.039
+   ],
+   "density": 0.615,
+   "findings": [],
+   "hash": "e7cf32d70fde92a6"
+  },
+  {
+   "id": "retention",
+   "index": 2,
+   "message": "The largest retention loss is the first transition.",
+   "mode": "compose",
+   "layout": "title-only",
+   "background": {
+    "hex": "F6F3EC",
+    "slot": "lt1",
+    "token": "s3paper"
+   },
+   "elements": [
+    {
+     "kind": "text",
+     "id": "retention/text1",
+     "role": "label",
+     "typeRole": "label",
+     "frame": {
+      "x": 0.5,
+      "y": 0.5,
+      "w": 10.0001,
+      "h": 0.25
+     },
+     "z": 0,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "DATA STORYTELLING"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 700,
+      "size": 10.5,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "C2410C",
+       "slot": "accent1",
+       "token": "s3coral"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.2,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/2/compose/free/items/0"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 0,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "retention/text2",
+     "role": "title",
+     "typeRole": "title",
+     "frame": {
+      "x": 0.5,
+      "y": 0.98,
+      "w": 12.33,
+      "h": 0.65
+     },
+     "z": 1,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "The first month is the retention fault line."
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Charter",
+      "family": "Charter",
+      "weight": 700,
+      "size": 30,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.05,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/2/compose/free/items/1"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "placeholder": {
+      "type": "title"
+     },
+     "readingIndex": 1,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "retention/text3",
+     "role": "body",
+     "typeRole": "small",
+     "frame": {
+      "x": 0.5,
+      "y": 1.67,
+      "w": 11.8,
+      "h": 0.5
+     },
+     "z": 2,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "Retention loses 18 points first, then flattens toward a 62% month-six floor."
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 15,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "66625B",
+       "slot": "dk2",
+       "token": "s3stone"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.3,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/2/compose/free/items/2"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 2,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "retention/shape4",
+     "role": "decorative",
+     "frame": {
+      "x": 0.5,
+      "y": 6.7548,
+      "w": 12.33,
+      "h": 0.0104
+     },
+     "z": 3,
+     "style": {
+      "preset": "rect",
+      "fill": {
+       "hex": "D6CFC2",
+       "slot": "accent3",
+       "token": "s3hair"
+      }
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/2/compose/free/items/3"
+     },
+     "decorative": true,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "retention/text5",
+     "role": "caption",
+     "typeRole": "caption",
+     "frame": {
+      "x": 0.5,
+      "y": 6.9,
+      "w": 10.4,
+      "h": 0.25
+     },
+     "z": 4,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "From Growth to Retention  ·  Illustrative demo"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 10,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "66625B",
+       "slot": "dk2",
+       "token": "s3stone"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.25,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/2/compose/free/items/4"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 3,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "retention/text6",
+     "role": "caption",
+     "typeRole": "caption",
+     "frame": {
+      "x": 11.8,
+      "y": 6.9,
+      "w": 1.03,
+      "h": 0.25
+     },
+     "z": 5,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "03 / 05"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 10,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "66625B",
+       "slot": "dk2",
+       "token": "s3stone"
+      },
+      "align": "right",
+      "valign": "top",
+      "leading": 1.25,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/2/compose/free/items/5"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 4,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "retention/text7",
+     "role": "body",
+     "typeRole": "small",
+     "frame": {
+      "x": 0.5,
+      "y": 2.5001,
+      "w": 1.25,
+      "h": 0.3
+     },
+     "z": 6,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "Month 1"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 13,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.3,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/2/compose/free/items/6"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 5,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "retention/shape8",
+     "role": "decorative",
+     "frame": {
+      "x": 2,
+      "y": 2.57,
+      "w": 7.9,
+      "h": 0.24
+     },
+     "z": 7,
+     "style": {
+      "preset": "roundRect",
+      "fill": {
+       "hex": "D6CFC2",
+       "slot": "accent3",
+       "token": "s3hair"
+      },
+      "radius": 3
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/2/compose/free/items/7"
+     },
+     "decorative": true,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "retention/shape9",
+     "role": "decorative",
+     "frame": {
+      "x": 2,
+      "y": 2.57,
+      "w": 7.9,
+      "h": 0.24
+     },
+     "z": 8,
+     "style": {
+      "preset": "roundRect",
+      "fill": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "radius": 3
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/2/compose/free/items/8"
+     },
+     "decorative": true,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "retention/text10",
+     "role": "body",
+     "typeRole": "small",
+     "frame": {
+      "x": 10.2001,
+      "y": 2.5001,
+      "w": 1.3,
+      "h": 0.35
+     },
+     "z": 9,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "100%"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 700,
+      "size": 16,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.3,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/2/compose/free/items/9"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 6,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "retention/text11",
+     "role": "body",
+     "typeRole": "small",
+     "frame": {
+      "x": 0.5,
+      "y": 3.06,
+      "w": 1.25,
+      "h": 0.3
+     },
+     "z": 10,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "Month 2"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 13,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.3,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/2/compose/free/items/10"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 7,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "retention/shape12",
+     "role": "decorative",
+     "frame": {
+      "x": 2,
+      "y": 3.13,
+      "w": 7.9,
+      "h": 0.24
+     },
+     "z": 11,
+     "style": {
+      "preset": "roundRect",
+      "fill": {
+       "hex": "D6CFC2",
+       "slot": "accent3",
+       "token": "s3hair"
+      },
+      "radius": 3
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/2/compose/free/items/11"
+     },
+     "decorative": true,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "retention/shape13",
+     "role": "decorative",
+     "frame": {
+      "x": 2,
+      "y": 3.13,
+      "w": 6.478,
+      "h": 0.24
+     },
+     "z": 12,
+     "style": {
+      "preset": "roundRect",
+      "fill": {
+       "hex": "C2410C",
+       "slot": "accent1",
+       "token": "s3coral"
+      },
+      "radius": 3
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/2/compose/free/items/12"
+     },
+     "decorative": true,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "retention/text14",
+     "role": "body",
+     "typeRole": "small",
+     "frame": {
+      "x": 10.2001,
+      "y": 3.06,
+      "w": 1.3,
+      "h": 0.35
+     },
+     "z": 13,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "82%"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 700,
+      "size": 16,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.3,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/2/compose/free/items/13"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 8,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "retention/text15",
+     "role": "body",
+     "typeRole": "small",
+     "frame": {
+      "x": 0.5,
+      "y": 3.62,
+      "w": 1.25,
+      "h": 0.3
+     },
+     "z": 14,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "Month 3"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 13,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.3,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/2/compose/free/items/14"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 9,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "retention/shape16",
+     "role": "decorative",
+     "frame": {
+      "x": 2,
+      "y": 3.69,
+      "w": 7.9,
+      "h": 0.24
+     },
+     "z": 15,
+     "style": {
+      "preset": "roundRect",
+      "fill": {
+       "hex": "D6CFC2",
+       "slot": "accent3",
+       "token": "s3hair"
+      },
+      "radius": 3
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/2/compose/free/items/15"
+     },
+     "decorative": true,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "retention/shape17",
+     "role": "decorative",
+     "frame": {
+      "x": 2,
+      "y": 3.69,
+      "w": 5.688,
+      "h": 0.24
+     },
+     "z": 16,
+     "style": {
+      "preset": "roundRect",
+      "fill": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "radius": 3
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/2/compose/free/items/16"
+     },
+     "decorative": true,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "retention/text18",
+     "role": "body",
+     "typeRole": "small",
+     "frame": {
+      "x": 10.2001,
+      "y": 3.62,
+      "w": 1.3,
+      "h": 0.35
+     },
+     "z": 17,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "72%"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 700,
+      "size": 16,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.3,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/2/compose/free/items/17"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 10,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "retention/text19",
+     "role": "body",
+     "typeRole": "small",
+     "frame": {
+      "x": 0.5,
+      "y": 4.18,
+      "w": 1.25,
+      "h": 0.3
+     },
+     "z": 18,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "Month 4"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 13,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.3,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/2/compose/free/items/18"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 11,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "retention/shape20",
+     "role": "decorative",
+     "frame": {
+      "x": 2,
+      "y": 4.25,
+      "w": 7.9,
+      "h": 0.24
+     },
+     "z": 19,
+     "style": {
+      "preset": "roundRect",
+      "fill": {
+       "hex": "D6CFC2",
+       "slot": "accent3",
+       "token": "s3hair"
+      },
+      "radius": 3
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/2/compose/free/items/19"
+     },
+     "decorative": true,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "retention/shape21",
+     "role": "decorative",
+     "frame": {
+      "x": 2,
+      "y": 4.25,
+      "w": 5.2931,
+      "h": 0.24
+     },
+     "z": 20,
+     "style": {
+      "preset": "roundRect",
+      "fill": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "radius": 3
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/2/compose/free/items/20"
+     },
+     "decorative": true,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "retention/text22",
+     "role": "body",
+     "typeRole": "small",
+     "frame": {
+      "x": 10.2001,
+      "y": 4.18,
+      "w": 1.3,
+      "h": 0.35
+     },
+     "z": 21,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "67%"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 700,
+      "size": 16,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.3,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/2/compose/free/items/21"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 12,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "retention/text23",
+     "role": "body",
+     "typeRole": "small",
+     "frame": {
+      "x": 0.5,
+      "y": 4.74,
+      "w": 1.25,
+      "h": 0.3
+     },
+     "z": 22,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "Month 5"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 13,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.3,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/2/compose/free/items/22"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 13,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "retention/shape24",
+     "role": "decorative",
+     "frame": {
+      "x": 2,
+      "y": 4.81,
+      "w": 7.9,
+      "h": 0.24
+     },
+     "z": 23,
+     "style": {
+      "preset": "roundRect",
+      "fill": {
+       "hex": "D6CFC2",
+       "slot": "accent3",
+       "token": "s3hair"
+      },
+      "radius": 3
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/2/compose/free/items/23"
+     },
+     "decorative": true,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "retention/shape25",
+     "role": "decorative",
+     "frame": {
+      "x": 2,
+      "y": 4.81,
+      "w": 5.056,
+      "h": 0.24
+     },
+     "z": 24,
+     "style": {
+      "preset": "roundRect",
+      "fill": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "radius": 3
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/2/compose/free/items/24"
+     },
+     "decorative": true,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "retention/text26",
+     "role": "body",
+     "typeRole": "small",
+     "frame": {
+      "x": 10.2001,
+      "y": 4.74,
+      "w": 1.3,
+      "h": 0.35
+     },
+     "z": 25,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "64%"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 700,
+      "size": 16,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.3,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/2/compose/free/items/25"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 14,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "retention/text27",
+     "role": "body",
+     "typeRole": "small",
+     "frame": {
+      "x": 0.5,
+      "y": 5.3,
+      "w": 1.25,
+      "h": 0.3
+     },
+     "z": 26,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "Month 6"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 13,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.3,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/2/compose/free/items/26"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 15,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "retention/shape28",
+     "role": "decorative",
+     "frame": {
+      "x": 2,
+      "y": 5.37,
+      "w": 7.9,
+      "h": 0.24
+     },
+     "z": 27,
+     "style": {
+      "preset": "roundRect",
+      "fill": {
+       "hex": "D6CFC2",
+       "slot": "accent3",
+       "token": "s3hair"
+      },
+      "radius": 3
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/2/compose/free/items/27"
+     },
+     "decorative": true,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "retention/shape29",
+     "role": "decorative",
+     "frame": {
+      "x": 2,
+      "y": 5.37,
+      "w": 4.898,
+      "h": 0.24
+     },
+     "z": 28,
+     "style": {
+      "preset": "roundRect",
+      "fill": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "radius": 3
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/2/compose/free/items/28"
+     },
+     "decorative": true,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "retention/text30",
+     "role": "body",
+     "typeRole": "small",
+     "frame": {
+      "x": 10.2001,
+      "y": 5.3,
+      "w": 1.3,
+      "h": 0.35
+     },
+     "z": 29,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "62%"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 700,
+      "size": 16,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.3,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/2/compose/free/items/29"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 16,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "retention/free31-surface",
+     "role": "container",
+     "frame": {
+      "x": 0.5,
+      "y": 6.02,
+      "w": 12.33,
+      "h": 0.7299
+     },
+     "z": 30,
+     "style": {
+      "preset": "roundRect",
+      "fill": {
+       "hex": "ECE6DA",
+       "slot": "lt2",
+       "token": "s3wash"
+      },
+      "radius": 10
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/2/compose/free/items/30"
+     },
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "retention/text32",
+     "role": "body",
+     "typeRole": "h3",
+     "frame": {
+      "x": 0.76,
+      "y": 6.18,
+      "w": 11.8001,
+      "h": 0.4
+     },
+     "z": 31,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "Focus onboarding on reaching first value; later retention losses are substantially smaller."
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Charter",
+      "family": "Charter",
+      "weight": 700,
+      "size": 17,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "C2410C",
+       "slot": "accent1",
+       "token": "s3coral"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.18,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/2/compose/free/items/30/free/items/0"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3wash",
+     "readingIndex": 17,
+     "overlapAllowed": true
+    }
+   ],
+   "notes": "Fictional demonstration data. The largest retention loss is the first transition.",
+   "signature": [
+    0.098,
+    0.179,
+    0.179,
+    0.179,
+    0.179,
+    0.179,
+    0.179,
+    0.179,
+    0.179,
+    0.127,
+    0.085,
+    0.047,
+    0.432,
+    0.786,
+    0.786,
+    0.786,
+    0.786,
+    0.786,
+    0.786,
+    0.786,
+    0.786,
+    0.786,
+    0.786,
+    0.304,
+    0.148,
+    0.18,
+    0.106,
+    0.106,
+    0.106,
+    0.106,
+    0.106,
+    0.102,
+    0.087,
+    0.247,
+    0.114,
+    0.001,
+    0.17,
+    0.202,
+    0.121,
+    0.121,
+    0.121,
+    0.121,
+    0.116,
+    0.074,
+    0.055,
+    0.299,
+    0.128,
+    0,
+    0.17,
+    0.202,
+    0.124,
+    0.124,
+    0.124,
+    0.124,
+    0.09,
+    0.062,
+    0.057,
+    0.299,
+    0.128,
+    0,
+    0.192,
+    0.364,
+    0.34,
+    0.34,
+    0.34,
+    0.34,
+    0.313,
+    0.306,
+    0.303,
+    0.407,
+    0.33,
+    0.115,
+    0.124,
+    0.261,
+    0.261,
+    0.261,
+    0.261,
+    0.261,
+    0.261,
+    0.261,
+    0.261,
+    0.248,
+    0.218,
+    0.122
+   ],
+   "density": 0.29,
+   "findings": [],
+   "hash": "29944581f6f79519"
+  },
+  {
+   "id": "funnel",
+   "index": 3,
+   "message": "11K sign-ups fail to reach activation.",
+   "mode": "compose",
+   "layout": "title-only",
+   "background": {
+    "hex": "F6F3EC",
+    "slot": "lt1",
+    "token": "s3paper"
+   },
+   "elements": [
+    {
+     "kind": "text",
+     "id": "funnel/text1",
+     "role": "label",
+     "typeRole": "label",
+     "frame": {
+      "x": 0.5,
+      "y": 0.5,
+      "w": 10.0001,
+      "h": 0.25
+     },
+     "z": 0,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "DATA STORYTELLING"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 700,
+      "size": 10.5,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "C2410C",
+       "slot": "accent1",
+       "token": "s3coral"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.2,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/3/compose/free/items/0"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 0,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "funnel/text2",
+     "role": "title",
+     "typeRole": "title",
+     "frame": {
+      "x": 0.5,
+      "y": 0.98,
+      "w": 12.33,
+      "h": 0.65
+     },
+     "z": 1,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "Activation is the most actionable bottleneck."
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Charter",
+      "family": "Charter",
+      "weight": 700,
+      "size": 30,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.05,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/3/compose/free/items/1"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "placeholder": {
+      "type": "title"
+     },
+     "readingIndex": 1,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "funnel/text3",
+     "role": "body",
+     "typeRole": "small",
+     "frame": {
+      "x": 0.5,
+      "y": 1.67,
+      "w": 11.8,
+      "h": 0.5
+     },
+     "z": 2,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "The funnel is modeled from one month: 100K visitors, 32K sign-ups, 21K activated."
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 15,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "66625B",
+       "slot": "dk2",
+       "token": "s3stone"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.3,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/3/compose/free/items/2"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 2,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "funnel/shape4",
+     "role": "decorative",
+     "frame": {
+      "x": 0.5,
+      "y": 6.7548,
+      "w": 12.33,
+      "h": 0.0104
+     },
+     "z": 3,
+     "style": {
+      "preset": "rect",
+      "fill": {
+       "hex": "D6CFC2",
+       "slot": "accent3",
+       "token": "s3hair"
+      }
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/3/compose/free/items/3"
+     },
+     "decorative": true,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "funnel/text5",
+     "role": "caption",
+     "typeRole": "caption",
+     "frame": {
+      "x": 0.5,
+      "y": 6.9,
+      "w": 10.4,
+      "h": 0.25
+     },
+     "z": 4,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "From Growth to Retention  ·  Illustrative demo"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 10,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "66625B",
+       "slot": "dk2",
+       "token": "s3stone"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.25,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/3/compose/free/items/4"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 3,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "funnel/text6",
+     "role": "caption",
+     "typeRole": "caption",
+     "frame": {
+      "x": 11.8,
+      "y": 6.9,
+      "w": 1.03,
+      "h": 0.25
+     },
+     "z": 5,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "04 / 05"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 10,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "66625B",
+       "slot": "dk2",
+       "token": "s3stone"
+      },
+      "align": "right",
+      "valign": "top",
+      "leading": 1.25,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/3/compose/free/items/5"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 4,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "funnel/text7",
+     "role": "body",
+     "typeRole": "body",
+     "frame": {
+      "x": 0.5,
+      "y": 2.63,
+      "w": 1.75,
+      "h": 0.4
+     },
+     "z": 6,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "Visitors"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 16,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.3,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/3/compose/free/items/6"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 5,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "funnel/shape8",
+     "role": "decorative",
+     "frame": {
+      "x": 2.5001,
+      "y": 2.63,
+      "w": 7.4,
+      "h": 0.4
+     },
+     "z": 7,
+     "style": {
+      "preset": "rect",
+      "fill": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      }
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/3/compose/free/items/7"
+     },
+     "decorative": true,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "funnel/text9",
+     "role": "body",
+     "typeRole": "h3",
+     "frame": {
+      "x": 10.3001,
+      "y": 2.63,
+      "w": 2.53,
+      "h": 0.4
+     },
+     "z": 8,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "100K"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Charter",
+      "family": "Charter",
+      "weight": 700,
+      "size": 20,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.18,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/3/compose/free/items/8"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 6,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "funnel/text10",
+     "role": "body",
+     "typeRole": "body",
+     "frame": {
+      "x": 0.5,
+      "y": 3.2801,
+      "w": 1.75,
+      "h": 0.4
+     },
+     "z": 9,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "Sign-ups"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 16,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.3,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/3/compose/free/items/9"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 7,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "funnel/shape11",
+     "role": "decorative",
+     "frame": {
+      "x": 2.5001,
+      "y": 3.2801,
+      "w": 2.368,
+      "h": 0.4
+     },
+     "z": 10,
+     "style": {
+      "preset": "rect",
+      "fill": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      }
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/3/compose/free/items/10"
+     },
+     "decorative": true,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "funnel/text12",
+     "role": "body",
+     "typeRole": "h3",
+     "frame": {
+      "x": 10.3001,
+      "y": 3.2801,
+      "w": 2.53,
+      "h": 0.4
+     },
+     "z": 11,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "32K"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Charter",
+      "family": "Charter",
+      "weight": 700,
+      "size": 20,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.18,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/3/compose/free/items/11"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 8,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "funnel/text13",
+     "role": "body",
+     "typeRole": "body",
+     "frame": {
+      "x": 0.5,
+      "y": 3.93,
+      "w": 1.75,
+      "h": 0.4
+     },
+     "z": 12,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "Activated"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 16,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.3,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/3/compose/free/items/12"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 9,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "funnel/shape14",
+     "role": "decorative",
+     "frame": {
+      "x": 2.5001,
+      "y": 3.93,
+      "w": 1.554,
+      "h": 0.4
+     },
+     "z": 13,
+     "style": {
+      "preset": "rect",
+      "fill": {
+       "hex": "C2410C",
+       "slot": "accent1",
+       "token": "s3coral"
+      }
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/3/compose/free/items/13"
+     },
+     "decorative": true,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "funnel/text15",
+     "role": "body",
+     "typeRole": "h3",
+     "frame": {
+      "x": 10.3001,
+      "y": 3.93,
+      "w": 2.53,
+      "h": 0.4
+     },
+     "z": 14,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "21K"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Charter",
+      "family": "Charter",
+      "weight": 700,
+      "size": 20,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.18,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/3/compose/free/items/14"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 10,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "funnel/text16",
+     "role": "body",
+     "typeRole": "body",
+     "frame": {
+      "x": 0.5,
+      "y": 4.5801,
+      "w": 1.75,
+      "h": 0.4
+     },
+     "z": 15,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "Paid"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 16,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.3,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/3/compose/free/items/15"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 11,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "funnel/shape17",
+     "role": "decorative",
+     "frame": {
+      "x": 2.5001,
+      "y": 4.5801,
+      "w": 0.6216,
+      "h": 0.4
+     },
+     "z": 16,
+     "style": {
+      "preset": "rect",
+      "fill": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      }
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/3/compose/free/items/16"
+     },
+     "decorative": true,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "funnel/text18",
+     "role": "body",
+     "typeRole": "h3",
+     "frame": {
+      "x": 10.3001,
+      "y": 4.5801,
+      "w": 2.53,
+      "h": 0.4
+     },
+     "z": 17,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "8.4K"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Charter",
+      "family": "Charter",
+      "weight": 700,
+      "size": 20,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.18,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/3/compose/free/items/17"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 12,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "funnel/free19-surface",
+     "role": "container",
+     "frame": {
+      "x": 0.5,
+      "y": 5.72,
+      "w": 12.33,
+      "h": 0.7299
+     },
+     "z": 18,
+     "style": {
+      "preset": "roundRect",
+      "fill": {
+       "hex": "ECE6DA",
+       "slot": "lt2",
+       "token": "s3wash"
+      },
+      "radius": 10
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/3/compose/free/items/18"
+     },
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "funnel/text20",
+     "role": "body",
+     "typeRole": "h3",
+     "frame": {
+      "x": 0.76,
+      "y": 5.88,
+      "w": 11.8001,
+      "h": 0.4
+     },
+     "z": 19,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "11K sign-ups never activate. Fix the first successful workflow before buying more traffic."
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Charter",
+      "family": "Charter",
+      "weight": 700,
+      "size": 17,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "C2410C",
+       "slot": "accent1",
+       "token": "s3coral"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.18,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/3/compose/free/items/18/free/items/0"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3wash",
+     "readingIndex": 13,
+     "overlapAllowed": true
+    }
+   ],
+   "notes": "Fictional demonstration data. 11K sign-ups fail to reach activation.",
+   "signature": [
+    0.098,
+    0.179,
+    0.179,
+    0.179,
+    0.179,
+    0.179,
+    0.179,
+    0.179,
+    0.179,
+    0.127,
+    0.085,
+    0.047,
+    0.432,
+    0.786,
+    0.786,
+    0.786,
+    0.786,
+    0.786,
+    0.786,
+    0.786,
+    0.786,
+    0.786,
+    0.786,
+    0.304,
+    0.132,
+    0.239,
+    0.063,
+    0.071,
+    0.071,
+    0.071,
+    0.071,
+    0.071,
+    0.066,
+    0.179,
+    0.239,
+    0.124,
+    0.233,
+    0.423,
+    0.09,
+    0.088,
+    0.021,
+    0,
+    0,
+    0,
+    0,
+    0.309,
+    0.423,
+    0.232,
+    0.137,
+    0.249,
+    0.042,
+    0.004,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0.182,
+    0.249,
+    0.136,
+    0.198,
+    0.455,
+    0.455,
+    0.455,
+    0.455,
+    0.455,
+    0.455,
+    0.455,
+    0.455,
+    0.455,
+    0.455,
+    0.195,
+    0.043,
+    0.078,
+    0.078,
+    0.078,
+    0.078,
+    0.078,
+    0.078,
+    0.078,
+    0.078,
+    0.065,
+    0.035,
+    0.043
+   ],
+   "density": 0.308,
+   "findings": [],
+   "hash": "f64408f3c44e6098"
+  },
+  {
+   "id": "experiment",
+   "index": 4,
+   "message": "An 80% activation scenario yields 1.84K additional paid users.",
+   "mode": "compose",
+   "layout": "title-only",
+   "background": {
+    "hex": "F6F3EC",
+    "slot": "lt1",
+    "token": "s3paper"
+   },
+   "elements": [
+    {
+     "kind": "text",
+     "id": "experiment/text1",
+     "role": "label",
+     "typeRole": "label",
+     "frame": {
+      "x": 0.5,
+      "y": 0.5,
+      "w": 10.0001,
+      "h": 0.25
+     },
+     "z": 0,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "DATA STORYTELLING"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 700,
+      "size": 10.5,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "C2410C",
+       "slot": "accent1",
+       "token": "s3coral"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.2,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/4/compose/free/items/0"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 0,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "experiment/text2",
+     "role": "title",
+     "typeRole": "title",
+     "frame": {
+      "x": 0.5,
+      "y": 0.98,
+      "w": 12.33,
+      "h": 0.65
+     },
+     "z": 1,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "An activation experiment can unlock 1.8K paid users."
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Charter",
+      "family": "Charter",
+      "weight": 700,
+      "size": 30,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.05,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/4/compose/free/items/1"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "placeholder": {
+      "type": "title"
+     },
+     "readingIndex": 1,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "experiment/text3",
+     "role": "body",
+     "typeRole": "small",
+     "frame": {
+      "x": 0.5,
+      "y": 1.67,
+      "w": 11.8,
+      "h": 0.5
+     },
+     "z": 2,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "Scenario holds 32K sign-ups and 40% activated-to-paid conversion constant."
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 15,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "66625B",
+       "slot": "dk2",
+       "token": "s3stone"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.3,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/4/compose/free/items/2"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 2,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "experiment/shape4",
+     "role": "decorative",
+     "frame": {
+      "x": 0.5,
+      "y": 6.7548,
+      "w": 12.33,
+      "h": 0.0104
+     },
+     "z": 3,
+     "style": {
+      "preset": "rect",
+      "fill": {
+       "hex": "D6CFC2",
+       "slot": "accent3",
+       "token": "s3hair"
+      }
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/4/compose/free/items/3"
+     },
+     "decorative": true,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "experiment/text5",
+     "role": "caption",
+     "typeRole": "caption",
+     "frame": {
+      "x": 0.5,
+      "y": 6.9,
+      "w": 10.4,
+      "h": 0.25
+     },
+     "z": 4,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "From Growth to Retention  ·  Illustrative demo"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 10,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "66625B",
+       "slot": "dk2",
+       "token": "s3stone"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.25,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/4/compose/free/items/4"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 3,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "experiment/text6",
+     "role": "caption",
+     "typeRole": "caption",
+     "frame": {
+      "x": 11.8,
+      "y": 6.9,
+      "w": 1.03,
+      "h": 0.25
+     },
+     "z": 5,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "05 / 05"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 10,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "66625B",
+       "slot": "dk2",
+       "token": "s3stone"
+      },
+      "align": "right",
+      "valign": "top",
+      "leading": 1.25,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/4/compose/free/items/5"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 4,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "experiment/text7",
+     "role": "metric",
+     "typeRole": "display",
+     "frame": {
+      "x": 0.5,
+      "y": 2.55,
+      "w": 3.8,
+      "h": 0.85
+     },
+     "z": 6,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "65.6%"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Charter",
+      "family": "Charter",
+      "weight": 700,
+      "size": 44,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "C2410C",
+       "slot": "accent1",
+       "token": "s3coral"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 0.95,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/4/compose/free/items/6"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 5,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "experiment/text8",
+     "role": "body",
+     "typeRole": "h3",
+     "frame": {
+      "x": 0.5,
+      "y": 3.47,
+      "w": 3.8,
+      "h": 0.4
+     },
+     "z": 7,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "Baseline activation"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Charter",
+      "family": "Charter",
+      "weight": 700,
+      "size": 18,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.18,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/4/compose/free/items/7"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 6,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "experiment/text9",
+     "role": "body",
+     "typeRole": "small",
+     "frame": {
+      "x": 0.5,
+      "y": 3.95,
+      "w": 3.8,
+      "h": 0.55
+     },
+     "z": 8,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "21K activated / 32K sign-ups"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 13,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "66625B",
+       "slot": "dk2",
+       "token": "s3stone"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.3,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/4/compose/free/items/8"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 7,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "experiment/text10",
+     "role": "metric",
+     "typeRole": "display",
+     "frame": {
+      "x": 4.75,
+      "y": 2.55,
+      "w": 3.8,
+      "h": 0.85
+     },
+     "z": 9,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "80%"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Charter",
+      "family": "Charter",
+      "weight": 700,
+      "size": 44,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "C2410C",
+       "slot": "accent1",
+       "token": "s3coral"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 0.95,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/4/compose/free/items/9"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 8,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "experiment/text11",
+     "role": "body",
+     "typeRole": "h3",
+     "frame": {
+      "x": 4.75,
+      "y": 3.47,
+      "w": 3.8,
+      "h": 0.4
+     },
+     "z": 10,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "Target activation"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Charter",
+      "family": "Charter",
+      "weight": 700,
+      "size": 18,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.18,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/4/compose/free/items/10"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 9,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "experiment/text12",
+     "role": "body",
+     "typeRole": "small",
+     "frame": {
+      "x": 4.75,
+      "y": 3.95,
+      "w": 3.8,
+      "h": 0.55
+     },
+     "z": 11,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "25.6K activated at the same traffic"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 13,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "66625B",
+       "slot": "dk2",
+       "token": "s3stone"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.3,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/4/compose/free/items/11"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 10,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "experiment/text13",
+     "role": "metric",
+     "typeRole": "display",
+     "frame": {
+      "x": 9,
+      "y": 2.55,
+      "w": 3.8,
+      "h": 0.85
+     },
+     "z": 12,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "+1.84K"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Charter",
+      "family": "Charter",
+      "weight": 700,
+      "size": 44,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "C2410C",
+       "slot": "accent1",
+       "token": "s3coral"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 0.95,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/4/compose/free/items/12"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 11,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "experiment/text14",
+     "role": "body",
+     "typeRole": "h3",
+     "frame": {
+      "x": 9,
+      "y": 3.47,
+      "w": 3.8,
+      "h": 0.4
+     },
+     "z": 13,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "Modeled paid lift"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Charter",
+      "family": "Charter",
+      "weight": 700,
+      "size": 18,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.18,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/4/compose/free/items/13"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 12,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "experiment/text15",
+     "role": "body",
+     "typeRole": "small",
+     "frame": {
+      "x": 9,
+      "y": 3.95,
+      "w": 3.8,
+      "h": 0.55
+     },
+     "z": 14,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "10.24K vs. 8.4K paid users"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 400,
+      "size": 13,
+      "bold": false,
+      "italic": false,
+      "color": {
+       "hex": "66625B",
+       "slot": "dk2",
+       "token": "s3stone"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.3,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/4/compose/free/items/14"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 13,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "shape",
+     "id": "experiment/shape16",
+     "role": "decorative",
+     "frame": {
+      "x": 0.5,
+      "y": 4.8448,
+      "w": 12.33,
+      "h": 0.0104
+     },
+     "z": 15,
+     "style": {
+      "preset": "rect",
+      "fill": {
+       "hex": "D6CFC2",
+       "slot": "accent3",
+       "token": "s3hair"
+      }
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/4/compose/free/items/15"
+     },
+     "decorative": true,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "experiment/text17",
+     "role": "label",
+     "typeRole": "label",
+     "frame": {
+      "x": 0.5,
+      "y": 5.08,
+      "w": 3.8,
+      "h": 0.38
+     },
+     "z": 16,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "TEST"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 700,
+      "size": 11,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "C2410C",
+       "slot": "accent1",
+       "token": "s3coral"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.2,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/4/compose/free/items/16"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 14,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "experiment/text18",
+     "role": "body",
+     "typeRole": "h3",
+     "frame": {
+      "x": 0.5,
+      "y": 5.57,
+      "w": 3.8,
+      "h": 0.5999
+     },
+     "z": 17,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "Guided first workflow"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Charter",
+      "family": "Charter",
+      "weight": 700,
+      "size": 17,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.18,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/4/compose/free/items/17"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 15,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "experiment/text19",
+     "role": "label",
+     "typeRole": "label",
+     "frame": {
+      "x": 4.75,
+      "y": 5.08,
+      "w": 3.8,
+      "h": 0.38
+     },
+     "z": 18,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "PRIMARY MEASURE"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 700,
+      "size": 11,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "C2410C",
+       "slot": "accent1",
+       "token": "s3coral"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.2,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/4/compose/free/items/18"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 16,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "experiment/text20",
+     "role": "body",
+     "typeRole": "h3",
+     "frame": {
+      "x": 4.75,
+      "y": 5.57,
+      "w": 3.8,
+      "h": 0.5999
+     },
+     "z": 19,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "Activation within 7 days"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Charter",
+      "family": "Charter",
+      "weight": 700,
+      "size": 17,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.18,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/4/compose/free/items/19"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 17,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "experiment/text21",
+     "role": "label",
+     "typeRole": "label",
+     "frame": {
+      "x": 9,
+      "y": 5.08,
+      "w": 3.8,
+      "h": 0.38
+     },
+     "z": 20,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "GUARDRAIL"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Helvetica Neue",
+      "family": "Helvetica Neue",
+      "weight": 700,
+      "size": 11,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "C2410C",
+       "slot": "accent1",
+       "token": "s3coral"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.2,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/4/compose/free/items/20"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 18,
+     "overlapAllowed": true
+    },
+    {
+     "kind": "text",
+     "id": "experiment/text22",
+     "role": "body",
+     "typeRole": "h3",
+     "frame": {
+      "x": 9,
+      "y": 5.57,
+      "w": 3.8,
+      "h": 0.5999
+     },
+     "z": 21,
+     "paragraphs": [
+      {
+       "runs": [
+        {
+         "text": "30-day retention"
+        }
+       ]
+      }
+     ],
+     "style": {
+      "font": "Charter",
+      "family": "Charter",
+      "weight": 700,
+      "size": 17,
+      "bold": true,
+      "italic": false,
+      "color": {
+       "hex": "1B1B1F",
+       "slot": "dk1",
+       "token": "s3ink"
+      },
+      "align": "left",
+      "valign": "top",
+      "leading": 1.18,
+      "inset": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "provenance": {
+      "source": "composed",
+      "path": "/slides/4/compose/free/items/21"
+     },
+     "fit": {
+      "status": "fit",
+      "steps": [
+       "measure"
+      ],
+      "lines": 1
+     },
+     "ground": "s3paper",
+     "readingIndex": 19,
+     "overlapAllowed": true
+    }
+   ],
+   "notes": "Fictional demonstration data. An 80% activation scenario yields 1.84K additional paid users.",
+   "signature": [
+    0.098,
+    0.179,
+    0.179,
+    0.179,
+    0.179,
+    0.179,
+    0.179,
+    0.179,
+    0.179,
+    0.127,
+    0.085,
+    0.047,
+    0.432,
+    0.786,
+    0.786,
+    0.786,
+    0.786,
+    0.786,
+    0.786,
+    0.786,
+    0.786,
+    0.786,
+    0.786,
+    0.304,
+    0.452,
+    0.821,
+    0.821,
+    0.716,
+    0.6,
+    0.821,
+    0.821,
+    0.575,
+    0.741,
+    0.821,
+    0.821,
+    0.42,
+    0.351,
+    0.637,
+    0.637,
+    0.554,
+    0.462,
+    0.637,
+    0.637,
+    0.443,
+    0.574,
+    0.637,
+    0.637,
+    0.331,
+    0.124,
+    0.225,
+    0.225,
+    0.196,
+    0.163,
+    0.225,
+    0.225,
+    0.157,
+    0.203,
+    0.225,
+    0.225,
+    0.117,
+    0.206,
+    0.374,
+    0.374,
+    0.326,
+    0.271,
+    0.374,
+    0.374,
+    0.26,
+    0.337,
+    0.374,
+    0.374,
+    0.195,
+    0.039,
+    0.071,
+    0.071,
+    0.071,
+    0.071,
+    0.071,
+    0.071,
+    0.071,
+    0.071,
+    0.058,
+    0.028,
+    0.039
+   ],
+   "density": 0.51,
+   "findings": [],
+   "hash": "5c8ac2fa6e802aab"
+  }
+ ]
+}

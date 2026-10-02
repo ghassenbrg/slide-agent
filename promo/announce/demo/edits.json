@@ -1,0 +1,20 @@
+[
+  {
+    "level": "design",
+    "op": "set",
+    "path": "/color/palette/s3coral",
+    "value": "#2F5BFF"
+  },
+  {
+    "level": "design",
+    "op": "set",
+    "path": "/color/palette/s3coralLight",
+    "value": "#86A0FF"
+  },
+  {
+    "level": "design",
+    "op": "set",
+    "path": "/color/palette/s3coralSoft",
+    "value": "#E6ECFF"
+  }
+]

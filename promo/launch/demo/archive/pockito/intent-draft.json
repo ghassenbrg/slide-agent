@@ -1,0 +1,2156 @@
+{
+  "schema": "slide-agent.intent/1",
+  "brief": {
+    "title": "Pockito — product update",
+    "audience": "Stakeholders, October product update",
+    "goal": "Show progress on Pockito and agree the roadmap and the support it needs",
+    "format": "16:9"
+  },
+  "direction": {
+    "concept": "Friendly fintech: airy white cards on a soft canvas, deep navy headlines with one word in fresh teal, every idea anchored by a round pastel icon badge, and the app's own art doing the smiling.",
+    "fit": "ask"
+  },
+  "design": {
+    "language": {
+      "color": {
+        "palette": {
+          "canvas": "#F5F7F9",
+          "card": "#FFFFFF",
+          "navy": "#0F2A44",
+          "slate": "#55657A",
+          "line": "#E2E8EE",
+          "teal": "#12998A",
+          "green": "#1C9A5C",
+          "ocean": "#3A8FA6",
+          "blue": "#3B82F6",
+          "purple": "#8B5CF6",
+          "pink": "#E8679B",
+          "orange": "#F2873A",
+          "yellow": "#F2B630",
+          "red": "#E0454B",
+          "orangeDeep": "#BF5410",
+          "tealDeep": "#0E7A6F",
+          "oceanDeep": "#2C6E83",
+          "pinkDeep": "#C03E78",
+          "amberDeep": "#9C6A00",
+          "sky": "#EAF3FA",
+          "peach": "#FDF0EA",
+          "mint": "#E8F6EF",
+          "rose": "#FCEDED",
+          "track": "#EEF2F5"
+        },
+        "roles": {
+          "background": "canvas",
+          "surface": "card",
+          "text": "navy",
+          "muted": "slate",
+          "accent": "teal",
+          "accentAlt": "green",
+          "rule": "line"
+        },
+        "data": [
+          "teal",
+          "blue",
+          "purple"
+        ]
+      },
+      "type": {
+        "display": {
+          "family": "Plus Jakarta Sans",
+          "weight": 800,
+          "tracking": -0.02
+        },
+        "body": {
+          "family": "Plus Jakarta Sans",
+          "weight": 500
+        },
+        "scale": {
+          "base": 17,
+          "ratio": 1.25
+        }
+      },
+      "space": {
+        "unit": 8,
+        "margin": 44,
+        "gutter": 16
+      },
+      "grid": {
+        "columns": 12,
+        "rows": 8
+      },
+      "shape": {
+        "radius": 14,
+        "stroke": 0,
+        "shadow": "soft"
+      },
+      "surfaces": {
+        "card": {
+          "fill": "card",
+          "radius": 16,
+          "pad": "space.3",
+          "shadow": "soft"
+        },
+        "tile": {
+          "fill": "card",
+          "radius": 16,
+          "pad": "space.2",
+          "shadow": "soft"
+        },
+        "sky": {
+          "fill": "sky",
+          "radius": 18,
+          "pad": "space.2.5"
+        },
+        "peach": {
+          "fill": "peach",
+          "radius": 18,
+          "pad": "space.2.5"
+        },
+        "mint": {
+          "fill": "mint",
+          "radius": 16,
+          "pad": "space.2.5"
+        },
+        "rose": {
+          "fill": "rose",
+          "radius": 18,
+          "pad": "space.2.5"
+        },
+        "track": {
+          "fill": "track",
+          "radius": 10
+        },
+        "dot-mint": {
+          "fill": "mint",
+          "radius": 100
+        },
+        "dot-sky": {
+          "fill": "sky",
+          "radius": 100
+        },
+        "dot-peach": {
+          "fill": "peach",
+          "radius": 100
+        },
+        "dot-rose": {
+          "fill": "rose",
+          "radius": 100
+        },
+        "dot-track": {
+          "fill": "track",
+          "radius": 100
+        },
+        "dot-teal-deep": {
+          "fill": "tealDeep",
+          "radius": 100
+        },
+        "dot-ocean-deep": {
+          "fill": "oceanDeep",
+          "radius": 100
+        }
+      },
+      "texture": [
+        {
+          "id": "sky-wash",
+          "primitive": "gradient-wash",
+          "params": {
+            "from": "canvas",
+            "to": "sky",
+            "angle": 0,
+            "opacity": 1
+          }
+        }
+      ],
+      "chrome": {
+        "slideNumber": true,
+        "position": "bottom-right"
+      }
+    }
+  },
+  "components": {
+    "agenda": {
+      "params": [
+        "n",
+        "title",
+        "detail",
+        "fill"
+      ],
+      "root": {
+        "row": {
+          "gap": "space.2.5",
+          "align": "center",
+          "items": [
+            {
+              "column": {
+                "surface": "dot-{fill}",
+                "width": 46,
+                "height": 46,
+                "justify": "center",
+                "items": [
+                  {
+                    "text": "{n}",
+                    "role": "h3",
+                    "tone": "card",
+                    "align": "center"
+                  }
+                ]
+              }
+            },
+            {
+              "column": {
+                "gap": "space.0.5",
+                "items": [
+                  {
+                    "text": "{title}",
+                    "role": "h3"
+                  },
+                  {
+                    "text": "{detail}",
+                    "role": "body",
+                    "tone": "muted"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "pillar": {
+      "params": [
+        "icon",
+        "fill",
+        "tone",
+        "title",
+        "detail"
+      ],
+      "root": {
+        "column": {
+          "gap": "space.1.5",
+          "align": "center",
+          "items": [
+            {
+              "column": {
+                "surface": "dot-{fill}",
+                "width": 64,
+                "height": 64,
+                "align": "center",
+                "justify": "center",
+                "items": [
+                  {
+                    "icon": "{icon}",
+                    "tone": "{tone}",
+                    "width": 30,
+                    "height": 30
+                  }
+                ]
+              }
+            },
+            {
+              "text": "{title}",
+              "role": "h3",
+              "align": "center"
+            },
+            {
+              "text": "{detail}",
+              "role": "small",
+              "tone": "muted",
+              "align": "center"
+            }
+          ]
+        }
+      }
+    },
+    "feature": {
+      "params": [
+        "icon",
+        "fill",
+        "tone",
+        "title",
+        "detail"
+      ],
+      "root": {
+        "column": {
+          "surface": "tile",
+          "gap": "space.1",
+          "align": "center",
+          "justify": "center",
+          "items": [
+            {
+              "column": {
+                "surface": "dot-{fill}",
+                "width": 50,
+                "height": 50,
+                "align": "center",
+                "justify": "center",
+                "items": [
+                  {
+                    "icon": "{icon}",
+                    "tone": "{tone}",
+                    "width": 24,
+                    "height": 24
+                  }
+                ]
+              }
+            },
+            {
+              "text": "{title}",
+              "role": "h3",
+              "align": "center"
+            },
+            {
+              "text": "{detail}",
+              "role": "small",
+              "tone": "muted",
+              "align": "center"
+            }
+          ]
+        }
+      }
+    },
+    "risk": {
+      "params": [
+        "icon",
+        "tone",
+        "title",
+        "detail"
+      ],
+      "root": {
+        "row": {
+          "gap": "space.2",
+          "height": 44,
+          "items": [
+            {
+              "icon": "{icon}",
+              "tone": "{tone}",
+              "width": 22,
+              "height": 22
+            },
+            {
+              "column": {
+                "gap": "space.0.25",
+                "items": [
+                  {
+                    "text": "{title}",
+                    "role": "body",
+                    "weight": 700
+                  },
+                  {
+                    "text": "{detail}",
+                    "role": "small",
+                    "tone": "muted"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "screen": {
+      "params": [
+        "asset",
+        "alt",
+        "title",
+        "detail"
+      ],
+      "root": {
+        "column": {
+          "gap": "space.1",
+          "align": "center",
+          "items": [
+            {
+              "image": {
+                "asset": "{asset}",
+                "alt": "{alt}",
+                "fit": "contain"
+              },
+              "grow": 1
+            },
+            {
+              "text": "{title}",
+              "role": "h3",
+              "align": "center"
+            },
+            {
+              "text": "{detail}",
+              "role": "small",
+              "tone": "muted",
+              "align": "center"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "slides": [
+    {
+      "id": "cover",
+      "message": "Pockito is becoming a smarter, simpler finance app — this is where we are",
+      "compose": {
+        "grid": "12x8",
+        "items": [
+          {
+            "at": "c1-12 r1-8",
+            "bleed": [
+              "left",
+              "right",
+              "top",
+              "bottom"
+            ],
+            "texture": "sky-wash"
+          },
+          {
+            "at": "c1-7 r1-8",
+            "column": {
+              "gap": "space.3",
+              "justify": "center",
+              "items": [
+                {
+                  "row": {
+                    "gap": "space.1",
+                    "align": "center",
+                    "items": [
+                      {
+                        "icon": "sprout",
+                        "tone": "green",
+                        "width": 34,
+                        "height": 34
+                      },
+                      {
+                        "text": "Pockito",
+                        "role": "h2",
+                        "tone": "accent",
+                        "width": "auto"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "space": "space.2"
+                },
+                {
+                  "text": "Building a Smarter & Simpler Finance App",
+                  "role": "display",
+                  "size": 54
+                },
+                {
+                  "text": "Product Update",
+                  "role": "h2"
+                },
+                {
+                  "text": "Oct 2026 · Simple finance, happier together",
+                  "role": "body",
+                  "tone": "muted"
+                }
+              ]
+            }
+          },
+          {
+            "at": "c8-12 r1-8",
+            "bleed": [
+              "right",
+              "top",
+              "bottom"
+            ],
+            "image": {
+              "asset": "app-art/otter.png",
+              "alt": "Pockito's otter mascot holding a gold coin on a hilltop above a coastal city",
+              "fit": "cover",
+              "focal": [
+                0.45,
+                0.5
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "agenda",
+      "message": "Five things to cover: product, progress, demo, roadmap, and risks",
+      "compose": {
+        "grid": "12x8",
+        "items": [
+          {
+            "at": "c1-7 r1-2",
+            "column": {
+              "gap": "space.1",
+              "justify": "start",
+              "items": [
+                {
+                  "row": {
+                    "gap": "space.1",
+                    "items": [
+                      {
+                        "text": "Today's",
+                        "role": "title",
+                        "size": 46,
+                        "width": "auto"
+                      },
+                      {
+                        "text": "Agenda",
+                        "role": "title",
+                        "size": 46,
+                        "tone": "accent",
+                        "width": "auto"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "at": "c1-6 r2-8",
+            "column": {
+              "gap": "space.1.25",
+              "justify": "center",
+              "items": [
+                {
+                  "use": "agenda",
+                  "n": "01",
+                  "title": "Product Overview",
+                  "detail": "Vision, users, and key goals",
+                  "fill": "ocean-deep"
+                },
+                {
+                  "use": "agenda",
+                  "n": "02",
+                  "title": "Progress & Milestones",
+                  "detail": "What we've delivered",
+                  "fill": "teal-deep"
+                },
+                {
+                  "use": "agenda",
+                  "n": "03",
+                  "title": "Demo Highlights",
+                  "detail": "Key features in action",
+                  "fill": "teal-deep"
+                },
+                {
+                  "use": "agenda",
+                  "n": "04",
+                  "title": "Roadmap",
+                  "detail": "Next steps and timeline",
+                  "fill": "ocean-deep"
+                },
+                {
+                  "use": "agenda",
+                  "n": "05",
+                  "title": "Risks & Support Needed",
+                  "detail": "What we need to succeed",
+                  "fill": "ocean-deep"
+                }
+              ]
+            }
+          },
+          {
+            "at": "c7-12 r1-8",
+            "image": {
+              "asset": "app-art/agenda-phone.png",
+              "alt": "Pockito home screen showing total balance, a shared space and recent expenses",
+              "fit": "contain"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "vision",
+      "message": "One app for individuals and couples to manage money together",
+      "compose": {
+        "grid": "12x8",
+        "items": [
+          {
+            "at": "c1-10 r1-2",
+            "column": {
+              "gap": "space.1",
+              "justify": "start",
+              "items": [
+                {
+                  "row": {
+                    "gap": "space.1",
+                    "items": [
+                      {
+                        "text": "Product",
+                        "role": "title",
+                        "size": 46,
+                        "width": "auto"
+                      },
+                      {
+                        "text": "Vision",
+                        "role": "title",
+                        "size": 46,
+                        "tone": "accent",
+                        "width": "auto"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "text": "A modern finance app for individuals and couples to manage money together, effortlessly.",
+                  "role": "lead",
+                  "tone": "muted"
+                }
+              ]
+            }
+          },
+          {
+            "at": "c1-12 r3-6",
+            "row": {
+              "gap": "space.3",
+              "align": "center",
+              "connect": "dots",
+              "items": [
+                {
+                  "use": "pillar",
+                  "icon": "users",
+                  "fill": "mint",
+                  "tone": "teal",
+                  "title": "Shared Spaces",
+                  "detail": "Expenses, budgets and settlements"
+                },
+                {
+                  "use": "pillar",
+                  "icon": "wallet-cards",
+                  "fill": "sky",
+                  "tone": "blue",
+                  "title": "Complete Money Management",
+                  "detail": "Accounts, wallets, subscriptions"
+                },
+                {
+                  "use": "pillar",
+                  "icon": "sparkles",
+                  "fill": "peach",
+                  "tone": "orangeDeep",
+                  "title": "AI-Powered Simplicity",
+                  "detail": "Smart insights and automation"
+                },
+                {
+                  "use": "pillar",
+                  "icon": "heart",
+                  "fill": "rose",
+                  "tone": "red",
+                  "title": "A Happier Financial Life",
+                  "detail": "Built for real life, together"
+                }
+              ]
+            }
+          },
+          {
+            "at": "c1-12 r7-8",
+            "surface": "mint",
+            "row": {
+              "gap": "space.2",
+              "align": "center",
+              "justify": "center",
+              "items": [
+                {
+                  "text": "“Make managing money simple, transparent, and even enjoyable — for individuals and the people they care about.”",
+                  "role": "body",
+                  "italic": true,
+                  "align": "center"
+                },
+                {
+                  "icon": "sprout",
+                  "tone": "green",
+                  "width": 32,
+                  "height": 32
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "users",
+      "message": "We design for individuals and for couples who share money",
+      "compose": {
+        "grid": "12x8",
+        "items": [
+          {
+            "at": "c1-10 r1-2",
+            "column": {
+              "gap": "space.1",
+              "justify": "start",
+              "items": [
+                {
+                  "row": {
+                    "gap": "space.1",
+                    "items": [
+                      {
+                        "text": "Target",
+                        "role": "title",
+                        "size": 46,
+                        "width": "auto"
+                      },
+                      {
+                        "text": "Users",
+                        "role": "title",
+                        "size": 46,
+                        "tone": "accent",
+                        "width": "auto"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "text": "Designed for both individual and shared finance needs.",
+                  "role": "lead",
+                  "tone": "muted"
+                }
+              ]
+            }
+          },
+          {
+            "at": "c1-6 r3-8",
+            "surface": "sky",
+            "column": {
+              "gap": "space.0.75",
+              "items": [
+                {
+                  "image": {
+                    "asset": "app-art/individual.png",
+                    "alt": "Illustration of a young man checking his phone",
+                    "fit": "contain"
+                  },
+                  "height": 132
+                },
+                {
+                  "text": "Individuals",
+                  "role": "h3"
+                },
+                {
+                  "row": {
+                    "gap": "space.1.5",
+                    "align": "center",
+                    "height": 22,
+                    "items": [
+                      {
+                        "icon": "circle-check",
+                        "tone": "accent",
+                        "width": 20,
+                        "height": 20
+                      },
+                      {
+                        "text": "Track personal expenses",
+                        "role": "small"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "row": {
+                    "gap": "space.1.5",
+                    "align": "center",
+                    "height": 22,
+                    "items": [
+                      {
+                        "icon": "circle-check",
+                        "tone": "accent",
+                        "width": 20,
+                        "height": 20
+                      },
+                      {
+                        "text": "Manage accounts & subscriptions",
+                        "role": "small"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "row": {
+                    "gap": "space.1.5",
+                    "align": "center",
+                    "height": 22,
+                    "items": [
+                      {
+                        "icon": "circle-check",
+                        "tone": "accent",
+                        "width": 20,
+                        "height": 20
+                      },
+                      {
+                        "text": "Get AI insights",
+                        "role": "small"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "row": {
+                    "gap": "space.1.5",
+                    "align": "center",
+                    "height": 22,
+                    "items": [
+                      {
+                        "icon": "circle-check",
+                        "tone": "accent",
+                        "width": 20,
+                        "height": 20
+                      },
+                      {
+                        "text": "Simple and clean experience",
+                        "role": "small"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "at": "c7-12 r3-8",
+            "surface": "peach",
+            "column": {
+              "gap": "space.0.75",
+              "items": [
+                {
+                  "image": {
+                    "asset": "app-art/couple.png",
+                    "alt": "Illustration of a smiling couple",
+                    "fit": "contain"
+                  },
+                  "height": 132
+                },
+                {
+                  "text": "Couples / Shared Spaces",
+                  "role": "h3"
+                },
+                {
+                  "row": {
+                    "gap": "space.1.5",
+                    "align": "center",
+                    "height": 22,
+                    "items": [
+                      {
+                        "icon": "circle-check",
+                        "tone": "orange",
+                        "width": 20,
+                        "height": 20
+                      },
+                      {
+                        "text": "Shared expenses",
+                        "role": "small"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "row": {
+                    "gap": "space.1.5",
+                    "align": "center",
+                    "height": 22,
+                    "items": [
+                      {
+                        "icon": "circle-check",
+                        "tone": "orange",
+                        "width": 20,
+                        "height": 20
+                      },
+                      {
+                        "text": "Budgets & categories",
+                        "role": "small"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "row": {
+                    "gap": "space.1.5",
+                    "align": "center",
+                    "height": 22,
+                    "items": [
+                      {
+                        "icon": "circle-check",
+                        "tone": "orange",
+                        "width": 20,
+                        "height": 20
+                      },
+                      {
+                        "text": "Fair settlements",
+                        "role": "small"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "row": {
+                    "gap": "space.1.5",
+                    "align": "center",
+                    "height": 22,
+                    "items": [
+                      {
+                        "icon": "circle-check",
+                        "tone": "orange",
+                        "width": 20,
+                        "height": 20
+                      },
+                      {
+                        "text": "Transparency for peace of mind",
+                        "role": "small"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "features",
+      "message": "Six features bring personal and shared finance together",
+      "compose": {
+        "grid": "12x8",
+        "items": [
+          {
+            "at": "c1-10 r1-2",
+            "column": {
+              "gap": "space.1",
+              "justify": "start",
+              "items": [
+                {
+                  "row": {
+                    "gap": "space.1",
+                    "items": [
+                      {
+                        "text": "Key",
+                        "role": "title",
+                        "size": 46,
+                        "width": "auto"
+                      },
+                      {
+                        "text": "Features",
+                        "role": "title",
+                        "size": 46,
+                        "tone": "accent",
+                        "width": "auto"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "text": "Bringing together the best of personal and shared finance.",
+                  "role": "lead",
+                  "tone": "muted"
+                }
+              ]
+            }
+          },
+          {
+            "at": "c1-12 r3-5",
+            "row": {
+              "gap": "space.2",
+              "items": [
+                {
+                  "use": "feature",
+                  "icon": "users",
+                  "fill": "mint",
+                  "tone": "green",
+                  "title": "Spaces",
+                  "detail": "Shared expenses, budgets, settlements"
+                },
+                {
+                  "use": "feature",
+                  "icon": "wallet",
+                  "fill": "sky",
+                  "tone": "blue",
+                  "title": "Accounts & Wallets",
+                  "detail": "Bank accounts, transfers, balances"
+                },
+                {
+                  "use": "feature",
+                  "icon": "chart-pie",
+                  "fill": "track",
+                  "tone": "purple",
+                  "title": "Expenses",
+                  "detail": "Categories, tags, receipts (OCR)"
+                }
+              ]
+            }
+          },
+          {
+            "at": "c1-12 r6-8",
+            "row": {
+              "gap": "space.2",
+              "items": [
+                {
+                  "use": "feature",
+                  "icon": "calendar-check",
+                  "fill": "peach",
+                  "tone": "orangeDeep",
+                  "title": "Budgets",
+                  "detail": "Track and get alerts"
+                },
+                {
+                  "use": "feature",
+                  "icon": "bell",
+                  "fill": "rose",
+                  "tone": "red",
+                  "title": "Notifications",
+                  "detail": "Stay informed"
+                },
+                {
+                  "use": "feature",
+                  "icon": "sparkles",
+                  "fill": "peach",
+                  "tone": "amberDeep",
+                  "title": "AI Insights",
+                  "detail": "Smart analysis and suggestions"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "progress",
+      "message": "Two quarters shipped; Q4 polish and scale is under way",
+      "compose": {
+        "grid": "12x8",
+        "items": [
+          {
+            "at": "c1-10 r1-2",
+            "column": {
+              "gap": "space.1",
+              "justify": "start",
+              "items": [
+                {
+                  "row": {
+                    "gap": "space.1",
+                    "items": [
+                      {
+                        "text": "Progress &",
+                        "role": "title",
+                        "size": 46,
+                        "width": "auto"
+                      },
+                      {
+                        "text": "Milestones",
+                        "role": "title",
+                        "size": 46,
+                        "tone": "accent",
+                        "width": "auto"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "text": "Significant progress across core features.",
+                  "role": "lead",
+                  "tone": "muted"
+                }
+              ]
+            }
+          },
+          {
+            "at": "c1-12 r3",
+            "row": {
+              "gap": "space.2",
+              "items": [
+                {
+                  "column": {
+                    "gap": "space.0.5",
+                    "align": "center",
+                    "items": [
+                      {
+                        "text": "Q2 2026",
+                        "role": "h3",
+                        "align": "center"
+                      },
+                      {
+                        "text": "Foundation",
+                        "role": "small",
+                        "tone": "muted",
+                        "align": "center"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "column": {
+                    "gap": "space.0.5",
+                    "align": "center",
+                    "items": [
+                      {
+                        "text": "Q3 2026",
+                        "role": "h3",
+                        "align": "center"
+                      },
+                      {
+                        "text": "Core Features",
+                        "role": "small",
+                        "tone": "muted",
+                        "align": "center"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "column": {
+                    "gap": "space.0.5",
+                    "align": "center",
+                    "items": [
+                      {
+                        "text": "Q4 2026",
+                        "role": "h3",
+                        "align": "center"
+                      },
+                      {
+                        "text": "Polish & Scale",
+                        "role": "small",
+                        "tone": "muted",
+                        "align": "center"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "column": {
+                    "gap": "space.0.5",
+                    "align": "center",
+                    "items": [
+                      {
+                        "text": "Q1 2027",
+                        "role": "h3",
+                        "align": "center"
+                      },
+                      {
+                        "text": "Web & Expansion",
+                        "role": "small",
+                        "tone": "muted",
+                        "align": "center"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "at": "c1-7 r4",
+            "column": {
+              "justify": "center",
+              "items": [
+                {
+                  "shape": "rect",
+                  "fill": "green",
+                  "height": 4
+                }
+              ]
+            }
+          },
+          {
+            "at": "c7-9 r4",
+            "column": {
+              "justify": "center",
+              "items": [
+                {
+                  "shape": "rect",
+                  "fill": "blue",
+                  "height": 4
+                }
+              ]
+            }
+          },
+          {
+            "at": "c10-12 r4",
+            "column": {
+              "justify": "center",
+              "items": [
+                {
+                  "shape": "rect",
+                  "fill": "line",
+                  "height": 4
+                }
+              ]
+            }
+          },
+          {
+            "at": "c1-12 r4",
+            "row": {
+              "gap": "space.2",
+              "items": [
+                {
+                  "column": {
+                    "align": "center",
+                    "justify": "center",
+                    "items": [
+                      {
+                        "icon": "circle-check",
+                        "tone": "green",
+                        "width": 34,
+                        "height": 34
+                      }
+                    ]
+                  }
+                },
+                {
+                  "column": {
+                    "align": "center",
+                    "justify": "center",
+                    "items": [
+                      {
+                        "icon": "circle-check",
+                        "tone": "green",
+                        "width": 34,
+                        "height": 34
+                      }
+                    ]
+                  }
+                },
+                {
+                  "column": {
+                    "align": "center",
+                    "justify": "center",
+                    "items": [
+                      {
+                        "layer": {
+                          "anchor": "center",
+                          "width": 34,
+                          "height": 34,
+                          "items": [
+                            {
+                              "shape": "ellipse",
+                              "fill": "blue"
+                            },
+                            {
+                              "shape": "ellipse",
+                              "fill": "card",
+                              "width": 18,
+                              "height": 18
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "column": {
+                    "align": "center",
+                    "justify": "center",
+                    "items": [
+                      {
+                        "layer": {
+                          "anchor": "center",
+                          "width": 34,
+                          "height": 34,
+                          "items": [
+                            {
+                              "shape": "ellipse",
+                              "fill": "line"
+                            },
+                            {
+                              "shape": "ellipse",
+                              "fill": "card",
+                              "width": 22,
+                              "height": 22
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "at": "c1-12 r5-8",
+            "row": {
+              "gap": "space.2",
+              "items": [
+                {
+                  "column": {
+                    "gap": "space.1.5",
+                    "items": [
+                      {
+                        "row": {
+                          "gap": "space.1.5",
+                          "align": "center",
+                          "height": 22,
+                          "items": [
+                            {
+                              "icon": "circle-check",
+                              "tone": "green",
+                              "width": 20,
+                              "height": 20
+                            },
+                            {
+                              "text": "Auth (Keycloak)",
+                              "role": "small"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "row": {
+                          "gap": "space.1.5",
+                          "align": "center",
+                          "height": 22,
+                          "items": [
+                            {
+                              "icon": "circle-check",
+                              "tone": "green",
+                              "width": 20,
+                              "height": 20
+                            },
+                            {
+                              "text": "Core infrastructure",
+                              "role": "small"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "row": {
+                          "gap": "space.1.5",
+                          "align": "center",
+                          "height": 22,
+                          "items": [
+                            {
+                              "icon": "circle-check",
+                              "tone": "green",
+                              "width": 20,
+                              "height": 20
+                            },
+                            {
+                              "text": "Mobile app base",
+                              "role": "small"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "row": {
+                          "gap": "space.1.5",
+                          "align": "center",
+                          "height": 22,
+                          "items": [
+                            {
+                              "icon": "circle-check",
+                              "tone": "green",
+                              "width": 20,
+                              "height": 20
+                            },
+                            {
+                              "text": "Basic expenses",
+                              "role": "small"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "column": {
+                    "gap": "space.1.5",
+                    "items": [
+                      {
+                        "row": {
+                          "gap": "space.1.5",
+                          "align": "center",
+                          "height": 22,
+                          "items": [
+                            {
+                              "icon": "circle-check",
+                              "tone": "green",
+                              "width": 20,
+                              "height": 20
+                            },
+                            {
+                              "text": "Shared spaces",
+                              "role": "small"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "row": {
+                          "gap": "space.1.5",
+                          "align": "center",
+                          "height": 22,
+                          "items": [
+                            {
+                              "icon": "circle-check",
+                              "tone": "green",
+                              "width": 20,
+                              "height": 20
+                            },
+                            {
+                              "text": "Budgets",
+                              "role": "small"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "row": {
+                          "gap": "space.1.5",
+                          "align": "center",
+                          "height": 22,
+                          "items": [
+                            {
+                              "icon": "circle-check",
+                              "tone": "green",
+                              "width": 20,
+                              "height": 20
+                            },
+                            {
+                              "text": "Settlements",
+                              "role": "small"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "row": {
+                          "gap": "space.1.5",
+                          "align": "center",
+                          "height": 22,
+                          "items": [
+                            {
+                              "icon": "circle-check",
+                              "tone": "green",
+                              "width": 20,
+                              "height": 20
+                            },
+                            {
+                              "text": "Accounts & wallets",
+                              "role": "small"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "row": {
+                          "gap": "space.1.5",
+                          "align": "center",
+                          "height": 22,
+                          "items": [
+                            {
+                              "icon": "circle-check",
+                              "tone": "green",
+                              "width": 20,
+                              "height": 20
+                            },
+                            {
+                              "text": "Notifications",
+                              "role": "small"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "column": {
+                    "gap": "space.1.5",
+                    "items": [
+                      {
+                        "row": {
+                          "gap": "space.1.5",
+                          "align": "center",
+                          "height": 22,
+                          "items": [
+                            {
+                              "icon": "circle-dot",
+                              "tone": "blue",
+                              "width": 20,
+                              "height": 20
+                            },
+                            {
+                              "text": "AI insights",
+                              "role": "small"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "row": {
+                          "gap": "space.1.5",
+                          "align": "center",
+                          "height": 22,
+                          "items": [
+                            {
+                              "icon": "circle-dot",
+                              "tone": "blue",
+                              "width": 20,
+                              "height": 20
+                            },
+                            {
+                              "text": "OCR receipts",
+                              "role": "small"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "row": {
+                          "gap": "space.1.5",
+                          "align": "center",
+                          "height": 22,
+                          "items": [
+                            {
+                              "icon": "circle-dot",
+                              "tone": "blue",
+                              "width": 20,
+                              "height": 20
+                            },
+                            {
+                              "text": "Subscriptions",
+                              "role": "small"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "row": {
+                          "gap": "space.1.5",
+                          "align": "center",
+                          "height": 22,
+                          "items": [
+                            {
+                              "icon": "circle-dot",
+                              "tone": "blue",
+                              "width": 20,
+                              "height": 20
+                            },
+                            {
+                              "text": "UI/UX polish",
+                              "role": "small"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "row": {
+                          "gap": "space.1.5",
+                          "align": "center",
+                          "height": 22,
+                          "items": [
+                            {
+                              "icon": "circle-dot",
+                              "tone": "blue",
+                              "width": 20,
+                              "height": 20
+                            },
+                            {
+                              "text": "iOS widgets",
+                              "role": "small"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "column": {
+                    "gap": "space.1.5",
+                    "items": [
+                      {
+                        "row": {
+                          "gap": "space.1.5",
+                          "align": "center",
+                          "height": 22,
+                          "items": [
+                            {
+                              "icon": "circle",
+                              "tone": "slate",
+                              "width": 20,
+                              "height": 20
+                            },
+                            {
+                              "text": "Web application",
+                              "role": "small"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "row": {
+                          "gap": "space.1.5",
+                          "align": "center",
+                          "height": 22,
+                          "items": [
+                            {
+                              "icon": "circle",
+                              "tone": "slate",
+                              "width": 20,
+                              "height": 20
+                            },
+                            {
+                              "text": "Advanced analytics",
+                              "role": "small"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "row": {
+                          "gap": "space.1.5",
+                          "align": "center",
+                          "height": 22,
+                          "items": [
+                            {
+                              "icon": "circle",
+                              "tone": "slate",
+                              "width": 20,
+                              "height": 20
+                            },
+                            {
+                              "text": "Multi-currency",
+                              "role": "small"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "row": {
+                          "gap": "space.1.5",
+                          "align": "center",
+                          "height": 22,
+                          "items": [
+                            {
+                              "icon": "circle",
+                              "tone": "slate",
+                              "width": 20,
+                              "height": 20
+                            },
+                            {
+                              "text": "More integrations",
+                              "role": "small"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "demo",
+      "message": "Five screens show the main experience",
+      "compose": {
+        "grid": "12x8",
+        "items": [
+          {
+            "at": "c1-10 r1-2",
+            "column": {
+              "gap": "space.1",
+              "justify": "start",
+              "items": [
+                {
+                  "row": {
+                    "gap": "space.1",
+                    "items": [
+                      {
+                        "text": "Demo",
+                        "role": "title",
+                        "size": 46,
+                        "width": "auto"
+                      },
+                      {
+                        "text": "Highlights",
+                        "role": "title",
+                        "size": 46,
+                        "tone": "accentAlt",
+                        "width": "auto"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "text": "A quick look at the main experience.",
+                  "role": "lead",
+                  "tone": "muted"
+                }
+              ]
+            }
+          },
+          {
+            "at": "c1-12 r3-8",
+            "row": {
+              "gap": "space.2",
+              "items": [
+                {
+                  "use": "screen",
+                  "asset": "app-art/screen-home.png",
+                  "alt": "Home screen",
+                  "title": "Home",
+                  "detail": "Overview & insights"
+                },
+                {
+                  "use": "screen",
+                  "asset": "app-art/screen-shared.png",
+                  "alt": "Shared space screen",
+                  "title": "Shared Space",
+                  "detail": "Expenses & members"
+                },
+                {
+                  "use": "screen",
+                  "asset": "app-art/screen-add.png",
+                  "alt": "Add expense screen",
+                  "title": "Add Expense",
+                  "detail": "Quick & easy"
+                },
+                {
+                  "use": "screen",
+                  "asset": "app-art/screen-budgets.png",
+                  "alt": "Budgets screen",
+                  "title": "Budgets",
+                  "detail": "Track & get alerts"
+                },
+                {
+                  "use": "screen",
+                  "asset": "app-art/screen-insights.png",
+                  "alt": "AI insights screen",
+                  "title": "AI Insights",
+                  "detail": "Personalized tips"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "roadmap",
+      "message": "From the mobile app to a full ecosystem by mid-2027",
+      "compose": {
+        "grid": "12x8",
+        "items": [
+          {
+            "at": "c1-10 r1-2",
+            "column": {
+              "gap": "space.1",
+              "justify": "start",
+              "items": [
+                {
+                  "row": {
+                    "gap": "space.1",
+                    "items": [
+                      {
+                        "text": "Roadmap",
+                        "role": "title",
+                        "size": 46,
+                        "width": "auto"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "text": "From a solid mobile foundation to a full ecosystem.",
+                  "role": "lead",
+                  "tone": "muted"
+                }
+              ]
+            }
+          },
+          {
+            "at": "c1-12 r3-8",
+            "grid": "13x7",
+            "items": [
+              {
+                "at": "c5-13 r2-7",
+                "surface": "track",
+                "space": "space.1"
+              },
+              {
+                "at": "c5-7 r1",
+                "text": "Q4 2026",
+                "role": "body",
+                "weight": 600,
+                "align": "center",
+                "valign": "middle"
+              },
+              {
+                "at": "c8-10 r1",
+                "text": "Q1 2027",
+                "role": "body",
+                "weight": 600,
+                "align": "center",
+                "valign": "middle"
+              },
+              {
+                "at": "c11-13 r1",
+                "text": "Q2 2027",
+                "role": "body",
+                "weight": 600,
+                "align": "center",
+                "valign": "middle"
+              },
+              {
+                "at": "c1-4 r2",
+                "row": {
+                  "gap": "space.1.5",
+                  "align": "center",
+                  "items": [
+                    {
+                      "icon": "smartphone",
+                      "tone": "green",
+                      "width": 22,
+                      "height": 22
+                    },
+                    {
+                      "text": "Mobile App (v1.0)",
+                      "role": "body"
+                    }
+                  ]
+                }
+              },
+              {
+                "at": "c5-8 r2",
+                "column": {
+                  "justify": "center",
+                  "items": [
+                    {
+                      "shape": "roundRect",
+                      "fill": "teal",
+                      "radius": 8,
+                      "height": 22
+                    }
+                  ]
+                }
+              },
+              {
+                "at": "c1-4 r3",
+                "row": {
+                  "gap": "space.1.5",
+                  "align": "center",
+                  "items": [
+                    {
+                      "icon": "bot",
+                      "tone": "blue",
+                      "width": 22,
+                      "height": 22
+                    },
+                    {
+                      "text": "AI Features",
+                      "role": "body"
+                    }
+                  ]
+                }
+              },
+              {
+                "at": "c6-8 r3",
+                "column": {
+                  "justify": "center",
+                  "items": [
+                    {
+                      "shape": "roundRect",
+                      "fill": "blue",
+                      "radius": 8,
+                      "height": 22
+                    }
+                  ]
+                }
+              },
+              {
+                "at": "c1-4 r4",
+                "row": {
+                  "gap": "space.1.5",
+                  "align": "center",
+                  "items": [
+                    {
+                      "icon": "app-window",
+                      "tone": "purple",
+                      "width": 22,
+                      "height": 22
+                    },
+                    {
+                      "text": "Web Application",
+                      "role": "body"
+                    }
+                  ]
+                }
+              },
+              {
+                "at": "c8-12 r4",
+                "column": {
+                  "justify": "center",
+                  "items": [
+                    {
+                      "shape": "roundRect",
+                      "fill": "purple",
+                      "radius": 8,
+                      "height": 22
+                    }
+                  ]
+                }
+              },
+              {
+                "at": "c1-4 r5",
+                "row": {
+                  "gap": "space.1.5",
+                  "align": "center",
+                  "items": [
+                    {
+                      "icon": "credit-card",
+                      "tone": "pinkDeep",
+                      "width": 22,
+                      "height": 22
+                    },
+                    {
+                      "text": "Integrations (Banks, Cards)",
+                      "role": "body"
+                    }
+                  ]
+                }
+              },
+              {
+                "at": "c9-11 r5",
+                "column": {
+                  "justify": "center",
+                  "items": [
+                    {
+                      "shape": "roundRect",
+                      "fill": "pink",
+                      "radius": 8,
+                      "height": 22
+                    }
+                  ]
+                }
+              },
+              {
+                "at": "c1-4 r6",
+                "row": {
+                  "gap": "space.1.5",
+                  "align": "center",
+                  "items": [
+                    {
+                      "icon": "chart-bar",
+                      "tone": "orangeDeep",
+                      "width": 22,
+                      "height": 22
+                    },
+                    {
+                      "text": "Advanced Analytics",
+                      "role": "body"
+                    }
+                  ]
+                }
+              },
+              {
+                "at": "c10-12 r6",
+                "column": {
+                  "justify": "center",
+                  "items": [
+                    {
+                      "shape": "roundRect",
+                      "fill": "orange",
+                      "radius": 8,
+                      "height": 22
+                    }
+                  ]
+                }
+              },
+              {
+                "at": "c1-4 r7",
+                "row": {
+                  "gap": "space.1.5",
+                  "align": "center",
+                  "items": [
+                    {
+                      "icon": "globe",
+                      "tone": "amberDeep",
+                      "width": 22,
+                      "height": 22
+                    },
+                    {
+                      "text": "Internationalization",
+                      "role": "body"
+                    }
+                  ]
+                }
+              },
+              {
+                "at": "c11-12 r7",
+                "column": {
+                  "justify": "center",
+                  "items": [
+                    {
+                      "shape": "roundRect",
+                      "fill": "yellow",
+                      "radius": 8,
+                      "height": 22
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "risks",
+      "message": "Four risks to manage, and the four kinds of support we need",
+      "compose": {
+        "grid": "12x8",
+        "items": [
+          {
+            "at": "c1-11 r1-2",
+            "column": {
+              "gap": "space.1",
+              "justify": "start",
+              "items": [
+                {
+                  "row": {
+                    "gap": "space.1",
+                    "items": [
+                      {
+                        "text": "Risks &",
+                        "role": "title",
+                        "size": 46,
+                        "width": "auto"
+                      },
+                      {
+                        "text": "Support Needed",
+                        "role": "title",
+                        "size": 46,
+                        "tone": "accentAlt",
+                        "width": "auto"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "text": "Key risks and what we need to ensure a successful launch.",
+                  "role": "lead",
+                  "tone": "muted"
+                }
+              ]
+            }
+          },
+          {
+            "at": "c1-6 r3-8",
+            "surface": "rose",
+            "column": {
+              "gap": "space.2",
+              "items": [
+                {
+                  "row": {
+                    "gap": "space.1.5",
+                    "align": "center",
+                    "items": [
+                      {
+                        "icon": "triangle-alert",
+                        "tone": "red",
+                        "width": 26,
+                        "height": 26
+                      },
+                      {
+                        "text": "Key Risks",
+                        "role": "h3",
+                        "tone": "red"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "use": "risk",
+                  "icon": "shield-alert",
+                  "tone": "red",
+                  "title": "OCR accuracy for complex receipts",
+                  "detail": "May affect user trust"
+                },
+                {
+                  "use": "risk",
+                  "icon": "shield-alert",
+                  "tone": "red",
+                  "title": "Scaling infrastructure",
+                  "detail": "Need to handle 500+ rows / large data"
+                },
+                {
+                  "use": "risk",
+                  "icon": "shield-alert",
+                  "tone": "red",
+                  "title": "External integrations",
+                  "detail": "Bank API availability & changes"
+                },
+                {
+                  "use": "risk",
+                  "icon": "shield-alert",
+                  "tone": "red",
+                  "title": "Timeline pressure",
+                  "detail": "Balancing quality and speed"
+                }
+              ]
+            }
+          },
+          {
+            "at": "c7-12 r3-8",
+            "surface": "mint",
+            "column": {
+              "gap": "space.2",
+              "items": [
+                {
+                  "row": {
+                    "gap": "space.1.5",
+                    "align": "center",
+                    "items": [
+                      {
+                        "icon": "rocket",
+                        "tone": "green",
+                        "width": 26,
+                        "height": 26
+                      },
+                      {
+                        "text": "Support Needed",
+                        "role": "h3",
+                        "tone": "green"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "use": "risk",
+                  "icon": "circle-check",
+                  "tone": "green",
+                  "title": "Engineering resources",
+                  "detail": "For web, AI & integrations"
+                },
+                {
+                  "use": "risk",
+                  "icon": "circle-check",
+                  "tone": "green",
+                  "title": "Infrastructure support",
+                  "detail": "Redis, storage, monitoring"
+                },
+                {
+                  "use": "risk",
+                  "icon": "circle-check",
+                  "tone": "green",
+                  "title": "Product feedback",
+                  "detail": "From stakeholders & early users"
+                },
+                {
+                  "use": "risk",
+                  "icon": "circle-check",
+                  "tone": "green",
+                  "title": "Go-to-market support",
+                  "detail": "Marketing & user acquisition"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,372 @@
+{
+  "schema": "slide-agent.intent/1",
+  "brief": {
+    "title": "Three bets for 2027",
+    "audience": "Whole company, all-hands",
+    "goal": "Explain the 2027 strategy in a way everyone remembers",
+    "format": "16:9"
+  },
+  "direction": {
+    "concept": "An editorial keynote: warm paper, oversized serif headlines, one coral accent, and generous white space, so every slide says exactly one thing.",
+    "fit": "ask"
+  },
+  "design": {
+    "language": {
+      "color": {
+        "palette": {
+          "paper": "#FBF7F1",
+          "sand": "#F1E8DC",
+          "ink": "#1E1A17",
+          "stone": "#6E645B",
+          "coral": "#C2410C",
+          "blush": "#FBE3D6",
+          "line": "#E5DBCD"
+        },
+        "roles": {
+          "background": "paper",
+          "surface": "sand",
+          "text": "ink",
+          "muted": "stone",
+          "accent": "coral",
+          "rule": "line"
+        },
+        "data": [
+          "coral",
+          "stone"
+        ]
+      },
+      "type": {
+        "display": {
+          "family": "Fraunces",
+          "weight": 600,
+          "tracking": -0.015
+        },
+        "body": {
+          "family": "DM Sans",
+          "weight": 400
+        },
+        "scale": {
+          "base": 19,
+          "ratio": 1.3
+        }
+      },
+      "space": {
+        "unit": 8,
+        "margin": 60,
+        "gutter": 24
+      },
+      "grid": {
+        "columns": 12,
+        "rows": 6
+      },
+      "shape": {
+        "radius": 18,
+        "stroke": 0
+      },
+      "surfaces": {
+        "card": {
+          "fill": "sand",
+          "radius": 20,
+          "pad": "space.4"
+        },
+        "badge": {
+          "fill": "blush",
+          "radius": 100
+        },
+        "ink": {
+          "fill": "ink"
+        }
+      },
+      "texture": [
+        {
+          "id": "rule",
+          "primitive": "underline",
+          "params": {
+            "width": 64,
+            "weight": 5,
+            "tone": "coral"
+          }
+        }
+      ],
+      "chrome": {
+        "slideNumber": true
+      }
+    }
+  },
+  "components": {
+    "bet": {
+      "params": [
+        "n",
+        "icon",
+        "title",
+        "detail"
+      ],
+      "root": {
+        "column": {
+          "surface": "card",
+          "gap": "space.2",
+          "items": [
+            {
+              "row": {
+                "gap": "space.2",
+                "align": "center",
+                "items": [
+                  {
+                    "column": {
+                      "surface": "badge",
+                      "width": 56,
+                      "height": 56,
+                      "align": "center",
+                      "justify": "center",
+                      "items": [
+                        {
+                          "icon": "{icon}",
+                          "tone": "accent",
+                          "width": 28,
+                          "height": 28
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "text": "{n}",
+                    "role": "label",
+                    "tone": "muted",
+                    "tracking": 0.05,
+                    "align": "right"
+                  }
+                ]
+              }
+            },
+            {
+              "text": "{title}",
+              "role": "h2"
+            },
+            {
+              "text": "{detail}",
+              "role": "body",
+              "tone": "muted"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "slides": [
+    {
+      "id": "cover",
+      "message": "This year we make three bets",
+      "compose": {
+        "grid": "12x6",
+        "items": [
+          {
+            "at": "c1-10 r2-5",
+            "column": {
+              "gap": "space.3",
+              "justify": "center",
+              "items": [
+                {
+                  "text": "All-hands · January 2027",
+                  "role": "label",
+                  "tone": "accent",
+                  "case": "upper",
+                  "tracking": 0.05
+                },
+                {
+                  "text": "Three bets for 2027",
+                  "role": "title",
+                  "size": 96
+                },
+                {
+                  "texture": "rule",
+                  "height": 8
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "statement",
+      "message": "We win by being the simplest tool in the room",
+      "compose": {
+        "grid": "12x6",
+        "items": [
+          {
+            "at": "c1-11 r2-5",
+            "column": {
+              "gap": "space.3",
+              "justify": "center",
+              "items": [
+                {
+                  "text": "Our strategy, in one sentence",
+                  "role": "label",
+                  "tone": "muted",
+                  "case": "upper",
+                  "tracking": 0.05
+                },
+                {
+                  "text": "We win by being the simplest tool in the room.",
+                  "role": "title",
+                  "size": 66
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "bets",
+      "message": "Focus, speed, and teams are the three bets",
+      "compose": {
+        "grid": "12x6",
+        "items": [
+          {
+            "at": "c1-10 r1",
+            "text": "The three bets",
+            "role": "title"
+          },
+          {
+            "at": "c1-12 r2-6",
+            "row": {
+              "gap": "space.3",
+              "items": [
+                {
+                  "use": "bet",
+                  "n": "01",
+                  "icon": "target",
+                  "title": "Focus",
+                  "detail": "Do fewer things, and make each one obvious."
+                },
+                {
+                  "use": "bet",
+                  "n": "02",
+                  "icon": "zap",
+                  "title": "Speed",
+                  "detail": "Every core action in under a second."
+                },
+                {
+                  "use": "bet",
+                  "n": "03",
+                  "icon": "users",
+                  "title": "Teams",
+                  "detail": "Built for the whole team, not just one person."
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "number",
+      "message": "The goal is three times more teams by December",
+      "compose": {
+        "grid": "12x6",
+        "items": [
+          {
+            "at": "c1-6 r1-6",
+            "column": {
+              "justify": "center",
+              "items": [
+                {
+                  "text": "3×",
+                  "role": "title",
+                  "size": 240,
+                  "tone": "accent"
+                }
+              ]
+            }
+          },
+          {
+            "at": "c7-12 r2-5",
+            "column": {
+              "gap": "space.2",
+              "justify": "center",
+              "items": [
+                {
+                  "text": "more teams on the platform by December",
+                  "role": "h2"
+                },
+                {
+                  "text": "From 4,000 teams today. Measured every month, shared every month.",
+                  "role": "body",
+                  "tone": "muted"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "quote",
+      "message": "Customers already feel the difference",
+      "compose": {
+        "grid": "12x6",
+        "items": [
+          {
+            "at": "c2-11 r2-5",
+            "column": {
+              "gap": "space.3",
+              "justify": "center",
+              "items": [
+                {
+                  "text": "“It's the first tool my whole team actually opened twice.”",
+                  "role": "quote",
+                  "size": 44
+                },
+                {
+                  "text": "Head of Operations, customer interview",
+                  "role": "body",
+                  "tone": "muted"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "close",
+      "message": "It starts on Monday",
+      "compose": {
+        "grid": "12x6",
+        "items": [
+          {
+            "at": "c1-12 r1-6",
+            "bleed": [
+              "left",
+              "right",
+              "top",
+              "bottom"
+            ],
+            "surface": "ink",
+            "column": {
+              "pad": "space.8",
+              "gap": "space.3",
+              "justify": "center",
+              "items": [
+                {
+                  "text": "What changes on Monday",
+                  "role": "label",
+                  "tone": "accent",
+                  "case": "upper",
+                  "tracking": 0.05
+                },
+                {
+                  "text": "One goal per team. One weekly demo. One number we all watch.",
+                  "role": "title",
+                  "size": 54,
+                  "tone": "paper"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

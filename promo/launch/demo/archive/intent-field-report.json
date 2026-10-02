@@ -1,0 +1,619 @@
+{
+  "schema": "slide-agent.intent/1",
+  "brief": {
+    "title": "Every region by Q2",
+    "audience": "Leadership team, Monday review",
+    "goal": "Approve rolling the support pilot out to all seven regions by Q2",
+    "format": "16:9"
+  },
+  "direction": {
+    "concept": "A field report: warm paper, ink-dark serif headlines, one teal signal reserved for what changed. Numbers carry the argument; everything else stays quiet.",
+    "fit": "ask"
+  },
+  "data": {
+    "resolution": {
+      "categories": [
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul"
+      ],
+      "series": [
+        {
+          "name": "Pilot regions",
+          "values": [
+            31,
+            28,
+            25,
+            22,
+            20,
+            19
+          ]
+        },
+        {
+          "name": "Other regions",
+          "values": [
+            30,
+            31,
+            30,
+            31,
+            30,
+            31
+          ]
+        }
+      ]
+    },
+    "csat": {
+      "categories": [
+        "Pilot regions",
+        "Other regions"
+      ],
+      "series": [
+        {
+          "name": "Feb",
+          "values": [
+            71,
+            72
+          ]
+        },
+        {
+          "name": "Jul",
+          "values": [
+            86,
+            72
+          ]
+        }
+      ]
+    },
+    "cost": {
+      "columns": [
+        "Wave",
+        "Regions",
+        "When",
+        "Cost"
+      ],
+      "rows": [
+        [
+          "1",
+          "EMEA",
+          "Aug – Sep",
+          "€380k"
+        ],
+        [
+          "2",
+          "Americas",
+          "Oct – Nov",
+          "€450k"
+        ],
+        [
+          "3",
+          "APAC",
+          "Dec – Jan",
+          "€370k"
+        ],
+        [
+          "",
+          "Total",
+          "",
+          "€1.2M"
+        ]
+      ]
+    }
+  },
+  "design": {
+    "language": {
+      "color": {
+        "palette": {
+          "paper": "#F6F1E8",
+          "panel": "#ECE4D6",
+          "ink": "#1C2024",
+          "graphite": "#5D6369",
+          "teal": "#0E7468",
+          "sand": "#B9A88C",
+          "hair": "#D8CEBD"
+        },
+        "roles": {
+          "background": "paper",
+          "surface": "panel",
+          "text": "ink",
+          "muted": "graphite",
+          "accent": "teal",
+          "accentAlt": "sand",
+          "rule": "hair"
+        },
+        "data": [
+          "teal",
+          "sand",
+          "graphite"
+        ]
+      },
+      "type": {
+        "display": {
+          "family": "Fraunces",
+          "weight": 600
+        },
+        "body": {
+          "family": "Inter",
+          "weight": 400
+        },
+        "mono": {
+          "family": "JetBrains Mono"
+        },
+        "scale": {
+          "base": 18,
+          "ratio": 1.25
+        }
+      },
+      "space": {
+        "unit": 8,
+        "margin": 56,
+        "gutter": 24
+      },
+      "grid": {
+        "columns": 12,
+        "rows": 6
+      },
+      "shape": {
+        "radius": 6,
+        "stroke": 0
+      },
+      "surfaces": {
+        "card": {
+          "fill": "surface",
+          "radius": 6,
+          "pad": "space.3"
+        },
+        "band": {
+          "fill": "ink"
+        }
+      },
+      "chrome": {
+        "slideNumber": true,
+        "footer": "Support pilot · Leadership review"
+      }
+    }
+  },
+  "components": {
+    "change": {
+      "params": [
+        "n",
+        "icon",
+        "label",
+        "detail"
+      ],
+      "root": {
+        "column": {
+          "surface": "card",
+          "gap": "space.2",
+          "items": [
+            {
+              "icon": "{icon}",
+              "tone": "accent",
+              "width": 40,
+              "height": 40
+            },
+            {
+              "text": "{n}",
+              "role": "label",
+              "font": "mono",
+              "tone": "muted"
+            },
+            {
+              "text": "{label}",
+              "role": "h3"
+            },
+            {
+              "text": "{detail}",
+              "role": "small",
+              "tone": "muted"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "slides": [
+    {
+      "id": "cover",
+      "message": "We are asking to take the support pilot to every region by Q2",
+      "compose": {
+        "grid": "12x6",
+        "items": [
+          {
+            "at": "c1-7 r2-5",
+            "column": {
+              "gap": "space.3",
+              "justify": "end",
+              "items": [
+                {
+                  "text": "Leadership review · Support",
+                  "role": "label",
+                  "tone": "accent",
+                  "case": "upper",
+                  "font": "mono"
+                },
+                {
+                  "text": "Every region by Q2",
+                  "role": "title",
+                  "size": 66
+                },
+                {
+                  "text": "Taking the support pilot from two regions to all seven",
+                  "role": "lead",
+                  "tone": "muted"
+                }
+              ]
+            }
+          },
+          {
+            "at": "c9-12 r1-6",
+            "bleed": [
+              "right",
+              "top",
+              "bottom"
+            ],
+            "surface": "band",
+            "column": {
+              "pad": "space.5",
+              "justify": "end",
+              "gap": "space.1",
+              "items": [
+                {
+                  "text": "2 → 7",
+                  "role": "display",
+                  "tone": "accent",
+                  "font": "mono",
+                  "size": 60
+                },
+                {
+                  "text": "regions",
+                  "role": "small",
+                  "tone": "muted"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "problem",
+      "message": "Customers waited nineteen hours for a first reply",
+      "compose": {
+        "grid": "12x6",
+        "items": [
+          {
+            "at": "c1-10 r1",
+            "text": "Customers waited most of a day to hear back",
+            "role": "title"
+          },
+          {
+            "at": "c1-6 r2-6",
+            "column": {
+              "justify": "center",
+              "gap": "space.1",
+              "items": [
+                {
+                  "text": "19 h",
+                  "role": "display",
+                  "size": 140,
+                  "tone": "accent",
+                  "font": "display"
+                },
+                {
+                  "text": "average wait for a first reply, January",
+                  "role": "body",
+                  "tone": "muted"
+                }
+              ]
+            }
+          },
+          {
+            "at": "c8-12 r3-6",
+            "column": {
+              "gap": "space.2",
+              "justify": "center",
+              "items": [
+                {
+                  "text": "“I’d given up and asked a colleague before anyone replied.”",
+                  "role": "quote"
+                },
+                {
+                  "text": "Customer survey, January",
+                  "role": "caption",
+                  "tone": "muted"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "pilot",
+      "message": "We changed three things in two regions",
+      "compose": {
+        "grid": "12x6",
+        "items": [
+          {
+            "at": "c1-9 r1",
+            "text": "Three changes, two regions, six months",
+            "role": "title"
+          },
+          {
+            "at": "c1-12 r3-6",
+            "row": {
+              "gap": "space.3",
+              "items": [
+                {
+                  "use": "change",
+                  "n": "01",
+                  "icon": "inbox",
+                  "label": "One shared queue",
+                  "detail": "No ticket waits in the wrong team’s inbox"
+                },
+                {
+                  "use": "change",
+                  "n": "02",
+                  "icon": "languages",
+                  "label": "Your language, first time",
+                  "detail": "Replies written in the customer’s language"
+                },
+                {
+                  "use": "change",
+                  "n": "03",
+                  "icon": "user-check",
+                  "label": "Specialists on call",
+                  "detail": "Hard tickets reach an expert the same day"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "results",
+      "message": "Resolution time fell 38% in the pilot regions",
+      "compose": {
+        "grid": "12x6",
+        "items": [
+          {
+            "at": "c1-4 r1-6",
+            "column": {
+              "gap": "space.2",
+              "justify": "center",
+              "items": [
+                {
+                  "text": "Results",
+                  "role": "label",
+                  "tone": "accent",
+                  "case": "upper",
+                  "font": "mono"
+                },
+                {
+                  "text": "−38%",
+                  "role": "title",
+                  "size": 120,
+                  "tone": "accent"
+                },
+                {
+                  "text": "Resolution time fell from 31 to 19 hours while the other regions stayed flat",
+                  "role": "body",
+                  "tone": "muted"
+                }
+              ]
+            }
+          },
+          {
+            "at": "c6-12 r1-6",
+            "chart": {
+              "data": "resolution",
+              "chart": "line",
+              "highlight": "Pilot regions"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "csat",
+      "message": "Satisfaction rose fifteen points where the pilot ran",
+      "compose": {
+        "grid": "12x6",
+        "items": [
+          {
+            "at": "c1-9 r1",
+            "text": "Customers noticed: satisfaction up fifteen points",
+            "role": "title"
+          },
+          {
+            "at": "c1-7 r2-6",
+            "chart": {
+              "data": "csat",
+              "chart": "column",
+              "highlight": "Jul"
+            }
+          },
+          {
+            "at": "c8-12 r3-6",
+            "column": {
+              "gap": "space.1",
+              "justify": "center",
+              "items": [
+                {
+                  "text": "71 → 86",
+                  "role": "display",
+                  "size": 56,
+                  "tone": "accent",
+                  "font": "mono"
+                },
+                {
+                  "text": "CSAT in the pilot regions, February to July",
+                  "role": "small",
+                  "tone": "muted"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "rollout",
+      "message": "Three waves take us to every region by Q2",
+      "compose": {
+        "grid": "12x6",
+        "items": [
+          {
+            "at": "c1-9 r1",
+            "text": "Three waves, one region group at a time",
+            "role": "title"
+          },
+          {
+            "at": "c1-12 r2-6",
+            "diagram": {
+              "grammar": "flow",
+              "nodes": [
+                {
+                  "id": "pilot",
+                  "label": "Pilot · 2 regions"
+                },
+                {
+                  "id": "w1",
+                  "label": "Wave 1 · EMEA"
+                },
+                {
+                  "id": "w2",
+                  "label": "Wave 2 · Americas"
+                },
+                {
+                  "id": "w3",
+                  "label": "Wave 3 · APAC"
+                },
+                {
+                  "id": "all",
+                  "label": "All 7 regions · Q2",
+                  "emphasis": "accent"
+                }
+              ],
+              "edges": [
+                {
+                  "from": "pilot",
+                  "to": "w1"
+                },
+                {
+                  "from": "w1",
+                  "to": "w2"
+                },
+                {
+                  "from": "w2",
+                  "to": "w3"
+                },
+                {
+                  "from": "w3",
+                  "to": "all"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "cost",
+      "message": "The rollout costs €1.2M and pays back in about eleven months",
+      "compose": {
+        "grid": "12x6",
+        "items": [
+          {
+            "at": "c1-9 r1",
+            "text": "€1.2M, paid back in about eleven months",
+            "role": "title"
+          },
+          {
+            "at": "c1-8 r2-5",
+            "table": {
+              "data": "cost",
+              "highlight": {
+                "row": 4
+              }
+            },
+            "size": "+2"
+          },
+          {
+            "at": "c10-12 r3-6",
+            "column": {
+              "gap": "space.1",
+              "justify": "center",
+              "items": [
+                {
+                  "text": "14",
+                  "role": "display",
+                  "size": 72,
+                  "tone": "accent",
+                  "font": "mono"
+                },
+                {
+                  "text": "specialists hired across the three waves",
+                  "role": "small",
+                  "tone": "muted"
+                },
+                {
+                  "text": "Payback estimate pending finance review",
+                  "role": "caption",
+                  "tone": "muted"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "ask",
+      "message": "Approve the rollout to all seven regions by Q2",
+      "compose": {
+        "grid": "12x6",
+        "items": [
+          {
+            "at": "c1-12 r1-6",
+            "bleed": [
+              "left",
+              "right",
+              "top",
+              "bottom"
+            ],
+            "surface": "band",
+            "column": {
+              "pad": "space.7",
+              "gap": "space.3",
+              "justify": "center",
+              "items": [
+                {
+                  "text": "The decision",
+                  "role": "label",
+                  "tone": "accent",
+                  "case": "upper",
+                  "font": "mono"
+                },
+                {
+                  "text": "Approve the rollout to all seven regions by Q2",
+                  "role": "title",
+                  "size": 58
+                },
+                {
+                  "text": "Wave 1 starts in EMEA in August",
+                  "role": "lead",
+                  "tone": "muted"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

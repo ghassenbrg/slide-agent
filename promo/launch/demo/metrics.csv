@@ -1,0 +1,5 @@
+quarter,requests_per_sec_k,p95_latency_ms,uptime_pct,cost_per_1k_req_usd
+Q1,14,310,99.91,0.42
+Q2,21,262,99.95,0.37
+Q3,32,214,99.97,0.32
+Q4,43,180,99.98,0.29

@@ -1,0 +1,1 @@
+Illustrative showcase data. MAU grew 88% over six months. Retention stabilises at 62% in month six. 8.4% of visitors become paying customers. 11K sign-ups fail to reach activation. An 80% activation scenario yields 1.84K additional paid users.
