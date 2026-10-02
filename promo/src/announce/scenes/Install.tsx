@@ -28,7 +28,7 @@ export const Install: React.FC = () => {
 	const f = useCurrentFrame();
 	const {fps} = useVideoConfig();
 	const ask = typed(ASK, f, 204, 60);
-	const exit = interpolate(f, [348, 360], [0, 1], {...clamp, easing: ease.in});
+	const exit = interpolate(f, [288, 300], [0, 1], {...clamp, easing: ease.in});
 	return (
 		<AbsoluteFill style={{opacity: 1 - exit}}>
 			<Title size={72} top={136}>

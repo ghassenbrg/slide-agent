@@ -3,7 +3,7 @@ import {AbsoluteFill, Img, interpolate, staticFile, useCurrentFrame} from 'remot
 import {accentWord, C, clamp, display, ease, mono} from '../../launch/theme';
 import {M} from '../kit';
 
-// 0:53–1:00 — the end card: what it is, where to read about it, where the
+// 0:54–1:00 — the end card: what it is, where to read about it, where the
 // code lives. Held long enough to read the address.
 
 export const REPO_URL = 'github.com/ghassenbrg/slide-agent';
@@ -15,9 +15,9 @@ export const End: React.FC = () => {
 	return (
 		<AbsoluteFill style={{alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: `0 ${M}px`}}>
 			<Img src={staticFile('icon.png')} style={{width: 210, height: 210, opacity: a(0), scale: interpolate(a(0), [0, 1], [0.8, 1]), filter: 'drop-shadow(0 30px 50px rgba(20,40,120,0.3))'}} />
-			<div style={{fontFamily: display, fontWeight: 800, fontSize: 132, letterSpacing: '-0.055em', lineHeight: 1, color: C.ink, marginTop: 26, opacity: a(6), translate: `0px ${(1 - a(6)) * 20}px`}}>Slide Agent</div>
-			<div style={{fontFamily: display, fontWeight: 600, fontSize: 56, letterSpacing: '-0.03em', color: C.inkSoft, marginTop: 18, opacity: a(16), translate: `0px ${(1 - a(16)) * 16}px`}}>
-				Describe it. <span style={accentWord()}>Get the deck.</span>
+			<div style={{fontFamily: display, fontWeight: 800, fontSize: 112, letterSpacing: '-0.055em', lineHeight: 1, color: C.ink, marginTop: 26, opacity: a(6), translate: `0px ${(1 - a(6)) * 20}px`}}>Try Slide Agent.</div>
+			<div style={{fontFamily: display, fontWeight: 600, fontSize: 52, letterSpacing: '-0.03em', color: C.inkSoft, marginTop: 18, opacity: a(16), translate: `0px ${(1 - a(16)) * 16}px`}}>
+				Your brief. <span style={accentWord()}>Your presentation.</span>
 			</div>
 
 			<div style={{marginTop: 70, padding: '22px 40px', borderRadius: 22, background: '#fff', boxShadow: '0 1px 2px rgba(10,20,51,0.06), 0 14px 36px -12px rgba(10,20,51,0.2)', opacity: a(30), translate: `0px ${(1 - a(30)) * 18}px`}}>

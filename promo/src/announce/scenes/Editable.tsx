@@ -6,10 +6,10 @@ import {Caret, Pointer} from '../../launch/components/ui';
 import type {ChartEl, Frame} from '../../launch/deck';
 import {SLIDE_W_IN} from '../../launch/deck';
 import {accentWord, C, clamp, display, ease, mono} from '../../launch/theme';
-import {GENRES, SHOWCASE_ASSETS, showcaseSlide} from '../../showcase-deck';
+import {ANALYTICS_ASSETS, analyticsSlide, narrative} from '../data';
 import {CW, M, Title} from '../kit';
 
-// 0:35–0:41 — it is real PowerPoint. A generic slide editor (not any vendor's
+// 0:27–0:33 — it is real PowerPoint. A generic slide editor (not any vendor's
 // UI): the headline is a live text box in its own typeface, and the chart is a
 // native chart that opens onto the data it carries.
 
@@ -22,7 +22,7 @@ const PPI = SLIDE_W / SLIDE_W_IN;
 const CLICK_TEXT = 36;
 const CLICK_CHART = 76;
 
-const slide = showcaseSlide('data-story');
+const slide = analyticsSlide('data-story');
 const title = slide.elements.find((e) => e.id === 'data-story/text2')!;
 const chart = slide.elements.find((e) => e.id === 'data-story/chart11') as ChartEl;
 const at = (fr: Frame) => ({x: SX + fr.x * PPI, y: SY + fr.y * PPI, w: fr.w * PPI, h: fr.h * PPI});
@@ -63,7 +63,7 @@ export const Editable: React.FC = () => {
 					{['#FF5F57', '#FEBC2E', '#28C840'].map((c) => (
 						<div key={c} style={{width: 14, height: 14, borderRadius: 14, background: c}} />
 					))}
-					<div style={{marginLeft: 14, fontFamily: display, fontWeight: 600, fontSize: 24, color: C.ink}}>MySlideAgent-Showcase.pptx</div>
+					<div style={{marginLeft: 14, fontFamily: display, fontWeight: 600, fontSize: 24, color: C.ink}}>analytics.pptx</div>
 				</div>
 				<div style={{height: 68, display: 'flex', alignItems: 'center', gap: 14, padding: '0 24px', background: '#fff', borderBottom: `1px solid ${C.line}`, fontFamily: display, fontSize: 21, color: C.ink}}>
 					<div style={{padding: '8px 14px', borderRadius: 9, border: `1px solid ${C.line}`, minWidth: 280, background: textSel || chartSel ? C.blueSoft : '#fff'}}>{chartSel ? 'Column chart' : textSel ? 'Charter' : 'Helvetica Neue'}</div>
@@ -75,14 +75,14 @@ export const Editable: React.FC = () => {
 					</div>
 				</div>
 				<div style={{position: 'absolute', left: 24, right: 24, bottom: 22, display: 'flex', gap: 8}}>
-					{GENRES.map((g) => (
-						<Img key={g.id} src={staticFile(g.render)} style={{flex: 1, minWidth: 0, borderRadius: 4, outline: g.id === 'data-story' ? `3px solid ${C.blue}` : `1px solid ${C.line}`}} />
+					{narrative.map((g, i) => (
+						<Img key={g.id} src={staticFile(`announce/analytics/0${i + 1}.png`)} style={{flex: 1, minWidth: 0, borderRadius: 4, outline: g.id === 'data-story' ? `3px solid ${C.blue}` : `1px solid ${C.line}`}} />
 					))}
 				</div>
 			</div>
 
 			<div style={{position: 'absolute', left: SX, top: SY, opacity: interpolate(f, [10, 20], [0, 1], clamp), boxShadow: '0 1px 3px rgba(10,20,51,0.12)'}}>
-				<SlideView slide={slide} width={SLIDE_W} assetBase={SHOWCASE_ASSETS} />
+				<SlideView slide={slide} width={SLIDE_W} assetBase={ANALYTICS_ASSETS} />
 			</div>
 
 			{textSel ? (

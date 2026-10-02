@@ -2,11 +2,12 @@
 // public/announce/audio. Upbeat from the first frame — no dark intro — and
 // shaped to the picture:
 //
-//   0.0  hook      pad, kick and bass from frame 0
-//   3.0  briefs    arp joins; claps from the second brief (8 s)
-//  28.0  engine    two-second breakdown (kick out, filter down), back at 30
-//  39–41 lift      riser into the install section
-//  53.0  end card  drums fall away; the chord rings out
+//   0.0  introduction — immediate product name, pad/kick/bass
+//   4.0  brief        — arp joins
+//  11.0  story        — claps join
+//  27.0  editable     — short breakdown, returning at 29
+//  44.0  installation — lift
+//  54.0  CTA          — drums fall away; chord rings out
 //
 //   node scripts/make-announce-audio.mjs
 //
@@ -23,12 +24,12 @@ const BAR = BEAT * 4;
 const DURATION = 60;
 
 const T = {
-	arp: 3,
-	claps: 8,
-	breakStart: 28,
-	breakEnd: 30,
-	lift: 41,
-	close: 53,
+	arp: 4,
+	claps: 11,
+	breakStart: 27,
+	breakEnd: 29,
+	lift: 44,
+	close: 54,
 };
 
 // Fadd9 – C/E – Dm7 – B♭maj7, one chord per bar.
