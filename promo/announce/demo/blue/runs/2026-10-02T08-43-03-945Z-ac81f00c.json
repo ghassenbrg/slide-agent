@@ -78,7 +78,7 @@
  "modelCalls": [],
  "verdict": {
   "run": "ac81f00c-e129-4e8b-875b-aff91b6bd9de",
-  "deck": "/Users/ghassenbrg/git/slide-agent/promo/showcase/presentations/analytics/out",
+  "deck": "promo/showcase/presentations/analytics/out",
   "state": "ready",
   "slides": 5,
   "authoring": {
@@ -113,10 +113,10 @@
    }
   ],
   "views": {
-   "sheet": "/Users/ghassenbrg/git/slide-agent/promo/showcase/presentations/analytics/out/previews/sheet.png",
-   "pptx": "/Users/ghassenbrg/git/slide-agent/promo/showcase/presentations/analytics/out/deck.pptx",
+   "sheet": "promo/showcase/presentations/analytics/out/previews/sheet.png",
+   "pptx": "promo/showcase/presentations/analytics/out/deck.pptx",
    "slides": [
-    "/Users/ghassenbrg/git/slide-agent/promo/showcase/presentations/analytics/out/exports/deck.pdf"
+    "promo/showcase/presentations/analytics/out/exports/deck.pdf"
    ]
   },
   "cost": {

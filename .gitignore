@@ -12,3 +12,5 @@ extensions/vscode/out/
 release/
 examples/output/
 examples/showcase/output/
+__pycache__/
+*.py[cod]

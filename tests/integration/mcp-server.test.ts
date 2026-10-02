@@ -6,6 +6,10 @@ import { Client } from "@modelcontextprotocol/client";
 import { StdioClientTransport } from "@modelcontextprotocol/client/stdio";
 import { afterEach, describe, expect, it } from "vitest";
 
+import { buildMcpServer } from "../../src/mcp-server.js";
+import { setWorkspaceRoots } from "../../src/security/policy.js";
+import { connectInProcess } from "../helpers/mcp-transport.js";
+
 const root = path.resolve(import.meta.dirname, "../..");
 let client: Client | undefined;
 let workspace: string | undefined;
@@ -13,12 +17,17 @@ let workspace: string | undefined;
 afterEach(async () => {
   await client?.close();
   client = undefined;
+  setWorkspaceRoots(undefined);
   if (workspace) await rm(workspace, { recursive: true, force: true });
   workspace = undefined;
 });
 
-async function connect(): Promise<Client> {
+async function connect(stdio = false): Promise<Client> {
   const created = new Client({ name: "slide-agent-test", version: "1.0.0" });
+  if (!stdio) {
+    await connectInProcess(created, buildMcpServer({ compatV1: true }));
+    return created;
+  }
   await created.connect(new StdioClientTransport({
     command: process.execPath,
     // The 0.x tools are served behind --compat-v1 on the 1.x server.
@@ -30,7 +39,7 @@ async function connect(): Promise<Client> {
 
 describe("Slide Agent MCP server", () => {
   it("lists the complete tool surface and runs doctor over stdio", async () => {
-    client = await connect();
+    client = await connect(true);
 
     const tools = await client.listTools();
     expect(tools.tools.map((tool) => tool.name)).toEqual(expect.arrayContaining([

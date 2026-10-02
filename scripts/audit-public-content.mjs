@@ -9,7 +9,28 @@ const excludedDirectories = new Set([".git", ".tmp", "node_modules", "dist", "re
 // Build output, not source. Both are gitignored; the auditor walks the working
 // tree, so it has to skip them explicitly or a local build fails the audit.
 const excludedRelativeDirectories = new Set(["examples/output", "examples/showcase/output"]);
-const allowedPresentationFiles = new Set(["tests/fixtures/invalid-layout.pptx"]);
+// Explicit public demos used by the promo and documentation site. Approving
+// these paths permits their file types; all content checks still apply.
+const allowedPresentationFiles = new Set([
+  "tests/fixtures/invalid-layout.pptx",
+  "promo/announce/demo/blue/deck.pptx",
+  "promo/announce/demo/blue/exports/deck.pdf",
+  "promo/announce/demo/blue/render/deck.pdf",
+  "promo/showcase/MySlideAgent-Showcase.pdf",
+  "promo/showcase/MySlideAgent-Showcase.pptx",
+  "site/public/showcase/presentations/analytics/analytics.pdf",
+  "site/public/showcase/presentations/analytics/analytics.pptx",
+  "site/public/showcase/presentations/architecture/architecture.pdf",
+  "site/public/showcase/presentations/architecture/architecture.pptx",
+  "site/public/showcase/presentations/executive/executive.pdf",
+  "site/public/showcase/presentations/executive/executive.pptx",
+  "site/public/showcase/presentations/nova/nova.pdf",
+  "site/public/showcase/presentations/nova/nova.pptx",
+  "site/public/showcase/presentations/transformation/transformation.pdf",
+  "site/public/showcase/presentations/transformation/transformation.pptx",
+  "site/public/showcase/range/slide-agent-showcase.pdf",
+  "site/public/showcase/range/slide-agent-showcase.pptx",
+]);
 const blockedArtifactExtensions = new Set([".ppt", ".pptx", ".pptm", ".pdf", ".key"]);
 const blockedFileNames = new Set([".env", ".env.local", ".npmrc"]);
 const sensitiveDigests = [
@@ -44,24 +65,26 @@ export function containsSensitiveDigest(value) {
   return false;
 }
 
-async function walk(directory, files = []) {
+async function walk(directory, files = [], auditRoot = root) {
   for (const entry of await readdir(directory, { withFileTypes: true })) {
     const absolute = path.join(directory, entry.name);
-    const relative = path.relative(root, absolute).split(path.sep).join("/");
+    const relative = path.relative(auditRoot, absolute).split(path.sep).join("/");
     if (entry.isDirectory() && (excludedDirectories.has(entry.name) || excludedRelativeDirectories.has(relative))) continue;
-    if (entry.isDirectory()) await walk(absolute, files);
+    if (entry.isDirectory()) await walk(absolute, files, auditRoot);
     else files.push({ absolute, relative });
   }
   return files;
 }
 
-export async function auditPublicContent() {
+export async function auditPublicContent(auditRoot = root) {
+  auditRoot = path.resolve(auditRoot);
   const problems = [];
-  for (const file of await walk(root)) {
+  const files = await walk(auditRoot, [], auditRoot);
+  for (const file of files) {
     const info = await lstat(file.absolute);
     if (info.isSymbolicLink()) {
       const target = await realpath(file.absolute).catch(() => "");
-      if (!target.startsWith(`${root}${path.sep}`)) problems.push(`${file.relative}: symlink escapes the repository`);
+      if (!target.startsWith(`${auditRoot}${path.sep}`)) problems.push(`${file.relative}: symlink escapes the repository`);
       continue;
     }
     const extension = path.extname(file.relative).toLowerCase();
@@ -78,7 +101,7 @@ export async function auditPublicContent() {
     if (secretPatterns.some((pattern) => pattern.test(content))) problems.push(`${file.relative}: possible credential or local absolute path`);
   }
   if (problems.length) throw new Error(`Public-content audit failed:\n${problems.join("\n")}`);
-  return { filesScanned: (await walk(root)).length };
+  return { filesScanned: files.length };
 }
 
 if (path.resolve(process.argv[1] ?? "") === fileURLToPath(import.meta.url)) {

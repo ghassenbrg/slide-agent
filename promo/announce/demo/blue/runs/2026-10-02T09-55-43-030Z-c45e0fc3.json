@@ -71,7 +71,7 @@
  "modelCalls": [],
  "verdict": {
   "run": "c45e0fc3-479c-4094-a206-1a643e98edcd",
-  "deck": "/Users/ghassenbrg/git/slide-agent/promo/announce/demo/blue",
+  "deck": "promo/announce/demo/blue",
   "state": "ready-unrendered",
   "slides": 5,
   "changed": [
@@ -103,8 +103,8 @@
    }
   ],
   "views": {
-   "sheet": "/Users/ghassenbrg/git/slide-agent/promo/announce/demo/blue/previews/sheet.png",
-   "pptx": "/Users/ghassenbrg/git/slide-agent/promo/announce/demo/blue/deck.pptx"
+   "sheet": "promo/announce/demo/blue/previews/sheet.png",
+   "pptx": "promo/announce/demo/blue/deck.pptx"
   },
   "cost": {
    "engineMs": 4674

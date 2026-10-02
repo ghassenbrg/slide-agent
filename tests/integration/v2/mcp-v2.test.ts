@@ -6,6 +6,13 @@ import { Client } from "@modelcontextprotocol/client";
 import { StdioClientTransport } from "@modelcontextprotocol/client/stdio";
 import { afterEach, describe, expect, it } from "vitest";
 
+import { buildMcpServer } from "../../../src/mcp-server.js";
+import { setWorkspaceRoots } from "../../../src/security/policy.js";
+import { Engine } from "../../../src/v2/engine/engine.js";
+import { buildV2McpServer } from "../../../src/v2/mcp/server.js";
+import { fixtureRegistry } from "../../unit/v2/helpers.js";
+import { connectInProcess } from "../../helpers/mcp-transport.js";
+
 const root = path.resolve(import.meta.dirname, "../../..");
 let client: Client | undefined;
 let workspace: string | undefined;
@@ -13,12 +20,21 @@ let workspace: string | undefined;
 afterEach(async () => {
   await client?.close();
   client = undefined;
+  setWorkspaceRoots(undefined);
   if (workspace) await rm(workspace, { recursive: true, force: true });
   workspace = undefined;
 });
 
-async function connect(cwd: string, extra: string[] = []): Promise<Client> {
+async function connect(cwd: string, extra: string[] = [], stdio = false): Promise<Client> {
   const created = new Client({ name: "slide-agent-v2-test", version: "1.0.0" });
+  if (!stdio) {
+    setWorkspaceRoots([cwd]);
+    const server = extra.includes("--compat-v1")
+      ? buildMcpServer({ compatV1: true })
+      : buildV2McpServer({ engine: new Engine({ registry: fixtureRegistry(), fontDownloads: false }) });
+    await connectInProcess(created, server);
+    return created;
+  }
   await created.connect(new StdioClientTransport({
     command: process.execPath,
     args: [path.join(root, "node_modules", "tsx", "dist", "cli.mjs"), path.join(root, "src", "mcp-server.ts"), ...extra],
@@ -37,11 +53,11 @@ function payload(result: { content: unknown }): Record<string, unknown> {
 describe("MCP server v2", () => {
   it("serves exactly the seven V2 tools by default, and V1 tools only with --compat-v1", async () => {
     workspace = await mkdtemp(path.join(tmpdir(), "slide-agent-mcp-v2-"));
-    client = await connect(workspace);
+    client = await connect(workspace, [], true);
     const names = (await client.listTools()).tools.map((tool) => tool.name).sort();
     expect(names).toEqual(["slides_build", "slides_catalog", "slides_edit", "slides_finalize", "slides_generate", "slides_inspect", "slides_view"]);
     await client.close();
-    client = await connect(workspace, ["--compat-v1"]);
+    client = await connect(workspace, ["--compat-v1"], true);
     const compat = (await client.listTools()).tools.map((tool) => tool.name);
     expect(compat).toContain("slides_build");
     expect(compat).toContain("slide_agent_run");
@@ -61,10 +77,10 @@ describe("MCP server v2", () => {
     expect((recipe.contents[0] as { text: string }).text).toContain("metrics");
   });
 
-  it("builds, views, edits, and confines paths over stdio within response budgets", async () => {
+  it.each([false, true])("builds, views, edits, and confines paths within response budgets (stdio: %s)", async (stdio) => {
     workspace = await mkdtemp(path.join(tmpdir(), "slide-agent-mcp-v2-"));
     await cp(path.join(root, "examples", "v2", "zero-trust-rollout.intent.json"), path.join(workspace, "intent.json"));
-    client = await connect(workspace);
+    client = await connect(workspace, [], stdio);
 
     const catalog = await client.callTool({ name: "slides_catalog", arguments: {} });
     expect(JSON.stringify(catalog.content).length / 4).toBeLessThanOrEqual(3200);

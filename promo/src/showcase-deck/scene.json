@@ -3991,7 +3991,7 @@
       "h": 7.5
      },
      "z": 0,
-     "asset": "/Users/ghassenbrg/git/slide-agent/promo/showcase/assets/night-glow.png",
+     "asset": "promo/showcase/assets/night-glow.png",
      "sha256": "8802436dfb0be6fe260987fbe14ab2e4888bbfcbd77cd413254efc6796b61907",
      "pixelWidth": 2667,
      "pixelHeight": 1500,
@@ -13577,7 +13577,7 @@
       "h": 7.5
      },
      "z": 0,
-     "asset": "/Users/ghassenbrg/git/slide-agent/promo/showcase/assets/keynote-light.png",
+     "asset": "promo/showcase/assets/keynote-light.png",
      "sha256": "4166ed3f64217fac7abff6c7fae48f998aae92488683c23fcfa3f3a09ca03347",
      "pixelWidth": 2667,
      "pixelHeight": 1500,
