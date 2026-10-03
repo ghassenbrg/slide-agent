@@ -1,0 +1,19 @@
+# Client brief (October 3) — source of truth for this film
+
+Create a new, polished LinkedIn announcement video for Slide Agent using Remotion.
+
+**Previous work.** Previous announcements (V1, V2, V5 and later attempts) felt boring: static slides moving from scene to scene, without purposeful motion or a connected visual story. Create a fresh concept and composition. Underlying assets (logo, fonts, colours, real decks, accurate screenshots, appropriate audio) may be reused; scripts, scene order, pacing, recurring layouts and overall visual treatment must not be inherited.
+
+**Central message.** "Create professional presentations directly through your AI agent." Two ideas together: (1) people create presentations directly through a supported AI agent; (2) the results can have impressive, professional design and substance. Communicate reliability through real evidence (coherent decks, clear content, thoughtful layouts, usable PowerPoint output). Avoid unsupported promises about perfect results, zero adjustments, universal compatibility, or generation speed.
+
+**Audience and tone.** Broad: professionals, project managers, engineers, founders, educators. Explain simply; not developer-only; do not assume viewers know what an AI skill is. Confident, professional product voice; no first-person ("I built").
+
+**Mandatory creative direction.** The opening connects AI creation and impressive results immediately; a short, readable request alongside a striking real result; the Slide Agent name within the opening seconds. A connected visual journey: request → agent workflow → professional deck → diverse examples → finished deliverable → website. Deliberately animated throughout, with motion that explains: follow connections through an architecture diagram; reveal components into a complete composition; progress through a roadmap/timeline; reveal chart information in a meaningful order; carry a visual element between related scenes; alternate useful close-ups with complete slide views. Transitions alone do not satisfy this. Balance movement with readable holds. Promotional animation must not imply animated PowerPoint output.
+
+**Narrative (45–55 s).** 1 Opening: natural-language request + impressive output. 2 Introduction: name Slide Agent, plain-language purpose. 3 Workflow: brief installation/availability in a supported agent, then a request and its actual result. 4 Quality and depth: several related slides from one deck, consistency beyond a title slide. 5 Range: ~3 contrasting presentation types and visual styles (not all the same dark theme). 6 Deliverable and close: editable PowerPoint output, then product name, website (https://slide-agent.ghassen.io/), invitation to explore examples and installation instructions. Installation brief; most time on workflow and output quality.
+
+**Evidence.** Actual Slide Agent output only; substantive slides (diagrams, timelines, charts, structured content), not only covers. Authentic workflow footage or a faithful recreation; clearly indicate acceleration/compression. Editable PowerPoint is a supporting benefit; manual editing must not be the main demonstration.
+
+**Audio and format.** Concise professional English voiceover; readable captions and short on-screen messages; music supporting rhythm without overpowering speech; understandable with sound off. 1080 × 1350 (4:5). Slides framed with useful close-ups and complete views, readable on a phone. Website readable and visible long enough to register.
+
+**Acceptance.** Opening communicates AI creation and output quality; product and workflow understandable to a broad audience; purposeful motion within scenes; actual decks show quality, consistency and variety; text and examples readable on a phone; voiceover, captions, music and visuals synchronized; claims match verified capabilities; follows this brief rather than a previous announcement's direction.

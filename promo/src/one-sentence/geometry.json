@@ -1,0 +1,5926 @@
+{
+ "fern-1": {
+  "size": {
+   "width": 13.333333,
+   "height": 7.5
+  },
+  "elements": [
+   {
+    "id": "dashboard/icon1",
+    "kind": "icon",
+    "text": "",
+    "frame": {
+     "x": 0.5,
+     "y": 0.47,
+     "w": 0.26,
+     "h": 0.26
+    }
+   },
+   {
+    "id": "dashboard/text2",
+    "kind": "text",
+    "text": "FERN",
+    "frame": {
+     "x": 0.84,
+     "y": 0.45,
+     "w": 2.0001,
+     "h": 0.3
+    }
+   },
+   {
+    "id": "dashboard/text3",
+    "kind": "text",
+    "text": "LAUNCH PLAN   \u00b7   Q1 2027   \u00b7   LEADERSHIP REVIEW",
+    "frame": {
+     "x": 6.2001,
+     "y": 0.45,
+     "w": 6.63,
+     "h": 0.3
+    }
+   },
+   {
+    "id": "dashboard/text4",
+    "kind": "text",
+    "text": "Fern launches March 18.",
+    "frame": {
+     "x": 0.5,
+     "y": 0.9,
+     "w": 10.0001,
+     "h": 0.8
+    }
+   },
+   {
+    "id": "dashboard/text5",
+    "kind": "text",
+    "text": "Twelve weeks from private beta to public launch, with a $420K budget and three n",
+    "frame": {
+     "x": 0.5,
+     "y": 1.7201,
+     "w": 11,
+     "h": 0.36
+    }
+   },
+   {
+    "id": "dashboard/free6-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 0.5,
+     "y": 2.3,
+     "w": 3,
+     "h": 2.08
+    }
+   },
+   {
+    "id": "dashboard/text7",
+    "kind": "text",
+    "text": "30-DAY TARGET",
+    "frame": {
+     "x": 0.8,
+     "y": 2.55,
+     "w": 2.5,
+     "h": 0.25
+    }
+   },
+   {
+    "id": "dashboard/text8",
+    "kind": "text",
+    "text": "50K",
+    "frame": {
+     "x": 0.8,
+     "y": 2.8499,
+     "w": 2.6,
+     "h": 0.85
+    }
+   },
+   {
+    "id": "dashboard/text9",
+    "kind": "text",
+    "text": "installs after launch",
+    "frame": {
+     "x": 0.8,
+     "y": 3.68,
+     "w": 2.5,
+     "h": 0.3
+    }
+   },
+   {
+    "id": "dashboard/shape10",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 0.8,
+     "y": 4.0199,
+     "w": 2.4,
+     "h": 0.01
+    }
+   },
+   {
+    "id": "dashboard/text11",
+    "kind": "text",
+    "text": "4.5 rating  \u00b7  25% week-4 active",
+    "frame": {
+     "x": 0.8,
+     "y": 4.08,
+     "w": 2.6,
+     "h": 0.24
+    }
+   },
+   {
+    "id": "dashboard/free12-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 3.7,
+     "y": 2.3,
+     "w": 9.133,
+     "h": 2.08
+    }
+   },
+   {
+    "id": "dashboard/text13",
+    "kind": "text",
+    "text": "Timeline",
+    "frame": {
+     "x": 4,
+     "y": 2.5,
+     "w": 3,
+     "h": 0.32
+    }
+   },
+   {
+    "id": "dashboard/text14",
+    "kind": "text",
+    "text": "12 weeks  \u00b7  Jan 4 \u2013 Mar 26",
+    "frame": {
+     "x": 9,
+     "y": 2.52,
+     "w": 3.53,
+     "h": 0.28
+    }
+   },
+   {
+    "id": "dashboard/shape15",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 4.45,
+     "y": 3.42,
+     "w": 7.7501,
+     "h": 0.05
+    }
+   },
+   {
+    "id": "dashboard/shape16",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 4.45,
+     "y": 3.42,
+     "w": 2.95,
+     "h": 0.05
+    }
+   },
+   {
+    "id": "dashboard/shape17",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 4.34,
+     "y": 3.335,
+     "w": 0.22,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "dashboard/icon18",
+    "kind": "icon",
+    "text": "",
+    "frame": {
+     "x": 4.34,
+     "y": 3.335,
+     "w": 0.22,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "dashboard/text19",
+    "kind": "text",
+    "text": "Jan 12",
+    "frame": {
+     "x": 3.65,
+     "y": 2.9999,
+     "w": 1.6,
+     "h": 0.24
+    }
+   },
+   {
+    "id": "dashboard/text20",
+    "kind": "text",
+    "text": "Private beta",
+    "frame": {
+     "x": 3.53,
+     "y": 3.7,
+     "w": 1.84,
+     "h": 0.28
+    }
+   },
+   {
+    "id": "dashboard/text21",
+    "kind": "text",
+    "text": "Done",
+    "frame": {
+     "x": 3.65,
+     "y": 3.98,
+     "w": 1.6,
+     "h": 0.24
+    }
+   },
+   {
+    "id": "dashboard/shape22",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 6.2775,
+     "y": 3.335,
+     "w": 0.22,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "dashboard/shape23",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 6.3375,
+     "y": 3.395,
+     "w": 0.1,
+     "h": 0.1
+    }
+   },
+   {
+    "id": "dashboard/text24",
+    "kind": "text",
+    "text": "Feb 2",
+    "frame": {
+     "x": 5.5875,
+     "y": 2.9999,
+     "w": 1.6,
+     "h": 0.24
+    }
+   },
+   {
+    "id": "dashboard/text25",
+    "kind": "text",
+    "text": "Store submission",
+    "frame": {
+     "x": 5.4675,
+     "y": 3.7,
+     "w": 1.84,
+     "h": 0.28
+    }
+   },
+   {
+    "id": "dashboard/text26",
+    "kind": "text",
+    "text": "Next",
+    "frame": {
+     "x": 5.5875,
+     "y": 3.98,
+     "w": 1.6,
+     "h": 0.24
+    }
+   },
+   {
+    "id": "dashboard/shape27",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 8.215,
+     "y": 3.335,
+     "w": 0.22,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "dashboard/text28",
+    "kind": "text",
+    "text": "Feb 23",
+    "frame": {
+     "x": 7.525,
+     "y": 2.9999,
+     "w": 1.6,
+     "h": 0.24
+    }
+   },
+   {
+    "id": "dashboard/text29",
+    "kind": "text",
+    "text": "Press preview",
+    "frame": {
+     "x": 7.405,
+     "y": 3.7,
+     "w": 1.84,
+     "h": 0.28
+    }
+   },
+   {
+    "id": "dashboard/text30",
+    "kind": "text",
+    "text": "Planned",
+    "frame": {
+     "x": 7.525,
+     "y": 3.98,
+     "w": 1.6,
+     "h": 0.24
+    }
+   },
+   {
+    "id": "dashboard/shape31",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 10.1125,
+     "y": 3.295,
+     "w": 0.3,
+     "h": 0.3
+    }
+   },
+   {
+    "id": "dashboard/text32",
+    "kind": "text",
+    "text": "Mar 18",
+    "frame": {
+     "x": 9.4625,
+     "y": 2.9999,
+     "w": 1.6,
+     "h": 0.24
+    }
+   },
+   {
+    "id": "dashboard/text33",
+    "kind": "text",
+    "text": "Launch",
+    "frame": {
+     "x": 9.3425,
+     "y": 3.7,
+     "w": 1.84,
+     "h": 0.28
+    }
+   },
+   {
+    "id": "dashboard/text34",
+    "kind": "text",
+    "text": "Launch day",
+    "frame": {
+     "x": 9.4625,
+     "y": 3.98,
+     "w": 1.6,
+     "h": 0.24
+    }
+   },
+   {
+    "id": "dashboard/shape35",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 12.0901,
+     "y": 3.335,
+     "w": 0.22,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "dashboard/text36",
+    "kind": "text",
+    "text": "Apr 15",
+    "frame": {
+     "x": 11.4001,
+     "y": 2.9999,
+     "w": 1.6,
+     "h": 0.24
+    }
+   },
+   {
+    "id": "dashboard/text37",
+    "kind": "text",
+    "text": "30-day review",
+    "frame": {
+     "x": 11.28,
+     "y": 3.7,
+     "w": 1.84,
+     "h": 0.28
+    }
+   },
+   {
+    "id": "dashboard/text38",
+    "kind": "text",
+    "text": "Planned",
+    "frame": {
+     "x": 11.4001,
+     "y": 3.98,
+     "w": 1.6,
+     "h": 0.24
+    }
+   },
+   {
+    "id": "dashboard/free39-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 0.5,
+     "y": 4.55,
+     "w": 6.0001,
+     "h": 2.02
+    }
+   },
+   {
+    "id": "dashboard/text40",
+    "kind": "text",
+    "text": "Budget",
+    "frame": {
+     "x": 0.8,
+     "y": 4.7301,
+     "w": 2,
+     "h": 0.32
+    }
+   },
+   {
+    "id": "dashboard/text41",
+    "kind": "text",
+    "text": "$420K total",
+    "frame": {
+     "x": 4.2,
+     "y": 4.7301,
+     "w": 2,
+     "h": 0.32
+    }
+   },
+   {
+    "id": "dashboard/text42",
+    "kind": "text",
+    "text": "Paid social",
+    "frame": {
+     "x": 0.8,
+     "y": 5.17,
+     "w": 1.55,
+     "h": 0.24
+    }
+   },
+   {
+    "id": "dashboard/shape43",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 2.4,
+     "y": 5.23,
+     "w": 3.05,
+     "h": 0.12
+    }
+   },
+   {
+    "id": "dashboard/shape44",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 2.4,
+     "y": 5.23,
+     "w": 3.05,
+     "h": 0.12
+    }
+   },
+   {
+    "id": "dashboard/text45",
+    "kind": "text",
+    "text": "$160K",
+    "frame": {
+     "x": 5.5001,
+     "y": 5.17,
+     "w": 0.7,
+     "h": 0.24
+    }
+   },
+   {
+    "id": "dashboard/text46",
+    "kind": "text",
+    "text": "Creators",
+    "frame": {
+     "x": 0.8,
+     "y": 5.44,
+     "w": 1.55,
+     "h": 0.24
+    }
+   },
+   {
+    "id": "dashboard/shape47",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 2.4,
+     "y": 5.5,
+     "w": 3.05,
+     "h": 0.12
+    }
+   },
+   {
+    "id": "dashboard/shape48",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 2.4,
+     "y": 5.5,
+     "w": 1.811,
+     "h": 0.12
+    }
+   },
+   {
+    "id": "dashboard/text49",
+    "kind": "text",
+    "text": "$95K",
+    "frame": {
+     "x": 5.5001,
+     "y": 5.44,
+     "w": 0.7,
+     "h": 0.24
+    }
+   },
+   {
+    "id": "dashboard/text50",
+    "kind": "text",
+    "text": "PR & events",
+    "frame": {
+     "x": 0.8,
+     "y": 5.71,
+     "w": 1.55,
+     "h": 0.24
+    }
+   },
+   {
+    "id": "dashboard/shape51",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 2.4,
+     "y": 5.77,
+     "w": 3.05,
+     "h": 0.12
+    }
+   },
+   {
+    "id": "dashboard/shape52",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 2.4,
+     "y": 5.77,
+     "w": 1.3344,
+     "h": 0.12
+    }
+   },
+   {
+    "id": "dashboard/text53",
+    "kind": "text",
+    "text": "$70K",
+    "frame": {
+     "x": 5.5001,
+     "y": 5.71,
+     "w": 0.7,
+     "h": 0.24
+    }
+   },
+   {
+    "id": "dashboard/text54",
+    "kind": "text",
+    "text": "App store ads",
+    "frame": {
+     "x": 0.8,
+     "y": 5.98,
+     "w": 1.55,
+     "h": 0.24
+    }
+   },
+   {
+    "id": "dashboard/shape55",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 2.4,
+     "y": 6.04,
+     "w": 3.05,
+     "h": 0.12
+    }
+   },
+   {
+    "id": "dashboard/shape56",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 2.4,
+     "y": 6.04,
+     "w": 1.0485,
+     "h": 0.12
+    }
+   },
+   {
+    "id": "dashboard/text57",
+    "kind": "text",
+    "text": "$55K",
+    "frame": {
+     "x": 5.5001,
+     "y": 5.98,
+     "w": 0.7,
+     "h": 0.24
+    }
+   },
+   {
+    "id": "dashboard/text58",
+    "kind": "text",
+    "text": "Contingency",
+    "frame": {
+     "x": 0.8,
+     "y": 6.25,
+     "w": 1.55,
+     "h": 0.24
+    }
+   },
+   {
+    "id": "dashboard/shape59",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 2.4,
+     "y": 6.31,
+     "w": 3.05,
+     "h": 0.12
+    }
+   },
+   {
+    "id": "dashboard/shape60",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 2.4,
+     "y": 6.31,
+     "w": 0.7625,
+     "h": 0.12
+    }
+   },
+   {
+    "id": "dashboard/text61",
+    "kind": "text",
+    "text": "$40K",
+    "frame": {
+     "x": 5.5001,
+     "y": 6.25,
+     "w": 0.7,
+     "h": 0.24
+    }
+   },
+   {
+    "id": "dashboard/free62-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 6.7,
+     "y": 4.55,
+     "w": 6.1331,
+     "h": 2.02
+    }
+   },
+   {
+    "id": "dashboard/text63",
+    "kind": "text",
+    "text": "Risks",
+    "frame": {
+     "x": 7,
+     "y": 4.7301,
+     "w": 2,
+     "h": 0.32
+    }
+   },
+   {
+    "id": "dashboard/text64",
+    "kind": "text",
+    "text": "3 open  \u00b7  each has an owner",
+    "frame": {
+     "x": 9.6,
+     "y": 4.7501,
+     "w": 2.93,
+     "h": 0.28
+    }
+   },
+   {
+    "id": "dashboard/row65-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 7,
+     "y": 5.21,
+     "w": 0.78,
+     "h": 0.25
+    }
+   },
+   {
+    "id": "dashboard/text66",
+    "kind": "text",
+    "text": "High",
+    "frame": {
+     "x": 7,
+     "y": 5.2482,
+     "w": 0.78,
+     "h": 0.1736
+    }
+   },
+   {
+    "id": "dashboard/text67",
+    "kind": "text",
+    "text": "App Store review slips past March 1",
+    "frame": {
+     "x": 7.92,
+     "y": 5.18,
+     "w": 3.4,
+     "h": 0.3
+    }
+   },
+   {
+    "id": "dashboard/text68",
+    "kind": "text",
+    "text": "Dana \u00b7 Product",
+    "frame": {
+     "x": 11.2,
+     "y": 5.18,
+     "w": 1.33,
+     "h": 0.3
+    }
+   },
+   {
+    "id": "dashboard/shape69",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 7,
+     "y": 5.565,
+     "w": 5.5301,
+     "h": 0.01
+    }
+   },
+   {
+    "id": "dashboard/row70-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 7,
+     "y": 5.65,
+     "w": 0.78,
+     "h": 0.25
+    }
+   },
+   {
+    "id": "dashboard/text71",
+    "kind": "text",
+    "text": "Medium",
+    "frame": {
+     "x": 7,
+     "y": 5.6882,
+     "w": 0.78,
+     "h": 0.1736
+    }
+   },
+   {
+    "id": "dashboard/text72",
+    "kind": "text",
+    "text": "Bank-connection limits at peak sign-up",
+    "frame": {
+     "x": 7.92,
+     "y": 5.62,
+     "w": 3.4,
+     "h": 0.3
+    }
+   },
+   {
+    "id": "dashboard/text73",
+    "kind": "text",
+    "text": "Omar \u00b7 Eng",
+    "frame": {
+     "x": 11.2,
+     "y": 5.62,
+     "w": 1.33,
+     "h": 0.3
+    }
+   },
+   {
+    "id": "dashboard/shape74",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 7,
+     "y": 6.005,
+     "w": 5.5301,
+     "h": 0.01
+    }
+   },
+   {
+    "id": "dashboard/row75-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 7,
+     "y": 6.09,
+     "w": 0.78,
+     "h": 0.25
+    }
+   },
+   {
+    "id": "dashboard/text76",
+    "kind": "text",
+    "text": "Medium",
+    "frame": {
+     "x": 7,
+     "y": 6.1282,
+     "w": 0.78,
+     "h": 0.1736
+    }
+   },
+   {
+    "id": "dashboard/text77",
+    "kind": "text",
+    "text": "Support volume in launch week",
+    "frame": {
+     "x": 7.92,
+     "y": 6.06,
+     "w": 3.4,
+     "h": 0.3
+    }
+   },
+   {
+    "id": "dashboard/text78",
+    "kind": "text",
+    "text": "Lena \u00b7 Support",
+    "frame": {
+     "x": 11.2,
+     "y": 6.06,
+     "w": 1.33,
+     "h": 0.3
+    }
+   },
+   {
+    "id": "dashboard/text79",
+    "kind": "text",
+    "text": "Fern \u2014 Launch plan  \u00b7  Illustrative demo",
+    "frame": {
+     "x": 0.5,
+     "y": 6.8,
+     "w": 8,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "dashboard/text80",
+    "kind": "text",
+    "text": "01 / 05",
+    "frame": {
+     "x": 11.33,
+     "y": 6.8,
+     "w": 1.5,
+     "h": 0.22
+    }
+   }
+  ]
+ },
+ "fern-2": {
+  "size": {
+   "width": 13.333333,
+   "height": 7.5
+  },
+  "elements": [
+   {
+    "id": "timeline/icon1",
+    "kind": "icon",
+    "text": "",
+    "frame": {
+     "x": 0.5,
+     "y": 0.47,
+     "w": 0.22,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "timeline/text2",
+    "kind": "text",
+    "text": "LAUNCH PLAN  \u00b7  TIMELINE",
+    "frame": {
+     "x": 0.8,
+     "y": 0.45,
+     "w": 7,
+     "h": 0.26
+    }
+   },
+   {
+    "id": "timeline/shape3",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 0.5,
+     "y": 6.72,
+     "w": 12.333,
+     "h": 0.012
+    }
+   },
+   {
+    "id": "timeline/text4",
+    "kind": "text",
+    "text": "Fern \u2014 Launch plan  \u00b7  Illustrative demo",
+    "frame": {
+     "x": 0.5,
+     "y": 6.8,
+     "w": 8,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "timeline/text5",
+    "kind": "text",
+    "text": "02 / 05",
+    "frame": {
+     "x": 11.33,
+     "y": 6.8,
+     "w": 1.5,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "timeline/text6",
+    "kind": "text",
+    "text": "Twelve weeks, three teams, one launch date.",
+    "frame": {
+     "x": 0.5,
+     "y": 0.85,
+     "w": 12.3,
+     "h": 0.62
+    }
+   },
+   {
+    "id": "timeline/text7",
+    "kind": "text",
+    "text": "Store submission on February 2 is the gate: it leaves six weeks of review buffer",
+    "frame": {
+     "x": 0.5,
+     "y": 1.5,
+     "w": 11.5,
+     "h": 0.36
+    }
+   },
+   {
+    "id": "timeline/text8",
+    "kind": "text",
+    "text": "January",
+    "frame": {
+     "x": 2.61,
+     "y": 2.2,
+     "w": 3.3,
+     "h": 0.3
+    }
+   },
+   {
+    "id": "timeline/shape9",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 2.55,
+     "y": 2.55,
+     "w": 3.3667,
+     "h": 0.035
+    }
+   },
+   {
+    "id": "timeline/text10",
+    "kind": "text",
+    "text": "February",
+    "frame": {
+     "x": 6.0366,
+     "y": 2.2,
+     "w": 3.3,
+     "h": 0.3
+    }
+   },
+   {
+    "id": "timeline/shape11",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 5.9767,
+     "y": 2.55,
+     "w": 3.3667,
+     "h": 0.035
+    }
+   },
+   {
+    "id": "timeline/text12",
+    "kind": "text",
+    "text": "March",
+    "frame": {
+     "x": 9.4634,
+     "y": 2.2,
+     "w": 3.3,
+     "h": 0.3
+    }
+   },
+   {
+    "id": "timeline/shape13",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 9.4033,
+     "y": 2.55,
+     "w": 3.3667,
+     "h": 0.035
+    }
+   },
+   {
+    "id": "timeline/text14",
+    "kind": "text",
+    "text": "W1",
+    "frame": {
+     "x": 2.55,
+     "y": 2.63,
+     "w": 0.8567,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "timeline/text15",
+    "kind": "text",
+    "text": "W2",
+    "frame": {
+     "x": 3.4067,
+     "y": 2.63,
+     "w": 0.8567,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "timeline/text16",
+    "kind": "text",
+    "text": "W3",
+    "frame": {
+     "x": 4.2633,
+     "y": 2.63,
+     "w": 0.8567,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "timeline/text17",
+    "kind": "text",
+    "text": "W4",
+    "frame": {
+     "x": 5.12,
+     "y": 2.63,
+     "w": 0.8567,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "timeline/text18",
+    "kind": "text",
+    "text": "W5",
+    "frame": {
+     "x": 5.9767,
+     "y": 2.63,
+     "w": 0.8567,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "timeline/text19",
+    "kind": "text",
+    "text": "W6",
+    "frame": {
+     "x": 6.8334,
+     "y": 2.63,
+     "w": 0.8567,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "timeline/text20",
+    "kind": "text",
+    "text": "W7",
+    "frame": {
+     "x": 7.69,
+     "y": 2.63,
+     "w": 0.8567,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "timeline/text21",
+    "kind": "text",
+    "text": "W8",
+    "frame": {
+     "x": 8.5467,
+     "y": 2.63,
+     "w": 0.8567,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "timeline/text22",
+    "kind": "text",
+    "text": "W9",
+    "frame": {
+     "x": 9.4033,
+     "y": 2.63,
+     "w": 0.8567,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "timeline/text23",
+    "kind": "text",
+    "text": "W10",
+    "frame": {
+     "x": 10.26,
+     "y": 2.63,
+     "w": 0.8567,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "timeline/text24",
+    "kind": "text",
+    "text": "W11",
+    "frame": {
+     "x": 11.1167,
+     "y": 2.63,
+     "w": 0.8567,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "timeline/text25",
+    "kind": "text",
+    "text": "W12",
+    "frame": {
+     "x": 11.9734,
+     "y": 2.63,
+     "w": 0.8567,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "timeline/shape26",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 6.0931,
+     "y": 2.92,
+     "w": 0.012,
+     "h": 2.48
+    }
+   },
+   {
+    "id": "timeline/shape27",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 8.663,
+     "y": 2.92,
+     "w": 0.012,
+     "h": 2.48
+    }
+   },
+   {
+    "id": "timeline/shape28",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 11.4778,
+     "y": 2.92,
+     "w": 0.012,
+     "h": 2.48
+    }
+   },
+   {
+    "id": "timeline/free29-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 0.5,
+     "y": 2.97,
+     "w": 12.333,
+     "h": 0.62
+    }
+   },
+   {
+    "id": "timeline/text30",
+    "kind": "text",
+    "text": "Product",
+    "frame": {
+     "x": 0.72,
+     "y": 3.05,
+     "w": 1.7,
+     "h": 0.46
+    }
+   },
+   {
+    "id": "timeline/row31-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 3.4367,
+     "y": 3.09,
+     "w": 2.51,
+     "h": 0.38
+    }
+   },
+   {
+    "id": "timeline/text32",
+    "kind": "text",
+    "text": "Private beta",
+    "frame": {
+     "x": 3.6034,
+     "y": 3.1845,
+     "w": 2.1766,
+     "h": 0.191
+    }
+   },
+   {
+    "id": "timeline/row33-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 6.0067,
+     "y": 3.09,
+     "w": 3.3667,
+     "h": 0.38
+    }
+   },
+   {
+    "id": "timeline/text34",
+    "kind": "text",
+    "text": "Fixes and polish",
+    "frame": {
+     "x": 6.1734,
+     "y": 3.1845,
+     "w": 3.0334,
+     "h": 0.191
+    }
+   },
+   {
+    "id": "timeline/row35-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 9.4333,
+     "y": 3.09,
+     "w": 1.6533,
+     "h": 0.38
+    }
+   },
+   {
+    "id": "timeline/text36",
+    "kind": "text",
+    "text": "Release build",
+    "frame": {
+     "x": 9.6,
+     "y": 3.1845,
+     "w": 1.32,
+     "h": 0.191
+    }
+   },
+   {
+    "id": "timeline/free37-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 0.5,
+     "y": 3.69,
+     "w": 12.333,
+     "h": 0.62
+    }
+   },
+   {
+    "id": "timeline/text38",
+    "kind": "text",
+    "text": "Marketing",
+    "frame": {
+     "x": 0.72,
+     "y": 3.77,
+     "w": 1.7,
+     "h": 0.46
+    }
+   },
+   {
+    "id": "timeline/row39-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 2.58,
+     "y": 3.81,
+     "w": 4.2233,
+     "h": 0.38
+    }
+   },
+   {
+    "id": "timeline/text40",
+    "kind": "text",
+    "text": "Waitlist",
+    "frame": {
+     "x": 2.7466,
+     "y": 3.9045,
+     "w": 3.89,
+     "h": 0.191
+    }
+   },
+   {
+    "id": "timeline/row41-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 6.8633,
+     "y": 3.81,
+     "w": 3.3667,
+     "h": 0.38
+    }
+   },
+   {
+    "id": "timeline/text42",
+    "kind": "text",
+    "text": "Creator content",
+    "frame": {
+     "x": 7.03,
+     "y": 3.9045,
+     "w": 3.0334,
+     "h": 0.191
+    }
+   },
+   {
+    "id": "timeline/row43-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 10.2901,
+     "y": 3.81,
+     "w": 2.51,
+     "h": 0.38
+    }
+   },
+   {
+    "id": "timeline/text44",
+    "kind": "text",
+    "text": "Launch campaign",
+    "frame": {
+     "x": 10.4567,
+     "y": 3.9045,
+     "w": 2.1766,
+     "h": 0.191
+    }
+   },
+   {
+    "id": "timeline/free45-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 0.5,
+     "y": 4.41,
+     "w": 12.333,
+     "h": 0.62
+    }
+   },
+   {
+    "id": "timeline/text46",
+    "kind": "text",
+    "text": "Support",
+    "frame": {
+     "x": 0.72,
+     "y": 4.49,
+     "w": 1.7,
+     "h": 0.46
+    }
+   },
+   {
+    "id": "timeline/row47-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 4.2933,
+     "y": 4.53,
+     "w": 3.3667,
+     "h": 0.38
+    }
+   },
+   {
+    "id": "timeline/text48",
+    "kind": "text",
+    "text": "Help center",
+    "frame": {
+     "x": 4.46,
+     "y": 4.6245,
+     "w": 3.0334,
+     "h": 0.191
+    }
+   },
+   {
+    "id": "timeline/row49-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 7.7201,
+     "y": 4.53,
+     "w": 2.51,
+     "h": 0.38
+    }
+   },
+   {
+    "id": "timeline/text50",
+    "kind": "text",
+    "text": "Team training",
+    "frame": {
+     "x": 7.8867,
+     "y": 4.6245,
+     "w": 2.1766,
+     "h": 0.191
+    }
+   },
+   {
+    "id": "timeline/row51-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 10.2901,
+     "y": 4.53,
+     "w": 2.51,
+     "h": 0.38
+    }
+   },
+   {
+    "id": "timeline/text52",
+    "kind": "text",
+    "text": "Launch-week desk",
+    "frame": {
+     "x": 10.4567,
+     "y": 4.6245,
+     "w": 2.1766,
+     "h": 0.191
+    }
+   },
+   {
+    "id": "timeline/text53",
+    "kind": "text",
+    "text": "Milestones",
+    "frame": {
+     "x": 0.72,
+     "y": 5.33,
+     "w": 1.7,
+     "h": 0.4
+    }
+   },
+   {
+    "id": "timeline/shape54",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 5.9891,
+     "y": 5.42,
+     "w": 0.22,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "timeline/text55",
+    "kind": "text",
+    "text": "Feb 2   Store submission",
+    "frame": {
+     "x": 6.269,
+     "y": 5.3601,
+     "w": 2.2,
+     "h": 0.3399
+    }
+   },
+   {
+    "id": "timeline/shape56",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 8.5591,
+     "y": 5.42,
+     "w": 0.22,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "timeline/text57",
+    "kind": "text",
+    "text": "Feb 23   Press preview",
+    "frame": {
+     "x": 8.8391,
+     "y": 5.3601,
+     "w": 2.2,
+     "h": 0.3399
+    }
+   },
+   {
+    "id": "timeline/shape58",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 11.3739,
+     "y": 5.42,
+     "w": 0.22,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "timeline/text59",
+    "kind": "text",
+    "text": "Mar 18   Launch",
+    "frame": {
+     "x": 11.6539,
+     "y": 5.3601,
+     "w": 1.25,
+     "h": 0.3399
+    }
+   },
+   {
+    "id": "timeline/free60-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 0.5,
+     "y": 5.92,
+     "w": 12.333,
+     "h": 0.58
+    }
+   },
+   {
+    "id": "timeline/text61",
+    "kind": "text",
+    "text": "Every team finishes its build work by week 10, so launch week is execution only.",
+    "frame": {
+     "x": 0.78,
+     "y": 5.97,
+     "w": 11.8,
+     "h": 0.48
+    }
+   }
+  ]
+ },
+ "fern-3": {
+  "size": {
+   "width": 13.333333,
+   "height": 7.5
+  },
+  "elements": [
+   {
+    "id": "budget/icon1",
+    "kind": "icon",
+    "text": "",
+    "frame": {
+     "x": 0.5,
+     "y": 0.47,
+     "w": 0.22,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "budget/text2",
+    "kind": "text",
+    "text": "LAUNCH PLAN  \u00b7  BUDGET",
+    "frame": {
+     "x": 0.8,
+     "y": 0.45,
+     "w": 7,
+     "h": 0.26
+    }
+   },
+   {
+    "id": "budget/shape3",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 0.5,
+     "y": 6.72,
+     "w": 12.333,
+     "h": 0.012
+    }
+   },
+   {
+    "id": "budget/text4",
+    "kind": "text",
+    "text": "Fern \u2014 Launch plan  \u00b7  Illustrative demo",
+    "frame": {
+     "x": 0.5,
+     "y": 6.8,
+     "w": 8,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "budget/text5",
+    "kind": "text",
+    "text": "03 / 05",
+    "frame": {
+     "x": 11.33,
+     "y": 6.8,
+     "w": 1.5,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "budget/text6",
+    "kind": "text",
+    "text": "Paid social and creators carry 61% of the budget.",
+    "frame": {
+     "x": 0.5,
+     "y": 0.85,
+     "w": 12.3,
+     "h": 0.62
+    }
+   },
+   {
+    "id": "budget/text7",
+    "kind": "text",
+    "text": "$420K across five channels. The $40K contingency is released only with approval ",
+    "frame": {
+     "x": 0.5,
+     "y": 1.5,
+     "w": 11.5,
+     "h": 0.36
+    }
+   },
+   {
+    "id": "budget/chart8",
+    "kind": "chart",
+    "text": "",
+    "frame": {
+     "x": 0.4,
+     "y": 2.15,
+     "w": 7.7,
+     "h": 4.35
+    }
+   },
+   {
+    "id": "budget/shape9",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 8.5501,
+     "y": 2.25,
+     "w": 0.012,
+     "h": 4.2
+    }
+   },
+   {
+    "id": "budget/text10",
+    "kind": "text",
+    "text": "$420K",
+    "frame": {
+     "x": 8.95,
+     "y": 2.2,
+     "w": 3.9,
+     "h": 0.95
+    }
+   },
+   {
+    "id": "budget/text11",
+    "kind": "text",
+    "text": "Total launch budget",
+    "frame": {
+     "x": 8.95,
+     "y": 3.15,
+     "w": 3.9,
+     "h": 0.32
+    }
+   },
+   {
+    "id": "budget/text12",
+    "kind": "text",
+    "text": "January 4 to April 15",
+    "frame": {
+     "x": 8.95,
+     "y": 3.48,
+     "w": 3.9,
+     "h": 0.28
+    }
+   },
+   {
+    "id": "budget/shape13",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 8.95,
+     "y": 3.98,
+     "w": 3.88,
+     "h": 0.012
+    }
+   },
+   {
+    "id": "budget/text14",
+    "kind": "text",
+    "text": "61%",
+    "frame": {
+     "x": 8.95,
+     "y": 4.12,
+     "w": 1.7,
+     "h": 0.66
+    }
+   },
+   {
+    "id": "budget/text15",
+    "kind": "text",
+    "text": "Paid social and creators",
+    "frame": {
+     "x": 10.55,
+     "y": 4.2,
+     "w": 2.3,
+     "h": 0.26
+    }
+   },
+   {
+    "id": "budget/text16",
+    "kind": "text",
+    "text": "$255K of $420K",
+    "frame": {
+     "x": 10.55,
+     "y": 4.47,
+     "w": 2.3,
+     "h": 0.26
+    }
+   },
+   {
+    "id": "budget/shape17",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 8.95,
+     "y": 5,
+     "w": 3.88,
+     "h": 0.012
+    }
+   },
+   {
+    "id": "budget/text18",
+    "kind": "text",
+    "text": "$40K",
+    "frame": {
+     "x": 8.95,
+     "y": 5.14,
+     "w": 1.7,
+     "h": 0.66
+    }
+   },
+   {
+    "id": "budget/text19",
+    "kind": "text",
+    "text": "Contingency",
+    "frame": {
+     "x": 10.55,
+     "y": 5.22,
+     "w": 2.3,
+     "h": 0.26
+    }
+   },
+   {
+    "id": "budget/text20",
+    "kind": "text",
+    "text": "Held until launch week",
+    "frame": {
+     "x": 10.55,
+     "y": 5.4901,
+     "w": 2.3,
+     "h": 0.26
+    }
+   }
+  ]
+ },
+ "fern-4": {
+  "size": {
+   "width": 13.333333,
+   "height": 7.5
+  },
+  "elements": [
+   {
+    "id": "risks/icon1",
+    "kind": "icon",
+    "text": "",
+    "frame": {
+     "x": 0.5,
+     "y": 0.47,
+     "w": 0.22,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "risks/text2",
+    "kind": "text",
+    "text": "LAUNCH PLAN  \u00b7  RISKS",
+    "frame": {
+     "x": 0.8,
+     "y": 0.45,
+     "w": 7,
+     "h": 0.26
+    }
+   },
+   {
+    "id": "risks/shape3",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 0.5,
+     "y": 6.72,
+     "w": 12.333,
+     "h": 0.012
+    }
+   },
+   {
+    "id": "risks/text4",
+    "kind": "text",
+    "text": "Fern \u2014 Launch plan  \u00b7  Illustrative demo",
+    "frame": {
+     "x": 0.5,
+     "y": 6.8,
+     "w": 8,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "risks/text5",
+    "kind": "text",
+    "text": "04 / 05",
+    "frame": {
+     "x": 11.33,
+     "y": 6.8,
+     "w": 1.5,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "risks/text6",
+    "kind": "text",
+    "text": "Three risks. Each one has an owner and a trigger.",
+    "frame": {
+     "x": 0.5,
+     "y": 0.85,
+     "w": 12.3,
+     "h": 0.62
+    }
+   },
+   {
+    "id": "risks/text7",
+    "kind": "text",
+    "text": "Reviewed every Monday. A tripped trigger goes to the launch lead within 24 hours",
+    "frame": {
+     "x": 0.5,
+     "y": 1.5,
+     "w": 11.5,
+     "h": 0.36
+    }
+   },
+   {
+    "id": "risks/free8-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 0.5,
+     "y": 2.2,
+     "w": 3.967,
+     "h": 4.3
+    }
+   },
+   {
+    "id": "risks/row9-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 0.8,
+     "y": 2.48,
+     "w": 1.2,
+     "h": 0.28
+    }
+   },
+   {
+    "id": "risks/text10",
+    "kind": "text",
+    "text": "High risk",
+    "frame": {
+     "x": 0.8,
+     "y": 2.5288,
+     "w": 1.2,
+     "h": 0.1823
+    }
+   },
+   {
+    "id": "risks/icon11",
+    "kind": "icon",
+    "text": "",
+    "frame": {
+     "x": 3.847,
+     "y": 2.4499,
+     "w": 0.3194,
+     "h": 0.3194
+    }
+   },
+   {
+    "id": "risks/text12",
+    "kind": "text",
+    "text": "App Store review slips",
+    "frame": {
+     "x": 0.8,
+     "y": 2.92,
+     "w": 3.367,
+     "h": 0.36
+    }
+   },
+   {
+    "id": "risks/text13",
+    "kind": "text",
+    "text": "IMPACT",
+    "frame": {
+     "x": 0.8,
+     "y": 3.4599,
+     "w": 2,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "risks/text14",
+    "kind": "text",
+    "text": "Launch date moves and paid media is wasted.",
+    "frame": {
+     "x": 0.8,
+     "y": 3.6999,
+     "w": 3.367,
+     "h": 0.48
+    }
+   },
+   {
+    "id": "risks/text15",
+    "kind": "text",
+    "text": "MITIGATION",
+    "frame": {
+     "x": 0.8,
+     "y": 4.2399,
+     "w": 2,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "risks/text16",
+    "kind": "text",
+    "text": "Submit on Feb 2, keeping six weeks of buffer.",
+    "frame": {
+     "x": 0.8,
+     "y": 4.48,
+     "w": 3.367,
+     "h": 0.48
+    }
+   },
+   {
+    "id": "risks/text17",
+    "kind": "text",
+    "text": "TRIGGER",
+    "frame": {
+     "x": 0.8,
+     "y": 5.02,
+     "w": 2,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "risks/text18",
+    "kind": "text",
+    "text": "No approval by March 1.",
+    "frame": {
+     "x": 0.8,
+     "y": 5.26,
+     "w": 3.367,
+     "h": 0.48
+    }
+   },
+   {
+    "id": "risks/shape19",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 0.8,
+     "y": 5.82,
+     "w": 3.367,
+     "h": 0.01
+    }
+   },
+   {
+    "id": "risks/shape20",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 0.8,
+     "y": 5.95,
+     "w": 0.4,
+     "h": 0.4
+    }
+   },
+   {
+    "id": "risks/text21",
+    "kind": "text",
+    "text": "DK",
+    "frame": {
+     "x": 0.8,
+     "y": 5.95,
+     "w": 0.4,
+     "h": 0.4
+    }
+   },
+   {
+    "id": "risks/text22",
+    "kind": "text",
+    "text": "Dana Kim   \u00b7  Product lead",
+    "frame": {
+     "x": 1.32,
+     "y": 5.9799,
+     "w": 2.867,
+     "h": 0.34
+    }
+   },
+   {
+    "id": "risks/free23-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 4.6831,
+     "y": 2.2,
+     "w": 3.967,
+     "h": 4.3
+    }
+   },
+   {
+    "id": "risks/row24-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 4.9831,
+     "y": 2.48,
+     "w": 1.2,
+     "h": 0.28
+    }
+   },
+   {
+    "id": "risks/text25",
+    "kind": "text",
+    "text": "Medium risk",
+    "frame": {
+     "x": 4.9831,
+     "y": 2.5288,
+     "w": 1.2,
+     "h": 0.1823
+    }
+   },
+   {
+    "id": "risks/icon26",
+    "kind": "icon",
+    "text": "",
+    "frame": {
+     "x": 8.0301,
+     "y": 2.4499,
+     "w": 0.3194,
+     "h": 0.3194
+    }
+   },
+   {
+    "id": "risks/text27",
+    "kind": "text",
+    "text": "Bank-connection limits",
+    "frame": {
+     "x": 4.9831,
+     "y": 2.92,
+     "w": 3.367,
+     "h": 0.36
+    }
+   },
+   {
+    "id": "risks/text28",
+    "kind": "text",
+    "text": "IMPACT",
+    "frame": {
+     "x": 4.9831,
+     "y": 3.4599,
+     "w": 2,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "risks/text29",
+    "kind": "text",
+    "text": "New users fail to link accounts in week one.",
+    "frame": {
+     "x": 4.9831,
+     "y": 3.6999,
+     "w": 3.367,
+     "h": 0.48
+    }
+   },
+   {
+    "id": "risks/text30",
+    "kind": "text",
+    "text": "MITIGATION",
+    "frame": {
+     "x": 4.9831,
+     "y": 4.2399,
+     "w": 2,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "risks/text31",
+    "kind": "text",
+    "text": "Raise partner quota; queue links at peak.",
+    "frame": {
+     "x": 4.9831,
+     "y": 4.48,
+     "w": 3.367,
+     "h": 0.48
+    }
+   },
+   {
+    "id": "risks/text32",
+    "kind": "text",
+    "text": "TRIGGER",
+    "frame": {
+     "x": 4.9831,
+     "y": 5.02,
+     "w": 2,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "risks/text33",
+    "kind": "text",
+    "text": "Link failures above 3%.",
+    "frame": {
+     "x": 4.9831,
+     "y": 5.26,
+     "w": 3.367,
+     "h": 0.48
+    }
+   },
+   {
+    "id": "risks/shape34",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 4.9831,
+     "y": 5.82,
+     "w": 3.367,
+     "h": 0.01
+    }
+   },
+   {
+    "id": "risks/shape35",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 4.9831,
+     "y": 5.95,
+     "w": 0.4,
+     "h": 0.4
+    }
+   },
+   {
+    "id": "risks/text36",
+    "kind": "text",
+    "text": "OR",
+    "frame": {
+     "x": 4.9831,
+     "y": 5.95,
+     "w": 0.4,
+     "h": 0.4
+    }
+   },
+   {
+    "id": "risks/text37",
+    "kind": "text",
+    "text": "Omar Reyes   \u00b7  Engineering",
+    "frame": {
+     "x": 5.5031,
+     "y": 5.9799,
+     "w": 2.867,
+     "h": 0.34
+    }
+   },
+   {
+    "id": "risks/free38-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 8.866,
+     "y": 2.2,
+     "w": 3.967,
+     "h": 4.3
+    }
+   },
+   {
+    "id": "risks/row39-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 9.166,
+     "y": 2.48,
+     "w": 1.2,
+     "h": 0.28
+    }
+   },
+   {
+    "id": "risks/text40",
+    "kind": "text",
+    "text": "Medium risk",
+    "frame": {
+     "x": 9.166,
+     "y": 2.5288,
+     "w": 1.2,
+     "h": 0.1823
+    }
+   },
+   {
+    "id": "risks/icon41",
+    "kind": "icon",
+    "text": "",
+    "frame": {
+     "x": 12.213,
+     "y": 2.4499,
+     "w": 0.3194,
+     "h": 0.3194
+    }
+   },
+   {
+    "id": "risks/text42",
+    "kind": "text",
+    "text": "Launch-week support load",
+    "frame": {
+     "x": 9.166,
+     "y": 2.92,
+     "w": 3.367,
+     "h": 0.36
+    }
+   },
+   {
+    "id": "risks/text43",
+    "kind": "text",
+    "text": "IMPACT",
+    "frame": {
+     "x": 9.166,
+     "y": 3.4599,
+     "w": 2,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "risks/text44",
+    "kind": "text",
+    "text": "Slow replies pull the store rating down.",
+    "frame": {
+     "x": 9.166,
+     "y": 3.6999,
+     "w": 3.367,
+     "h": 0.48
+    }
+   },
+   {
+    "id": "risks/text45",
+    "kind": "text",
+    "text": "MITIGATION",
+    "frame": {
+     "x": 9.166,
+     "y": 4.2399,
+     "w": 2,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "risks/text46",
+    "kind": "text",
+    "text": "Train six extra agents; in-app help first.",
+    "frame": {
+     "x": 9.166,
+     "y": 4.48,
+     "w": 3.367,
+     "h": 0.48
+    }
+   },
+   {
+    "id": "risks/text47",
+    "kind": "text",
+    "text": "TRIGGER",
+    "frame": {
+     "x": 9.166,
+     "y": 5.02,
+     "w": 2,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "risks/text48",
+    "kind": "text",
+    "text": "First reply over 4 hours.",
+    "frame": {
+     "x": 9.166,
+     "y": 5.26,
+     "w": 3.367,
+     "h": 0.48
+    }
+   },
+   {
+    "id": "risks/shape49",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 9.166,
+     "y": 5.82,
+     "w": 3.367,
+     "h": 0.01
+    }
+   },
+   {
+    "id": "risks/shape50",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 9.166,
+     "y": 5.95,
+     "w": 0.4,
+     "h": 0.4
+    }
+   },
+   {
+    "id": "risks/text51",
+    "kind": "text",
+    "text": "LN",
+    "frame": {
+     "x": 9.166,
+     "y": 5.95,
+     "w": 0.4,
+     "h": 0.4
+    }
+   },
+   {
+    "id": "risks/text52",
+    "kind": "text",
+    "text": "Lena Novak   \u00b7  Support",
+    "frame": {
+     "x": 9.686,
+     "y": 5.9799,
+     "w": 2.867,
+     "h": 0.34
+    }
+   }
+  ]
+ },
+ "fern-5": {
+  "size": {
+   "width": 13.333333,
+   "height": 7.5
+  },
+  "elements": [
+   {
+    "id": "decision/icon1",
+    "kind": "icon",
+    "text": "",
+    "frame": {
+     "x": 0.5,
+     "y": 0.47,
+     "w": 0.22,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "decision/text2",
+    "kind": "text",
+    "text": "LAUNCH PLAN  \u00b7  DECISION",
+    "frame": {
+     "x": 0.8,
+     "y": 0.45,
+     "w": 7,
+     "h": 0.26
+    }
+   },
+   {
+    "id": "decision/text3",
+    "kind": "text",
+    "text": "Approve $420K and the March 18 date by January 15.",
+    "frame": {
+     "x": 0.5,
+     "y": 1.35,
+     "w": 5.5663,
+     "h": 2.1
+    }
+   },
+   {
+    "id": "decision/text4",
+    "kind": "text",
+    "text": "A decision this month protects the February 2 store submission and the creator b",
+    "frame": {
+     "x": 0.5,
+     "y": 3.6,
+     "w": 6.8,
+     "h": 0.7
+    }
+   },
+   {
+    "id": "decision/text5",
+    "kind": "text",
+    "text": "WHAT WE COMMIT TO, 30 DAYS AFTER LAUNCH",
+    "frame": {
+     "x": 8.4,
+     "y": 1.4,
+     "w": 4.43,
+     "h": 0.26
+    }
+   },
+   {
+    "id": "decision/free6-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 8.4,
+     "y": 1.8501,
+     "w": 4.433,
+     "h": 1.16
+    }
+   },
+   {
+    "id": "decision/text7",
+    "kind": "text",
+    "text": "50K",
+    "frame": {
+     "x": 8.7,
+     "y": 2.0501,
+     "w": 1.9,
+     "h": 0.76
+    }
+   },
+   {
+    "id": "decision/text8",
+    "kind": "text",
+    "text": "app installs",
+    "frame": {
+     "x": 10.55,
+     "y": 2.0501,
+     "w": 2.1,
+     "h": 0.76
+    }
+   },
+   {
+    "id": "decision/free9-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 8.4,
+     "y": 3.17,
+     "w": 4.433,
+     "h": 1.16
+    }
+   },
+   {
+    "id": "decision/text10",
+    "kind": "text",
+    "text": "4.5",
+    "frame": {
+     "x": 8.7,
+     "y": 3.37,
+     "w": 1.9,
+     "h": 0.76
+    }
+   },
+   {
+    "id": "decision/text11",
+    "kind": "text",
+    "text": "average star rating in the stores",
+    "frame": {
+     "x": 10.55,
+     "y": 3.37,
+     "w": 2.1,
+     "h": 0.76
+    }
+   },
+   {
+    "id": "decision/free12-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 8.4,
+     "y": 4.49,
+     "w": 4.433,
+     "h": 1.16
+    }
+   },
+   {
+    "id": "decision/text13",
+    "kind": "text",
+    "text": "25%",
+    "frame": {
+     "x": 8.7,
+     "y": 4.69,
+     "w": 1.9,
+     "h": 0.76
+    }
+   },
+   {
+    "id": "decision/text14",
+    "kind": "text",
+    "text": "of new users still active in week 4",
+    "frame": {
+     "x": 10.55,
+     "y": 4.69,
+     "w": 2.1,
+     "h": 0.76
+    }
+   },
+   {
+    "id": "decision/shape15",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 0.5,
+     "y": 6,
+     "w": 7.3,
+     "h": 0.012
+    }
+   },
+   {
+    "id": "decision/text16",
+    "kind": "text",
+    "text": "Next review: April 15 , 30 days after launch, against these three goals.",
+    "frame": {
+     "x": 0.5,
+     "y": 6.12,
+     "w": 7.3,
+     "h": 0.32
+    }
+   },
+   {
+    "id": "decision/text17",
+    "kind": "text",
+    "text": "Fern \u2014 Launch plan  \u00b7  Illustrative demo",
+    "frame": {
+     "x": 0.5,
+     "y": 6.8,
+     "w": 8,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "decision/text18",
+    "kind": "text",
+    "text": "05 / 05",
+    "frame": {
+     "x": 11.33,
+     "y": 6.8,
+     "w": 1.5,
+     "h": 0.22
+    }
+   }
+  ]
+ },
+ "architecture-1": {
+  "size": {
+   "width": 13.333333,
+   "height": 7.5
+  },
+  "elements": [
+   {
+    "id": "architecture/text3",
+    "kind": "text",
+    "text": "AI Platform \u2014 Production Architecture",
+    "frame": {
+     "x": 0.5,
+     "y": 0.46,
+     "w": 8.6,
+     "h": 0.56
+    }
+   },
+   {
+    "id": "architecture/text4",
+    "kind": "text",
+    "text": "Scalable, secure and modular architecture for AI-powered applications",
+    "frame": {
+     "x": 0.5,
+     "y": 0.99,
+     "w": 7.6,
+     "h": 0.3
+    }
+   },
+   {
+    "id": "architecture/text5",
+    "kind": "text",
+    "text": "ARCHITECTURE REVIEW",
+    "frame": {
+     "x": 9,
+     "y": 0.5,
+     "w": 3.833,
+     "h": 0.25
+    }
+   },
+   {
+    "id": "architecture/text6",
+    "kind": "text",
+    "text": "rev 2.3  \u00b7  prod / us-east-1",
+    "frame": {
+     "x": 9,
+     "y": 0.75,
+     "w": 3.833,
+     "h": 0.25
+    }
+   },
+   {
+    "id": "architecture/shape7",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 9.05,
+     "y": 1.165,
+     "w": 0.09,
+     "h": 0.09
+    }
+   },
+   {
+    "id": "architecture/text8",
+    "kind": "text",
+    "text": "Request path",
+    "frame": {
+     "x": 9.1901,
+     "y": 1.09,
+     "w": 1.1,
+     "h": 0.24
+    }
+   },
+   {
+    "id": "architecture/shape9",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 10.3001,
+     "y": 1.165,
+     "w": 0.09,
+     "h": 0.09
+    }
+   },
+   {
+    "id": "architecture/text10",
+    "kind": "text",
+    "text": "AI runtime",
+    "frame": {
+     "x": 10.44,
+     "y": 1.09,
+     "w": 1.1,
+     "h": 0.24
+    }
+   },
+   {
+    "id": "architecture/shape11",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 11.55,
+     "y": 1.165,
+     "w": 0.09,
+     "h": 0.09
+    }
+   },
+   {
+    "id": "architecture/text12",
+    "kind": "text",
+    "text": "Data plane",
+    "frame": {
+     "x": 11.69,
+     "y": 1.09,
+     "w": 1.1,
+     "h": 0.24
+    }
+   },
+   {
+    "id": "architecture/shape13",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 1.6,
+     "y": 2.62,
+     "w": 1.76,
+     "h": 2.38
+    }
+   },
+   {
+    "id": "architecture/text14",
+    "kind": "text",
+    "text": "CLIENTS",
+    "frame": {
+     "x": 1.74,
+     "y": 2.68,
+     "w": 1.48,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "architecture/shape15",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 5.3,
+     "y": 1.95,
+     "w": 4.3,
+     "h": 3.6
+    }
+   },
+   {
+    "id": "architecture/text16",
+    "kind": "text",
+    "text": "CORE SERVICES  \u00b7  ns/platform",
+    "frame": {
+     "x": 5.44,
+     "y": 2.01,
+     "w": 4.02,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "architecture/shape17",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 9.85,
+     "y": 1.55,
+     "w": 2.983,
+     "h": 2.11
+    }
+   },
+   {
+    "id": "architecture/text18",
+    "kind": "text",
+    "text": "AI RUNTIME",
+    "frame": {
+     "x": 9.99,
+     "y": 1.61,
+     "w": 2.7031,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "architecture/shape19",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 9.85,
+     "y": 3.86,
+     "w": 2.983,
+     "h": 2.1
+    }
+   },
+   {
+    "id": "architecture/text20",
+    "kind": "text",
+    "text": "DATA PLANE",
+    "frame": {
+     "x": 9.99,
+     "y": 3.92,
+     "w": 2.7031,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "architecture/text21",
+    "kind": "text",
+    "text": "EDGE",
+    "frame": {
+     "x": 3.6,
+     "y": 3.04,
+     "w": 1.4,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "architecture/shape22",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 1.35,
+     "y": 3.8413,
+     "w": 0.13,
+     "h": 0.0173
+    }
+   },
+   {
+    "id": "architecture/shape23",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 1.4714,
+     "y": 3.3,
+     "w": 0.0174,
+     "h": 1.1
+    }
+   },
+   {
+    "id": "architecture/shape24",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 1.48,
+     "y": 3.2913,
+     "w": 0.18,
+     "h": 0.0173
+    }
+   },
+   {
+    "id": "architecture/shape25",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 1.645,
+     "y": 3.255,
+     "w": 0.075,
+     "h": 0.09
+    }
+   },
+   {
+    "id": "architecture/shape26",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 1.48,
+     "y": 4.3913,
+     "w": 0.18,
+     "h": 0.0173
+    }
+   },
+   {
+    "id": "architecture/shape27",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 1.645,
+     "y": 4.355,
+     "w": 0.075,
+     "h": 0.09
+    }
+   },
+   {
+    "id": "architecture/shape28",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 3.27,
+     "y": 3.2913,
+     "w": 0.18,
+     "h": 0.0173
+    }
+   },
+   {
+    "id": "architecture/shape29",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 3.27,
+     "y": 4.3913,
+     "w": 0.18,
+     "h": 0.0173
+    }
+   },
+   {
+    "id": "architecture/shape30",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 3.4413,
+     "y": 3.3,
+     "w": 0.0174,
+     "h": 1.1
+    }
+   },
+   {
+    "id": "architecture/shape31",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 3.45,
+     "y": 3.8413,
+     "w": 0.09,
+     "h": 0.0173
+    }
+   },
+   {
+    "id": "architecture/shape32",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 3.5251,
+     "y": 3.805,
+     "w": 0.075,
+     "h": 0.09
+    }
+   },
+   {
+    "id": "architecture/shape33",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 5,
+     "y": 3.8413,
+     "w": 0.39,
+     "h": 0.0173
+    }
+   },
+   {
+    "id": "architecture/shape34",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 5.3751,
+     "y": 3.805,
+     "w": 0.075,
+     "h": 0.09
+    }
+   },
+   {
+    "id": "architecture/shape35",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 6.95,
+     "y": 3.8413,
+     "w": 0.18,
+     "h": 0.0173
+    }
+   },
+   {
+    "id": "architecture/shape36",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 7.1214,
+     "y": 2.61,
+     "w": 0.0174,
+     "h": 2.47
+    }
+   },
+   {
+    "id": "architecture/shape37",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 7.13,
+     "y": 2.6013,
+     "w": 0.11,
+     "h": 0.0173
+    }
+   },
+   {
+    "id": "architecture/shape38",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 7.2251,
+     "y": 2.5651,
+     "w": 0.075,
+     "h": 0.09
+    }
+   },
+   {
+    "id": "architecture/shape39",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 7.13,
+     "y": 3.4414,
+     "w": 0.11,
+     "h": 0.0173
+    }
+   },
+   {
+    "id": "architecture/shape40",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 7.2251,
+     "y": 3.405,
+     "w": 0.075,
+     "h": 0.09
+    }
+   },
+   {
+    "id": "architecture/shape41",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 7.13,
+     "y": 4.2613,
+     "w": 0.11,
+     "h": 0.0173
+    }
+   },
+   {
+    "id": "architecture/shape42",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 7.2251,
+     "y": 4.225,
+     "w": 0.075,
+     "h": 0.09
+    }
+   },
+   {
+    "id": "architecture/shape43",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 7.13,
+     "y": 5.0713,
+     "w": 0.11,
+     "h": 0.0173
+    }
+   },
+   {
+    "id": "architecture/shape44",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 7.2251,
+     "y": 5.0351,
+     "w": 0.075,
+     "h": 0.09
+    }
+   },
+   {
+    "id": "architecture/shape45",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 9.4601,
+     "y": 2.6013,
+     "w": 0.22,
+     "h": 0.0173
+    }
+   },
+   {
+    "id": "architecture/shape46",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 9.6714,
+     "y": 2.15,
+     "w": 0.0174,
+     "h": 1.16
+    }
+   },
+   {
+    "id": "architecture/shape47",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 9.68,
+     "y": 2.1414,
+     "w": 0.26,
+     "h": 0.0173
+    }
+   },
+   {
+    "id": "architecture/shape48",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 9.925,
+     "y": 2.105,
+     "w": 0.075,
+     "h": 0.09
+    }
+   },
+   {
+    "id": "architecture/shape49",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 9.68,
+     "y": 2.7213,
+     "w": 0.26,
+     "h": 0.0173
+    }
+   },
+   {
+    "id": "architecture/shape50",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 9.925,
+     "y": 2.685,
+     "w": 0.075,
+     "h": 0.09
+    }
+   },
+   {
+    "id": "architecture/shape51",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 9.68,
+     "y": 3.3013,
+     "w": 0.26,
+     "h": 0.0173
+    }
+   },
+   {
+    "id": "architecture/shape52",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 9.925,
+     "y": 3.265,
+     "w": 0.075,
+     "h": 0.09
+    }
+   },
+   {
+    "id": "architecture/shape53",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 9.4601,
+     "y": 5.0713,
+     "w": 0.22,
+     "h": 0.0173
+    }
+   },
+   {
+    "id": "architecture/shape54",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 9.6714,
+     "y": 4.45,
+     "w": 0.0174,
+     "h": 1.16
+    }
+   },
+   {
+    "id": "architecture/shape55",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 9.68,
+     "y": 4.4413,
+     "w": 0.26,
+     "h": 0.0173
+    }
+   },
+   {
+    "id": "architecture/shape56",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 9.925,
+     "y": 4.405,
+     "w": 0.075,
+     "h": 0.09
+    }
+   },
+   {
+    "id": "architecture/shape57",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 9.68,
+     "y": 5.0213,
+     "w": 0.26,
+     "h": 0.0173
+    }
+   },
+   {
+    "id": "architecture/shape58",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 9.925,
+     "y": 4.985,
+     "w": 0.075,
+     "h": 0.09
+    }
+   },
+   {
+    "id": "architecture/shape59",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 9.68,
+     "y": 5.6013,
+     "w": 0.26,
+     "h": 0.0173
+    }
+   },
+   {
+    "id": "architecture/shape60",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 9.925,
+     "y": 5.565,
+     "w": 0.075,
+     "h": 0.09
+    }
+   },
+   {
+    "id": "architecture/column61-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 0.5,
+     "y": 3.35,
+     "w": 0.85,
+     "h": 1
+    }
+   },
+   {
+    "id": "architecture/icon62",
+    "kind": "icon",
+    "text": "",
+    "frame": {
+     "x": 0.7722,
+     "y": 3.5612,
+     "w": 0.3056,
+     "h": 0.3056
+    }
+   },
+   {
+    "id": "architecture/text63",
+    "kind": "text",
+    "text": "Users",
+    "frame": {
+     "x": 0.68,
+     "y": 3.9223,
+     "w": 0.4901,
+     "h": 0.2167
+    }
+   },
+   {
+    "id": "architecture/row64-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 1.72,
+     "y": 3,
+     "w": 1.55,
+     "h": 0.5999
+    }
+   },
+   {
+    "id": "architecture/icon65",
+    "kind": "icon",
+    "text": "",
+    "frame": {
+     "x": 1.845,
+     "y": 3.1889,
+     "w": 0.2222,
+     "h": 0.2222
+    }
+   },
+   {
+    "id": "architecture/text67",
+    "kind": "text",
+    "text": "Web app",
+    "frame": {
+     "x": 2.1783,
+     "y": 3.0979,
+     "w": 0.9667,
+     "h": 0.2167
+    }
+   },
+   {
+    "id": "architecture/text68",
+    "kind": "text",
+    "text": "React \u00b7 Next.js",
+    "frame": {
+     "x": 2.1783,
+     "y": 3.3285,
+     "w": 0.9667,
+     "h": 0.1736
+    }
+   },
+   {
+    "id": "architecture/row69-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 1.72,
+     "y": 4.1,
+     "w": 1.55,
+     "h": 0.5999
+    }
+   },
+   {
+    "id": "architecture/icon70",
+    "kind": "icon",
+    "text": "",
+    "frame": {
+     "x": 1.845,
+     "y": 4.2889,
+     "w": 0.2222,
+     "h": 0.2222
+    }
+   },
+   {
+    "id": "architecture/text72",
+    "kind": "text",
+    "text": "Mobile app",
+    "frame": {
+     "x": 2.1783,
+     "y": 4.1979,
+     "w": 0.9667,
+     "h": 0.2167
+    }
+   },
+   {
+    "id": "architecture/text73",
+    "kind": "text",
+    "text": "iOS \u00b7 Android",
+    "frame": {
+     "x": 2.1783,
+     "y": 4.4285,
+     "w": 0.9667,
+     "h": 0.1736
+    }
+   },
+   {
+    "id": "architecture/column74-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 3.6,
+     "y": 3.3,
+     "w": 1.4,
+     "h": 1.1
+    }
+   },
+   {
+    "id": "architecture/icon75",
+    "kind": "icon",
+    "text": "",
+    "frame": {
+     "x": 4.1472,
+     "y": 3.3833,
+     "w": 0.3056,
+     "h": 0.3056
+    }
+   },
+   {
+    "id": "architecture/text76",
+    "kind": "text",
+    "text": "API Gateway",
+    "frame": {
+     "x": 3.7747,
+     "y": 3.7444,
+     "w": 1.0506,
+     "h": 0.2167
+    }
+   },
+   {
+    "id": "architecture/text77",
+    "kind": "text",
+    "text": "Routing \u00b7 rate limits",
+    "frame": {
+     "x": 3.7111,
+     "y": 4.0167,
+     "w": 1.1778,
+     "h": 0.3472
+    }
+   },
+   {
+    "id": "architecture/column78-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 5.45,
+     "y": 3.17,
+     "w": 1.5,
+     "h": 1.36
+    }
+   },
+   {
+    "id": "architecture/icon79",
+    "kind": "icon",
+    "text": "",
+    "frame": {
+     "x": 6.0472,
+     "y": 3.2533,
+     "w": 0.3056,
+     "h": 0.3056
+    }
+   },
+   {
+    "id": "architecture/text80",
+    "kind": "text",
+    "text": "Application services",
+    "frame": {
+     "x": 5.5611,
+     "y": 3.6144,
+     "w": 1.2778,
+     "h": 0.4333
+    }
+   },
+   {
+    "id": "architecture/text81",
+    "kind": "text",
+    "text": "Microservices \u00b7 gRPC",
+    "frame": {
+     "x": 5.5611,
+     "y": 4.1033,
+     "w": 1.2778,
+     "h": 0.3472
+    }
+   },
+   {
+    "id": "architecture/shape82",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 7.2,
+     "y": 2.23,
+     "w": 2.36,
+     "h": 0.76
+    }
+   },
+   {
+    "id": "architecture/row83-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 7.3,
+     "y": 2.33,
+     "w": 2.16,
+     "h": 0.56
+    }
+   },
+   {
+    "id": "architecture/icon84",
+    "kind": "icon",
+    "text": "",
+    "frame": {
+     "x": 7.425,
+     "y": 2.4988,
+     "w": 0.2222,
+     "h": 0.2222
+    }
+   },
+   {
+    "id": "architecture/text86",
+    "kind": "text",
+    "text": "AI orchestrator",
+    "frame": {
+     "x": 7.7583,
+     "y": 2.4079,
+     "w": 1.5766,
+     "h": 0.2167
+    }
+   },
+   {
+    "id": "architecture/text87",
+    "kind": "text",
+    "text": "Agents \u00b7 tools \u00b7 memory",
+    "frame": {
+     "x": 7.7583,
+     "y": 2.6384,
+     "w": 1.5766,
+     "h": 0.1736
+    }
+   },
+   {
+    "id": "architecture/row88-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 7.3,
+     "y": 3.17,
+     "w": 2.16,
+     "h": 0.56
+    }
+   },
+   {
+    "id": "architecture/icon89",
+    "kind": "icon",
+    "text": "",
+    "frame": {
+     "x": 7.425,
+     "y": 3.3389,
+     "w": 0.2222,
+     "h": 0.2222
+    }
+   },
+   {
+    "id": "architecture/text91",
+    "kind": "text",
+    "text": "Authentication",
+    "frame": {
+     "x": 7.7583,
+     "y": 3.2479,
+     "w": 1.5766,
+     "h": 0.2167
+    }
+   },
+   {
+    "id": "architecture/text92",
+    "kind": "text",
+    "text": "OIDC \u00b7 RBAC \u00b7 SSO",
+    "frame": {
+     "x": 7.7583,
+     "y": 3.4784,
+     "w": 1.5766,
+     "h": 0.1736
+    }
+   },
+   {
+    "id": "architecture/row93-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 7.3,
+     "y": 3.99,
+     "w": 2.16,
+     "h": 0.56
+    }
+   },
+   {
+    "id": "architecture/icon94",
+    "kind": "icon",
+    "text": "",
+    "frame": {
+     "x": 7.425,
+     "y": 4.1588,
+     "w": 0.2222,
+     "h": 0.2222
+    }
+   },
+   {
+    "id": "architecture/text96",
+    "kind": "text",
+    "text": "Notifications",
+    "frame": {
+     "x": 7.7583,
+     "y": 4.0679,
+     "w": 1.5766,
+     "h": 0.2167
+    }
+   },
+   {
+    "id": "architecture/text97",
+    "kind": "text",
+    "text": "Push \u00b7 email \u00b7 SMS",
+    "frame": {
+     "x": 7.7583,
+     "y": 4.2984,
+     "w": 1.5766,
+     "h": 0.1736
+    }
+   },
+   {
+    "id": "architecture/row98-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 7.3,
+     "y": 4.8,
+     "w": 2.16,
+     "h": 0.56
+    }
+   },
+   {
+    "id": "architecture/icon99",
+    "kind": "icon",
+    "text": "",
+    "frame": {
+     "x": 7.425,
+     "y": 4.9688,
+     "w": 0.2222,
+     "h": 0.2222
+    }
+   },
+   {
+    "id": "architecture/text101",
+    "kind": "text",
+    "text": "Data service",
+    "frame": {
+     "x": 7.7583,
+     "y": 4.8779,
+     "w": 1.5766,
+     "h": 0.2167
+    }
+   },
+   {
+    "id": "architecture/text102",
+    "kind": "text",
+    "text": "Queries \u00b7 cache \u00b7 files",
+    "frame": {
+     "x": 7.7583,
+     "y": 5.1084,
+     "w": 1.5766,
+     "h": 0.1736
+    }
+   },
+   {
+    "id": "architecture/row103-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 10.0001,
+     "y": 1.9,
+     "w": 2.68,
+     "h": 0.5
+    }
+   },
+   {
+    "id": "architecture/icon104",
+    "kind": "icon",
+    "text": "",
+    "frame": {
+     "x": 10.1251,
+     "y": 2.0389,
+     "w": 0.2222,
+     "h": 0.2222
+    }
+   },
+   {
+    "id": "architecture/text106",
+    "kind": "text",
+    "text": "LLM providers",
+    "frame": {
+     "x": 10.4584,
+     "y": 1.9479,
+     "w": 2.0967,
+     "h": 0.2167
+    }
+   },
+   {
+    "id": "architecture/text107",
+    "kind": "text",
+    "text": "Claude \u00b7 GPT \u00b7 open models",
+    "frame": {
+     "x": 10.4584,
+     "y": 2.1784,
+     "w": 2.0967,
+     "h": 0.1736
+    }
+   },
+   {
+    "id": "architecture/row108-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 10.0001,
+     "y": 2.48,
+     "w": 2.68,
+     "h": 0.5
+    }
+   },
+   {
+    "id": "architecture/icon109",
+    "kind": "icon",
+    "text": "",
+    "frame": {
+     "x": 10.1251,
+     "y": 2.6189,
+     "w": 0.2222,
+     "h": 0.2222
+    }
+   },
+   {
+    "id": "architecture/text111",
+    "kind": "text",
+    "text": "Vector database",
+    "frame": {
+     "x": 10.4584,
+     "y": 2.5279,
+     "w": 2.0967,
+     "h": 0.2167
+    }
+   },
+   {
+    "id": "architecture/text112",
+    "kind": "text",
+    "text": "pgvector \u00b7 embeddings",
+    "frame": {
+     "x": 10.4584,
+     "y": 2.7585,
+     "w": 2.0967,
+     "h": 0.1736
+    }
+   },
+   {
+    "id": "architecture/row113-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 10.0001,
+     "y": 3.06,
+     "w": 2.68,
+     "h": 0.5
+    }
+   },
+   {
+    "id": "architecture/icon114",
+    "kind": "icon",
+    "text": "",
+    "frame": {
+     "x": 10.1251,
+     "y": 3.1989,
+     "w": 0.2222,
+     "h": 0.2222
+    }
+   },
+   {
+    "id": "architecture/text116",
+    "kind": "text",
+    "text": "Tool / MCP services",
+    "frame": {
+     "x": 10.4584,
+     "y": 3.1079,
+     "w": 2.0967,
+     "h": 0.2167
+    }
+   },
+   {
+    "id": "architecture/text117",
+    "kind": "text",
+    "text": "MCP servers \u00b7 internal APIs",
+    "frame": {
+     "x": 10.4584,
+     "y": 3.3385,
+     "w": 2.0967,
+     "h": 0.1736
+    }
+   },
+   {
+    "id": "architecture/row118-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 10.0001,
+     "y": 4.2,
+     "w": 2.68,
+     "h": 0.5
+    }
+   },
+   {
+    "id": "architecture/icon119",
+    "kind": "icon",
+    "text": "",
+    "frame": {
+     "x": 10.1251,
+     "y": 4.3389,
+     "w": 0.2222,
+     "h": 0.2222
+    }
+   },
+   {
+    "id": "architecture/text121",
+    "kind": "text",
+    "text": "PostgreSQL",
+    "frame": {
+     "x": 10.4584,
+     "y": 4.2479,
+     "w": 2.0967,
+     "h": 0.2167
+    }
+   },
+   {
+    "id": "architecture/text122",
+    "kind": "text",
+    "text": "Primary + 2 read replicas",
+    "frame": {
+     "x": 10.4584,
+     "y": 4.4785,
+     "w": 2.0967,
+     "h": 0.1736
+    }
+   },
+   {
+    "id": "architecture/row123-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 10.0001,
+     "y": 4.78,
+     "w": 2.68,
+     "h": 0.5
+    }
+   },
+   {
+    "id": "architecture/icon124",
+    "kind": "icon",
+    "text": "",
+    "frame": {
+     "x": 10.1251,
+     "y": 4.9189,
+     "w": 0.2222,
+     "h": 0.2222
+    }
+   },
+   {
+    "id": "architecture/text126",
+    "kind": "text",
+    "text": "Redis",
+    "frame": {
+     "x": 10.4584,
+     "y": 4.8279,
+     "w": 2.0967,
+     "h": 0.2167
+    }
+   },
+   {
+    "id": "architecture/text127",
+    "kind": "text",
+    "text": "Cache \u00b7 sessions \u00b7 queues",
+    "frame": {
+     "x": 10.4584,
+     "y": 5.0585,
+     "w": 2.0967,
+     "h": 0.1736
+    }
+   },
+   {
+    "id": "architecture/row128-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 10.0001,
+     "y": 5.3601,
+     "w": 2.68,
+     "h": 0.5
+    }
+   },
+   {
+    "id": "architecture/icon129",
+    "kind": "icon",
+    "text": "",
+    "frame": {
+     "x": 10.1251,
+     "y": 5.4989,
+     "w": 0.2222,
+     "h": 0.2222
+    }
+   },
+   {
+    "id": "architecture/text131",
+    "kind": "text",
+    "text": "Object storage",
+    "frame": {
+     "x": 10.4584,
+     "y": 5.4079,
+     "w": 2.0967,
+     "h": 0.2167
+    }
+   },
+   {
+    "id": "architecture/text132",
+    "kind": "text",
+    "text": "S3 \u00b7 documents & media",
+    "frame": {
+     "x": 10.4584,
+     "y": 5.6385,
+     "w": 2.0967,
+     "h": 0.1736
+    }
+   },
+   {
+    "id": "architecture/free133-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 0.5,
+     "y": 6.12,
+     "w": 12.333,
+     "h": 0.88
+    }
+   },
+   {
+    "id": "architecture/text134",
+    "kind": "text",
+    "text": "INFRASTRUCTURE LAYER",
+    "frame": {
+     "x": 0.72,
+     "y": 6.24,
+     "w": 2.1,
+     "h": 0.24
+    }
+   },
+   {
+    "id": "architecture/text135",
+    "kind": "text",
+    "text": "Runs, observes and ships everything above",
+    "frame": {
+     "x": 0.72,
+     "y": 6.48,
+     "w": 2,
+     "h": 0.42
+    }
+   },
+   {
+    "id": "architecture/row136-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 2.95,
+     "y": 6.24,
+     "w": 3.12,
+     "h": 0.64
+    }
+   },
+   {
+    "id": "architecture/icon137",
+    "kind": "icon",
+    "text": "",
+    "frame": {
+     "x": 3.075,
+     "y": 6.435,
+     "w": 0.25,
+     "h": 0.25
+    }
+   },
+   {
+    "id": "architecture/text139",
+    "kind": "text",
+    "text": "Kubernetes",
+    "frame": {
+     "x": 3.4361,
+     "y": 6.3579,
+     "w": 2.5089,
+     "h": 0.2167
+    }
+   },
+   {
+    "id": "architecture/text140",
+    "kind": "text",
+    "text": "EKS \u00b7 autoscaling node pools",
+    "frame": {
+     "x": 3.4361,
+     "y": 6.5885,
+     "w": 2.5089,
+     "h": 0.1736
+    }
+   },
+   {
+    "id": "architecture/row141-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 6.28,
+     "y": 6.24,
+     "w": 3.12,
+     "h": 0.64
+    }
+   },
+   {
+    "id": "architecture/icon142",
+    "kind": "icon",
+    "text": "",
+    "frame": {
+     "x": 6.405,
+     "y": 6.435,
+     "w": 0.25,
+     "h": 0.25
+    }
+   },
+   {
+    "id": "architecture/text144",
+    "kind": "text",
+    "text": "Observability",
+    "frame": {
+     "x": 6.7661,
+     "y": 6.3579,
+     "w": 2.5089,
+     "h": 0.2167
+    }
+   },
+   {
+    "id": "architecture/text145",
+    "kind": "text",
+    "text": "OpenTelemetry \u00b7 metrics, logs, traces",
+    "frame": {
+     "x": 6.7661,
+     "y": 6.5885,
+     "w": 2.5089,
+     "h": 0.1736
+    }
+   },
+   {
+    "id": "architecture/row146-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 9.61,
+     "y": 6.24,
+     "w": 3.12,
+     "h": 0.64
+    }
+   },
+   {
+    "id": "architecture/icon147",
+    "kind": "icon",
+    "text": "",
+    "frame": {
+     "x": 9.735,
+     "y": 6.435,
+     "w": 0.25,
+     "h": 0.25
+    }
+   },
+   {
+    "id": "architecture/text149",
+    "kind": "text",
+    "text": "CI/CD",
+    "frame": {
+     "x": 10.0961,
+     "y": 6.3579,
+     "w": 2.5089,
+     "h": 0.2167
+    }
+   },
+   {
+    "id": "architecture/text150",
+    "kind": "text",
+    "text": "GitHub Actions \u00b7 Argo CD \u00b7 canary",
+    "frame": {
+     "x": 10.0961,
+     "y": 6.5885,
+     "w": 2.5089,
+     "h": 0.1736
+    }
+   }
+  ]
+ },
+ "transformation-1": {
+  "size": {
+   "width": 13.333333,
+   "height": 7.5
+  },
+  "elements": [
+   {
+    "id": "transformation/text1",
+    "kind": "text",
+    "text": "TRANSFORMATION ROADMAP  \u00b7  2026 \u2013 2028",
+    "frame": {
+     "x": 0.5,
+     "y": 0.5,
+     "w": 6.5,
+     "h": 0.25
+    }
+   },
+   {
+    "id": "transformation/text2",
+    "kind": "text",
+    "text": "From manual workflow to AI-native organization",
+    "frame": {
+     "x": 0.5,
+     "y": 0.76,
+     "w": 12.333,
+     "h": 0.62
+    }
+   },
+   {
+    "id": "transformation/text3",
+    "kind": "text",
+    "text": "From fragmented tools to an autonomous, high-performance organization",
+    "frame": {
+     "x": 0.5,
+     "y": 1.36,
+     "w": 7.4,
+     "h": 0.32
+    }
+   },
+   {
+    "id": "transformation/text4",
+    "kind": "text",
+    "text": "People  \u00d7  Process  \u00d7  AI",
+    "frame": {
+     "x": 7.6,
+     "y": 1.36,
+     "w": 2.75,
+     "h": 0.32
+    }
+   },
+   {
+    "id": "transformation/text5",
+    "kind": "text",
+    "text": "=  compounding impact",
+    "frame": {
+     "x": 10.43,
+     "y": 1.36,
+     "w": 2.403,
+     "h": 0.32
+    }
+   },
+   {
+    "id": "transformation/shape6",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 0.5,
+     "y": 1.88,
+     "w": 4.264,
+     "h": 0.62
+    }
+   },
+   {
+    "id": "transformation/row7-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 0.72,
+     "y": 1.94,
+     "w": 3.594,
+     "h": 0.5
+    }
+   },
+   {
+    "id": "transformation/text8",
+    "kind": "text",
+    "text": "TODAY",
+    "frame": {
+     "x": 0.72,
+     "y": 2.1024,
+     "w": 0.6522,
+     "h": 0.175
+    }
+   },
+   {
+    "id": "transformation/text9",
+    "kind": "text",
+    "text": "Manual",
+    "frame": {
+     "x": 1.5389,
+     "y": 2.0424,
+     "w": 2.7752,
+     "h": 0.295
+    }
+   },
+   {
+    "id": "transformation/free10-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 0.5,
+     "y": 2.64,
+     "w": 3.8777,
+     "h": 1.56
+    }
+   },
+   {
+    "id": "transformation/icon11",
+    "kind": "icon",
+    "text": "",
+    "frame": {
+     "x": 0.76,
+     "y": 2.84,
+     "w": 0.4167,
+     "h": 0.4167
+    }
+   },
+   {
+    "id": "transformation/shape12",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 1.52,
+     "y": 2.92,
+     "w": 0.07,
+     "h": 0.07
+    }
+   },
+   {
+    "id": "transformation/text13",
+    "kind": "text",
+    "text": "Fragmented tools",
+    "frame": {
+     "x": 1.68,
+     "y": 2.81,
+     "w": 2.5277,
+     "h": 0.29
+    }
+   },
+   {
+    "id": "transformation/shape14",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 1.52,
+     "y": 3.23,
+     "w": 0.07,
+     "h": 0.07
+    }
+   },
+   {
+    "id": "transformation/text15",
+    "kind": "text",
+    "text": "Repetitive work",
+    "frame": {
+     "x": 1.68,
+     "y": 3.12,
+     "w": 2.5277,
+     "h": 0.29
+    }
+   },
+   {
+    "id": "transformation/shape16",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 1.52,
+     "y": 3.54,
+     "w": 0.07,
+     "h": 0.07
+    }
+   },
+   {
+    "id": "transformation/text17",
+    "kind": "text",
+    "text": "Slow decisions",
+    "frame": {
+     "x": 1.68,
+     "y": 3.43,
+     "w": 2.5277,
+     "h": 0.29
+    }
+   },
+   {
+    "id": "transformation/text18",
+    "kind": "text",
+    "text": "AI MATURITY",
+    "frame": {
+     "x": 0.76,
+     "y": 3.86,
+     "w": 1.1,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "transformation/shape19",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 1.92,
+     "y": 3.915,
+     "w": 0.11,
+     "h": 0.11
+    }
+   },
+   {
+    "id": "transformation/shape20",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 2.12,
+     "y": 3.915,
+     "w": 0.11,
+     "h": 0.11
+    }
+   },
+   {
+    "id": "transformation/shape21",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 2.32,
+     "y": 3.915,
+     "w": 0.11,
+     "h": 0.11
+    }
+   },
+   {
+    "id": "transformation/shape22",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 2.52,
+     "y": 3.915,
+     "w": 0.11,
+     "h": 0.11
+    }
+   },
+   {
+    "id": "transformation/shape23",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 2.72,
+     "y": 3.915,
+     "w": 0.11,
+     "h": 0.11
+    }
+   },
+   {
+    "id": "transformation/shape24",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 4.534,
+     "y": 1.88,
+     "w": 4.264,
+     "h": 0.62
+    }
+   },
+   {
+    "id": "transformation/row25-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 5.004,
+     "y": 1.94,
+     "w": 3.344,
+     "h": 0.5
+    }
+   },
+   {
+    "id": "transformation/text26",
+    "kind": "text",
+    "text": "NEXT",
+    "frame": {
+     "x": 5.004,
+     "y": 2.1024,
+     "w": 0.4966,
+     "h": 0.175
+    }
+   },
+   {
+    "id": "transformation/text27",
+    "kind": "text",
+    "text": "AI-assisted",
+    "frame": {
+     "x": 5.6673,
+     "y": 2.0424,
+     "w": 2.6807,
+     "h": 0.295
+    }
+   },
+   {
+    "id": "transformation/free28-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 4.7277,
+     "y": 2.64,
+     "w": 3.8777,
+     "h": 1.56
+    }
+   },
+   {
+    "id": "transformation/icon29",
+    "kind": "icon",
+    "text": "",
+    "frame": {
+     "x": 4.9877,
+     "y": 2.84,
+     "w": 0.4167,
+     "h": 0.4167
+    }
+   },
+   {
+    "id": "transformation/shape30",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 5.7477,
+     "y": 2.92,
+     "w": 0.07,
+     "h": 0.07
+    }
+   },
+   {
+    "id": "transformation/text31",
+    "kind": "text",
+    "text": "Copilots for every team",
+    "frame": {
+     "x": 5.9077,
+     "y": 2.81,
+     "w": 2.5277,
+     "h": 0.29
+    }
+   },
+   {
+    "id": "transformation/shape32",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 5.7477,
+     "y": 3.23,
+     "w": 0.07,
+     "h": 0.07
+    }
+   },
+   {
+    "id": "transformation/text33",
+    "kind": "text",
+    "text": "Connected knowledge",
+    "frame": {
+     "x": 5.9077,
+     "y": 3.12,
+     "w": 2.5277,
+     "h": 0.29
+    }
+   },
+   {
+    "id": "transformation/shape34",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 5.7477,
+     "y": 3.54,
+     "w": 0.07,
+     "h": 0.07
+    }
+   },
+   {
+    "id": "transformation/text35",
+    "kind": "text",
+    "text": "Workflow automation",
+    "frame": {
+     "x": 5.9077,
+     "y": 3.43,
+     "w": 2.5277,
+     "h": 0.29
+    }
+   },
+   {
+    "id": "transformation/text36",
+    "kind": "text",
+    "text": "AI MATURITY",
+    "frame": {
+     "x": 4.9877,
+     "y": 3.86,
+     "w": 1.1,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "transformation/shape37",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 6.1477,
+     "y": 3.915,
+     "w": 0.11,
+     "h": 0.11
+    }
+   },
+   {
+    "id": "transformation/shape38",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 6.3477,
+     "y": 3.915,
+     "w": 0.11,
+     "h": 0.11
+    }
+   },
+   {
+    "id": "transformation/shape39",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 6.5477,
+     "y": 3.915,
+     "w": 0.11,
+     "h": 0.11
+    }
+   },
+   {
+    "id": "transformation/shape40",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 6.7477,
+     "y": 3.915,
+     "w": 0.11,
+     "h": 0.11
+    }
+   },
+   {
+    "id": "transformation/shape41",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 6.9477,
+     "y": 3.915,
+     "w": 0.11,
+     "h": 0.11
+    }
+   },
+   {
+    "id": "transformation/shape42",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 8.5681,
+     "y": 1.88,
+     "w": 4.264,
+     "h": 0.62
+    }
+   },
+   {
+    "id": "transformation/row43-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 9.0381,
+     "y": 1.94,
+     "w": 3.344,
+     "h": 0.5
+    }
+   },
+   {
+    "id": "transformation/text44",
+    "kind": "text",
+    "text": "FUTURE",
+    "frame": {
+     "x": 9.0381,
+     "y": 2.1024,
+     "w": 0.6999,
+     "h": 0.175
+    }
+   },
+   {
+    "id": "transformation/text45",
+    "kind": "text",
+    "text": "AI-native",
+    "frame": {
+     "x": 9.9046,
+     "y": 2.0424,
+     "w": 2.4774,
+     "h": 0.295
+    }
+   },
+   {
+    "id": "transformation/free46-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 8.9553,
+     "y": 2.64,
+     "w": 3.8777,
+     "h": 1.56
+    }
+   },
+   {
+    "id": "transformation/icon47",
+    "kind": "icon",
+    "text": "",
+    "frame": {
+     "x": 9.2153,
+     "y": 2.84,
+     "w": 0.4167,
+     "h": 0.4167
+    }
+   },
+   {
+    "id": "transformation/shape48",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 9.9753,
+     "y": 2.92,
+     "w": 0.07,
+     "h": 0.07
+    }
+   },
+   {
+    "id": "transformation/text49",
+    "kind": "text",
+    "text": "Autonomous agents",
+    "frame": {
+     "x": 10.1353,
+     "y": 2.81,
+     "w": 2.5277,
+     "h": 0.29
+    }
+   },
+   {
+    "id": "transformation/shape50",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 9.9753,
+     "y": 3.23,
+     "w": 0.07,
+     "h": 0.07
+    }
+   },
+   {
+    "id": "transformation/text51",
+    "kind": "text",
+    "text": "Intelligent orchestration",
+    "frame": {
+     "x": 10.1353,
+     "y": 3.12,
+     "w": 2.5277,
+     "h": 0.29
+    }
+   },
+   {
+    "id": "transformation/shape52",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 9.9753,
+     "y": 3.54,
+     "w": 0.07,
+     "h": 0.07
+    }
+   },
+   {
+    "id": "transformation/text53",
+    "kind": "text",
+    "text": "Continuous optimization",
+    "frame": {
+     "x": 10.1353,
+     "y": 3.43,
+     "w": 2.5277,
+     "h": 0.29
+    }
+   },
+   {
+    "id": "transformation/text54",
+    "kind": "text",
+    "text": "AI MATURITY",
+    "frame": {
+     "x": 9.2153,
+     "y": 3.86,
+     "w": 1.1,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "transformation/shape55",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 10.3753,
+     "y": 3.915,
+     "w": 0.11,
+     "h": 0.11
+    }
+   },
+   {
+    "id": "transformation/shape56",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 10.5753,
+     "y": 3.915,
+     "w": 0.11,
+     "h": 0.11
+    }
+   },
+   {
+    "id": "transformation/shape57",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 10.7754,
+     "y": 3.915,
+     "w": 0.11,
+     "h": 0.11
+    }
+   },
+   {
+    "id": "transformation/shape58",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 10.9753,
+     "y": 3.915,
+     "w": 0.11,
+     "h": 0.11
+    }
+   },
+   {
+    "id": "transformation/shape59",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 11.1753,
+     "y": 3.915,
+     "w": 0.11,
+     "h": 0.11
+    }
+   },
+   {
+    "id": "transformation/text60",
+    "kind": "text",
+    "text": "ROADMAP",
+    "frame": {
+     "x": 0.5,
+     "y": 4.42,
+     "w": 1.9001,
+     "h": 0.3
+    }
+   },
+   {
+    "id": "transformation/text61",
+    "kind": "text",
+    "text": "2026",
+    "frame": {
+     "x": 2.5001,
+     "y": 4.36,
+     "w": 0.9,
+     "h": 0.4401
+    }
+   },
+   {
+    "id": "transformation/text62",
+    "kind": "text",
+    "text": "Foundation",
+    "frame": {
+     "x": 3.42,
+     "y": 4.44,
+     "w": 2.3,
+     "h": 0.3
+    }
+   },
+   {
+    "id": "transformation/shape63",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 2.5001,
+     "y": 4.9,
+     "w": 3.3844,
+     "h": 0.06
+    }
+   },
+   {
+    "id": "transformation/text64",
+    "kind": "text",
+    "text": "2027",
+    "frame": {
+     "x": 5.9443,
+     "y": 4.36,
+     "w": 0.9,
+     "h": 0.4401
+    }
+   },
+   {
+    "id": "transformation/text65",
+    "kind": "text",
+    "text": "Scale",
+    "frame": {
+     "x": 6.8643,
+     "y": 4.44,
+     "w": 2.3,
+     "h": 0.3
+    }
+   },
+   {
+    "id": "transformation/shape66",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 5.9744,
+     "y": 4.9,
+     "w": 3.3844,
+     "h": 0.06
+    }
+   },
+   {
+    "id": "transformation/shape67",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 5.9391,
+     "y": 4.98,
+     "w": 0.0104,
+     "h": 2.0001
+    }
+   },
+   {
+    "id": "transformation/text68",
+    "kind": "text",
+    "text": "2028",
+    "frame": {
+     "x": 9.3887,
+     "y": 4.36,
+     "w": 0.9,
+     "h": 0.4401
+    }
+   },
+   {
+    "id": "transformation/text69",
+    "kind": "text",
+    "text": "Autonomy",
+    "frame": {
+     "x": 10.3087,
+     "y": 4.44,
+     "w": 2.3,
+     "h": 0.3
+    }
+   },
+   {
+    "id": "transformation/shape70",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 9.4186,
+     "y": 4.9,
+     "w": 3.3844,
+     "h": 0.06
+    }
+   },
+   {
+    "id": "transformation/shape71",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 9.3835,
+     "y": 4.98,
+     "w": 0.0104,
+     "h": 2.0001
+    }
+   },
+   {
+    "id": "transformation/text72",
+    "kind": "text",
+    "text": "Data & platform",
+    "frame": {
+     "x": 0.5,
+     "y": 5.1,
+     "w": 1.95,
+     "h": 0.32
+    }
+   },
+   {
+    "id": "transformation/row73-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 2.53,
+     "y": 5.12,
+     "w": 4.2454,
+     "h": 0.28
+    }
+   },
+   {
+    "id": "transformation/text74",
+    "kind": "text",
+    "text": "Unified data layer  \u00b7  AI platform  \u00b7  governance",
+    "frame": {
+     "x": 2.6966,
+     "y": 5.1689,
+     "w": 3.9121,
+     "h": 0.1823
+    }
+   },
+   {
+    "id": "transformation/text75",
+    "kind": "text",
+    "text": "Copilots",
+    "frame": {
+     "x": 0.5,
+     "y": 5.48,
+     "w": 1.95,
+     "h": 0.32
+    }
+   },
+   {
+    "id": "transformation/row76-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 4.2522,
+     "y": 5.5,
+     "w": 5.1065,
+     "h": 0.28
+    }
+   },
+   {
+    "id": "transformation/text77",
+    "kind": "text",
+    "text": "Copilots in every function  \u00b7  connected knowledge",
+    "frame": {
+     "x": 4.4189,
+     "y": 5.5489,
+     "w": 4.7732,
+     "h": 0.1823
+    }
+   },
+   {
+    "id": "transformation/text78",
+    "kind": "text",
+    "text": "Agents",
+    "frame": {
+     "x": 0.5,
+     "y": 5.86,
+     "w": 1.95,
+     "h": 0.32
+    }
+   },
+   {
+    "id": "transformation/row79-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 7.6965,
+     "y": 5.8801,
+     "w": 5.1065,
+     "h": 0.28
+    }
+   },
+   {
+    "id": "transformation/text80",
+    "kind": "text",
+    "text": "Autonomous agents  \u00b7  intelligent orchestration",
+    "frame": {
+     "x": 7.8632,
+     "y": 5.9289,
+     "w": 4.7732,
+     "h": 0.1823
+    }
+   },
+   {
+    "id": "transformation/text81",
+    "kind": "text",
+    "text": "People & operating model",
+    "frame": {
+     "x": 0.5,
+     "y": 6.24,
+     "w": 1.95,
+     "h": 0.32
+    }
+   },
+   {
+    "id": "transformation/row82-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 2.53,
+     "y": 6.26,
+     "w": 10.273,
+     "h": 0.28
+    }
+   },
+   {
+    "id": "transformation/text83",
+    "kind": "text",
+    "text": "Upskilling   \u00b7   new AI-native roles   \u00b7   continuous optimization",
+    "frame": {
+     "x": 2.6966,
+     "y": 6.3088,
+     "w": 9.9397,
+     "h": 0.1823
+    }
+   },
+   {
+    "id": "transformation/text84",
+    "kind": "text",
+    "text": "Milestones",
+    "frame": {
+     "x": 0.5,
+     "y": 6.62,
+     "w": 1.95,
+     "h": 0.32
+    }
+   },
+   {
+    "id": "transformation/shape85",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 4.217,
+     "y": 4.98,
+     "w": 0.0104,
+     "h": 1.68
+    }
+   },
+   {
+    "id": "transformation/shape86",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 4.1322,
+     "y": 6.69,
+     "w": 0.18,
+     "h": 0.18
+    }
+   },
+   {
+    "id": "transformation/text87",
+    "kind": "text",
+    "text": "AI platform live",
+    "frame": {
+     "x": 4.3622,
+     "y": 6.64,
+     "w": 2.3,
+     "h": 0.28
+    }
+   },
+   {
+    "id": "transformation/shape88",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 7.6613,
+     "y": 4.98,
+     "w": 0.0104,
+     "h": 1.68
+    }
+   },
+   {
+    "id": "transformation/shape89",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 7.5766,
+     "y": 6.69,
+     "w": 0.18,
+     "h": 0.18
+    }
+   },
+   {
+    "id": "transformation/text90",
+    "kind": "text",
+    "text": "Copilots in every team",
+    "frame": {
+     "x": 7.8065,
+     "y": 6.64,
+     "w": 2.3,
+     "h": 0.28
+    }
+   },
+   {
+    "id": "transformation/shape91",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 10.2446,
+     "y": 4.98,
+     "w": 0.0104,
+     "h": 1.68
+    }
+   },
+   {
+    "id": "transformation/shape92",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 10.1598,
+     "y": 6.69,
+     "w": 0.18,
+     "h": 0.18
+    }
+   },
+   {
+    "id": "transformation/text93",
+    "kind": "text",
+    "text": "First autonomous workflows",
+    "frame": {
+     "x": 10.3898,
+     "y": 6.64,
+     "w": 2.3,
+     "h": 0.28
+    }
+   }
+  ]
+ },
+ "analytics-1": {
+  "size": {
+   "width": 13.333333,
+   "height": 7.5
+  },
+  "elements": [
+   {
+    "id": "data-story/text1",
+    "kind": "text",
+    "text": "PRODUCT ANALYTICS  \u00b7  JANUARY \u2013 JUNE 2026",
+    "frame": {
+     "x": 0.5,
+     "y": 0.5,
+     "w": 8,
+     "h": 0.25
+    }
+   },
+   {
+    "id": "data-story/text2",
+    "kind": "text",
+    "text": "From growth to retention: what the data tells us",
+    "frame": {
+     "x": 0.5,
+     "y": 0.76,
+     "w": 11,
+     "h": 0.64
+    }
+   },
+   {
+    "id": "data-story/text3",
+    "kind": "text",
+    "text": "Six months of product data, three signals, and one decision.",
+    "frame": {
+     "x": 0.5,
+     "y": 1.38,
+     "w": 10.0001,
+     "h": 0.3399
+    }
+   },
+   {
+    "id": "data-story/shape4",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 0.5,
+     "y": 1.8531,
+     "w": 12.333,
+     "h": 0.0139
+    }
+   },
+   {
+    "id": "data-story/shape5",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 5.4948,
+     "y": 2.1,
+     "w": 0.0104,
+     "h": 3.72
+    }
+   },
+   {
+    "id": "data-story/shape6",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 9.1448,
+     "y": 2.1,
+     "w": 0.0104,
+     "h": 3.72
+    }
+   },
+   {
+    "id": "data-story/text7",
+    "kind": "text",
+    "text": "01    ACQUISITION",
+    "frame": {
+     "x": 0.5,
+     "y": 2.08,
+     "w": 4.75,
+     "h": 0.25
+    }
+   },
+   {
+    "id": "data-story/text8",
+    "kind": "text",
+    "text": "Users are arriving faster every month",
+    "frame": {
+     "x": 0.5,
+     "y": 2.36,
+     "w": 4.75,
+     "h": 0.38
+    }
+   },
+   {
+    "id": "data-story/text9",
+    "kind": "text",
+    "text": "+88%",
+    "frame": {
+     "x": 0.5,
+     "y": 2.76,
+     "w": 1.95,
+     "h": 0.72
+    }
+   },
+   {
+    "id": "data-story/text10",
+    "kind": "text",
+    "text": "monthly active users, 42K in January, 79K in June",
+    "frame": {
+     "x": 2.48,
+     "y": 2.88,
+     "w": 2.77,
+     "h": 0.52
+    }
+   },
+   {
+    "id": "data-story/chart11",
+    "kind": "chart",
+    "text": "",
+    "frame": {
+     "x": 0.4,
+     "y": 3.52,
+     "w": 4.9,
+     "h": 2.36
+    }
+   },
+   {
+    "id": "data-story/text12",
+    "kind": "text",
+    "text": "02    RETENTION",
+    "frame": {
+     "x": 5.75,
+     "y": 2.08,
+     "w": 3.15,
+     "h": 0.25
+    }
+   },
+   {
+    "id": "data-story/text13",
+    "kind": "text",
+    "text": "Cohorts settle by month 3",
+    "frame": {
+     "x": 5.75,
+     "y": 2.36,
+     "w": 3.15,
+     "h": 0.38
+    }
+   },
+   {
+    "id": "data-story/text14",
+    "kind": "text",
+    "text": "62%",
+    "frame": {
+     "x": 5.75,
+     "y": 2.76,
+     "w": 1.95,
+     "h": 0.72
+    }
+   },
+   {
+    "id": "data-story/text15",
+    "kind": "text",
+    "text": "still active at month 6",
+    "frame": {
+     "x": 7.73,
+     "y": 2.88,
+     "w": 1.17,
+     "h": 0.52
+    }
+   },
+   {
+    "id": "data-story/shape16",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 6.05,
+     "y": 3.78,
+     "w": 2.7,
+     "h": 1.66
+    }
+   },
+   {
+    "id": "data-story/shape17",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 6.05,
+     "y": 5.4348,
+     "w": 2.7,
+     "h": 0.0104
+    }
+   },
+   {
+    "id": "data-story/shape18",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 6.05,
+     "y": 3.7765,
+     "w": 2.7,
+     "h": 0.0069
+    }
+   },
+   {
+    "id": "data-story/text19",
+    "kind": "text",
+    "text": "100",
+    "frame": {
+     "x": 5.55,
+     "y": 3.68,
+     "w": 0.4,
+     "h": 0.2
+    }
+   },
+   {
+    "id": "data-story/text20",
+    "kind": "text",
+    "text": "0",
+    "frame": {
+     "x": 5.55,
+     "y": 5.33,
+     "w": 0.4,
+     "h": 0.2
+    }
+   },
+   {
+    "id": "data-story/shape21",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 6.05,
+     "y": 3.78,
+     "w": 2.7,
+     "h": 1.66
+    }
+   },
+   {
+    "id": "data-story/shape22",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 6.01,
+     "y": 3.74,
+     "w": 0.08,
+     "h": 0.0799
+    }
+   },
+   {
+    "id": "data-story/text23",
+    "kind": "text",
+    "text": "M1",
+    "frame": {
+     "x": 5.8,
+     "y": 5.4901,
+     "w": 0.5,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "data-story/shape24",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 6.55,
+     "y": 4.0388,
+     "w": 0.08,
+     "h": 0.0799
+    }
+   },
+   {
+    "id": "data-story/text25",
+    "kind": "text",
+    "text": "M2",
+    "frame": {
+     "x": 6.34,
+     "y": 5.4901,
+     "w": 0.5,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "data-story/shape26",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 7.09,
+     "y": 4.2048,
+     "w": 0.08,
+     "h": 0.0799
+    }
+   },
+   {
+    "id": "data-story/text27",
+    "kind": "text",
+    "text": "M3",
+    "frame": {
+     "x": 6.88,
+     "y": 5.4901,
+     "w": 0.5,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "data-story/shape28",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 7.63,
+     "y": 4.2878,
+     "w": 0.08,
+     "h": 0.0799
+    }
+   },
+   {
+    "id": "data-story/text29",
+    "kind": "text",
+    "text": "M4",
+    "frame": {
+     "x": 7.42,
+     "y": 5.4901,
+     "w": 0.5,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "data-story/shape30",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 8.17,
+     "y": 4.3376,
+     "w": 0.08,
+     "h": 0.0799
+    }
+   },
+   {
+    "id": "data-story/text31",
+    "kind": "text",
+    "text": "M5",
+    "frame": {
+     "x": 7.96,
+     "y": 5.4901,
+     "w": 0.5,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "data-story/shape32",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 8.685,
+     "y": 4.3458,
+     "w": 0.13,
+     "h": 0.13
+    }
+   },
+   {
+    "id": "data-story/text33",
+    "kind": "text",
+    "text": "M6",
+    "frame": {
+     "x": 8.5,
+     "y": 5.4901,
+     "w": 0.5,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "data-story/shape34",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 7.13,
+     "y": 4.0679,
+     "w": 1.62,
+     "h": 0.0139
+    }
+   },
+   {
+    "id": "data-story/shape35",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 7.1231,
+     "y": 4.0748,
+     "w": 0.0139,
+     "h": 0.0799
+    }
+   },
+   {
+    "id": "data-story/shape36",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 8.7431,
+     "y": 4.0748,
+     "w": 0.0139,
+     "h": 0.216
+    }
+   },
+   {
+    "id": "data-story/text37",
+    "kind": "text",
+    "text": "\u221210 pts in three months",
+    "frame": {
+     "x": 7.08,
+     "y": 3.8048,
+     "w": 2.0001,
+     "h": 0.24
+    }
+   },
+   {
+    "id": "data-story/text38",
+    "kind": "text",
+    "text": "62%",
+    "frame": {
+     "x": 8.3501,
+     "y": 4.5108,
+     "w": 0.55,
+     "h": 0.22
+    }
+   },
+   {
+    "id": "data-story/text39",
+    "kind": "text",
+    "text": "03    ACTIVATION",
+    "frame": {
+     "x": 9.4,
+     "y": 2.08,
+     "w": 3.433,
+     "h": 0.25
+    }
+   },
+   {
+    "id": "data-story/text40",
+    "kind": "text",
+    "text": "Activation is the leak",
+    "frame": {
+     "x": 9.4,
+     "y": 2.36,
+     "w": 3.433,
+     "h": 0.38
+    }
+   },
+   {
+    "id": "data-story/text41",
+    "kind": "text",
+    "text": "8.4%",
+    "frame": {
+     "x": 9.4,
+     "y": 2.76,
+     "w": 1.95,
+     "h": 0.72
+    }
+   },
+   {
+    "id": "data-story/text42",
+    "kind": "text",
+    "text": "of visitors become paying customers",
+    "frame": {
+     "x": 11.3801,
+     "y": 2.88,
+     "w": 1.453,
+     "h": 0.52
+    }
+   },
+   {
+    "id": "data-story/text43",
+    "kind": "text",
+    "text": "Visitors",
+    "frame": {
+     "x": 9.4,
+     "y": 3.65,
+     "w": 0.95,
+     "h": 0.28
+    }
+   },
+   {
+    "id": "data-story/shape44",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 10.4001,
+     "y": 3.62,
+     "w": 1.85,
+     "h": 0.3399
+    }
+   },
+   {
+    "id": "data-story/text45",
+    "kind": "text",
+    "text": "100K",
+    "frame": {
+     "x": 12.33,
+     "y": 3.65,
+     "w": 0.503,
+     "h": 0.28
+    }
+   },
+   {
+    "id": "data-story/text46",
+    "kind": "text",
+    "text": "Sign-ups",
+    "frame": {
+     "x": 9.4,
+     "y": 4.2,
+     "w": 0.95,
+     "h": 0.28
+    }
+   },
+   {
+    "id": "data-story/shape47",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 10.4001,
+     "y": 4.17,
+     "w": 0.592,
+     "h": 0.3399
+    }
+   },
+   {
+    "id": "data-story/text48",
+    "kind": "text",
+    "text": "32K  \u00b7  32%",
+    "frame": {
+     "x": 11.072,
+     "y": 4.2,
+     "w": 1.761,
+     "h": 0.28
+    }
+   },
+   {
+    "id": "data-story/text49",
+    "kind": "text",
+    "text": "Activated",
+    "frame": {
+     "x": 9.4,
+     "y": 4.75,
+     "w": 0.95,
+     "h": 0.28
+    }
+   },
+   {
+    "id": "data-story/shape50",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 10.4001,
+     "y": 4.72,
+     "w": 0.3885,
+     "h": 0.3399
+    }
+   },
+   {
+    "id": "data-story/shape51",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 10.7886,
+     "y": 4.72,
+     "w": 0.2035,
+     "h": 0.3399
+    }
+   },
+   {
+    "id": "data-story/text52",
+    "kind": "text",
+    "text": "11K lost",
+    "frame": {
+     "x": 10.7385,
+     "y": 5.07,
+     "w": 1.2,
+     "h": 0.2
+    }
+   },
+   {
+    "id": "data-story/text53",
+    "kind": "text",
+    "text": "21K  \u00b7  66%",
+    "frame": {
+     "x": 11.072,
+     "y": 4.75,
+     "w": 1.761,
+     "h": 0.28
+    }
+   },
+   {
+    "id": "data-story/text54",
+    "kind": "text",
+    "text": "Paid",
+    "frame": {
+     "x": 9.4,
+     "y": 5.3,
+     "w": 0.95,
+     "h": 0.28
+    }
+   },
+   {
+    "id": "data-story/shape55",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 10.4001,
+     "y": 5.27,
+     "w": 0.1554,
+     "h": 0.3399
+    }
+   },
+   {
+    "id": "data-story/text56",
+    "kind": "text",
+    "text": "8.4K  \u00b7  40%",
+    "frame": {
+     "x": 10.6354,
+     "y": 5.3,
+     "w": 2.1976,
+     "h": 0.28
+    }
+   },
+   {
+    "id": "data-story/shape57",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 0,
+     "y": 6.12,
+     "w": 13.3333,
+     "h": 1.38
+    }
+   },
+   {
+    "id": "data-story/free58-surface",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 0.5,
+     "y": 6.12,
+     "w": 12.333,
+     "h": 0.88
+    }
+   },
+   {
+    "id": "data-story/text59",
+    "kind": "text",
+    "text": "THE TAKEAWAY",
+    "frame": {
+     "x": 0.5,
+     "y": 6.56,
+     "w": 1.6,
+     "h": 0.25
+    }
+   },
+   {
+    "id": "data-story/text60",
+    "kind": "text",
+    "text": "Acquisition is accelerating, but activation remains the biggest growth lever.",
+    "frame": {
+     "x": 2.15,
+     "y": 6.44,
+     "w": 6.75,
+     "h": 0.62
+    }
+   },
+   {
+    "id": "data-story/shape61",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 9.1948,
+     "y": 6.46,
+     "w": 0.0104,
+     "h": 0.58
+    }
+   },
+   {
+    "id": "data-story/text62",
+    "kind": "text",
+    "text": "+1.8K",
+    "frame": {
+     "x": 9.4,
+     "y": 6.44,
+     "w": 1.4,
+     "h": 0.6
+    }
+   },
+   {
+    "id": "data-story/text63",
+    "kind": "text",
+    "text": "paid users a month if activation rises from 66% to 80%",
+    "frame": {
+     "x": 10.78,
+     "y": 6.46,
+     "w": 2.053,
+     "h": 0.6
+    }
+   }
+  ]
+ },
+ "analytics-2": {
+  "size": {
+   "width": 13.333333,
+   "height": 7.5
+  },
+  "elements": [
+   {
+    "id": "growth/text1",
+    "kind": "text",
+    "text": "DATA STORYTELLING",
+    "frame": {
+     "x": 0.5,
+     "y": 0.5,
+     "w": 10.0001,
+     "h": 0.25
+    }
+   },
+   {
+    "id": "growth/text2",
+    "kind": "text",
+    "text": "Growth accelerated throughout the half.",
+    "frame": {
+     "x": 0.5,
+     "y": 0.98,
+     "w": 12.33,
+     "h": 0.65
+    }
+   },
+   {
+    "id": "growth/text3",
+    "kind": "text",
+    "text": "Monthly active users grew from 42K to 79K; the largest absolute gain came in Jun",
+    "frame": {
+     "x": 0.5,
+     "y": 1.67,
+     "w": 11.8,
+     "h": 0.5
+    }
+   },
+   {
+    "id": "growth/shape4",
+    "kind": "shape",
+    "text": "",
+    "frame": {
+     "x": 0.5,
+     "y": 6.7548,
+     "w": 12.33,
+     "h": 0.0104
+    }
+   },
+   {
+    "id": "growth/text5",
+    "kind": "text",
+    "text": "From Growth to Retention  \u00b7  Illustrative demo",
+    "frame": {
+     "x": 0.5,
+     "y": 6.9,
+     "w": 10.4,
+     "h": 0.25
+    }
+   },
+   {
+    "id": "growth/text6",
+    "kind": "text",
+    "text": "02 / 05",
+    "frame": {
+     "x": 11.8,
+     "y": 6.9,
+     "w": 1.03,
+     "h": 0.25
+    }
+   },
+   {
+    "id": "growth/chart7",
+    "kind": "chart",
+    "text": "",
+    "frame": {
+     "x": 0.4501,
+     "y": 2.5001,
+     "w": 8.25,
+     "h": 3.85
+    }
+   },
+   {
+    "id": "growth/text8",
+    "kind": "text",
+    "text": "+88%",
+    "frame": {
+     "x": 9.1,
+     "y": 2.65,
+     "w": 3.7,
+     "h": 0.85
+    }
+   },
+   {
+    "id": "growth/text9",
+    "kind": "text",
+    "text": "Six-month growth",
+    "frame": {
+     "x": 9.1,
+     "y": 3.57,
+     "w": 3.7,
+     "h": 0.4
+    }
+   },
+   {
+    "id": "growth/text10",
+    "kind": "text",
+    "text": "37K additional monthly active users",
+    "frame": {
+     "x": 9.1,
+     "y": 4.05,
+     "w": 3.7,
+     "h": 0.55
+    }
+   },
+   {
+    "id": "growth/text11",
+    "kind": "text",
+    "text": "+11K in June",
+    "frame": {
+     "x": 9.1,
+     "y": 5.12,
+     "w": 3.7,
+     "h": 0.5
+    }
+   },
+   {
+    "id": "growth/text12",
+    "kind": "text",
+    "text": "Momentum increases the value of fixing activation.",
+    "frame": {
+     "x": 9.1,
+     "y": 5.72,
+     "w": 3.7,
+     "h": 0.54
+    }
+   }
+  ]
+ }
+}

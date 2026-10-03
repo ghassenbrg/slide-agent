@@ -1,0 +1,35 @@
+{
+  "checked": "2026-10-02",
+  "links": [
+    {
+      "url": "https://slide-agent.ghassen.io/",
+      "status": 200,
+      "resolved_url": "https://slide-agent.ghassen.io/",
+      "title": "Slide Agent"
+    },
+    {
+      "url": "https://slide-agent.ghassen.io/guide/install",
+      "status": 200,
+      "resolved_url": "https://slide-agent.ghassen.io/guide/install",
+      "title": "Install | Slide Agent"
+    },
+    {
+      "url": "https://slide-agent.ghassen.io/showcase",
+      "status": 200,
+      "resolved_url": "https://slide-agent.ghassen.io/showcase",
+      "title": "Five presentations. Five design systems. | Slide Agent"
+    },
+    {
+      "url": "https://github.com/ghassenbrg/slide-agent",
+      "status": 200,
+      "resolved_url": "https://github.com/ghassenbrg/slide-agent",
+      "title": "GitHub - ghassenbrg/slide-agent: AI-powered presentation generation for any LLM or coding agent. Create professional PowerPoint presentations from prompts, Markdown, codebases, or documents. \u00b7 GitHub"
+    },
+    {
+      "url": "https://marketplace.visualstudio.com/items?itemName=ghassenbrg.slide-agent-vscode",
+      "status": 200,
+      "resolved_url": "https://marketplace.visualstudio.com/items?itemName=ghassenbrg.slide-agent-vscode",
+      "title": "Slide Agent - Visual Studio Marketplace"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+Package check of deck.pptx (Fern-launch-plan.pptx), 2026-10-03T02:46Z
+
+## Parts
+      319  10-03-2026 02:18   ppt/charts/_rels/chart1.xml.rels
+     4100  10-03-2026 02:18   ppt/charts/chart1.xml
+     1704  10-03-2026 02:18   ppt/embeddings/Microsoft_Excel_Worksheet1.xlsx
+   146970  10-03-2026 02:18   ppt/fonts/font1.fntdata
+   143186  10-03-2026 02:18   ppt/fonts/font2.fntdata
+   143630  10-03-2026 02:18   ppt/fonts/font3.fntdata
+   145634  10-03-2026 02:18   ppt/fonts/font4.fntdata
+   236102  10-03-2026 02:18   ppt/fonts/font5.fntdata
+   215378  10-03-2026 02:18   ppt/fonts/font6.fntdata
+   219118  10-03-2026 02:18   ppt/fonts/font7.fntdata
+   245622  10-03-2026 02:18   ppt/fonts/font8.fntdata
+    60778  10-03-2026 02:18   ppt/slides/slide1.xml
+    44385  10-03-2026 02:18   ppt/slides/slide2.xml
+    17005  10-03-2026 02:18   ppt/slides/slide3.xml
+    44989  10-03-2026 02:18   ppt/slides/slide4.xml
+    15570  10-03-2026 02:18   ppt/slides/slide5.xml
+     3295  10-03-2026 02:18   ppt/theme/theme1.xml
+
+## Slide 1 title placeholder
+type="title"
+
+## Slide 1 text runs (first 8)
+<a:t>FERN</a:t>
+<a:t>LAUNCH PLAN   ·   Q1 2027   ·   LEADERSHIP REVIEW</a:t>
+<a:t>Fern launches March 18.</a:t>
+<a:t>Twelve weeks from private beta to public launch, with a $420K budget and three named risks.</a:t>
+<a:t>30-DAY TARGET</a:t>
+<a:t>50K</a:t>
+<a:t>installs after launch</a:t>
+<a:t>4.5 rating  ·  25% week-4 active</a:t>
+
+## Slide 3 native chart frame
+<c:chart xmlns:c="http://schemas.openxmlformats.org/drawingml/2006/chart" r:id="rId2"/>
+
+## Theme fonts
+<a:latin typeface="Helvetica Neue"
+<a:latin typeface="Helvetica Neue"

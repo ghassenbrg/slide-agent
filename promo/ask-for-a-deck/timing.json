@@ -1,0 +1,63 @@
+{
+  "fps": 30,
+  "duration": 1560,
+  "period": 0.4917023334866687,
+  "shots": [
+    {
+      "id": "opening",
+      "from": 0,
+      "duration": 236
+    },
+    {
+      "id": "connect",
+      "from": 236,
+      "duration": 89
+    },
+    {
+      "id": "create",
+      "from": 325,
+      "duration": 206
+    },
+    {
+      "id": "preview",
+      "from": 531,
+      "duration": 207
+    },
+    {
+      "id": "edit",
+      "from": 738,
+      "duration": 206
+    },
+    {
+      "id": "range",
+      "from": 944,
+      "duration": 236
+    },
+    {
+      "id": "export",
+      "from": 1180,
+      "duration": 177
+    },
+    {
+      "id": "close",
+      "from": 1357,
+      "duration": 203
+    }
+  ],
+  "events": {
+    "reveal": 74,
+    "connect": 266,
+    "send": 413,
+    "result": 472,
+    "preview2": 590,
+    "preview5": 664,
+    "editSend": 826,
+    "editResult": 856,
+    "rangeTech": 1018,
+    "rangeData": 1092,
+    "exportPress": 1210,
+    "powerpoint": 1254,
+    "nativeSelect": 1298,
+    "brand": 1372
+  }
+}

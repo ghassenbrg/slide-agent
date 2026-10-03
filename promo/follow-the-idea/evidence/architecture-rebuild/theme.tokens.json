@@ -1,0 +1,405 @@
+{
+ "$description": "Slide Agent theme (authored); compiler 2.0.0",
+ "color": {
+  "palette": {
+   "s2night": {
+    "$type": "color",
+    "$value": {
+     "colorSpace": "srgb",
+     "hex": "#0A1022"
+    }
+   },
+   "s2node": {
+    "$type": "color",
+    "$value": {
+     "colorSpace": "srgb",
+     "hex": "#111A33"
+    }
+   },
+   "s2node2": {
+    "$type": "color",
+    "$value": {
+     "colorSpace": "srgb",
+     "hex": "#152040"
+    }
+   },
+   "s2orch": {
+    "$type": "color",
+    "$value": {
+     "colorSpace": "srgb",
+     "hex": "#231B4D"
+    }
+   },
+   "s2group": {
+    "$type": "color",
+    "$value": {
+     "colorSpace": "srgb",
+     "hex": "#0D1530"
+    }
+   },
+   "s2band": {
+    "$type": "color",
+    "$value": {
+     "colorSpace": "srgb",
+     "hex": "#0E1730"
+    }
+   },
+   "s2edge": {
+    "$type": "color",
+    "$value": {
+     "colorSpace": "srgb",
+     "hex": "#2A3757"
+    }
+   },
+   "s2frost": {
+    "$type": "color",
+    "$value": {
+     "colorSpace": "srgb",
+     "hex": "#E8EDF7"
+    }
+   },
+   "s2haze": {
+    "$type": "color",
+    "$value": {
+     "colorSpace": "srgb",
+     "hex": "#97A3BF"
+    }
+   },
+   "s2sky": {
+    "$type": "color",
+    "$value": {
+     "colorSpace": "srgb",
+     "hex": "#38BDF8"
+    }
+   },
+   "s2skyDim": {
+    "$type": "color",
+    "$value": {
+     "colorSpace": "srgb",
+     "hex": "#1E4466"
+    }
+   },
+   "s2violet": {
+    "$type": "color",
+    "$value": {
+     "colorSpace": "srgb",
+     "hex": "#A78BFA"
+    }
+   },
+   "s2violetDim": {
+    "$type": "color",
+    "$value": {
+     "colorSpace": "srgb",
+     "hex": "#433779"
+    }
+   },
+   "s2teal": {
+    "$type": "color",
+    "$value": {
+     "colorSpace": "srgb",
+     "hex": "#2DD4BF"
+    }
+   },
+   "s2tealDim": {
+    "$type": "color",
+    "$value": {
+     "colorSpace": "srgb",
+     "hex": "#1A5552"
+    }
+   },
+   "s2amber": {
+    "$type": "color",
+    "$value": {
+     "colorSpace": "srgb",
+     "hex": "#FBBF24"
+    }
+   },
+   "s2amberDim": {
+    "$type": "color",
+    "$value": {
+     "colorSpace": "srgb",
+     "hex": "#5A4514"
+    }
+   },
+   "s2grid": {
+    "$type": "color",
+    "$value": {
+     "colorSpace": "srgb",
+     "hex": "#1A2442"
+    }
+   }
+  },
+  "role": {
+   "background": {
+    "$type": "color",
+    "$value": "{color.palette.s2night}"
+   },
+   "surface": {
+    "$type": "color",
+    "$value": "{color.palette.s2node}"
+   },
+   "text": {
+    "$type": "color",
+    "$value": "{color.palette.s2frost}"
+   },
+   "muted": {
+    "$type": "color",
+    "$value": "{color.palette.s2haze}"
+   },
+   "accent": {
+    "$type": "color",
+    "$value": "{color.palette.s2sky}"
+   },
+   "accentAlt": {
+    "$type": "color",
+    "$value": "{color.palette.s2sky}"
+   },
+   "rule": {
+    "$type": "color",
+    "$value": "{color.palette.s2edge}"
+   }
+  },
+  "data": {
+   "series1": {
+    "$type": "color",
+    "$value": {
+     "colorSpace": "srgb",
+     "hex": "#38BDF8"
+    }
+   },
+   "series2": {
+    "$type": "color",
+    "$value": {
+     "colorSpace": "srgb",
+     "hex": "#E8EDF7"
+    }
+   }
+  }
+ },
+ "font": {
+  "family": {
+   "display": {
+    "$type": "fontFamily",
+    "$value": [
+     "Helvetica Neue"
+    ]
+   },
+   "body": {
+    "$type": "fontFamily",
+    "$value": [
+     "Helvetica Neue"
+    ]
+   },
+   "mono": {
+    "$type": "fontFamily",
+    "$value": [
+     "Menlo"
+    ]
+   }
+  },
+  "size": {
+   "display": {
+    "$type": "dimension",
+    "$value": {
+     "value": 61,
+     "unit": "pt"
+    }
+   },
+   "title": {
+    "$type": "dimension",
+    "$value": {
+     "value": 31.5,
+     "unit": "pt"
+    }
+   },
+   "subtitle": {
+    "$type": "dimension",
+    "$value": {
+     "value": 22.5,
+     "unit": "pt"
+    }
+   },
+   "h2": {
+    "$type": "dimension",
+    "$value": {
+     "value": 25,
+     "unit": "pt"
+    }
+   },
+   "h3": {
+    "$type": "dimension",
+    "$value": {
+     "value": 20,
+     "unit": "pt"
+    }
+   },
+   "lead": {
+    "$type": "dimension",
+    "$value": {
+     "value": 20,
+     "unit": "pt"
+    }
+   },
+   "body": {
+    "$type": "dimension",
+    "$value": {
+     "value": 16,
+     "unit": "pt"
+    }
+   },
+   "small": {
+    "$type": "dimension",
+    "$value": {
+     "value": 13,
+     "unit": "pt"
+    }
+   },
+   "caption": {
+    "$type": "dimension",
+    "$value": {
+     "value": 11.5,
+     "unit": "pt"
+    }
+   },
+   "label": {
+    "$type": "dimension",
+    "$value": {
+     "value": 11.5,
+     "unit": "pt"
+    }
+   },
+   "quote": {
+    "$type": "dimension",
+    "$value": {
+     "value": 25,
+     "unit": "pt"
+    }
+   }
+  }
+ },
+ "space": {
+  "unit": {
+   "$type": "dimension",
+   "$value": {
+    "value": 8,
+    "unit": "pt"
+   }
+  },
+  "margin": {
+   "$type": "dimension",
+   "$value": {
+    "value": 36,
+    "unit": "pt"
+   }
+  },
+  "gutter": {
+   "$type": "dimension",
+   "$value": {
+    "value": 16,
+    "unit": "pt"
+   }
+  }
+ },
+ "$extensions": {
+  "dev.slide-agent.language": {
+   "color": {
+    "palette": {
+     "s2night": "#0A1022",
+     "s2node": "#111A33",
+     "s2node2": "#152040",
+     "s2orch": "#231B4D",
+     "s2group": "#0D1530",
+     "s2band": "#0E1730",
+     "s2edge": "#2A3757",
+     "s2frost": "#E8EDF7",
+     "s2haze": "#97A3BF",
+     "s2sky": "#38BDF8",
+     "s2skyDim": "#1E4466",
+     "s2violet": "#A78BFA",
+     "s2violetDim": "#433779",
+     "s2teal": "#2DD4BF",
+     "s2tealDim": "#1A5552",
+     "s2amber": "#FBBF24",
+     "s2amberDim": "#5A4514",
+     "s2grid": "#1A2442"
+    },
+    "roles": {
+     "background": "s2night",
+     "surface": "s2node",
+     "text": "s2frost",
+     "muted": "s2haze",
+     "accent": "s2sky",
+     "rule": "s2edge"
+    },
+    "data": [
+     "s2sky",
+     "s2frost"
+    ]
+   },
+   "type": {
+    "display": {
+     "family": "Helvetica Neue",
+     "weight": 700,
+     "tracking": -0.01
+    },
+    "body": {
+     "family": "Helvetica Neue",
+     "weight": 400
+    },
+    "mono": {
+     "family": "Menlo"
+    },
+    "scale": {
+     "base": 16,
+     "ratio": 1.25
+    }
+   },
+   "space": {
+    "unit": 8,
+    "margin": 36,
+    "gutter": 16
+   },
+   "grid": {
+    "columns": 12,
+    "rows": 6
+   },
+   "shape": {
+    "radius": 10,
+    "stroke": 0
+   },
+   "texture": [
+    {
+     "id": "blueprint",
+     "primitive": "line-grid",
+     "params": {
+      "spacing": 36,
+      "tone": "s2grid",
+      "opacity": 0.18,
+      "weight": 0.5
+     }
+    },
+    {
+     "id": "lighting",
+     "primitive": "gradient-wash",
+     "params": {
+      "from": "s2night",
+      "to": "s2violet",
+      "angle": 315,
+      "opacity": 0.08
+     }
+    }
+   ],
+   "charts": {
+    "axis": "hairline",
+    "gridlines": "none",
+    "labels": "none",
+    "highlight": "s2sky",
+    "legend": "none"
+   },
+   "chrome": {
+    "slideNumber": false
+   }
+  },
+  "dev.slide-agent.hash": "4ac438bb03962296"
+ }
+}

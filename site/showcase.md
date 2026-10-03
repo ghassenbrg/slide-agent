@@ -6,10 +6,11 @@ sidebar: false
 import PresentationGallery from './.vitepress/theme/PresentationGallery.vue';
 </script>
 
-# Five presentations. Five design systems.
+# Showcase
 
-Five complete presentations built with Slide Agent, each with its own visual language
-and five-slide story. Explore every slide or download each deck separately.
+Example presentations built with Slide Agent. These are samples, not a menu of templates:
+Slide Agent designs the palette, typography and layout for each brief, so your deck gets a
+look of its own. Explore every slide or download each deck separately.
 
 The PowerPoint files contain editable text, diagrams and charts. Every presentation
 passed rendering, text checks, package validation and a clean rebuild.

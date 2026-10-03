@@ -1,0 +1,1 @@
+{"extends":"../tsconfig.json","include":["../src/ask-for-a-deck/**/*"],"exclude":["../out","../node_modules"]}

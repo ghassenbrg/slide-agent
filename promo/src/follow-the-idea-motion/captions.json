@@ -1,0 +1,674 @@
+[
+  {
+    "text": " Create",
+    "startMs": 100,
+    "endMs": 400,
+    "timestampMs": 250,
+    "confidence": null
+  },
+  {
+    "text": " professional",
+    "startMs": 412,
+    "endMs": 1000,
+    "timestampMs": 706,
+    "confidence": null
+  },
+  {
+    "text": " presentations",
+    "startMs": 1012,
+    "endMs": 1775,
+    "timestampMs": 1394,
+    "confidence": null
+  },
+  {
+    "text": " directly",
+    "startMs": 1788,
+    "endMs": 2438,
+    "timestampMs": 2112,
+    "confidence": null
+  },
+  {
+    "text": " through",
+    "startMs": 2588,
+    "endMs": 2812,
+    "timestampMs": 2700,
+    "confidence": null
+  },
+  {
+    "text": " your",
+    "startMs": 2825,
+    "endMs": 3038,
+    "timestampMs": 2931,
+    "confidence": null
+  },
+  {
+    "text": " AI",
+    "startMs": 3050,
+    "endMs": 3400,
+    "timestampMs": 3225,
+    "confidence": null
+  },
+  {
+    "text": " agent.",
+    "startMs": 3412,
+    "endMs": 3850,
+    "timestampMs": 3631,
+    "confidence": null
+  },
+  {
+    "text": " This",
+    "startMs": 4262,
+    "endMs": 4488,
+    "timestampMs": 4375,
+    "confidence": null
+  },
+  {
+    "text": " is",
+    "startMs": 4500,
+    "endMs": 4588,
+    "timestampMs": 4544,
+    "confidence": null
+  },
+  {
+    "text": " Slide",
+    "startMs": 4600,
+    "endMs": 4912,
+    "timestampMs": 4756,
+    "confidence": null
+  },
+  {
+    "text": " Agent.",
+    "startMs": 4925,
+    "endMs": 5288,
+    "timestampMs": 5106,
+    "confidence": null
+  },
+  {
+    "text": " Add",
+    "startMs": 6100,
+    "endMs": 6275,
+    "timestampMs": 6188,
+    "confidence": null
+  },
+  {
+    "text": " Slide",
+    "startMs": 6288,
+    "endMs": 6600,
+    "timestampMs": 6444,
+    "confidence": null
+  },
+  {
+    "text": " Agent",
+    "startMs": 6612,
+    "endMs": 6925,
+    "timestampMs": 6769,
+    "confidence": null
+  },
+  {
+    "text": " to",
+    "startMs": 6938,
+    "endMs": 7050,
+    "timestampMs": 6994,
+    "confidence": null
+  },
+  {
+    "text": " a",
+    "startMs": 7062,
+    "endMs": 7125,
+    "timestampMs": 7094,
+    "confidence": null
+  },
+  {
+    "text": " supported",
+    "startMs": 7138,
+    "endMs": 7612,
+    "timestampMs": 7375,
+    "confidence": null
+  },
+  {
+    "text": " agent,",
+    "startMs": 7625,
+    "endMs": 7975,
+    "timestampMs": 7800,
+    "confidence": null
+  },
+  {
+    "text": " like",
+    "startMs": 8275,
+    "endMs": 8425,
+    "timestampMs": 8350,
+    "confidence": null
+  },
+  {
+    "text": " Codex",
+    "startMs": 8438,
+    "endMs": 9012,
+    "timestampMs": 8725,
+    "confidence": null
+  },
+  {
+    "text": " or",
+    "startMs": 9138,
+    "endMs": 9238,
+    "timestampMs": 9188,
+    "confidence": null
+  },
+  {
+    "text": " Claude",
+    "startMs": 9250,
+    "endMs": 9562,
+    "timestampMs": 9406,
+    "confidence": null
+  },
+  {
+    "text": " Code.",
+    "startMs": 9575,
+    "endMs": 9900,
+    "timestampMs": 9738,
+    "confidence": null
+  },
+  {
+    "text": " Describe",
+    "startMs": 12100,
+    "endMs": 12488,
+    "timestampMs": 12294,
+    "confidence": null
+  },
+  {
+    "text": " the",
+    "startMs": 12500,
+    "endMs": 12575,
+    "timestampMs": 12538,
+    "confidence": null
+  },
+  {
+    "text": " presentation",
+    "startMs": 12588,
+    "endMs": 13250,
+    "timestampMs": 12919,
+    "confidence": null
+  },
+  {
+    "text": " you",
+    "startMs": 13262,
+    "endMs": 13338,
+    "timestampMs": 13300,
+    "confidence": null
+  },
+  {
+    "text": " need.",
+    "startMs": 13350,
+    "endMs": 13650,
+    "timestampMs": 13500,
+    "confidence": null
+  },
+  {
+    "text": " Your",
+    "startMs": 14062,
+    "endMs": 14212,
+    "timestampMs": 14138,
+    "confidence": null
+  },
+  {
+    "text": " agent",
+    "startMs": 14225,
+    "endMs": 14512,
+    "timestampMs": 14369,
+    "confidence": null
+  },
+  {
+    "text": " designs",
+    "startMs": 14525,
+    "endMs": 14962,
+    "timestampMs": 14744,
+    "confidence": null
+  },
+  {
+    "text": " it",
+    "startMs": 14975,
+    "endMs": 15112,
+    "timestampMs": 15044,
+    "confidence": null
+  },
+  {
+    "text": " and",
+    "startMs": 15362,
+    "endMs": 15450,
+    "timestampMs": 15406,
+    "confidence": null
+  },
+  {
+    "text": " builds",
+    "startMs": 15462,
+    "endMs": 15762,
+    "timestampMs": 15612,
+    "confidence": null
+  },
+  {
+    "text": " the",
+    "startMs": 15775,
+    "endMs": 15862,
+    "timestampMs": 15819,
+    "confidence": null
+  },
+  {
+    "text": " deck.",
+    "startMs": 15875,
+    "endMs": 16275,
+    "timestampMs": 16075,
+    "confidence": null
+  },
+  {
+    "text": " Preview",
+    "startMs": 19100,
+    "endMs": 19400,
+    "timestampMs": 19250,
+    "confidence": null
+  },
+  {
+    "text": " the",
+    "startMs": 19412,
+    "endMs": 19500,
+    "timestampMs": 19456,
+    "confidence": null
+  },
+  {
+    "text": " slides",
+    "startMs": 19512,
+    "endMs": 19875,
+    "timestampMs": 19694,
+    "confidence": null
+  },
+  {
+    "text": " together.",
+    "startMs": 19888,
+    "endMs": 20338,
+    "timestampMs": 20112,
+    "confidence": null
+  },
+  {
+    "text": " A",
+    "startMs": 20750,
+    "endMs": 20800,
+    "timestampMs": 20775,
+    "confidence": null
+  },
+  {
+    "text": " consistent",
+    "startMs": 20812,
+    "endMs": 21425,
+    "timestampMs": 21119,
+    "confidence": null
+  },
+  {
+    "text": " look,",
+    "startMs": 21438,
+    "endMs": 21725,
+    "timestampMs": 21581,
+    "confidence": null
+  },
+  {
+    "text": " clear",
+    "startMs": 21975,
+    "endMs": 22275,
+    "timestampMs": 22125,
+    "confidence": null
+  },
+  {
+    "text": " layouts,",
+    "startMs": 22288,
+    "endMs": 22912,
+    "timestampMs": 22600,
+    "confidence": null
+  },
+  {
+    "text": " and",
+    "startMs": 23075,
+    "endMs": 23225,
+    "timestampMs": 23150,
+    "confidence": null
+  },
+  {
+    "text": " substance",
+    "startMs": 23238,
+    "endMs": 23800,
+    "timestampMs": 23519,
+    "confidence": null
+  },
+  {
+    "text": " across",
+    "startMs": 23812,
+    "endMs": 24200,
+    "timestampMs": 24006,
+    "confidence": null
+  },
+  {
+    "text": " the",
+    "startMs": 24212,
+    "endMs": 24300,
+    "timestampMs": 24256,
+    "confidence": null
+  },
+  {
+    "text": " presentation.",
+    "startMs": 24312,
+    "endMs": 25025,
+    "timestampMs": 24669,
+    "confidence": null
+  },
+  {
+    "text": " Want",
+    "startMs": 27100,
+    "endMs": 27200,
+    "timestampMs": 27150,
+    "confidence": null
+  },
+  {
+    "text": " a",
+    "startMs": 27212,
+    "endMs": 27250,
+    "timestampMs": 27231,
+    "confidence": null
+  },
+  {
+    "text": " change?",
+    "startMs": 27262,
+    "endMs": 27738,
+    "timestampMs": 27500,
+    "confidence": null
+  },
+  {
+    "text": " Ask",
+    "startMs": 28150,
+    "endMs": 28325,
+    "timestampMs": 28238,
+    "confidence": null
+  },
+  {
+    "text": " your",
+    "startMs": 28338,
+    "endMs": 28450,
+    "timestampMs": 28394,
+    "confidence": null
+  },
+  {
+    "text": " agent.",
+    "startMs": 28462,
+    "endMs": 28800,
+    "timestampMs": 28631,
+    "confidence": null
+  },
+  {
+    "text": " Here,",
+    "startMs": 29250,
+    "endMs": 29488,
+    "timestampMs": 29369,
+    "confidence": null
+  },
+  {
+    "text": " a",
+    "startMs": 29875,
+    "endMs": 29900,
+    "timestampMs": 29888,
+    "confidence": null
+  },
+  {
+    "text": " new",
+    "startMs": 29912,
+    "endMs": 30150,
+    "timestampMs": 30031,
+    "confidence": null
+  },
+  {
+    "text": " headline",
+    "startMs": 30162,
+    "endMs": 30638,
+    "timestampMs": 30400,
+    "confidence": null
+  },
+  {
+    "text": " keeps",
+    "startMs": 30650,
+    "endMs": 30938,
+    "timestampMs": 30794,
+    "confidence": null
+  },
+  {
+    "text": " the",
+    "startMs": 30950,
+    "endMs": 31038,
+    "timestampMs": 30994,
+    "confidence": null
+  },
+  {
+    "text": " same",
+    "startMs": 31050,
+    "endMs": 31300,
+    "timestampMs": 31175,
+    "confidence": null
+  },
+  {
+    "text": " design.",
+    "startMs": 31312,
+    "endMs": 31738,
+    "timestampMs": 31525,
+    "confidence": null
+  },
+  {
+    "text": " Different",
+    "startMs": 34100,
+    "endMs": 34325,
+    "timestampMs": 34212,
+    "confidence": null
+  },
+  {
+    "text": " topics.",
+    "startMs": 34338,
+    "endMs": 34900,
+    "timestampMs": 34619,
+    "confidence": null
+  },
+  {
+    "text": " Different",
+    "startMs": 35312,
+    "endMs": 35550,
+    "timestampMs": 35431,
+    "confidence": null
+  },
+  {
+    "text": " looks.",
+    "startMs": 35562,
+    "endMs": 35950,
+    "timestampMs": 35756,
+    "confidence": null
+  },
+  {
+    "text": " Project",
+    "startMs": 36375,
+    "endMs": 36725,
+    "timestampMs": 36550,
+    "confidence": null
+  },
+  {
+    "text": " updates,",
+    "startMs": 36738,
+    "endMs": 37300,
+    "timestampMs": 37019,
+    "confidence": null
+  },
+  {
+    "text": " technical",
+    "startMs": 37512,
+    "endMs": 37975,
+    "timestampMs": 37744,
+    "confidence": null
+  },
+  {
+    "text": " reviews,",
+    "startMs": 37988,
+    "endMs": 38538,
+    "timestampMs": 38262,
+    "confidence": null
+  },
+  {
+    "text": " and",
+    "startMs": 38725,
+    "endMs": 38838,
+    "timestampMs": 38781,
+    "confidence": null
+  },
+  {
+    "text": " data",
+    "startMs": 38850,
+    "endMs": 39100,
+    "timestampMs": 38975,
+    "confidence": null
+  },
+  {
+    "text": " stories.",
+    "startMs": 39112,
+    "endMs": 39662,
+    "timestampMs": 39388,
+    "confidence": null
+  },
+  {
+    "text": " Export",
+    "startMs": 41100,
+    "endMs": 41562,
+    "timestampMs": 41331,
+    "confidence": null
+  },
+  {
+    "text": " an",
+    "startMs": 41662,
+    "endMs": 41788,
+    "timestampMs": 41725,
+    "confidence": null
+  },
+  {
+    "text": " editable",
+    "startMs": 41925,
+    "endMs": 42325,
+    "timestampMs": 42125,
+    "confidence": null
+  },
+  {
+    "text": " PowerPoint,",
+    "startMs": 42338,
+    "endMs": 43050,
+    "timestampMs": 42694,
+    "confidence": null
+  },
+  {
+    "text": " ready",
+    "startMs": 43362,
+    "endMs": 43600,
+    "timestampMs": 43481,
+    "confidence": null
+  },
+  {
+    "text": " for",
+    "startMs": 43612,
+    "endMs": 43738,
+    "timestampMs": 43675,
+    "confidence": null
+  },
+  {
+    "text": " your",
+    "startMs": 43750,
+    "endMs": 43862,
+    "timestampMs": 43806,
+    "confidence": null
+  },
+  {
+    "text": " next",
+    "startMs": 43875,
+    "endMs": 44150,
+    "timestampMs": 44012,
+    "confidence": null
+  },
+  {
+    "text": " presentation.",
+    "startMs": 44162,
+    "endMs": 44862,
+    "timestampMs": 44512,
+    "confidence": null
+  },
+  {
+    "text": " Explore",
+    "startMs": 46100,
+    "endMs": 46550,
+    "timestampMs": 46325,
+    "confidence": null
+  },
+  {
+    "text": " examples",
+    "startMs": 46562,
+    "endMs": 47262,
+    "timestampMs": 46912,
+    "confidence": null
+  },
+  {
+    "text": " and",
+    "startMs": 47388,
+    "endMs": 47562,
+    "timestampMs": 47475,
+    "confidence": null
+  },
+  {
+    "text": " installation",
+    "startMs": 47575,
+    "endMs": 48212,
+    "timestampMs": 47894,
+    "confidence": null
+  },
+  {
+    "text": " instructions",
+    "startMs": 48225,
+    "endMs": 48900,
+    "timestampMs": 48562,
+    "confidence": null
+  },
+  {
+    "text": " at",
+    "startMs": 48975,
+    "endMs": 49112,
+    "timestampMs": 49044,
+    "confidence": null
+  },
+  {
+    "text": " slide-agent",
+    "startMs": 49125,
+    "endMs": 49888,
+    "timestampMs": 49506,
+    "confidence": null
+  },
+  {
+    "text": " dot",
+    "startMs": 50012,
+    "endMs": 50212,
+    "timestampMs": 50112,
+    "confidence": null
+  },
+  {
+    "text": " ghassen",
+    "startMs": 50225,
+    "endMs": 50575,
+    "timestampMs": 50400,
+    "confidence": null
+  },
+  {
+    "text": " dot",
+    "startMs": 50588,
+    "endMs": 50762,
+    "timestampMs": 50675,
+    "confidence": null
+  },
+  {
+    "text": " io.",
+    "startMs": 50775,
+    "endMs": 51150,
+    "timestampMs": 50962,
+    "confidence": null
+  }
+]

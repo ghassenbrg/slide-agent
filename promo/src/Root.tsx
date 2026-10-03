@@ -3,6 +3,16 @@ import {Composition, Folder, Still} from 'remotion';
 import {DeckCheck} from './launch/DeckCheck';
 import {Launch} from './launch/Launch';
 import {Announce} from './announce/Announce';
+import {Announcement} from './announcement3/Announcement';
+import {AnnouncementV5} from './announcement5/Announcement';
+import {Reveal as A3Reveal} from './announcement3/scenes/Reveal';
+import {Brief as A3Brief} from './announcement3/scenes/Brief';
+import {Direction as A3Direction} from './announcement3/scenes/Direction';
+import {Architecture as A3Architecture} from './announcement3/scenes/Architecture';
+import {Native as A3Native} from './announcement3/scenes/Native';
+import {Range as A3Range} from './announcement3/scenes/Range';
+import {Start as A3Start} from './announcement3/scenes/Start';
+import {Close as A3Close} from './announcement3/scenes/Close';
 import {LinkedIn} from './linkedin/LinkedIn';
 import {ShowcaseCheck} from './showcase-deck/ShowcaseCheck';
 import {Blank} from './launch/scenes/Blank';
@@ -20,6 +30,18 @@ import {Showcase} from './scenes/Showcase';
 export const RemotionRoot: React.FC = () => {
 	return (
 		<>
+			<Composition id="AnnouncementV5" component={AnnouncementV5} durationInFrames={1350} fps={30} width={1080} height={1350} defaultProps={{bgm:true}} />
+			<Composition id="AnnouncementV3" component={Announcement} durationInFrames={1800} fps={30} width={1080} height={1350} />
+			<Folder name="Announcement-V3-Scenes">
+				<Composition id="A3-Reveal" component={A3Reveal} durationInFrames={132} fps={30} width={1080} height={1350} />
+				<Composition id="A3-Brief" component={A3Brief} durationInFrames={192} fps={30} width={1080} height={1350} />
+				<Composition id="A3-Direction" component={A3Direction} durationInFrames={162} fps={30} width={1080} height={1350} />
+				<Composition id="A3-Architecture" component={A3Architecture} durationInFrames={312} fps={30} width={1080} height={1350} />
+				<Composition id="A3-Native" component={A3Native} durationInFrames={192} fps={30} width={1080} height={1350} />
+				<Composition id="A3-Range" component={A3Range} durationInFrames={372} fps={30} width={1080} height={1350} />
+				<Composition id="A3-Start" component={A3Start} durationInFrames={312} fps={30} width={1080} height={1350} />
+				<Composition id="A3-Close" component={A3Close} durationInFrames={210} fps={30} width={1080} height={1350} />
+			</Folder>
 			<Composition id="Promo" component={Promo} durationInFrames={1800} fps={30} width={1080} height={1920} />
 			<Composition id="Announce" component={Announce} durationInFrames={1800} fps={30} width={1080} height={1350} />
 			<Composition id="LinkedIn" component={LinkedIn} durationInFrames={1500} fps={30} width={1080} height={1350} />

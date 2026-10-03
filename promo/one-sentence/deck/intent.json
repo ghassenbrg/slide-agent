@@ -1,0 +1,3251 @@
+{
+ "schema": "slide-agent.intent/1",
+ "brief": {
+  "title": "Fern — Launch plan",
+  "audience": "Company leadership approving an app launch",
+  "goal": "Approve the March 18 launch date and the $420K budget.",
+  "format": "16:9"
+ },
+ "direction": {
+  "concept": "Calm, confident launch plan for a personal-finance app: warm paper, deep forest green and one lime signal colour; Helvetica Neue with heavy, tight headlines; each slide makes one claim and shows the evidence for it.",
+  "fit": "ask"
+ },
+ "design": {
+  "language": {
+   "color": {
+    "palette": {
+     "paper": "#F6F4EE",
+     "white": "#FFFFFF",
+     "ink": "#10261D",
+     "moss": "#5B6A62",
+     "forest": "#1E6B4A",
+     "forestDeep": "#123526",
+     "forestCard": "#1B4734",
+     "forestLine": "#2E5E48",
+     "leaf": "#5FAE7E",
+     "leafDeep": "#2F7A51",
+     "teal": "#1F7273",
+     "lime": "#C9F26B",
+     "mint": "#E2F1E7",
+     "mintText": "#CFE5D8",
+     "sand": "#CFC7B4",
+     "track": "#E7E3D8",
+     "laneBg": "#EFECE3",
+     "planned": "#B9B3A4",
+     "coral": "#BC3C25",
+     "coralSoft": "#FBE4DD",
+     "amberText": "#8A5A00",
+     "amberSoft": "#FAEFD2"
+    },
+    "roles": {
+     "background": "paper",
+     "surface": "white",
+     "text": "ink",
+     "muted": "moss",
+     "accent": "forest",
+     "rule": "track"
+    },
+    "data": [
+     "leaf",
+     "forest"
+    ]
+   },
+   "type": {
+    "display": {
+     "family": "Helvetica Neue",
+     "weight": 700,
+     "tracking": -0.02
+    },
+    "body": {
+     "family": "Helvetica Neue",
+     "weight": 400
+    },
+    "mono": {
+     "family": "Menlo"
+    },
+    "scale": {
+     "base": 16,
+     "ratio": 1.25
+    }
+   },
+   "space": {
+    "unit": 8,
+    "margin": 36,
+    "gutter": 16
+   },
+   "grid": {
+    "columns": 12,
+    "rows": 6
+   },
+   "shape": {
+    "radius": 12,
+    "stroke": 0
+   },
+   "texture": [],
+   "charts": {
+    "axis": "none",
+    "gridlines": "none",
+    "labels": "end",
+    "highlight": "forest",
+    "legend": "none"
+   },
+   "chrome": {
+    "slideNumber": false
+   }
+  }
+ },
+ "data": {
+  "budget": {
+   "categories": [
+    "Paid social",
+    "Creators",
+    "PR & events",
+    "App store ads",
+    "Contingency"
+   ],
+   "series": [
+    {
+     "name": "Budget ($K)",
+     "values": [
+      160,
+      95,
+      70,
+      55,
+      40
+     ]
+    }
+   ],
+   "unit": "K"
+  }
+ },
+ "slides": [
+  {
+   "id": "dashboard",
+   "message": "Fern launches March 18 with a $420K budget and three owned risks",
+   "background": "paper",
+   "notes": "Fictional demonstration content.",
+   "compose": {
+    "free": {
+     "items": [
+      {
+       "icon": "leaf",
+       "tone": "forest",
+       "size": 19,
+       "width": 19,
+       "height": 19,
+       "box": [
+        0.0,
+        -0.0277,
+        0.253,
+        0.24
+       ]
+      },
+      {
+       "text": "FERN",
+       "role": "label",
+       "size": 12.5,
+       "tone": "ink",
+       "box": [
+        0.3308,
+        -0.0462,
+        1.946,
+        0.2769
+       ],
+       "weight": "bold",
+       "tracking": 0.28,
+       "valign": "middle"
+      },
+      {
+       "text": "LAUNCH PLAN   ·   Q1 2027   ·   LEADERSHIP REVIEW",
+       "role": "label",
+       "size": 10.5,
+       "tone": "moss",
+       "box": [
+        5.546,
+        -0.0462,
+        6.4508,
+        0.2769
+       ],
+       "weight": "bold",
+       "align": "right",
+       "tracking": 0.1,
+       "valign": "middle"
+      },
+      {
+       "text": "Fern launches March 18.",
+       "role": "title",
+       "size": 42,
+       "tone": "ink",
+       "box": [
+        0.0,
+        0.3692,
+        9.7298,
+        0.7385
+       ],
+       "weight": "bold"
+      },
+      {
+       "text": "Twelve weeks from private beta to public launch, with a $420K budget and three named risks.",
+       "role": "small",
+       "size": 15.5,
+       "tone": "moss",
+       "box": [
+        0.0,
+        1.1262,
+        10.7027,
+        0.3323
+       ]
+      },
+      {
+       "surface": {
+        "fill": "forestDeep",
+        "radius": 12,
+        "shadow": "soft"
+       },
+       "free": {
+        "items": [
+         {
+          "text": "30-DAY TARGET",
+          "role": "label",
+          "size": 10.5,
+          "tone": "lime",
+          "box": [
+           1.2,
+           0.7212,
+           10.0,
+           0.7212
+          ],
+          "weight": "bold",
+          "tracking": 0.1
+         },
+         {
+          "text": "50K",
+          "role": "display",
+          "size": 56,
+          "tone": "white",
+          "box": [
+           1.2,
+           1.5865,
+           10.4,
+           2.4519
+          ],
+          "weight": "bold"
+         },
+         {
+          "text": "installs after launch",
+          "role": "small",
+          "size": 13.5,
+          "tone": "mintText",
+          "box": [
+           1.2,
+           3.9808,
+           10.0,
+           0.8654
+          ]
+         },
+         {
+          "shape": "rect",
+          "decorative": true,
+          "fill": "forestLine",
+          "box": [
+           1.2,
+           4.9615,
+           9.6,
+           0.0288
+          ]
+         },
+         {
+          "text": "4.5 rating  ·  25% week-4 active",
+          "role": "caption",
+          "size": 10.5,
+          "tone": "lime",
+          "box": [
+           1.2,
+           5.1346,
+           10.4,
+           0.6923
+          ],
+          "weight": "bold"
+         }
+        ]
+       },
+       "box": [
+        0.0,
+        1.6615,
+        2.9189,
+        1.92
+       ]
+      },
+      {
+       "surface": {
+        "fill": "white",
+        "radius": 12,
+        "shadow": "soft"
+       },
+       "free": {
+        "items": [
+         {
+          "text": "Timeline",
+          "role": "h3",
+          "size": 15.5,
+          "tone": "ink",
+          "box": [
+           0.3942,
+           0.5769,
+           3.9417,
+           0.9231
+          ],
+          "weight": "bold"
+         },
+         {
+          "text": "12 weeks  ·  Jan 4 – Mar 26",
+          "role": "caption",
+          "size": 11,
+          "tone": "moss",
+          "box": [
+           6.9638,
+           0.6346,
+           4.6381,
+           0.8077
+          ],
+          "align": "right"
+         },
+         {
+          "shape": "roundRect",
+          "decorative": true,
+          "fill": "track",
+          "box": [
+           0.9854,
+           3.2308,
+           10.1829,
+           0.1442
+          ],
+          "radius": 2
+         },
+         {
+          "shape": "roundRect",
+          "decorative": true,
+          "fill": "forest",
+          "box": [
+           0.9854,
+           3.2308,
+           3.8761,
+           0.1442
+          ],
+          "radius": 2
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "white",
+          "box": [
+           0.8409,
+           2.9856,
+           0.2891,
+           0.6346
+          ]
+         },
+         {
+          "icon": "circle-check",
+          "tone": "forest",
+          "size": 16,
+          "width": 16,
+          "height": 16,
+          "box": [
+           0.8409,
+           2.9856,
+           0.2891,
+           0.6346
+          ]
+         },
+         {
+          "text": "Jan 12",
+          "role": "caption",
+          "size": 11,
+          "tone": "moss",
+          "box": [
+           -0.0657,
+           2.0192,
+           2.1023,
+           0.6923
+          ],
+          "align": "center"
+         },
+         {
+          "text": "Private beta",
+          "role": "small",
+          "size": 13,
+          "tone": "ink",
+          "box": [
+           -0.2234,
+           4.0385,
+           2.4176,
+           0.8077
+          ],
+          "weight": "bold",
+          "align": "center"
+         },
+         {
+          "text": "Done",
+          "role": "caption",
+          "size": 10.5,
+          "tone": "forest",
+          "box": [
+           -0.0657,
+           4.8462,
+           2.1023,
+           0.6923
+          ],
+          "align": "center"
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "white",
+          "box": [
+           3.3866,
+           2.9856,
+           0.2891,
+           0.6346
+          ],
+          "stroke": "forest",
+          "strokeWidth": 2.5
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "forest",
+          "box": [
+           3.4655,
+           3.1587,
+           0.1314,
+           0.2885
+          ]
+         },
+         {
+          "text": "Feb 2",
+          "role": "caption",
+          "size": 11,
+          "tone": "moss",
+          "box": [
+           2.48,
+           2.0192,
+           2.1023,
+           0.6923
+          ],
+          "align": "center"
+         },
+         {
+          "text": "Store submission",
+          "role": "small",
+          "size": 13,
+          "tone": "ink",
+          "box": [
+           2.3223,
+           4.0385,
+           2.4176,
+           0.8077
+          ],
+          "weight": "bold",
+          "align": "center"
+         },
+         {
+          "text": "Next",
+          "role": "caption",
+          "size": 10.5,
+          "tone": "forest",
+          "box": [
+           2.48,
+           4.8462,
+           2.1023,
+           0.6923
+          ],
+          "align": "center"
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "white",
+          "box": [
+           5.9323,
+           2.9856,
+           0.2891,
+           0.6346
+          ],
+          "stroke": "planned",
+          "strokeWidth": 2
+         },
+         {
+          "text": "Feb 23",
+          "role": "caption",
+          "size": 11,
+          "tone": "moss",
+          "box": [
+           5.0257,
+           2.0192,
+           2.1023,
+           0.6923
+          ],
+          "align": "center"
+         },
+         {
+          "text": "Press preview",
+          "role": "small",
+          "size": 13,
+          "tone": "ink",
+          "box": [
+           4.8681,
+           4.0385,
+           2.4176,
+           0.8077
+          ],
+          "weight": "bold",
+          "align": "center"
+         },
+         {
+          "text": "Planned",
+          "role": "caption",
+          "size": 10.5,
+          "tone": "moss",
+          "box": [
+           5.0257,
+           4.8462,
+           2.1023,
+           0.6923
+          ],
+          "align": "center"
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "lime",
+          "box": [
+           8.4255,
+           2.8702,
+           0.3942,
+           0.8654
+          ],
+          "stroke": "forestDeep",
+          "strokeWidth": 2.5
+         },
+         {
+          "text": "Mar 18",
+          "role": "caption",
+          "size": 11,
+          "tone": "forest",
+          "box": [
+           7.5714,
+           2.0192,
+           2.1023,
+           0.6923
+          ],
+          "weight": "bold",
+          "align": "center"
+         },
+         {
+          "text": "Launch",
+          "role": "small",
+          "size": 14,
+          "tone": "forestDeep",
+          "box": [
+           7.4138,
+           4.0385,
+           2.4176,
+           0.8077
+          ],
+          "weight": "bold",
+          "align": "center"
+         },
+         {
+          "text": "Launch day",
+          "role": "caption",
+          "size": 10.5,
+          "tone": "forest",
+          "box": [
+           7.5714,
+           4.8462,
+           2.1023,
+           0.6923
+          ],
+          "weight": "bold",
+          "align": "center"
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "white",
+          "box": [
+           11.0238,
+           2.9856,
+           0.2891,
+           0.6346
+          ],
+          "stroke": "planned",
+          "strokeWidth": 2
+         },
+         {
+          "text": "Apr 15",
+          "role": "caption",
+          "size": 11,
+          "tone": "moss",
+          "box": [
+           10.1172,
+           2.0192,
+           2.1023,
+           0.6923
+          ],
+          "align": "center"
+         },
+         {
+          "text": "30-day review",
+          "role": "small",
+          "size": 13,
+          "tone": "ink",
+          "box": [
+           9.9595,
+           4.0385,
+           2.4176,
+           0.8077
+          ],
+          "weight": "bold",
+          "align": "center"
+         },
+         {
+          "text": "Planned",
+          "role": "caption",
+          "size": 10.5,
+          "tone": "moss",
+          "box": [
+           10.1172,
+           4.8462,
+           2.1023,
+           0.6923
+          ],
+          "align": "center"
+         }
+        ]
+       },
+       "box": [
+        3.1135,
+        1.6615,
+        8.8862,
+        1.92
+       ]
+      },
+      {
+       "surface": {
+        "fill": "white",
+        "radius": 12,
+        "shadow": "soft"
+       },
+       "free": {
+        "items": [
+         {
+          "text": "Budget",
+          "role": "h3",
+          "size": 15.5,
+          "tone": "ink",
+          "box": [
+           0.6,
+           0.5347,
+           4.0,
+           0.9505
+          ],
+          "weight": "bold"
+         },
+         {
+          "text": "$420K total",
+          "role": "h3",
+          "size": 15.5,
+          "tone": "forest",
+          "box": [
+           7.4,
+           0.5347,
+           4.0,
+           0.9505
+          ],
+          "weight": "bold",
+          "align": "right"
+         },
+         {
+          "text": "Paid social",
+          "role": "caption",
+          "size": 11,
+          "tone": "ink",
+          "box": [
+           0.6,
+           1.8416,
+           3.1,
+           0.7129
+          ],
+          "valign": "middle"
+         },
+         {
+          "shape": "roundRect",
+          "decorative": true,
+          "fill": "track",
+          "box": [
+           3.8,
+           2.0198,
+           6.1,
+           0.3564
+          ],
+          "radius": 3
+         },
+         {
+          "shape": "roundRect",
+          "decorative": true,
+          "fill": "forest",
+          "box": [
+           3.8,
+           2.0198,
+           6.1,
+           0.3564
+          ],
+          "radius": 3
+         },
+         {
+          "text": "$160K",
+          "role": "caption",
+          "size": 11,
+          "tone": "ink",
+          "box": [
+           10.0,
+           1.8416,
+           1.4,
+           0.7129
+          ],
+          "weight": "bold",
+          "align": "right",
+          "valign": "middle"
+         },
+         {
+          "text": "Creators",
+          "role": "caption",
+          "size": 11,
+          "tone": "ink",
+          "box": [
+           0.6,
+           2.6436,
+           3.1,
+           0.7129
+          ],
+          "valign": "middle"
+         },
+         {
+          "shape": "roundRect",
+          "decorative": true,
+          "fill": "track",
+          "box": [
+           3.8,
+           2.8218,
+           6.1,
+           0.3564
+          ],
+          "radius": 3
+         },
+         {
+          "shape": "roundRect",
+          "decorative": true,
+          "fill": "forest",
+          "box": [
+           3.8,
+           2.8218,
+           3.6219,
+           0.3564
+          ],
+          "radius": 3
+         },
+         {
+          "text": "$95K",
+          "role": "caption",
+          "size": 11,
+          "tone": "ink",
+          "box": [
+           10.0,
+           2.6436,
+           1.4,
+           0.7129
+          ],
+          "weight": "bold",
+          "align": "right",
+          "valign": "middle"
+         },
+         {
+          "text": "PR & events",
+          "role": "caption",
+          "size": 11,
+          "tone": "ink",
+          "box": [
+           0.6,
+           3.4455,
+           3.1,
+           0.7129
+          ],
+          "valign": "middle"
+         },
+         {
+          "shape": "roundRect",
+          "decorative": true,
+          "fill": "track",
+          "box": [
+           3.8,
+           3.6238,
+           6.1,
+           0.3564
+          ],
+          "radius": 3
+         },
+         {
+          "shape": "roundRect",
+          "decorative": true,
+          "fill": "leaf",
+          "box": [
+           3.8,
+           3.6238,
+           2.6688,
+           0.3564
+          ],
+          "radius": 3
+         },
+         {
+          "text": "$70K",
+          "role": "caption",
+          "size": 11,
+          "tone": "ink",
+          "box": [
+           10.0,
+           3.4455,
+           1.4,
+           0.7129
+          ],
+          "weight": "bold",
+          "align": "right",
+          "valign": "middle"
+         },
+         {
+          "text": "App store ads",
+          "role": "caption",
+          "size": 11,
+          "tone": "ink",
+          "box": [
+           0.6,
+           4.2475,
+           3.1,
+           0.7129
+          ],
+          "valign": "middle"
+         },
+         {
+          "shape": "roundRect",
+          "decorative": true,
+          "fill": "track",
+          "box": [
+           3.8,
+           4.4257,
+           6.1,
+           0.3564
+          ],
+          "radius": 3
+         },
+         {
+          "shape": "roundRect",
+          "decorative": true,
+          "fill": "leaf",
+          "box": [
+           3.8,
+           4.4257,
+           2.0969,
+           0.3564
+          ],
+          "radius": 3
+         },
+         {
+          "text": "$55K",
+          "role": "caption",
+          "size": 11,
+          "tone": "ink",
+          "box": [
+           10.0,
+           4.2475,
+           1.4,
+           0.7129
+          ],
+          "weight": "bold",
+          "align": "right",
+          "valign": "middle"
+         },
+         {
+          "text": "Contingency",
+          "role": "caption",
+          "size": 11,
+          "tone": "ink",
+          "box": [
+           0.6,
+           5.0495,
+           3.1,
+           0.7129
+          ],
+          "valign": "middle"
+         },
+         {
+          "shape": "roundRect",
+          "decorative": true,
+          "fill": "track",
+          "box": [
+           3.8,
+           5.2277,
+           6.1,
+           0.3564
+          ],
+          "radius": 3
+         },
+         {
+          "shape": "roundRect",
+          "decorative": true,
+          "fill": "sand",
+          "box": [
+           3.8,
+           5.2277,
+           1.525,
+           0.3564
+          ],
+          "radius": 3
+         },
+         {
+          "text": "$40K",
+          "role": "caption",
+          "size": 11,
+          "tone": "ink",
+          "box": [
+           10.0,
+           5.0495,
+           1.4,
+           0.7129
+          ],
+          "weight": "bold",
+          "align": "right",
+          "valign": "middle"
+         }
+        ]
+       },
+       "box": [
+        0.0,
+        3.7385,
+        5.8379,
+        1.8646
+       ]
+      },
+      {
+       "surface": {
+        "fill": "white",
+        "radius": 12,
+        "shadow": "soft"
+       },
+       "free": {
+        "items": [
+         {
+          "text": "Risks",
+          "role": "h3",
+          "size": 15.5,
+          "tone": "ink",
+          "box": [
+           0.587,
+           0.5347,
+           3.9133,
+           0.9505
+          ],
+          "weight": "bold"
+         },
+         {
+          "text": "3 open  ·  each has an owner",
+          "role": "caption",
+          "size": 11,
+          "tone": "moss",
+          "box": [
+           5.6742,
+           0.5941,
+           5.7329,
+           0.8317
+          ],
+          "align": "right"
+         },
+         {
+          "surface": {
+           "fill": "coralSoft",
+           "radius": 100
+          },
+          "row": {
+           "items": [
+            {
+             "text": "High",
+             "role": "caption",
+             "size": 10,
+             "weight": "bold",
+             "tone": "coral",
+             "align": "center"
+            }
+           ],
+           "justify": "center",
+           "align": "center"
+          },
+          "box": [
+           0.587,
+           1.9604,
+           1.5262,
+           0.7426
+          ]
+         },
+         {
+          "text": "App Store review slips past March 1",
+          "role": "small",
+          "size": 12.5,
+          "tone": "ink",
+          "box": [
+           2.3871,
+           1.8713,
+           6.6525,
+           0.8911
+          ],
+          "weight": "bold",
+          "valign": "middle"
+         },
+         {
+          "text": "Dana · Product",
+          "role": "caption",
+          "size": 10.5,
+          "tone": "moss",
+          "box": [
+           8.8048,
+           1.8713,
+           2.6023,
+           0.8911
+          ],
+          "align": "right",
+          "valign": "middle"
+         },
+         {
+          "shape": "rect",
+          "decorative": true,
+          "fill": "track",
+          "box": [
+           0.587,
+           3.0149,
+           10.8202,
+           0.0297
+          ]
+         },
+         {
+          "surface": {
+           "fill": "amberSoft",
+           "radius": 100
+          },
+          "row": {
+           "items": [
+            {
+             "text": "Medium",
+             "role": "caption",
+             "size": 10,
+             "weight": "bold",
+             "tone": "amberText",
+             "align": "center"
+            }
+           ],
+           "justify": "center",
+           "align": "center"
+          },
+          "box": [
+           0.587,
+           3.2673,
+           1.5262,
+           0.7426
+          ]
+         },
+         {
+          "text": "Bank-connection limits at peak sign-up",
+          "role": "small",
+          "size": 12.5,
+          "tone": "ink",
+          "box": [
+           2.3871,
+           3.1782,
+           6.6525,
+           0.8911
+          ],
+          "weight": "bold",
+          "valign": "middle"
+         },
+         {
+          "text": "Omar · Eng",
+          "role": "caption",
+          "size": 10.5,
+          "tone": "moss",
+          "box": [
+           8.8048,
+           3.1782,
+           2.6023,
+           0.8911
+          ],
+          "align": "right",
+          "valign": "middle"
+         },
+         {
+          "shape": "rect",
+          "decorative": true,
+          "fill": "track",
+          "box": [
+           0.587,
+           4.3218,
+           10.8202,
+           0.0297
+          ]
+         },
+         {
+          "surface": {
+           "fill": "amberSoft",
+           "radius": 100
+          },
+          "row": {
+           "items": [
+            {
+             "text": "Medium",
+             "role": "caption",
+             "size": 10,
+             "weight": "bold",
+             "tone": "amberText",
+             "align": "center"
+            }
+           ],
+           "justify": "center",
+           "align": "center"
+          },
+          "box": [
+           0.587,
+           4.5743,
+           1.5262,
+           0.7426
+          ]
+         },
+         {
+          "text": "Support volume in launch week",
+          "role": "small",
+          "size": 12.5,
+          "tone": "ink",
+          "box": [
+           2.3871,
+           4.4851,
+           6.6525,
+           0.8911
+          ],
+          "weight": "bold",
+          "valign": "middle"
+         },
+         {
+          "text": "Lena · Support",
+          "role": "caption",
+          "size": 10.5,
+          "tone": "moss",
+          "box": [
+           8.8048,
+           4.4851,
+           2.6023,
+           0.8911
+          ],
+          "align": "right",
+          "valign": "middle"
+         }
+        ]
+       },
+       "box": [
+        6.0324,
+        3.7385,
+        5.9673,
+        1.8646
+       ]
+      },
+      {
+       "text": "Fern — Launch plan  ·  Illustrative demo",
+       "role": "caption",
+       "size": 10,
+       "tone": "moss",
+       "box": [
+        0.0,
+        5.8154,
+        7.7838,
+        0.2031
+       ]
+      },
+      {
+       "text": "01 / 05",
+       "role": "caption",
+       "size": 10,
+       "tone": "moss",
+       "box": [
+        10.5373,
+        5.8154,
+        1.4595,
+        0.2031
+       ],
+       "align": "right"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "timeline",
+   "message": "Twelve weeks, three teams, one launch date",
+   "background": "paper",
+   "compose": {
+    "free": {
+     "items": [
+      {
+       "icon": "leaf",
+       "tone": "forest",
+       "size": 16,
+       "width": 16,
+       "height": 16,
+       "box": [
+        0.0,
+        -0.0277,
+        0.2141,
+        0.2031
+       ]
+      },
+      {
+       "text": "LAUNCH PLAN  ·  TIMELINE",
+       "role": "label",
+       "size": 10.5,
+       "tone": "forest",
+       "box": [
+        0.2919,
+        -0.0462,
+        6.8108,
+        0.24
+       ],
+       "weight": "bold",
+       "tracking": 0.1,
+       "valign": "middle"
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "track",
+       "box": [
+        0.0,
+        5.7415,
+        11.9997,
+        0.0111
+       ]
+      },
+      {
+       "text": "Fern — Launch plan  ·  Illustrative demo",
+       "role": "caption",
+       "size": 10,
+       "tone": "moss",
+       "box": [
+        0.0,
+        5.8154,
+        7.7838,
+        0.2031
+       ]
+      },
+      {
+       "text": "02 / 05",
+       "role": "caption",
+       "size": 10,
+       "tone": "moss",
+       "box": [
+        10.5373,
+        5.8154,
+        1.4595,
+        0.2031
+       ],
+       "align": "right"
+      },
+      {
+       "text": "Twelve weeks, three teams, one launch date.",
+       "role": "title",
+       "size": 30,
+       "tone": "ink",
+       "box": [
+        0.0,
+        0.3231,
+        11.9676,
+        0.5723
+       ],
+       "weight": "bold"
+      },
+      {
+       "text": "Store submission on February 2 is the gate: it leaves six weeks of review buffer before March 18.",
+       "role": "small",
+       "size": 15,
+       "tone": "moss",
+       "box": [
+        0.0,
+        0.9231,
+        11.1892,
+        0.3323
+       ]
+      },
+      {
+       "text": "January",
+       "role": "h3",
+       "size": 14,
+       "tone": "ink",
+       "box": [
+        2.053,
+        1.5692,
+        3.2108,
+        0.2769
+       ],
+       "weight": "bold"
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "forest",
+       "box": [
+        1.9946,
+        1.8923,
+        3.2757,
+        0.0323
+       ]
+      },
+      {
+       "text": "February",
+       "role": "h3",
+       "size": 14,
+       "tone": "ink",
+       "box": [
+        5.387,
+        1.5692,
+        3.2108,
+        0.2769
+       ],
+       "weight": "bold"
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "track",
+       "box": [
+        5.3287,
+        1.8923,
+        3.2757,
+        0.0323
+       ]
+      },
+      {
+       "text": "March",
+       "role": "h3",
+       "size": 14,
+       "tone": "ink",
+       "box": [
+        8.7211,
+        1.5692,
+        3.2108,
+        0.2769
+       ],
+       "weight": "bold"
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "track",
+       "box": [
+        8.6627,
+        1.8923,
+        3.2757,
+        0.0323
+       ]
+      },
+      {
+       "text": "W1",
+       "role": "caption",
+       "size": 10,
+       "tone": "moss",
+       "box": [
+        1.9946,
+        1.9662,
+        0.8335,
+        0.2031
+       ],
+       "align": "center"
+      },
+      {
+       "text": "W2",
+       "role": "caption",
+       "size": 10,
+       "tone": "moss",
+       "box": [
+        2.8281,
+        1.9662,
+        0.8335,
+        0.2031
+       ],
+       "align": "center"
+      },
+      {
+       "text": "W3",
+       "role": "caption",
+       "size": 10,
+       "tone": "moss",
+       "box": [
+        3.6616,
+        1.9662,
+        0.8335,
+        0.2031
+       ],
+       "align": "center"
+      },
+      {
+       "text": "W4",
+       "role": "caption",
+       "size": 10,
+       "tone": "moss",
+       "box": [
+        4.4951,
+        1.9662,
+        0.8335,
+        0.2031
+       ],
+       "align": "center"
+      },
+      {
+       "text": "W5",
+       "role": "caption",
+       "size": 10,
+       "tone": "moss",
+       "box": [
+        5.3287,
+        1.9662,
+        0.8335,
+        0.2031
+       ],
+       "align": "center"
+      },
+      {
+       "text": "W6",
+       "role": "caption",
+       "size": 10,
+       "tone": "moss",
+       "box": [
+        6.1622,
+        1.9662,
+        0.8335,
+        0.2031
+       ],
+       "align": "center"
+      },
+      {
+       "text": "W7",
+       "role": "caption",
+       "size": 10,
+       "tone": "moss",
+       "box": [
+        6.9957,
+        1.9662,
+        0.8335,
+        0.2031
+       ],
+       "align": "center"
+      },
+      {
+       "text": "W8",
+       "role": "caption",
+       "size": 10,
+       "tone": "moss",
+       "box": [
+        7.8292,
+        1.9662,
+        0.8335,
+        0.2031
+       ],
+       "align": "center"
+      },
+      {
+       "text": "W9",
+       "role": "caption",
+       "size": 10,
+       "tone": "moss",
+       "box": [
+        8.6627,
+        1.9662,
+        0.8335,
+        0.2031
+       ],
+       "align": "center"
+      },
+      {
+       "text": "W10",
+       "role": "caption",
+       "size": 10,
+       "tone": "moss",
+       "box": [
+        9.4962,
+        1.9662,
+        0.8335,
+        0.2031
+       ],
+       "align": "center"
+      },
+      {
+       "text": "W11",
+       "role": "caption",
+       "size": 10,
+       "tone": "moss",
+       "box": [
+        10.3298,
+        1.9662,
+        0.8335,
+        0.2031
+       ],
+       "align": "center"
+      },
+      {
+       "text": "W12",
+       "role": "caption",
+       "size": 10,
+       "tone": "moss",
+       "box": [
+        11.1633,
+        1.9662,
+        0.8335,
+        0.2031
+       ],
+       "align": "center"
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "planned",
+       "box": [
+        5.4419,
+        2.2338,
+        0.0117,
+        2.2892
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "planned",
+       "box": [
+        7.9424,
+        2.2338,
+        0.0117,
+        2.2892
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "forest",
+       "box": [
+        10.6811,
+        2.2338,
+        0.0117,
+        2.2892
+       ]
+      },
+      {
+       "surface": {
+        "fill": "laneBg",
+        "radius": 8
+       },
+       "free": {
+        "items": [
+         {
+          "text": "Product",
+          "role": "small",
+          "size": 14,
+          "tone": "ink",
+          "box": [
+           0.2141,
+           0.7742,
+           1.6541,
+           4.4516
+          ],
+          "weight": "bold",
+          "valign": "middle"
+         },
+         {
+          "surface": {
+           "fill": "forest",
+           "radius": 100
+          },
+          "row": {
+           "items": [
+            {
+             "text": "Private beta",
+             "role": "caption",
+             "size": 11,
+             "weight": "bold",
+             "tone": "white"
+            }
+           ],
+           "pad": [
+            0,
+            12,
+            0,
+            12
+           ],
+           "align": "center"
+          },
+          "box": [
+           2.8574,
+           1.1613,
+           2.4422,
+           3.6774
+          ]
+         },
+         {
+          "surface": {
+           "fill": "forest",
+           "radius": 100
+          },
+          "row": {
+           "items": [
+            {
+             "text": "Fixes and polish",
+             "role": "caption",
+             "size": 11,
+             "weight": "bold",
+             "tone": "white"
+            }
+           ],
+           "pad": [
+            0,
+            12,
+            0,
+            12
+           ],
+           "align": "center"
+          },
+          "box": [
+           5.358,
+           1.1613,
+           3.2758,
+           3.6774
+          ]
+         },
+         {
+          "surface": {
+           "fill": "forest",
+           "radius": 100
+          },
+          "row": {
+           "items": [
+            {
+             "text": "Release build",
+             "role": "caption",
+             "size": 11,
+             "weight": "bold",
+             "tone": "white"
+            }
+           ],
+           "pad": [
+            0,
+            12,
+            0,
+            12
+           ],
+           "align": "center"
+          },
+          "box": [
+           8.6921,
+           1.1613,
+           1.6087,
+           3.6774
+          ]
+         }
+        ]
+       },
+       "box": [
+        0.0,
+        2.28,
+        11.9997,
+        0.5723
+       ]
+      },
+      {
+       "surface": {
+        "fill": "laneBg",
+        "radius": 8
+       },
+       "free": {
+        "items": [
+         {
+          "text": "Marketing",
+          "role": "small",
+          "size": 14,
+          "tone": "ink",
+          "box": [
+           0.2141,
+           0.7742,
+           1.6541,
+           4.4516
+          ],
+          "weight": "bold",
+          "valign": "middle"
+         },
+         {
+          "surface": {
+           "fill": "leafDeep",
+           "radius": 100
+          },
+          "row": {
+           "items": [
+            {
+             "text": "Waitlist",
+             "role": "caption",
+             "size": 11,
+             "weight": "bold",
+             "tone": "white"
+            }
+           ],
+           "pad": [
+            0,
+            12,
+            0,
+            12
+           ],
+           "align": "center"
+          },
+          "box": [
+           2.0238,
+           1.1613,
+           4.1093,
+           3.6774
+          ]
+         },
+         {
+          "surface": {
+           "fill": "leafDeep",
+           "radius": 100
+          },
+          "row": {
+           "items": [
+            {
+             "text": "Creator content",
+             "role": "caption",
+             "size": 11,
+             "weight": "bold",
+             "tone": "white"
+            }
+           ],
+           "pad": [
+            0,
+            12,
+            0,
+            12
+           ],
+           "align": "center"
+          },
+          "box": [
+           6.1915,
+           1.1613,
+           3.2758,
+           3.6774
+          ]
+         },
+         {
+          "surface": {
+           "fill": "leafDeep",
+           "radius": 100
+          },
+          "row": {
+           "items": [
+            {
+             "text": "Launch campaign",
+             "role": "caption",
+             "size": 11,
+             "weight": "bold",
+             "tone": "white"
+            }
+           ],
+           "pad": [
+            0,
+            12,
+            0,
+            12
+           ],
+           "align": "center"
+          },
+          "box": [
+           9.5257,
+           1.1613,
+           2.4422,
+           3.6774
+          ]
+         }
+        ]
+       },
+       "box": [
+        0.0,
+        2.9446,
+        11.9997,
+        0.5723
+       ]
+      },
+      {
+       "surface": {
+        "fill": "laneBg",
+        "radius": 8
+       },
+       "free": {
+        "items": [
+         {
+          "text": "Support",
+          "role": "small",
+          "size": 14,
+          "tone": "ink",
+          "box": [
+           0.2141,
+           0.7742,
+           1.6541,
+           4.4516
+          ],
+          "weight": "bold",
+          "valign": "middle"
+         },
+         {
+          "surface": {
+           "fill": "teal",
+           "radius": 100
+          },
+          "row": {
+           "items": [
+            {
+             "text": "Help center",
+             "role": "caption",
+             "size": 11,
+             "weight": "bold",
+             "tone": "white"
+            }
+           ],
+           "pad": [
+            0,
+            12,
+            0,
+            12
+           ],
+           "align": "center"
+          },
+          "box": [
+           3.6909,
+           1.1613,
+           3.2758,
+           3.6774
+          ]
+         },
+         {
+          "surface": {
+           "fill": "teal",
+           "radius": 100
+          },
+          "row": {
+           "items": [
+            {
+             "text": "Team training",
+             "role": "caption",
+             "size": 11,
+             "weight": "bold",
+             "tone": "white"
+            }
+           ],
+           "pad": [
+            0,
+            12,
+            0,
+            12
+           ],
+           "align": "center"
+          },
+          "box": [
+           7.0251,
+           1.1613,
+           2.4422,
+           3.6774
+          ]
+         },
+         {
+          "surface": {
+           "fill": "teal",
+           "radius": 100
+          },
+          "row": {
+           "items": [
+            {
+             "text": "Launch-week desk",
+             "role": "caption",
+             "size": 11,
+             "weight": "bold",
+             "tone": "white"
+            }
+           ],
+           "pad": [
+            0,
+            12,
+            0,
+            12
+           ],
+           "align": "center"
+          },
+          "box": [
+           9.5257,
+           1.1613,
+           2.4422,
+           3.6774
+          ]
+         }
+        ]
+       },
+       "box": [
+        0.0,
+        3.6092,
+        11.9997,
+        0.5723
+       ]
+      },
+      {
+       "text": "Milestones",
+       "role": "small",
+       "size": 14,
+       "tone": "ink",
+       "box": [
+        0.2141,
+        4.4585,
+        1.6541,
+        0.3692
+       ],
+       "weight": "bold",
+       "valign": "middle"
+      },
+      {
+       "shape": "diamond",
+       "decorative": true,
+       "fill": "forest",
+       "box": [
+        5.3407,
+        4.5415,
+        0.2141,
+        0.2031
+       ]
+      },
+      {
+       "text": "**Feb 2**  Store submission",
+       "role": "small",
+       "size": 12,
+       "tone": "ink",
+       "box": [
+        5.6131,
+        4.4862,
+        2.1405,
+        0.3138
+       ],
+       "valign": "middle"
+      },
+      {
+       "shape": "diamond",
+       "decorative": true,
+       "fill": "forest",
+       "box": [
+        7.8413,
+        4.5415,
+        0.2141,
+        0.2031
+       ]
+      },
+      {
+       "text": "**Feb 23**  Press preview",
+       "role": "small",
+       "size": 12,
+       "tone": "ink",
+       "box": [
+        8.1137,
+        4.4862,
+        2.1405,
+        0.3138
+       ],
+       "valign": "middle"
+      },
+      {
+       "shape": "diamond",
+       "decorative": true,
+       "fill": "lime",
+       "box": [
+        10.58,
+        4.5415,
+        0.2141,
+        0.2031
+       ],
+       "stroke": "forestDeep",
+       "strokeWidth": 2
+      },
+      {
+       "text": "**Mar 18**  Launch",
+       "role": "small",
+       "size": 12,
+       "tone": "forestDeep",
+       "box": [
+        10.8524,
+        4.4862,
+        1.2162,
+        0.3138
+       ],
+       "valign": "middle"
+      },
+      {
+       "surface": {
+        "fill": "mint",
+        "radius": 10
+       },
+       "free": {
+        "items": [
+         {
+          "text": "Every team finishes its build work by week 10, so launch week is execution only.",
+          "role": "body",
+          "size": 14.5,
+          "tone": "forestDeep",
+          "box": [
+           0.2724,
+           0.5172,
+           11.4814,
+           4.9655
+          ],
+          "weight": "bold",
+          "valign": "middle"
+         }
+        ]
+       },
+       "box": [
+        0.0,
+        5.0031,
+        11.9997,
+        0.5354
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "budget",
+   "message": "Paid social and creators carry 61% of the $420K budget",
+   "background": "paper",
+   "compose": {
+    "free": {
+     "items": [
+      {
+       "icon": "leaf",
+       "tone": "forest",
+       "size": 16,
+       "width": 16,
+       "height": 16,
+       "box": [
+        0.0,
+        -0.0277,
+        0.2141,
+        0.2031
+       ]
+      },
+      {
+       "text": "LAUNCH PLAN  ·  BUDGET",
+       "role": "label",
+       "size": 10.5,
+       "tone": "forest",
+       "box": [
+        0.2919,
+        -0.0462,
+        6.8108,
+        0.24
+       ],
+       "weight": "bold",
+       "tracking": 0.1,
+       "valign": "middle"
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "track",
+       "box": [
+        0.0,
+        5.7415,
+        11.9997,
+        0.0111
+       ]
+      },
+      {
+       "text": "Fern — Launch plan  ·  Illustrative demo",
+       "role": "caption",
+       "size": 10,
+       "tone": "moss",
+       "box": [
+        0.0,
+        5.8154,
+        7.7838,
+        0.2031
+       ]
+      },
+      {
+       "text": "03 / 05",
+       "role": "caption",
+       "size": 10,
+       "tone": "moss",
+       "box": [
+        10.5373,
+        5.8154,
+        1.4595,
+        0.2031
+       ],
+       "align": "right"
+      },
+      {
+       "text": "Paid social and creators carry 61% of the budget.",
+       "role": "title",
+       "size": 30,
+       "tone": "ink",
+       "box": [
+        0.0,
+        0.3231,
+        11.9676,
+        0.5723
+       ],
+       "weight": "bold"
+      },
+      {
+       "text": "$420K across five channels. The $40K contingency is released only with approval in launch week.",
+       "role": "small",
+       "size": 15,
+       "tone": "moss",
+       "box": [
+        0.0,
+        0.9231,
+        11.1892,
+        0.3323
+       ]
+      },
+      {
+       "chart": {
+        "data": "budget",
+        "chart": "bar",
+        "labels": "end",
+        "axis": "none",
+        "highlight": [
+         "Paid social",
+         "Creators"
+        ],
+        "alt": "Launch budget by channel in thousands of dollars: paid social 160, creators 95, PR and events 70, app store ads 55, contingency 40."
+       },
+       "box": [
+        -0.0973,
+        1.5231,
+        7.4919,
+        4.0154
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "track",
+       "box": [
+        7.8325,
+        1.6154,
+        0.0117,
+        3.8769
+       ]
+      },
+      {
+       "text": "$420K",
+       "role": "display",
+       "size": 60,
+       "tone": "forest",
+       "box": [
+        8.2216,
+        1.5692,
+        3.7946,
+        0.8769
+       ],
+       "weight": "bold"
+      },
+      {
+       "text": "Total launch budget",
+       "role": "h3",
+       "size": 16,
+       "tone": "ink",
+       "box": [
+        8.2216,
+        2.4462,
+        3.7946,
+        0.2954
+       ],
+       "weight": "bold"
+      },
+      {
+       "text": "January 4 to April 15",
+       "role": "small",
+       "size": 12.5,
+       "tone": "moss",
+       "box": [
+        8.2216,
+        2.7508,
+        3.7946,
+        0.2585
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "track",
+       "box": [
+        8.2216,
+        3.2123,
+        3.7751,
+        0.0111
+       ]
+      },
+      {
+       "text": "61%",
+       "role": "display",
+       "size": 36,
+       "tone": "leafDeep",
+       "box": [
+        8.2216,
+        3.3415,
+        1.6541,
+        0.6092
+       ],
+       "weight": "bold"
+      },
+      {
+       "text": "Paid social and creators",
+       "role": "small",
+       "size": 13,
+       "tone": "ink",
+       "box": [
+        9.7784,
+        3.4154,
+        2.2378,
+        0.24
+       ],
+       "weight": "bold"
+      },
+      {
+       "text": "$255K of $420K",
+       "role": "small",
+       "size": 12,
+       "tone": "moss",
+       "box": [
+        9.7784,
+        3.6646,
+        2.2378,
+        0.24
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "track",
+       "box": [
+        8.2216,
+        4.1538,
+        3.7751,
+        0.0111
+       ]
+      },
+      {
+       "text": "$40K",
+       "role": "display",
+       "size": 36,
+       "tone": "ink",
+       "box": [
+        8.2216,
+        4.2831,
+        1.6541,
+        0.6092
+       ],
+       "weight": "bold"
+      },
+      {
+       "text": "Contingency",
+       "role": "small",
+       "size": 13,
+       "tone": "ink",
+       "box": [
+        9.7784,
+        4.3569,
+        2.2378,
+        0.24
+       ],
+       "weight": "bold"
+      },
+      {
+       "text": "Held until launch week",
+       "role": "small",
+       "size": 12,
+       "tone": "moss",
+       "box": [
+        9.7784,
+        4.6062,
+        2.2378,
+        0.24
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "risks",
+   "message": "Three risks, each with an owner and a trigger",
+   "background": "paper",
+   "compose": {
+    "free": {
+     "items": [
+      {
+       "icon": "leaf",
+       "tone": "forest",
+       "size": 16,
+       "width": 16,
+       "height": 16,
+       "box": [
+        0.0,
+        -0.0277,
+        0.2141,
+        0.2031
+       ]
+      },
+      {
+       "text": "LAUNCH PLAN  ·  RISKS",
+       "role": "label",
+       "size": 10.5,
+       "tone": "forest",
+       "box": [
+        0.2919,
+        -0.0462,
+        6.8108,
+        0.24
+       ],
+       "weight": "bold",
+       "tracking": 0.1,
+       "valign": "middle"
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "track",
+       "box": [
+        0.0,
+        5.7415,
+        11.9997,
+        0.0111
+       ]
+      },
+      {
+       "text": "Fern — Launch plan  ·  Illustrative demo",
+       "role": "caption",
+       "size": 10,
+       "tone": "moss",
+       "box": [
+        0.0,
+        5.8154,
+        7.7838,
+        0.2031
+       ]
+      },
+      {
+       "text": "04 / 05",
+       "role": "caption",
+       "size": 10,
+       "tone": "moss",
+       "box": [
+        10.5373,
+        5.8154,
+        1.4595,
+        0.2031
+       ],
+       "align": "right"
+      },
+      {
+       "text": "Three risks. Each one has an owner and a trigger.",
+       "role": "title",
+       "size": 30,
+       "tone": "ink",
+       "box": [
+        0.0,
+        0.3231,
+        11.9676,
+        0.5723
+       ],
+       "weight": "bold"
+      },
+      {
+       "text": "Reviewed every Monday. A tripped trigger goes to the launch lead within 24 hours.",
+       "role": "small",
+       "size": 15,
+       "tone": "moss",
+       "box": [
+        0.0,
+        0.9231,
+        11.1892,
+        0.3323
+       ]
+      },
+      {
+       "surface": {
+        "fill": "white",
+        "radius": 12,
+        "shadow": "soft"
+       },
+       "free": {
+        "items": [
+         {
+          "surface": {
+           "fill": "coralSoft",
+           "radius": 100
+          },
+          "row": {
+           "items": [
+            {
+             "text": "High risk",
+             "role": "caption",
+             "size": 10.5,
+             "weight": "bold",
+             "tone": "coral",
+             "align": "center"
+            }
+           ],
+           "justify": "center",
+           "align": "center"
+          },
+          "box": [
+           0.9075,
+           0.3907,
+           3.6299,
+           0.3907
+          ]
+         },
+         {
+          "icon": "clock",
+          "tone": "forest",
+          "size": 23,
+          "width": 23,
+          "height": 23,
+          "box": [
+           10.1245,
+           0.3488,
+           0.968,
+           0.4465
+          ]
+         },
+         {
+          "text": "App Store review slips",
+          "role": "h3",
+          "size": 18,
+          "tone": "ink",
+          "box": [
+           0.9075,
+           1.0047,
+           10.185,
+           0.5023
+          ],
+          "weight": "bold"
+         },
+         {
+          "text": "IMPACT",
+          "role": "label",
+          "size": 10,
+          "tone": "forest",
+          "box": [
+           0.9075,
+           1.7581,
+           6.0499,
+           0.307
+          ],
+          "weight": "bold",
+          "tracking": 0.1
+         },
+         {
+          "text": "Launch date moves and paid media is wasted.",
+          "role": "small",
+          "size": 12.5,
+          "tone": "ink",
+          "box": [
+           0.9075,
+           2.093,
+           10.185,
+           0.6698
+          ]
+         },
+         {
+          "text": "MITIGATION",
+          "role": "label",
+          "size": 10,
+          "tone": "forest",
+          "box": [
+           0.9075,
+           2.8465,
+           6.0499,
+           0.307
+          ],
+          "weight": "bold",
+          "tracking": 0.1
+         },
+         {
+          "text": "Submit on Feb 2, keeping six weeks of buffer.",
+          "role": "small",
+          "size": 12.5,
+          "tone": "ink",
+          "box": [
+           0.9075,
+           3.1814,
+           10.185,
+           0.6698
+          ]
+         },
+         {
+          "text": "TRIGGER",
+          "role": "label",
+          "size": 10,
+          "tone": "forest",
+          "box": [
+           0.9075,
+           3.9349,
+           6.0499,
+           0.307
+          ],
+          "weight": "bold",
+          "tracking": 0.1
+         },
+         {
+          "text": "No approval by March 1.",
+          "role": "small",
+          "size": 12.5,
+          "tone": "ink",
+          "box": [
+           0.9075,
+           4.2698,
+           10.185,
+           0.6698
+          ]
+         },
+         {
+          "shape": "rect",
+          "decorative": true,
+          "fill": "track",
+          "box": [
+           0.9075,
+           5.0512,
+           10.185,
+           0.014
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "mint",
+          "box": [
+           0.9075,
+           5.2326,
+           1.21,
+           0.5581
+          ]
+         },
+         {
+          "text": "DK",
+          "role": "caption",
+          "size": 10.5,
+          "tone": "forestDeep",
+          "box": [
+           0.9075,
+           5.2326,
+           1.21,
+           0.5581
+          ],
+          "weight": "bold",
+          "align": "center",
+          "valign": "middle"
+         },
+         {
+          "text": "**Dana Kim**  ·  Product lead",
+          "role": "small",
+          "size": 12,
+          "tone": "ink",
+          "box": [
+           2.4805,
+           5.2744,
+           8.6725,
+           0.4744
+          ],
+          "valign": "middle"
+         }
+        ]
+       },
+       "box": [
+        0.0,
+        1.5692,
+        3.8598,
+        3.9692
+       ]
+      },
+      {
+       "surface": {
+        "fill": "white",
+        "radius": 12,
+        "shadow": "soft"
+       },
+       "free": {
+        "items": [
+         {
+          "surface": {
+           "fill": "amberSoft",
+           "radius": 100
+          },
+          "row": {
+           "items": [
+            {
+             "text": "Medium risk",
+             "role": "caption",
+             "size": 10.5,
+             "weight": "bold",
+             "tone": "amberText",
+             "align": "center"
+            }
+           ],
+           "justify": "center",
+           "align": "center"
+          },
+          "box": [
+           0.9075,
+           0.3907,
+           3.6299,
+           0.3907
+          ]
+         },
+         {
+          "icon": "landmark",
+          "tone": "forest",
+          "size": 23,
+          "width": 23,
+          "height": 23,
+          "box": [
+           10.1245,
+           0.3488,
+           0.968,
+           0.4465
+          ]
+         },
+         {
+          "text": "Bank-connection limits",
+          "role": "h3",
+          "size": 18,
+          "tone": "ink",
+          "box": [
+           0.9075,
+           1.0047,
+           10.185,
+           0.5023
+          ],
+          "weight": "bold"
+         },
+         {
+          "text": "IMPACT",
+          "role": "label",
+          "size": 10,
+          "tone": "forest",
+          "box": [
+           0.9075,
+           1.7581,
+           6.0499,
+           0.307
+          ],
+          "weight": "bold",
+          "tracking": 0.1
+         },
+         {
+          "text": "New users fail to link accounts in week one.",
+          "role": "small",
+          "size": 12.5,
+          "tone": "ink",
+          "box": [
+           0.9075,
+           2.093,
+           10.185,
+           0.6698
+          ]
+         },
+         {
+          "text": "MITIGATION",
+          "role": "label",
+          "size": 10,
+          "tone": "forest",
+          "box": [
+           0.9075,
+           2.8465,
+           6.0499,
+           0.307
+          ],
+          "weight": "bold",
+          "tracking": 0.1
+         },
+         {
+          "text": "Raise partner quota; queue links at peak.",
+          "role": "small",
+          "size": 12.5,
+          "tone": "ink",
+          "box": [
+           0.9075,
+           3.1814,
+           10.185,
+           0.6698
+          ]
+         },
+         {
+          "text": "TRIGGER",
+          "role": "label",
+          "size": 10,
+          "tone": "forest",
+          "box": [
+           0.9075,
+           3.9349,
+           6.0499,
+           0.307
+          ],
+          "weight": "bold",
+          "tracking": 0.1
+         },
+         {
+          "text": "Link failures above 3%.",
+          "role": "small",
+          "size": 12.5,
+          "tone": "ink",
+          "box": [
+           0.9075,
+           4.2698,
+           10.185,
+           0.6698
+          ]
+         },
+         {
+          "shape": "rect",
+          "decorative": true,
+          "fill": "track",
+          "box": [
+           0.9075,
+           5.0512,
+           10.185,
+           0.014
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "mint",
+          "box": [
+           0.9075,
+           5.2326,
+           1.21,
+           0.5581
+          ]
+         },
+         {
+          "text": "OR",
+          "role": "caption",
+          "size": 10.5,
+          "tone": "forestDeep",
+          "box": [
+           0.9075,
+           5.2326,
+           1.21,
+           0.5581
+          ],
+          "weight": "bold",
+          "align": "center",
+          "valign": "middle"
+         },
+         {
+          "text": "**Omar Reyes**  ·  Engineering",
+          "role": "small",
+          "size": 12,
+          "tone": "ink",
+          "box": [
+           2.4805,
+           5.2744,
+           8.6725,
+           0.4744
+          ],
+          "valign": "middle"
+         }
+        ]
+       },
+       "box": [
+        4.07,
+        1.5692,
+        3.8598,
+        3.9692
+       ]
+      },
+      {
+       "surface": {
+        "fill": "white",
+        "radius": 12,
+        "shadow": "soft"
+       },
+       "free": {
+        "items": [
+         {
+          "surface": {
+           "fill": "amberSoft",
+           "radius": 100
+          },
+          "row": {
+           "items": [
+            {
+             "text": "Medium risk",
+             "role": "caption",
+             "size": 10.5,
+             "weight": "bold",
+             "tone": "amberText",
+             "align": "center"
+            }
+           ],
+           "justify": "center",
+           "align": "center"
+          },
+          "box": [
+           0.9075,
+           0.3907,
+           3.6299,
+           0.3907
+          ]
+         },
+         {
+          "icon": "headset",
+          "tone": "forest",
+          "size": 23,
+          "width": 23,
+          "height": 23,
+          "box": [
+           10.1245,
+           0.3488,
+           0.968,
+           0.4465
+          ]
+         },
+         {
+          "text": "Launch-week support load",
+          "role": "h3",
+          "size": 18,
+          "tone": "ink",
+          "box": [
+           0.9075,
+           1.0047,
+           10.185,
+           0.5023
+          ],
+          "weight": "bold"
+         },
+         {
+          "text": "IMPACT",
+          "role": "label",
+          "size": 10,
+          "tone": "forest",
+          "box": [
+           0.9075,
+           1.7581,
+           6.0499,
+           0.307
+          ],
+          "weight": "bold",
+          "tracking": 0.1
+         },
+         {
+          "text": "Slow replies pull the store rating down.",
+          "role": "small",
+          "size": 12.5,
+          "tone": "ink",
+          "box": [
+           0.9075,
+           2.093,
+           10.185,
+           0.6698
+          ]
+         },
+         {
+          "text": "MITIGATION",
+          "role": "label",
+          "size": 10,
+          "tone": "forest",
+          "box": [
+           0.9075,
+           2.8465,
+           6.0499,
+           0.307
+          ],
+          "weight": "bold",
+          "tracking": 0.1
+         },
+         {
+          "text": "Train six extra agents; in-app help first.",
+          "role": "small",
+          "size": 12.5,
+          "tone": "ink",
+          "box": [
+           0.9075,
+           3.1814,
+           10.185,
+           0.6698
+          ]
+         },
+         {
+          "text": "TRIGGER",
+          "role": "label",
+          "size": 10,
+          "tone": "forest",
+          "box": [
+           0.9075,
+           3.9349,
+           6.0499,
+           0.307
+          ],
+          "weight": "bold",
+          "tracking": 0.1
+         },
+         {
+          "text": "First reply over 4 hours.",
+          "role": "small",
+          "size": 12.5,
+          "tone": "ink",
+          "box": [
+           0.9075,
+           4.2698,
+           10.185,
+           0.6698
+          ]
+         },
+         {
+          "shape": "rect",
+          "decorative": true,
+          "fill": "track",
+          "box": [
+           0.9075,
+           5.0512,
+           10.185,
+           0.014
+          ]
+         },
+         {
+          "shape": "ellipse",
+          "decorative": true,
+          "fill": "mint",
+          "box": [
+           0.9075,
+           5.2326,
+           1.21,
+           0.5581
+          ]
+         },
+         {
+          "text": "LN",
+          "role": "caption",
+          "size": 10.5,
+          "tone": "forestDeep",
+          "box": [
+           0.9075,
+           5.2326,
+           1.21,
+           0.5581
+          ],
+          "weight": "bold",
+          "align": "center",
+          "valign": "middle"
+         },
+         {
+          "text": "**Lena Novak**  ·  Support",
+          "role": "small",
+          "size": 12,
+          "tone": "ink",
+          "box": [
+           2.4805,
+           5.2744,
+           8.6725,
+           0.4744
+          ],
+          "valign": "middle"
+         }
+        ]
+       },
+       "box": [
+        8.1399,
+        1.5692,
+        3.8598,
+        3.9692
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "decision",
+   "message": "Approve $420K and the March 18 date by January 15",
+   "background": "forestDeep",
+   "compose": {
+    "free": {
+     "items": [
+      {
+       "icon": "leaf",
+       "tone": "lime",
+       "size": 16,
+       "width": 16,
+       "height": 16,
+       "box": [
+        0.0,
+        -0.0277,
+        0.2141,
+        0.2031
+       ]
+      },
+      {
+       "text": "LAUNCH PLAN  ·  DECISION",
+       "role": "label",
+       "size": 10.5,
+       "tone": "lime",
+       "box": [
+        0.2919,
+        -0.0462,
+        6.8108,
+        0.24
+       ],
+       "weight": "bold",
+       "tracking": 0.1,
+       "valign": "middle"
+      },
+      {
+       "text": "Approve $420K and the March 18 date by January 15.",
+       "role": "title",
+       "size": 44,
+       "tone": "white",
+       "box": [
+        0.0,
+        0.7846,
+        7.1027,
+        1.9385
+       ],
+       "weight": "bold",
+       "leading": 1.08
+      },
+      {
+       "text": "A decision this month protects the February 2 store submission and the creator bookings behind it.",
+       "role": "body",
+       "size": 16,
+       "tone": "mintText",
+       "box": [
+        0.0,
+        2.8615,
+        6.6162,
+        0.6462
+       ]
+      },
+      {
+       "text": "WHAT WE COMMIT TO, 30 DAYS AFTER LAUNCH",
+       "role": "label",
+       "size": 10.5,
+       "tone": "lime",
+       "box": [
+        7.6865,
+        0.8308,
+        4.3103,
+        0.24
+       ],
+       "weight": "bold",
+       "tracking": 0.1
+      },
+      {
+       "surface": {
+        "fill": "forestCard",
+        "radius": 12
+       },
+       "free": {
+        "items": [
+         {
+          "text": "50K",
+          "role": "display",
+          "size": 40,
+          "tone": "lime",
+          "box": [
+           0.8121,
+           1.0345,
+           5.1432,
+           3.931
+          ],
+          "weight": "bold",
+          "valign": "middle"
+         },
+         {
+          "text": "app installs",
+          "role": "small",
+          "size": 14,
+          "tone": "white",
+          "box": [
+           5.82,
+           1.0345,
+           5.6846,
+           3.931
+          ],
+          "weight": "bold",
+          "valign": "middle"
+         }
+        ]
+       },
+       "box": [
+        7.6865,
+        1.2462,
+        4.3132,
+        1.0708
+       ]
+      },
+      {
+       "surface": {
+        "fill": "forestCard",
+        "radius": 12
+       },
+       "free": {
+        "items": [
+         {
+          "text": "4.5",
+          "role": "display",
+          "size": 40,
+          "tone": "lime",
+          "box": [
+           0.8121,
+           1.0345,
+           5.1432,
+           3.931
+          ],
+          "weight": "bold",
+          "valign": "middle"
+         },
+         {
+          "text": "average star rating in the stores",
+          "role": "small",
+          "size": 14,
+          "tone": "white",
+          "box": [
+           5.82,
+           1.0345,
+           5.6846,
+           3.931
+          ],
+          "weight": "bold",
+          "valign": "middle"
+         }
+        ]
+       },
+       "box": [
+        7.6865,
+        2.4646,
+        4.3132,
+        1.0708
+       ]
+      },
+      {
+       "surface": {
+        "fill": "forestCard",
+        "radius": 12
+       },
+       "free": {
+        "items": [
+         {
+          "text": "25%",
+          "role": "display",
+          "size": 40,
+          "tone": "lime",
+          "box": [
+           0.8121,
+           1.0345,
+           5.1432,
+           3.931
+          ],
+          "weight": "bold",
+          "valign": "middle"
+         },
+         {
+          "text": "of new users still active in week 4",
+          "role": "small",
+          "size": 14,
+          "tone": "white",
+          "box": [
+           5.82,
+           1.0345,
+           5.6846,
+           3.931
+          ],
+          "weight": "bold",
+          "valign": "middle"
+         }
+        ]
+       },
+       "box": [
+        7.6865,
+        3.6831,
+        4.3132,
+        1.0708
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "forestLine",
+       "box": [
+        0.0,
+        5.0769,
+        7.1027,
+        0.0111
+       ]
+      },
+      {
+       "text": "**Next review: April 15**, 30 days after launch, against these three goals.",
+       "role": "small",
+       "size": 13.5,
+       "tone": "white",
+       "box": [
+        0.0,
+        5.1877,
+        7.1027,
+        0.2954
+       ]
+      },
+      {
+       "text": "Fern — Launch plan  ·  Illustrative demo",
+       "role": "caption",
+       "size": 10,
+       "tone": "mintText",
+       "box": [
+        0.0,
+        5.8154,
+        7.7838,
+        0.2031
+       ]
+      },
+      {
+       "text": "05 / 05",
+       "role": "caption",
+       "size": 10,
+       "tone": "mintText",
+       "box": [
+        10.5373,
+        5.8154,
+        1.4595,
+        0.2031
+       ],
+       "align": "right"
+      }
+     ]
+    }
+   }
+  }
+ ]
+}

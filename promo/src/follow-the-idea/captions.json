@@ -1,0 +1,695 @@
+[
+  {
+    "text": " Create",
+    "startMs": 100,
+    "endMs": 400,
+    "timestampMs": 250,
+    "confidence": null
+  },
+  {
+    "text": " professional",
+    "startMs": 412,
+    "endMs": 1000,
+    "timestampMs": 706,
+    "confidence": null
+  },
+  {
+    "text": " presentations",
+    "startMs": 1012,
+    "endMs": 1775,
+    "timestampMs": 1394,
+    "confidence": null
+  },
+  {
+    "text": " directly",
+    "startMs": 1788,
+    "endMs": 2438,
+    "timestampMs": 2112,
+    "confidence": null
+  },
+  {
+    "text": " through",
+    "startMs": 2588,
+    "endMs": 2812,
+    "timestampMs": 2700,
+    "confidence": null
+  },
+  {
+    "text": " your",
+    "startMs": 2825,
+    "endMs": 3038,
+    "timestampMs": 2931,
+    "confidence": null
+  },
+  {
+    "text": " AI",
+    "startMs": 3050,
+    "endMs": 3400,
+    "timestampMs": 3225,
+    "confidence": null
+  },
+  {
+    "text": " agent.",
+    "startMs": 3412,
+    "endMs": 3850,
+    "timestampMs": 3631,
+    "confidence": null
+  },
+  {
+    "text": " This",
+    "startMs": 4262,
+    "endMs": 4488,
+    "timestampMs": 4375,
+    "confidence": null
+  },
+  {
+    "text": " is",
+    "startMs": 4500,
+    "endMs": 4588,
+    "timestampMs": 4544,
+    "confidence": null
+  },
+  {
+    "text": " Slide",
+    "startMs": 4600,
+    "endMs": 4912,
+    "timestampMs": 4756,
+    "confidence": null
+  },
+  {
+    "text": " Agent.",
+    "startMs": 4925,
+    "endMs": 5288,
+    "timestampMs": 5106,
+    "confidence": null
+  },
+  {
+    "text": " Install",
+    "startMs": 6100,
+    "endMs": 6538,
+    "timestampMs": 6319,
+    "confidence": null
+  },
+  {
+    "text": " it",
+    "startMs": 6550,
+    "endMs": 6650,
+    "timestampMs": 6600,
+    "confidence": null
+  },
+  {
+    "text": " in",
+    "startMs": 6725,
+    "endMs": 6838,
+    "timestampMs": 6781,
+    "confidence": null
+  },
+  {
+    "text": " a",
+    "startMs": 6850,
+    "endMs": 6900,
+    "timestampMs": 6875,
+    "confidence": null
+  },
+  {
+    "text": " supported",
+    "startMs": 6912,
+    "endMs": 7350,
+    "timestampMs": 7131,
+    "confidence": null
+  },
+  {
+    "text": " agent.",
+    "startMs": 7362,
+    "endMs": 7750,
+    "timestampMs": 7556,
+    "confidence": null
+  },
+  {
+    "text": " Then",
+    "startMs": 8175,
+    "endMs": 8262,
+    "timestampMs": 8219,
+    "confidence": null
+  },
+  {
+    "text": " describe",
+    "startMs": 8275,
+    "endMs": 8638,
+    "timestampMs": 8456,
+    "confidence": null
+  },
+  {
+    "text": " your",
+    "startMs": 8650,
+    "endMs": 8750,
+    "timestampMs": 8700,
+    "confidence": null
+  },
+  {
+    "text": " topic,",
+    "startMs": 8762,
+    "endMs": 9250,
+    "timestampMs": 9006,
+    "confidence": null
+  },
+  {
+    "text": " audience,",
+    "startMs": 9450,
+    "endMs": 9975,
+    "timestampMs": 9712,
+    "confidence": null
+  },
+  {
+    "text": " and",
+    "startMs": 10150,
+    "endMs": 10238,
+    "timestampMs": 10194,
+    "confidence": null
+  },
+  {
+    "text": " style.",
+    "startMs": 10250,
+    "endMs": 10725,
+    "timestampMs": 10488,
+    "confidence": null
+  },
+  {
+    "text": " Follow",
+    "startMs": 13138,
+    "endMs": 13325,
+    "timestampMs": 13231,
+    "confidence": null
+  },
+  {
+    "text": " the",
+    "startMs": 13338,
+    "endMs": 13450,
+    "timestampMs": 13394,
+    "confidence": null
+  },
+  {
+    "text": " architecture.",
+    "startMs": 13462,
+    "endMs": 14175,
+    "timestampMs": 13819,
+    "confidence": null
+  },
+  {
+    "text": " From",
+    "startMs": 14612,
+    "endMs": 14712,
+    "timestampMs": 14662,
+    "confidence": null
+  },
+  {
+    "text": " the",
+    "startMs": 14725,
+    "endMs": 14800,
+    "timestampMs": 14762,
+    "confidence": null
+  },
+  {
+    "text": " gateway,",
+    "startMs": 14812,
+    "endMs": 15350,
+    "timestampMs": 15081,
+    "confidence": null
+  },
+  {
+    "text": " through",
+    "startMs": 15650,
+    "endMs": 15800,
+    "timestampMs": 15725,
+    "confidence": null
+  },
+  {
+    "text": " core",
+    "startMs": 15812,
+    "endMs": 16062,
+    "timestampMs": 15938,
+    "confidence": null
+  },
+  {
+    "text": " services,",
+    "startMs": 16075,
+    "endMs": 16738,
+    "timestampMs": 16406,
+    "confidence": null
+  },
+  {
+    "text": " to",
+    "startMs": 16950,
+    "endMs": 17038,
+    "timestampMs": 16994,
+    "confidence": null
+  },
+  {
+    "text": " the",
+    "startMs": 17050,
+    "endMs": 17138,
+    "timestampMs": 17094,
+    "confidence": null
+  },
+  {
+    "text": " model",
+    "startMs": 17150,
+    "endMs": 17588,
+    "timestampMs": 17369,
+    "confidence": null
+  },
+  {
+    "text": " and",
+    "startMs": 17625,
+    "endMs": 17700,
+    "timestampMs": 17662,
+    "confidence": null
+  },
+  {
+    "text": " data.",
+    "startMs": 17712,
+    "endMs": 18138,
+    "timestampMs": 17925,
+    "confidence": null
+  },
+  {
+    "text": " Carry",
+    "startMs": 21100,
+    "endMs": 21350,
+    "timestampMs": 21225,
+    "confidence": null
+  },
+  {
+    "text": " that",
+    "startMs": 21362,
+    "endMs": 21512,
+    "timestampMs": 21438,
+    "confidence": null
+  },
+  {
+    "text": " story",
+    "startMs": 21525,
+    "endMs": 21950,
+    "timestampMs": 21738,
+    "confidence": null
+  },
+  {
+    "text": " across",
+    "startMs": 21962,
+    "endMs": 22350,
+    "timestampMs": 22156,
+    "confidence": null
+  },
+  {
+    "text": " the",
+    "startMs": 22362,
+    "endMs": 22475,
+    "timestampMs": 22419,
+    "confidence": null
+  },
+  {
+    "text": " deck,",
+    "startMs": 22488,
+    "endMs": 22825,
+    "timestampMs": 22656,
+    "confidence": null
+  },
+  {
+    "text": " with",
+    "startMs": 23075,
+    "endMs": 23238,
+    "timestampMs": 23156,
+    "confidence": null
+  },
+  {
+    "text": " clear",
+    "startMs": 23250,
+    "endMs": 23562,
+    "timestampMs": 23406,
+    "confidence": null
+  },
+  {
+    "text": " request",
+    "startMs": 23575,
+    "endMs": 24038,
+    "timestampMs": 23806,
+    "confidence": null
+  },
+  {
+    "text": " flows",
+    "startMs": 24050,
+    "endMs": 24538,
+    "timestampMs": 24294,
+    "confidence": null
+  },
+  {
+    "text": " and",
+    "startMs": 24712,
+    "endMs": 24825,
+    "timestampMs": 24769,
+    "confidence": null
+  },
+  {
+    "text": " explicit",
+    "startMs": 24838,
+    "endMs": 25438,
+    "timestampMs": 25138,
+    "confidence": null
+  },
+  {
+    "text": " trust",
+    "startMs": 25512,
+    "endMs": 25838,
+    "timestampMs": 25675,
+    "confidence": null
+  },
+  {
+    "text": " boundaries.",
+    "startMs": 25850,
+    "endMs": 26512,
+    "timestampMs": 26181,
+    "confidence": null
+  },
+  {
+    "text": " Plan",
+    "startMs": 28112,
+    "endMs": 28262,
+    "timestampMs": 28188,
+    "confidence": null
+  },
+  {
+    "text": " a",
+    "startMs": 28275,
+    "endMs": 28325,
+    "timestampMs": 28300,
+    "confidence": null
+  },
+  {
+    "text": " project",
+    "startMs": 28338,
+    "endMs": 28812,
+    "timestampMs": 28575,
+    "confidence": null
+  },
+  {
+    "text": " with",
+    "startMs": 28825,
+    "endMs": 28938,
+    "timestampMs": 28881,
+    "confidence": null
+  },
+  {
+    "text": " a",
+    "startMs": 28950,
+    "endMs": 28988,
+    "timestampMs": 28969,
+    "confidence": null
+  },
+  {
+    "text": " lighter",
+    "startMs": 29000,
+    "endMs": 29350,
+    "timestampMs": 29175,
+    "confidence": null
+  },
+  {
+    "text": " look.",
+    "startMs": 29362,
+    "endMs": 29675,
+    "timestampMs": 29519,
+    "confidence": null
+  },
+  {
+    "text": " Bring",
+    "startMs": 30100,
+    "endMs": 30275,
+    "timestampMs": 30188,
+    "confidence": null
+  },
+  {
+    "text": " milestones,",
+    "startMs": 30288,
+    "endMs": 31038,
+    "timestampMs": 30662,
+    "confidence": null
+  },
+  {
+    "text": " workstreams,",
+    "startMs": 31275,
+    "endMs": 32038,
+    "timestampMs": 31656,
+    "confidence": null
+  },
+  {
+    "text": " and",
+    "startMs": 32275,
+    "endMs": 32375,
+    "timestampMs": 32325,
+    "confidence": null
+  },
+  {
+    "text": " decisions",
+    "startMs": 32388,
+    "endMs": 33025,
+    "timestampMs": 32706,
+    "confidence": null
+  },
+  {
+    "text": " into",
+    "startMs": 33038,
+    "endMs": 33212,
+    "timestampMs": 33125,
+    "confidence": null
+  },
+  {
+    "text": " focus.",
+    "startMs": 33225,
+    "endMs": 33850,
+    "timestampMs": 33538,
+    "confidence": null
+  },
+  {
+    "text": " Or",
+    "startMs": 35112,
+    "endMs": 35175,
+    "timestampMs": 35144,
+    "confidence": null
+  },
+  {
+    "text": " tell",
+    "startMs": 35188,
+    "endMs": 35350,
+    "timestampMs": 35269,
+    "confidence": null
+  },
+  {
+    "text": " a",
+    "startMs": 35362,
+    "endMs": 35412,
+    "timestampMs": 35388,
+    "confidence": null
+  },
+  {
+    "text": " data",
+    "startMs": 35425,
+    "endMs": 35638,
+    "timestampMs": 35531,
+    "confidence": null
+  },
+  {
+    "text": " story.",
+    "startMs": 35650,
+    "endMs": 36050,
+    "timestampMs": 35850,
+    "confidence": null
+  },
+  {
+    "text": " Reveal",
+    "startMs": 36462,
+    "endMs": 36775,
+    "timestampMs": 36619,
+    "confidence": null
+  },
+  {
+    "text": " the",
+    "startMs": 36788,
+    "endMs": 36862,
+    "timestampMs": 36825,
+    "confidence": null
+  },
+  {
+    "text": " trend,",
+    "startMs": 36875,
+    "endMs": 37312,
+    "timestampMs": 37094,
+    "confidence": null
+  },
+  {
+    "text": " and",
+    "startMs": 37625,
+    "endMs": 37700,
+    "timestampMs": 37662,
+    "confidence": null
+  },
+  {
+    "text": " make",
+    "startMs": 37712,
+    "endMs": 37900,
+    "timestampMs": 37806,
+    "confidence": null
+  },
+  {
+    "text": " the",
+    "startMs": 37912,
+    "endMs": 38000,
+    "timestampMs": 37956,
+    "confidence": null
+  },
+  {
+    "text": " takeaway",
+    "startMs": 38012,
+    "endMs": 38488,
+    "timestampMs": 38250,
+    "confidence": null
+  },
+  {
+    "text": " clear.",
+    "startMs": 38500,
+    "endMs": 38950,
+    "timestampMs": 38725,
+    "confidence": null
+  },
+  {
+    "text": " Take",
+    "startMs": 42112,
+    "endMs": 42275,
+    "timestampMs": 42194,
+    "confidence": null
+  },
+  {
+    "text": " the",
+    "startMs": 42288,
+    "endMs": 42388,
+    "timestampMs": 42338,
+    "confidence": null
+  },
+  {
+    "text": " complete",
+    "startMs": 42400,
+    "endMs": 42912,
+    "timestampMs": 42656,
+    "confidence": null
+  },
+  {
+    "text": " deck",
+    "startMs": 42975,
+    "endMs": 43300,
+    "timestampMs": 43138,
+    "confidence": null
+  },
+  {
+    "text": " into",
+    "startMs": 43412,
+    "endMs": 43662,
+    "timestampMs": 43538,
+    "confidence": null
+  },
+  {
+    "text": " editable",
+    "startMs": 43775,
+    "endMs": 44162,
+    "timestampMs": 43969,
+    "confidence": null
+  },
+  {
+    "text": " PowerPoint.",
+    "startMs": 44175,
+    "endMs": 44888,
+    "timestampMs": 44531,
+    "confidence": null
+  },
+  {
+    "text": " Explore",
+    "startMs": 46100,
+    "endMs": 46588,
+    "timestampMs": 46344,
+    "confidence": null
+  },
+  {
+    "text": " the",
+    "startMs": 46600,
+    "endMs": 46662,
+    "timestampMs": 46631,
+    "confidence": null
+  },
+  {
+    "text": " examples",
+    "startMs": 46675,
+    "endMs": 47412,
+    "timestampMs": 47044,
+    "confidence": null
+  },
+  {
+    "text": " and",
+    "startMs": 47512,
+    "endMs": 47688,
+    "timestampMs": 47600,
+    "confidence": null
+  },
+  {
+    "text": " installation",
+    "startMs": 47700,
+    "endMs": 48375,
+    "timestampMs": 48038,
+    "confidence": null
+  },
+  {
+    "text": " guide",
+    "startMs": 48388,
+    "endMs": 48675,
+    "timestampMs": 48531,
+    "confidence": null
+  },
+  {
+    "text": " at",
+    "startMs": 48688,
+    "endMs": 48775,
+    "timestampMs": 48731,
+    "confidence": null
+  },
+  {
+    "text": " slide-agent",
+    "startMs": 48788,
+    "endMs": 49538,
+    "timestampMs": 49162,
+    "confidence": null
+  },
+  {
+    "text": " dot",
+    "startMs": 49650,
+    "endMs": 49850,
+    "timestampMs": 49750,
+    "confidence": null
+  },
+  {
+    "text": " ghassen",
+    "startMs": 49862,
+    "endMs": 50212,
+    "timestampMs": 50038,
+    "confidence": null
+  },
+  {
+    "text": " dot",
+    "startMs": 50225,
+    "endMs": 50400,
+    "timestampMs": 50312,
+    "confidence": null
+  },
+  {
+    "text": " io.",
+    "startMs": 50412,
+    "endMs": 50788,
+    "timestampMs": 50600,
+    "confidence": null
+  }
+]

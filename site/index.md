@@ -46,13 +46,14 @@ import PresentationGallery from './.vitepress/theme/PresentationGallery.vue';
 
 <div style="max-width: 1152px; margin: 64px auto 0; padding: 0 24px;">
 
-## Five presentations. Five design systems.
+## Every deck gets its own design.
 
-Executive reviews, architecture, analytics, product launches and transformation strategy.
-Five standalone decks, with five slides in each and separate PowerPoint and PDF downloads.
+A few examples from the showcase: an executive review, an architecture deck, an analytics
+story, a product launch and a transformation strategy. None of them came from a fixed template.
+Slide Agent designed each look for its brief, and it will design a new one for yours.
 
 <PresentationGallery />
 
-[Explore all presentations →](/showcase)
+[Open the showcase →](/showcase)
 
 </div>

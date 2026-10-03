@@ -1,0 +1,10 @@
+[
+{"id":"opening","start":0,"end":6,"text":"Create professional presentations directly through your AI agent. This is Slide Agent."},
+{"id":"install","start":6,"end":12,"text":"Add Slide Agent to a supported agent, like Codex or Claude Code."},
+{"id":"create","start":12,"end":19,"text":"Describe the presentation you need. Your agent designs it and builds the deck."},
+{"id":"preview","start":19,"end":27,"text":"Preview the slides together. A consistent look, clear layouts, and substance across the presentation."},
+{"id":"edit","start":27,"end":34,"text":"Want a change? Ask your agent. Here, a new headline keeps the same design."},
+{"id":"range","start":34,"end":41,"text":"Different topics. Different looks. Project updates, technical reviews, and data stories."},
+{"id":"export","start":41,"end":46,"text":"Export an editable PowerPoint, ready for your next presentation."},
+{"id":"close","start":46,"end":52,"text":"Explore examples and installation instructions at slide-agent dot ghassen dot io."}
+]

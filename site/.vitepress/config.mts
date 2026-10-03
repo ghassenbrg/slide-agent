@@ -17,6 +17,7 @@ export default defineConfig({
 		['meta', {property: 'og:title', content: 'Slide Agent — describe a deck, get real PowerPoint'}],
 		['meta', {property: 'og:description', content: 'An open-source AI agent that designs native, editable PowerPoint decks.'}],
 		['meta', {property: 'og:image', content: `${base}showcase/announcement.png`}],
+		['script', {defer: '', src: 'https://umami.ghassen.io/analytics.js', 'data-website-id': 'dec9cfc1-2b32-47a1-912e-44ae77f079da'}],
 	],
 	themeConfig: {
 		logo: '/icon.png',

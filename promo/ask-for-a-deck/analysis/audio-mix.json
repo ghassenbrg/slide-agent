@@ -1,0 +1,158 @@
+{
+  "narrationSeconds": 29.544,
+  "musicGainDuringSpeech": 0.46059999999999995,
+  "musicGainInGaps": 0.94,
+  "openingFilteredUntil": 2.466666666666667,
+  "editBreak": [
+    24.6,
+    28.533333333333335
+  ],
+  "masterGainDb": 4.1,
+  "sharedCeilingDb": -1.2,
+  "minimumLimiterGain": 0.8545234853117397,
+  "cueSources": [
+    {
+      "key": "tap",
+      "source": "ui/switch-tap.mp3",
+      "peakOffset": 0.0020833333333333333
+    },
+    {
+      "key": "sweep",
+      "source": "transition/sweep-fast-small.mp3",
+      "peakOffset": 0.29633333333333334
+    },
+    {
+      "key": "paper",
+      "source": "paper/paper-move-quick.mp3",
+      "peakOffset": 0.4221875
+    },
+    {
+      "key": "impact",
+      "source": "impact/impact-zoom-quick.mp3",
+      "peakOffset": 0.414375
+    }
+  ],
+  "cues": [
+    {
+      "key": "tap",
+      "frame": 32,
+      "startSeconds": 1.0645833333333332,
+      "peakOffsetSeconds": 0.0020833333333333333,
+      "peakGain": 0.12,
+      "label": "Manual alignment"
+    },
+    {
+      "key": "tap",
+      "frame": 266,
+      "startSeconds": 8.864583333333334,
+      "peakOffsetSeconds": 0.0020833333333333333,
+      "peakGain": 0.12,
+      "label": "Choose supported agent"
+    },
+    {
+      "key": "tap",
+      "frame": 413,
+      "startSeconds": 13.764583333333334,
+      "peakOffsetSeconds": 0.0020833333333333333,
+      "peakGain": 0.12,
+      "label": "Send deck request"
+    },
+    {
+      "key": "tap",
+      "frame": 590,
+      "startSeconds": 19.664583333333333,
+      "peakOffsetSeconds": 0.0020833333333333333,
+      "peakGain": 0.12,
+      "label": "Select slide 2"
+    },
+    {
+      "key": "tap",
+      "frame": 664,
+      "startSeconds": 22.131249999999998,
+      "peakOffsetSeconds": 0.0020833333333333333,
+      "peakGain": 0.12,
+      "label": "Select slide 5"
+    },
+    {
+      "key": "tap",
+      "frame": 826,
+      "startSeconds": 27.53125,
+      "peakOffsetSeconds": 0.0020833333333333333,
+      "peakGain": 0.12,
+      "label": "Send headline change"
+    },
+    {
+      "key": "tap",
+      "frame": 856,
+      "startSeconds": 28.53125,
+      "peakOffsetSeconds": 0.0020833333333333333,
+      "peakGain": 0.12,
+      "label": "Headline applied"
+    },
+    {
+      "key": "tap",
+      "frame": 1210,
+      "startSeconds": 40.331250000000004,
+      "peakOffsetSeconds": 0.0020833333333333333,
+      "peakGain": 0.12,
+      "label": "Export PowerPoint"
+    },
+    {
+      "key": "tap",
+      "frame": 1298,
+      "startSeconds": 43.264583333333334,
+      "peakOffsetSeconds": 0.0020833333333333333,
+      "peakGain": 0.12,
+      "label": "Select native text"
+    },
+    {
+      "key": "sweep",
+      "frame": 74,
+      "startSeconds": 2.1703333333333337,
+      "peakOffsetSeconds": 0.29633333333333334,
+      "peakGain": 0.105,
+      "label": "Manual canvas becomes agent/result"
+    },
+    {
+      "key": "sweep",
+      "frame": 472,
+      "startSeconds": 15.437,
+      "peakOffsetSeconds": 0.29633333333333334,
+      "peakGain": 0.105,
+      "label": "Actual deck expands"
+    },
+    {
+      "key": "sweep",
+      "frame": 1018,
+      "startSeconds": 33.63699999999999,
+      "peakOffsetSeconds": 0.29633333333333334,
+      "peakGain": 0.105,
+      "label": "Technical deck enters"
+    },
+    {
+      "key": "sweep",
+      "frame": 1092,
+      "startSeconds": 36.10366666666666,
+      "peakOffsetSeconds": 0.29633333333333334,
+      "peakGain": 0.105,
+      "label": "Data deck enters"
+    },
+    {
+      "key": "paper",
+      "frame": 1254,
+      "startSeconds": 41.3778125,
+      "peakOffsetSeconds": 0.4221875,
+      "peakGain": 0.13,
+      "label": "File opens into PowerPoint"
+    },
+    {
+      "key": "impact",
+      "frame": 1372,
+      "startSeconds": 45.318958333333335,
+      "peakOffsetSeconds": 0.414375,
+      "peakGain": 0.12,
+      "label": "Brand resolves"
+    }
+  ],
+  "peakDbFS": -1.1999997147157961
+}

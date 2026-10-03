@@ -1,0 +1,10 @@
+[
+  {"id":"opening","start":0,"end":6,"text":"Create professional presentations directly through your AI agent. This is Slide Agent."},
+  {"id":"workflow","start":6,"end":13,"text":"Install it in a supported agent. Then describe your topic, audience, and style."},
+  {"id":"architecture","start":13,"end":21,"text":"Follow the architecture. From the gateway, through core services, to the model and data."},
+  {"id":"coherence","start":21,"end":28,"text":"Carry that story across the deck, with clear request flows and explicit trust boundaries."},
+  {"id":"planning","start":28,"end":35,"text":"Plan a project with a lighter look. Bring milestones, workstreams, and decisions into focus."},
+  {"id":"data","start":35,"end":42,"text":"Or tell a data story. Reveal the trend, and make the takeaway clear."},
+  {"id":"deliverable","start":42,"end":46,"text":"Take the complete deck into editable PowerPoint."},
+  {"id":"close","start":46,"end":52,"text":"Explore the examples and installation guide at slide-agent dot ghassen dot io."}
+]

@@ -1,0 +1,10 @@
+import React from 'react';
+import {AbsoluteFill,Series,staticFile,useCurrentFrame} from 'remotion';
+import {Audio} from '@remotion/media';
+import {Opening,Install,Create,Preview,Edit,Range,Export,Close} from './Scenes';
+import {CaptionLayer} from './Captions';
+import {C,tw} from './kit';
+export const SHOTS=[{id:'opening',from:0,duration:180},{id:'install',from:180,duration:180},{id:'create',from:360,duration:210},{id:'preview',from:570,duration:240},{id:'edit',from:810,duration:210},{id:'range',from:1020,duration:210},{id:'export',from:1230,duration:150},{id:'close',from:1380,duration:180}];
+const SCENES=[Opening,Install,Create,Preview,Edit,Range,Export,Close];
+export const Curtain=()=>{const f=useCurrentFrame(),b=SHOTS.slice(1).find(s=>f>=s.from-7&&f<=s.from+7);if(!b)return null;const x=f<b.from?tw(f,b.from-7,b.from,-1100,0):tw(f,b.from,b.from+7,0,1100);return <AbsoluteFill style={{background:C.blue,transform:`translateX(${x}px)`,zIndex:25}}/>;};
+export const Film:React.FC<{bgm:boolean}>=({bgm=true})=><AbsoluteFill><Series>{SHOTS.map((s,i)=>{const Comp=SCENES[i];return <Series.Sequence key={s.id} durationInFrames={s.duration} premountFor={30}><Comp/></Series.Sequence>;})}</Series><CaptionLayer/><Curtain/>{SHOTS.map(s=><Audio key={s.id} name={s.id+' narration'} src={staticFile('follow-the-idea-motion/audio/'+s.id+'.wav')} from={s.from} durationInFrames={s.duration} premountFor={30}/>)}<Audio name="UI typing, clicks and paper motion" src={staticFile('follow-the-idea-motion/audio/actions.wav')} durationInFrames={1560} volume={.42} premountFor={30}/>{bgm&&<Audio name="Original rhythmic score" src={staticFile('follow-the-idea/audio/music.wav')} volume={f=>{const s=SHOTS.find(s=>f>=s.from&&f<s.from+s.duration)!;return .15+tw(f,s.from+s.duration-35,s.from+s.duration-15)*.08-tw(f,s.from+s.duration-10,s.from+s.duration)*.08;}} durationInFrames={1560} premountFor={30}/>}</AbsoluteFill>;

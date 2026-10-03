@@ -1,0 +1,3514 @@
+{
+ "schema": "slide-agent.intent/1",
+ "brief": {
+  "title": "AI Platform — Production Architecture",
+  "audience": "Technical architecture audience",
+  "goal": "Canary releases and SLOs close the operating loop.",
+  "language": "en",
+  "format": "16:9"
+ },
+ "direction": {
+  "concept": "Technical architecture with Helvetica Neue display typography, an intentional five-slide narrative and varied compositions.",
+  "fit": "ask"
+ },
+ "design": {
+  "language": {
+   "color": {
+    "palette": {
+     "s2night": "#0A1022",
+     "s2node": "#111A33",
+     "s2node2": "#152040",
+     "s2orch": "#231B4D",
+     "s2group": "#0D1530",
+     "s2band": "#0E1730",
+     "s2edge": "#2A3757",
+     "s2frost": "#E8EDF7",
+     "s2haze": "#97A3BF",
+     "s2sky": "#38BDF8",
+     "s2skyDim": "#1E4466",
+     "s2violet": "#A78BFA",
+     "s2violetDim": "#433779",
+     "s2teal": "#2DD4BF",
+     "s2tealDim": "#1A5552",
+     "s2amber": "#FBBF24",
+     "s2amberDim": "#5A4514",
+     "s2grid": "#1A2442"
+    },
+    "roles": {
+     "background": "s2night",
+     "surface": "s2node",
+     "text": "s2frost",
+     "muted": "s2haze",
+     "accent": "s2sky",
+     "rule": "s2edge"
+    },
+    "data": [
+     "s2sky",
+     "s2frost"
+    ]
+   },
+   "type": {
+    "display": {
+     "family": "Helvetica Neue",
+     "weight": 700,
+     "tracking": -0.01
+    },
+    "body": {
+     "family": "Helvetica Neue",
+     "weight": 400
+    },
+    "mono": {
+     "family": "Menlo"
+    },
+    "scale": {
+     "base": 16,
+     "ratio": 1.25
+    }
+   },
+   "space": {
+    "unit": 8,
+    "margin": 36,
+    "gutter": 16
+   },
+   "grid": {
+    "columns": 12,
+    "rows": 6
+   },
+   "shape": {
+    "radius": 10,
+    "stroke": 0
+   },
+   "texture": [
+    {
+     "id": "blueprint",
+     "primitive": "line-grid",
+     "params": {
+      "spacing": 36,
+      "tone": "s2grid",
+      "opacity": 0.18,
+      "weight": 0.5
+     }
+    },
+    {
+     "id": "lighting",
+     "primitive": "gradient-wash",
+     "params": {
+      "from": "s2night",
+      "to": "s2violet",
+      "angle": 315,
+      "opacity": 0.08
+     }
+    }
+   ],
+   "charts": {
+    "axis": "hairline",
+    "gridlines": "none",
+    "labels": "none",
+    "highlight": "s2sky",
+    "legend": "none"
+   },
+   "chrome": {
+    "slideNumber": false
+   }
+  }
+ },
+ "data": {},
+ "slides": [
+  {
+   "id": "architecture",
+   "message": "Every request flows through one gateway into a service tier that fans out to the AI runtime and the data plane",
+   "notes": "Technical architecture: grouped system boundaries, orthogonal routed wiring, domain colour coding, icons, an infrastructure layer.",
+   "background": "s2night",
+   "compose": {
+    "free": {
+     "items": [
+      {
+       "bleed": [
+        "left",
+        "right",
+        "top",
+        "bottom"
+       ],
+       "decorative": true,
+       "texture": "lighting",
+       "box": [
+        0,
+        0,
+        12,
+        6
+       ]
+      },
+      {
+       "texture": "blueprint",
+       "box": [
+        0,
+        0.9231,
+        11.9997,
+        5.0769
+       ]
+      },
+      {
+       "text": "AI Platform — Production Architecture",
+       "role": "title",
+       "size": 28,
+       "font": "Helvetica Neue",
+       "weight": "bold",
+       "tone": "s2frost",
+       "box": [
+        0,
+        -0.0369,
+        8.3676,
+        0.5169
+       ]
+      },
+      {
+       "text": "Scalable, secure and modular architecture for AI-powered applications",
+       "role": "small",
+       "size": 13,
+       "font": "Helvetica Neue",
+       "tone": "s2haze",
+       "box": [
+        0,
+        0.4523,
+        7.3946,
+        0.2769
+       ]
+      },
+      {
+       "text": "ARCHITECTURE REVIEW",
+       "role": "label",
+       "size": 10,
+       "font": "Menlo",
+       "tone": "s2sky",
+       "tracking": 0.2,
+       "align": "right",
+       "box": [
+        8.2703,
+        0,
+        3.7294,
+        0.2308
+       ]
+      },
+      {
+       "text": "rev 2.3  ·  prod / us-east-1",
+       "role": "caption",
+       "size": 10,
+       "font": "Menlo",
+       "tone": "s2haze",
+       "align": "right",
+       "box": [
+        8.2703,
+        0.2308,
+        3.7294,
+        0.2308
+       ]
+      },
+      {
+       "shape": "ellipse",
+       "decorative": true,
+       "fill": "s2sky",
+       "box": [
+        8.3189,
+        0.6138,
+        0.0876,
+        0.0831
+       ]
+      },
+      {
+       "text": "Request path",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s2haze",
+       "valign": "middle",
+       "box": [
+        8.4552,
+        0.5446,
+        1.0703,
+        0.2215
+       ]
+      },
+      {
+       "shape": "ellipse",
+       "decorative": true,
+       "fill": "s2violet",
+       "box": [
+        9.5352,
+        0.6138,
+        0.0876,
+        0.0831
+       ]
+      },
+      {
+       "text": "AI runtime",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s2haze",
+       "valign": "middle",
+       "box": [
+        9.6714,
+        0.5446,
+        1.0703,
+        0.2215
+       ]
+      },
+      {
+       "shape": "ellipse",
+       "decorative": true,
+       "fill": "s2teal",
+       "box": [
+        10.7514,
+        0.6138,
+        0.0876,
+        0.0831
+       ]
+      },
+      {
+       "text": "Data plane",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s2haze",
+       "valign": "middle",
+       "box": [
+        10.8876,
+        0.5446,
+        1.0703,
+        0.2215
+       ]
+      },
+      {
+       "shape": "roundRect",
+       "decorative": true,
+       "fill": "s2group",
+       "stroke": "s2edge",
+       "strokeWidth": 1,
+       "radius": 12,
+       "opacity": 0.55,
+       "box": [
+        1.0703,
+        1.9569,
+        1.7124,
+        2.1969
+       ]
+      },
+      {
+       "text": "CLIENTS",
+       "role": "label",
+       "size": 10,
+       "font": "Menlo",
+       "tone": "s2haze",
+       "tracking": 0.12,
+       "box": [
+        1.2065,
+        2.0123,
+        1.44,
+        0.2031
+       ]
+      },
+      {
+       "shape": "roundRect",
+       "decorative": true,
+       "fill": "s2group",
+       "stroke": "s2edge",
+       "strokeWidth": 1,
+       "radius": 12,
+       "opacity": 0.55,
+       "box": [
+        4.6703,
+        1.3385,
+        4.1838,
+        3.3231
+       ]
+      },
+      {
+       "text": "CORE SERVICES  ·  ns/platform",
+       "role": "label",
+       "size": 10,
+       "font": "Menlo",
+       "tone": "s2haze",
+       "tracking": 0.12,
+       "box": [
+        4.8065,
+        1.3938,
+        3.9114,
+        0.2031
+       ]
+      },
+      {
+       "shape": "roundRect",
+       "decorative": true,
+       "fill": "s2group",
+       "stroke": "s2violetDim",
+       "strokeWidth": 1,
+       "radius": 12,
+       "opacity": 0.55,
+       "box": [
+        9.0973,
+        0.9692,
+        2.9024,
+        1.9477
+       ]
+      },
+      {
+       "text": "AI RUNTIME",
+       "role": "label",
+       "size": 10,
+       "font": "Menlo",
+       "tone": "s2violet",
+       "tracking": 0.12,
+       "box": [
+        9.2335,
+        1.0246,
+        2.63,
+        0.2031
+       ]
+      },
+      {
+       "shape": "roundRect",
+       "decorative": true,
+       "fill": "s2group",
+       "stroke": "s2tealDim",
+       "strokeWidth": 1,
+       "radius": 12,
+       "opacity": 0.55,
+       "box": [
+        9.0973,
+        3.1015,
+        2.9024,
+        1.9385
+       ]
+      },
+      {
+       "text": "DATA PLANE",
+       "role": "label",
+       "size": 10,
+       "font": "Menlo",
+       "tone": "s2teal",
+       "tracking": 0.12,
+       "box": [
+        9.2335,
+        3.1569,
+        2.63,
+        0.2031
+       ]
+      },
+      {
+       "text": "EDGE",
+       "role": "label",
+       "size": 10,
+       "font": "Menlo",
+       "tone": "s2haze",
+       "tracking": 0.12,
+       "align": "center",
+       "box": [
+        3.0162,
+        2.3446,
+        1.3622,
+        0.2031
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2sky",
+       "opacity": 0.8,
+       "box": [
+        0.827,
+        3.0843,
+        0.1265,
+        0.016
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2sky",
+       "opacity": 0.8,
+       "box": [
+        0.9451,
+        2.5846,
+        0.0169,
+        1.0154
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2sky",
+       "opacity": 0.8,
+       "box": [
+        0.9535,
+        2.5766,
+        0.1751,
+        0.016
+       ]
+      },
+      {
+       "shape": {
+        "path": "M0 0 L1 0.5 L0 1 Z"
+       },
+       "decorative": true,
+       "fill": "s2sky",
+       "box": [
+        1.1141,
+        2.5431,
+        0.073,
+        0.0831
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2sky",
+       "opacity": 0.8,
+       "box": [
+        0.9535,
+        3.592,
+        0.1751,
+        0.016
+       ]
+      },
+      {
+       "shape": {
+        "path": "M0 0 L1 0.5 L0 1 Z"
+       },
+       "decorative": true,
+       "fill": "s2sky",
+       "box": [
+        1.1141,
+        3.5585,
+        0.073,
+        0.0831
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2sky",
+       "opacity": 0.8,
+       "box": [
+        2.6951,
+        2.5766,
+        0.1751,
+        0.016
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2sky",
+       "opacity": 0.8,
+       "box": [
+        2.6951,
+        3.592,
+        0.1751,
+        0.016
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2sky",
+       "opacity": 0.8,
+       "box": [
+        2.8618,
+        2.5846,
+        0.0169,
+        1.0154
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2sky",
+       "opacity": 0.8,
+       "box": [
+        2.8703,
+        3.0843,
+        0.0876,
+        0.016
+       ]
+      },
+      {
+       "shape": {
+        "path": "M0 0 L1 0.5 L0 1 Z"
+       },
+       "decorative": true,
+       "fill": "s2sky",
+       "box": [
+        2.9433,
+        3.0508,
+        0.073,
+        0.0831
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2sky",
+       "opacity": 0.8,
+       "box": [
+        4.3784,
+        3.0843,
+        0.3795,
+        0.016
+       ]
+      },
+      {
+       "shape": {
+        "path": "M0 0 L1 0.5 L0 1 Z"
+       },
+       "decorative": true,
+       "fill": "s2sky",
+       "box": [
+        4.7433,
+        3.0508,
+        0.073,
+        0.0831
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2sky",
+       "opacity": 0.8,
+       "box": [
+        6.2757,
+        3.0843,
+        0.1751,
+        0.016
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2sky",
+       "opacity": 0.8,
+       "box": [
+        6.4424,
+        1.9477,
+        0.0169,
+        2.28
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2sky",
+       "opacity": 0.8,
+       "box": [
+        6.4508,
+        1.9397,
+        0.107,
+        0.016
+       ]
+      },
+      {
+       "shape": {
+        "path": "M0 0 L1 0.5 L0 1 Z"
+       },
+       "decorative": true,
+       "fill": "s2sky",
+       "box": [
+        6.5433,
+        1.9062,
+        0.073,
+        0.0831
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2sky",
+       "opacity": 0.8,
+       "box": [
+        6.4508,
+        2.7151,
+        0.107,
+        0.016
+       ]
+      },
+      {
+       "shape": {
+        "path": "M0 0 L1 0.5 L0 1 Z"
+       },
+       "decorative": true,
+       "fill": "s2sky",
+       "box": [
+        6.5433,
+        2.6815,
+        0.073,
+        0.0831
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2sky",
+       "opacity": 0.8,
+       "box": [
+        6.4508,
+        3.472,
+        0.107,
+        0.016
+       ]
+      },
+      {
+       "shape": {
+        "path": "M0 0 L1 0.5 L0 1 Z"
+       },
+       "decorative": true,
+       "fill": "s2sky",
+       "box": [
+        6.5433,
+        3.4385,
+        0.073,
+        0.0831
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2sky",
+       "opacity": 0.8,
+       "box": [
+        6.4508,
+        4.2197,
+        0.107,
+        0.016
+       ]
+      },
+      {
+       "shape": {
+        "path": "M0 0 L1 0.5 L0 1 Z"
+       },
+       "decorative": true,
+       "fill": "s2sky",
+       "box": [
+        6.5433,
+        4.1862,
+        0.073,
+        0.0831
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2violet",
+       "opacity": 0.8,
+       "box": [
+        8.7179,
+        1.9397,
+        0.2141,
+        0.016
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2violet",
+       "opacity": 0.8,
+       "box": [
+        8.9235,
+        1.5231,
+        0.0169,
+        1.0708
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2violet",
+       "opacity": 0.8,
+       "box": [
+        8.9319,
+        1.5151,
+        0.253,
+        0.016
+       ]
+      },
+      {
+       "shape": {
+        "path": "M0 0 L1 0.5 L0 1 Z"
+       },
+       "decorative": true,
+       "fill": "s2violet",
+       "box": [
+        9.1703,
+        1.4815,
+        0.073,
+        0.0831
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2violet",
+       "opacity": 0.8,
+       "box": [
+        8.9319,
+        2.0504,
+        0.253,
+        0.016
+       ]
+      },
+      {
+       "shape": {
+        "path": "M0 0 L1 0.5 L0 1 Z"
+       },
+       "decorative": true,
+       "fill": "s2violet",
+       "box": [
+        9.1703,
+        2.0169,
+        0.073,
+        0.0831
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2violet",
+       "opacity": 0.8,
+       "box": [
+        8.9319,
+        2.5858,
+        0.253,
+        0.016
+       ]
+      },
+      {
+       "shape": {
+        "path": "M0 0 L1 0.5 L0 1 Z"
+       },
+       "decorative": true,
+       "fill": "s2violet",
+       "box": [
+        9.1703,
+        2.5523,
+        0.073,
+        0.0831
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2teal",
+       "opacity": 0.8,
+       "box": [
+        8.7179,
+        4.2197,
+        0.2141,
+        0.016
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2teal",
+       "opacity": 0.8,
+       "box": [
+        8.9235,
+        3.6462,
+        0.0169,
+        1.0708
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2teal",
+       "opacity": 0.8,
+       "box": [
+        8.9319,
+        3.6381,
+        0.253,
+        0.016
+       ]
+      },
+      {
+       "shape": {
+        "path": "M0 0 L1 0.5 L0 1 Z"
+       },
+       "decorative": true,
+       "fill": "s2teal",
+       "box": [
+        9.1703,
+        3.6046,
+        0.073,
+        0.0831
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2teal",
+       "opacity": 0.8,
+       "box": [
+        8.9319,
+        4.1735,
+        0.253,
+        0.016
+       ]
+      },
+      {
+       "shape": {
+        "path": "M0 0 L1 0.5 L0 1 Z"
+       },
+       "decorative": true,
+       "fill": "s2teal",
+       "box": [
+        9.1703,
+        4.14,
+        0.073,
+        0.0831
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2teal",
+       "opacity": 0.8,
+       "box": [
+        8.9319,
+        4.7089,
+        0.253,
+        0.016
+       ]
+      },
+      {
+       "shape": {
+        "path": "M0 0 L1 0.5 L0 1 Z"
+       },
+       "decorative": true,
+       "fill": "s2teal",
+       "box": [
+        9.1703,
+        4.6754,
+        0.073,
+        0.0831
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s2node",
+        "stroke": "s2skyDim",
+        "strokeWidth": 1,
+        "radius": 10
+       },
+       "column": {
+        "items": [
+         {
+          "icon": "users",
+          "tone": "s2sky",
+          "size": 22,
+          "width": 22,
+          "height": 22
+         },
+         {
+          "text": "Users",
+          "role": "small",
+          "size": 12,
+          "font": "Helvetica Neue",
+          "weight": "bold",
+          "tone": "s2frost",
+          "align": "center"
+         }
+        ],
+        "pad": [
+         6,
+         8,
+         6,
+         8
+        ],
+        "gap": 4,
+        "align": "center",
+        "justify": "center"
+       },
+       "box": [
+        0,
+        2.6308,
+        0.827,
+        0.9231
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s2node",
+        "stroke": "s2skyDim",
+        "strokeWidth": 1,
+        "radius": 8
+       },
+       "row": {
+        "items": [
+         {
+          "icon": "monitor",
+          "tone": "s2sky",
+          "size": 16,
+          "width": 16,
+          "height": 16
+         },
+         {
+          "column": {
+           "gap": 1,
+           "justify": "center",
+           "grow": 1,
+           "items": [
+            {
+             "text": "Web app",
+             "role": "small",
+             "size": 12,
+             "font": "Helvetica Neue",
+             "weight": "bold",
+             "tone": "s2frost"
+            },
+            {
+             "text": "React · Next.js",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s2haze"
+            }
+           ]
+          }
+         }
+        ],
+        "pad": [
+         0,
+         9,
+         0,
+         9
+        ],
+        "gap": 8,
+        "align": "center"
+       },
+       "box": [
+        1.187,
+        2.3077,
+        1.5081,
+        0.5538
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s2node",
+        "stroke": "s2skyDim",
+        "strokeWidth": 1,
+        "radius": 8
+       },
+       "row": {
+        "items": [
+         {
+          "icon": "smartphone",
+          "tone": "s2sky",
+          "size": 16,
+          "width": 16,
+          "height": 16
+         },
+         {
+          "column": {
+           "gap": 1,
+           "justify": "center",
+           "grow": 1,
+           "items": [
+            {
+             "text": "Mobile app",
+             "role": "small",
+             "size": 12,
+             "font": "Helvetica Neue",
+             "weight": "bold",
+             "tone": "s2frost"
+            },
+            {
+             "text": "iOS · Android",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s2haze"
+            }
+           ]
+          }
+         }
+        ],
+        "pad": [
+         0,
+         9,
+         0,
+         9
+        ],
+        "gap": 8,
+        "align": "center"
+       },
+       "box": [
+        1.187,
+        3.3231,
+        1.5081,
+        0.5538
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s2node",
+        "stroke": "s2skyDim",
+        "strokeWidth": 1,
+        "radius": 10
+       },
+       "column": {
+        "items": [
+         {
+          "icon": "waypoints",
+          "tone": "s2sky",
+          "size": 22,
+          "width": 22,
+          "height": 22
+         },
+         {
+          "text": "API Gateway",
+          "role": "small",
+          "size": 12,
+          "font": "Helvetica Neue",
+          "weight": "bold",
+          "tone": "s2frost",
+          "align": "center"
+         },
+         {
+          "text": "Routing · rate limits",
+          "role": "caption",
+          "size": 10,
+          "font": "Helvetica Neue",
+          "tone": "s2haze",
+          "align": "center"
+         }
+        ],
+        "pad": [
+         6,
+         8,
+         6,
+         8
+        ],
+        "gap": 4,
+        "align": "center",
+        "justify": "center"
+       },
+       "box": [
+        3.0162,
+        2.5846,
+        1.3622,
+        1.0154
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s2node",
+        "stroke": "s2skyDim",
+        "strokeWidth": 1,
+        "radius": 10
+       },
+       "column": {
+        "items": [
+         {
+          "icon": "boxes",
+          "tone": "s2sky",
+          "size": 22,
+          "width": 22,
+          "height": 22
+         },
+         {
+          "text": "Application services",
+          "role": "small",
+          "size": 12,
+          "font": "Helvetica Neue",
+          "weight": "bold",
+          "tone": "s2frost",
+          "align": "center"
+         },
+         {
+          "text": "Microservices · gRPC",
+          "role": "caption",
+          "size": 10,
+          "font": "Helvetica Neue",
+          "tone": "s2haze",
+          "align": "center"
+         }
+        ],
+        "pad": [
+         6,
+         8,
+         6,
+         8
+        ],
+        "gap": 4,
+        "align": "center",
+        "justify": "center"
+       },
+       "box": [
+        4.8162,
+        2.4646,
+        1.4595,
+        1.2554
+       ]
+      },
+      {
+       "shape": "roundRect",
+       "decorative": true,
+       "fill": "s2violet",
+       "radius": 14,
+       "opacity": 0.14,
+       "box": [
+        6.5189,
+        1.5969,
+        2.2962,
+        0.7015
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s2orch",
+        "stroke": "s2violet",
+        "strokeWidth": 1,
+        "radius": 8
+       },
+       "row": {
+        "items": [
+         {
+          "icon": "brain-circuit",
+          "tone": "s2violet",
+          "size": 16,
+          "width": 16,
+          "height": 16
+         },
+         {
+          "column": {
+           "gap": 1,
+           "justify": "center",
+           "grow": 1,
+           "items": [
+            {
+             "text": "AI orchestrator",
+             "role": "small",
+             "size": 12,
+             "font": "Helvetica Neue",
+             "weight": "bold",
+             "tone": "s2frost"
+            },
+            {
+             "text": "Agents · tools · memory",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s2haze"
+            }
+           ]
+          }
+         }
+        ],
+        "pad": [
+         0,
+         9,
+         0,
+         9
+        ],
+        "gap": 8,
+        "align": "center"
+       },
+       "box": [
+        6.6162,
+        1.6892,
+        2.1016,
+        0.5169
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s2node",
+        "stroke": "s2skyDim",
+        "strokeWidth": 1,
+        "radius": 8
+       },
+       "row": {
+        "items": [
+         {
+          "icon": "shield-check",
+          "tone": "s2sky",
+          "size": 16,
+          "width": 16,
+          "height": 16
+         },
+         {
+          "column": {
+           "gap": 1,
+           "justify": "center",
+           "grow": 1,
+           "items": [
+            {
+             "text": "Authentication",
+             "role": "small",
+             "size": 12,
+             "font": "Helvetica Neue",
+             "weight": "bold",
+             "tone": "s2frost"
+            },
+            {
+             "text": "OIDC · RBAC · SSO",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s2haze"
+            }
+           ]
+          }
+         }
+        ],
+        "pad": [
+         0,
+         9,
+         0,
+         9
+        ],
+        "gap": 8,
+        "align": "center"
+       },
+       "box": [
+        6.6162,
+        2.4646,
+        2.1016,
+        0.5169
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s2node",
+        "stroke": "s2amberDim",
+        "strokeWidth": 1,
+        "radius": 8
+       },
+       "row": {
+        "items": [
+         {
+          "icon": "bell-ring",
+          "tone": "s2amber",
+          "size": 16,
+          "width": 16,
+          "height": 16
+         },
+         {
+          "column": {
+           "gap": 1,
+           "justify": "center",
+           "grow": 1,
+           "items": [
+            {
+             "text": "Notifications",
+             "role": "small",
+             "size": 12,
+             "font": "Helvetica Neue",
+             "weight": "bold",
+             "tone": "s2frost"
+            },
+            {
+             "text": "Push · email · SMS",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s2haze"
+            }
+           ]
+          }
+         }
+        ],
+        "pad": [
+         0,
+         9,
+         0,
+         9
+        ],
+        "gap": 8,
+        "align": "center"
+       },
+       "box": [
+        6.6162,
+        3.2215,
+        2.1016,
+        0.5169
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s2node",
+        "stroke": "s2tealDim",
+        "strokeWidth": 1,
+        "radius": 8
+       },
+       "row": {
+        "items": [
+         {
+          "icon": "database-zap",
+          "tone": "s2teal",
+          "size": 16,
+          "width": 16,
+          "height": 16
+         },
+         {
+          "column": {
+           "gap": 1,
+           "justify": "center",
+           "grow": 1,
+           "items": [
+            {
+             "text": "Data service",
+             "role": "small",
+             "size": 12,
+             "font": "Helvetica Neue",
+             "weight": "bold",
+             "tone": "s2frost"
+            },
+            {
+             "text": "Queries · cache · files",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s2haze"
+            }
+           ]
+          }
+         }
+        ],
+        "pad": [
+         0,
+         9,
+         0,
+         9
+        ],
+        "gap": 8,
+        "align": "center"
+       },
+       "box": [
+        6.6162,
+        3.9692,
+        2.1016,
+        0.5169
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s2node",
+        "stroke": "s2violetDim",
+        "strokeWidth": 1,
+        "radius": 8
+       },
+       "row": {
+        "items": [
+         {
+          "icon": "sparkles",
+          "tone": "s2violet",
+          "size": 16,
+          "width": 16,
+          "height": 16
+         },
+         {
+          "column": {
+           "gap": 1,
+           "justify": "center",
+           "grow": 1,
+           "items": [
+            {
+             "text": "LLM providers",
+             "role": "small",
+             "size": 12,
+             "font": "Helvetica Neue",
+             "weight": "bold",
+             "tone": "s2frost"
+            },
+            {
+             "text": "Claude · GPT · open models",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s2haze"
+            }
+           ]
+          }
+         }
+        ],
+        "pad": [
+         0,
+         9,
+         0,
+         9
+        ],
+        "gap": 8,
+        "align": "center"
+       },
+       "box": [
+        9.2433,
+        1.2923,
+        2.6076,
+        0.4615
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s2node",
+        "stroke": "s2violetDim",
+        "strokeWidth": 1,
+        "radius": 8
+       },
+       "row": {
+        "items": [
+         {
+          "icon": "layers",
+          "tone": "s2violet",
+          "size": 16,
+          "width": 16,
+          "height": 16
+         },
+         {
+          "column": {
+           "gap": 1,
+           "justify": "center",
+           "grow": 1,
+           "items": [
+            {
+             "text": "Vector database",
+             "role": "small",
+             "size": 12,
+             "font": "Helvetica Neue",
+             "weight": "bold",
+             "tone": "s2frost"
+            },
+            {
+             "text": "pgvector · embeddings",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s2haze"
+            }
+           ]
+          }
+         }
+        ],
+        "pad": [
+         0,
+         9,
+         0,
+         9
+        ],
+        "gap": 8,
+        "align": "center"
+       },
+       "box": [
+        9.2433,
+        1.8277,
+        2.6076,
+        0.4615
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s2node",
+        "stroke": "s2violetDim",
+        "strokeWidth": 1,
+        "radius": 8
+       },
+       "row": {
+        "items": [
+         {
+          "icon": "plug-zap",
+          "tone": "s2violet",
+          "size": 16,
+          "width": 16,
+          "height": 16
+         },
+         {
+          "column": {
+           "gap": 1,
+           "justify": "center",
+           "grow": 1,
+           "items": [
+            {
+             "text": "Tool / MCP services",
+             "role": "small",
+             "size": 12,
+             "font": "Helvetica Neue",
+             "weight": "bold",
+             "tone": "s2frost"
+            },
+            {
+             "text": "MCP servers · internal APIs",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s2haze"
+            }
+           ]
+          }
+         }
+        ],
+        "pad": [
+         0,
+         9,
+         0,
+         9
+        ],
+        "gap": 8,
+        "align": "center"
+       },
+       "box": [
+        9.2433,
+        2.3631,
+        2.6076,
+        0.4615
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s2node",
+        "stroke": "s2tealDim",
+        "strokeWidth": 1,
+        "radius": 8
+       },
+       "row": {
+        "items": [
+         {
+          "icon": "database",
+          "tone": "s2teal",
+          "size": 16,
+          "width": 16,
+          "height": 16
+         },
+         {
+          "column": {
+           "gap": 1,
+           "justify": "center",
+           "grow": 1,
+           "items": [
+            {
+             "text": "PostgreSQL",
+             "role": "small",
+             "size": 12,
+             "font": "Helvetica Neue",
+             "weight": "bold",
+             "tone": "s2frost"
+            },
+            {
+             "text": "Primary + 2 read replicas",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s2haze"
+            }
+           ]
+          }
+         }
+        ],
+        "pad": [
+         0,
+         9,
+         0,
+         9
+        ],
+        "gap": 8,
+        "align": "center"
+       },
+       "box": [
+        9.2433,
+        3.4154,
+        2.6076,
+        0.4615
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s2node",
+        "stroke": "s2tealDim",
+        "strokeWidth": 1,
+        "radius": 8
+       },
+       "row": {
+        "items": [
+         {
+          "icon": "zap",
+          "tone": "s2teal",
+          "size": 16,
+          "width": 16,
+          "height": 16
+         },
+         {
+          "column": {
+           "gap": 1,
+           "justify": "center",
+           "grow": 1,
+           "items": [
+            {
+             "text": "Redis",
+             "role": "small",
+             "size": 12,
+             "font": "Helvetica Neue",
+             "weight": "bold",
+             "tone": "s2frost"
+            },
+            {
+             "text": "Cache · sessions · queues",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s2haze"
+            }
+           ]
+          }
+         }
+        ],
+        "pad": [
+         0,
+         9,
+         0,
+         9
+        ],
+        "gap": 8,
+        "align": "center"
+       },
+       "box": [
+        9.2433,
+        3.9508,
+        2.6076,
+        0.4615
+       ]
+      },
+      {
+       "surface": {
+        "fill": "s2node",
+        "stroke": "s2tealDim",
+        "strokeWidth": 1,
+        "radius": 8
+       },
+       "row": {
+        "items": [
+         {
+          "icon": "hard-drive",
+          "tone": "s2teal",
+          "size": 16,
+          "width": 16,
+          "height": 16
+         },
+         {
+          "column": {
+           "gap": 1,
+           "justify": "center",
+           "grow": 1,
+           "items": [
+            {
+             "text": "Object storage",
+             "role": "small",
+             "size": 12,
+             "font": "Helvetica Neue",
+             "weight": "bold",
+             "tone": "s2frost"
+            },
+            {
+             "text": "S3 · documents & media",
+             "role": "caption",
+             "size": 10,
+             "font": "Helvetica Neue",
+             "tone": "s2haze"
+            }
+           ]
+          }
+         }
+        ],
+        "pad": [
+         0,
+         9,
+         0,
+         9
+        ],
+        "gap": 8,
+        "align": "center"
+       },
+       "box": [
+        9.2433,
+        4.4862,
+        2.6076,
+        0.4615
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "INFRASTRUCTURE LAYER",
+          "role": "label",
+          "size": 10,
+          "font": "Menlo",
+          "tone": "s2sky",
+          "tracking": 0.12,
+          "box": [
+           0.2141,
+           0.8182,
+           2.0433,
+           1.6364
+          ]
+         },
+         {
+          "text": "Runs, observes and ships everything above",
+          "role": "caption",
+          "size": 10,
+          "font": "Helvetica Neue",
+          "tone": "s2haze",
+          "box": [
+           0.2141,
+           2.4545,
+           1.946,
+           2.8636
+          ]
+         },
+         {
+          "surface": {
+           "fill": "s2node2",
+           "stroke": "s2edge",
+           "strokeWidth": 1,
+           "radius": 8
+          },
+          "row": {
+           "items": [
+            {
+             "icon": "container",
+             "tone": "s2sky",
+             "size": 18,
+             "width": 18,
+             "height": 18
+            },
+            {
+             "column": {
+              "gap": 1,
+              "justify": "center",
+              "grow": 1,
+              "items": [
+               {
+                "text": "Kubernetes",
+                "role": "small",
+                "size": 12,
+                "font": "Helvetica Neue",
+                "weight": "bold",
+                "tone": "s2frost"
+               },
+               {
+                "text": "EKS · autoscaling node pools",
+                "role": "caption",
+                "size": 10,
+                "font": "Helvetica Neue",
+                "tone": "s2haze"
+               }
+              ]
+             }
+            }
+           ],
+           "pad": [
+            0,
+            9,
+            0,
+            9
+           ],
+           "gap": 8,
+           "align": "center"
+          },
+          "box": [
+           2.3838,
+           0.8182,
+           3.0358,
+           4.3636
+          ]
+         },
+         {
+          "surface": {
+           "fill": "s2node2",
+           "stroke": "s2edge",
+           "strokeWidth": 1,
+           "radius": 8
+          },
+          "row": {
+           "items": [
+            {
+             "icon": "activity",
+             "tone": "s2violet",
+             "size": 18,
+             "width": 18,
+             "height": 18
+            },
+            {
+             "column": {
+              "gap": 1,
+              "justify": "center",
+              "grow": 1,
+              "items": [
+               {
+                "text": "Observability",
+                "role": "small",
+                "size": 12,
+                "font": "Helvetica Neue",
+                "weight": "bold",
+                "tone": "s2frost"
+               },
+               {
+                "text": "OpenTelemetry · metrics, logs, traces",
+                "role": "caption",
+                "size": 10,
+                "font": "Helvetica Neue",
+                "tone": "s2haze"
+               }
+              ]
+             }
+            }
+           ],
+           "pad": [
+            0,
+            9,
+            0,
+            9
+           ],
+           "gap": 8,
+           "align": "center"
+          },
+          "box": [
+           5.6239,
+           0.8182,
+           3.0358,
+           4.3636
+          ]
+         },
+         {
+          "surface": {
+           "fill": "s2node2",
+           "stroke": "s2edge",
+           "strokeWidth": 1,
+           "radius": 8
+          },
+          "row": {
+           "items": [
+            {
+             "icon": "git-branch",
+             "tone": "s2teal",
+             "size": 18,
+             "width": 18,
+             "height": 18
+            },
+            {
+             "column": {
+              "gap": 1,
+              "justify": "center",
+              "grow": 1,
+              "items": [
+               {
+                "text": "CI/CD",
+                "role": "small",
+                "size": 12,
+                "font": "Helvetica Neue",
+                "weight": "bold",
+                "tone": "s2frost"
+               },
+               {
+                "text": "GitHub Actions · Argo CD · canary",
+                "role": "caption",
+                "size": 10,
+                "font": "Helvetica Neue",
+                "tone": "s2haze"
+               }
+              ]
+             }
+            }
+           ],
+           "pad": [
+            0,
+            9,
+            0,
+            9
+           ],
+           "gap": 8,
+           "align": "center"
+          },
+          "box": [
+           8.864,
+           0.8182,
+           3.0358,
+           4.3636
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s2band",
+        "stroke": "s2edge",
+        "strokeWidth": 1,
+        "radius": 10
+       },
+       "box": [
+        0,
+        5.1877,
+        11.9997,
+        0.8123
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "request",
+   "message": "Every production request is traceable and bounded.",
+   "notes": "Fictional demonstration data. Every production request is traceable and bounded.",
+   "background": "s2night",
+   "compose": {
+    "free": {
+     "items": [
+      {
+       "text": "TECHNICAL ARCHITECTURE",
+       "role": "label",
+       "size": 10.5,
+       "font": "Helvetica Neue",
+       "tone": "s2sky",
+       "weight": "bold",
+       "box": [
+        0,
+        0,
+        9.7298,
+        0.2308
+       ]
+      },
+      {
+       "text": "One request. Four deliberate stages.",
+       "role": "title",
+       "size": 30,
+       "font": "Helvetica Neue",
+       "tone": "s2frost",
+       "weight": "bold",
+       "box": [
+        0,
+        0.4431,
+        11.9968,
+        0.6
+       ]
+      },
+      {
+       "text": "Bounded retries, streaming responses and trace context make the path production-ready.",
+       "role": "small",
+       "size": 15,
+       "font": "Helvetica Neue",
+       "tone": "s2haze",
+       "box": [
+        0,
+        1.08,
+        11.4811,
+        0.4615
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2edge",
+       "box": [
+        0,
+        5.7737,
+        11.9968,
+        0.0096
+       ]
+      },
+      {
+       "text": "AI Platform — Production Architecture  ·  Illustrative demo",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s2haze",
+       "box": [
+        0,
+        5.9077,
+        10.1189,
+        0.2308
+       ]
+      },
+      {
+       "text": "02 / 05",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s2haze",
+       "align": "right",
+       "box": [
+        10.9946,
+        5.9077,
+        1.0022,
+        0.2308
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "01",
+          "role": "small",
+          "size": 13,
+          "font": "Helvetica Neue",
+          "tone": "s2sky",
+          "weight": "bold",
+          "box": [
+           0.8392,
+           0.5143,
+           10.3217,
+           1
+          ]
+         },
+         {
+          "text": "Accept",
+          "role": "h3",
+          "size": 18,
+          "font": "Helvetica Neue",
+          "tone": "s2frost",
+          "weight": "bold",
+          "box": [
+           0.8392,
+           2,
+           10.3217,
+           1.3714
+          ]
+         },
+         {
+          "text": "Gateway validates identity, quota and request schema.",
+          "role": "small",
+          "size": 13,
+          "font": "Helvetica Neue",
+          "tone": "s2haze",
+          "box": [
+           0.8392,
+           3.5143,
+           10.3217,
+           1.7714
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s2node",
+        "radius": 10
+       },
+       "box": [
+        0,
+        2.4,
+        2.7827,
+        1.9385
+       ]
+      },
+      {
+       "shape": "chevron",
+       "decorative": true,
+       "fill": "s2sky",
+       "box": [
+        2.8508,
+        3.2031,
+        0.1459,
+        0.2215
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "02",
+          "role": "small",
+          "size": 13,
+          "font": "Helvetica Neue",
+          "tone": "s2sky",
+          "weight": "bold",
+          "box": [
+           0.8392,
+           0.5143,
+           10.3217,
+           1
+          ]
+         },
+         {
+          "text": "Plan",
+          "role": "h3",
+          "size": 18,
+          "font": "Helvetica Neue",
+          "tone": "s2frost",
+          "weight": "bold",
+          "box": [
+           0.8392,
+           2,
+           10.3217,
+           1.3714
+          ]
+         },
+         {
+          "text": "Orchestrator selects retrieval, tools and model.",
+          "role": "small",
+          "size": 13,
+          "font": "Helvetica Neue",
+          "tone": "s2haze",
+          "box": [
+           0.8392,
+           3.5143,
+           10.3217,
+           1.7714
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s2node",
+        "radius": 10
+       },
+       "box": [
+        3.0746,
+        2.4,
+        2.7827,
+        1.9385
+       ]
+      },
+      {
+       "shape": "chevron",
+       "decorative": true,
+       "fill": "s2sky",
+       "box": [
+        5.9254,
+        3.2031,
+        0.1459,
+        0.2215
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "03",
+          "role": "small",
+          "size": 13,
+          "font": "Helvetica Neue",
+          "tone": "s2sky",
+          "weight": "bold",
+          "box": [
+           0.8392,
+           0.5143,
+           10.3217,
+           1
+          ]
+         },
+         {
+          "text": "Execute",
+          "role": "h3",
+          "size": 18,
+          "font": "Helvetica Neue",
+          "tone": "s2frost",
+          "weight": "bold",
+          "box": [
+           0.8392,
+           2,
+           10.3217,
+           1.3714
+          ]
+         },
+         {
+          "text": "Services retrieve context and invoke allowed tools.",
+          "role": "small",
+          "size": 13,
+          "font": "Helvetica Neue",
+          "tone": "s2haze",
+          "box": [
+           0.8392,
+           3.5143,
+           10.3217,
+           1.7714
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s2node",
+        "radius": 10
+       },
+       "box": [
+        6.1492,
+        2.4,
+        2.7827,
+        1.9385
+       ]
+      },
+      {
+       "shape": "chevron",
+       "decorative": true,
+       "fill": "s2sky",
+       "box": [
+        9,
+        3.2031,
+        0.1459,
+        0.2215
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "04",
+          "role": "small",
+          "size": 13,
+          "font": "Helvetica Neue",
+          "tone": "s2sky",
+          "weight": "bold",
+          "box": [
+           0.8392,
+           0.5143,
+           10.3217,
+           1
+          ]
+         },
+         {
+          "text": "Respond",
+          "role": "h3",
+          "size": 18,
+          "font": "Helvetica Neue",
+          "tone": "s2frost",
+          "weight": "bold",
+          "box": [
+           0.8392,
+           2,
+           10.3217,
+           1.3714
+          ]
+         },
+         {
+          "text": "Stream output and record usage, latency and trace.",
+          "role": "small",
+          "size": 13,
+          "font": "Helvetica Neue",
+          "tone": "s2haze",
+          "box": [
+           0.8392,
+           3.5143,
+           10.3217,
+           1.7714
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s2node",
+        "radius": 10
+       },
+       "box": [
+        9.2238,
+        2.4,
+        2.7827,
+        1.9385
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "One trace ID spans the gateway, orchestrator, tool calls and model response.",
+          "role": "h3",
+          "size": 17,
+          "font": "Helvetica Neue",
+          "tone": "s2sky",
+          "weight": "bold",
+          "box": [
+           0.253,
+           1.3151,
+           11.4842,
+           3.2877
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s2node",
+        "radius": 10
+       },
+       "box": [
+        0,
+        4.8185,
+        11.9968,
+        0.6738
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "retrieval",
+   "message": "Retrieval preserves tenant permissions and citations.",
+   "notes": "Fictional demonstration data. Retrieval preserves tenant permissions and citations.",
+   "background": "s2night",
+   "compose": {
+    "free": {
+     "items": [
+      {
+       "text": "TECHNICAL ARCHITECTURE",
+       "role": "label",
+       "size": 10.5,
+       "font": "Helvetica Neue",
+       "tone": "s2sky",
+       "weight": "bold",
+       "box": [
+        0,
+        0,
+        9.7298,
+        0.2308
+       ]
+      },
+      {
+       "text": "Ground the model in governed knowledge.",
+       "role": "title",
+       "size": 30,
+       "font": "Helvetica Neue",
+       "tone": "s2frost",
+       "weight": "bold",
+       "box": [
+        0,
+        0.4431,
+        11.9968,
+        0.6
+       ]
+      },
+      {
+       "text": "Separate ingestion from retrieval; keep citations and access control attached to context.",
+       "role": "small",
+       "size": 15,
+       "font": "Helvetica Neue",
+       "tone": "s2haze",
+       "box": [
+        0,
+        1.08,
+        11.4811,
+        0.4615
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2edge",
+       "box": [
+        0,
+        5.7737,
+        11.9968,
+        0.0096
+       ]
+      },
+      {
+       "text": "AI Platform — Production Architecture  ·  Illustrative demo",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s2haze",
+       "box": [
+        0,
+        5.9077,
+        10.1189,
+        0.2308
+       ]
+      },
+      {
+       "text": "03 / 05",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s2haze",
+       "align": "right",
+       "box": [
+        10.9946,
+        5.9077,
+        1.0022,
+        0.2308
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "Documents",
+          "role": "h3",
+          "size": 20,
+          "font": "Helvetica Neue",
+          "tone": "s2frost",
+          "weight": "bold",
+          "box": [
+           0.8392,
+           1.0256,
+           10.3217,
+           1.9487
+          ]
+         },
+         {
+          "text": "Object storage",
+          "role": "caption",
+          "size": 11,
+          "font": "Helvetica Neue",
+          "tone": "s2haze",
+          "box": [
+           0.8392,
+           3.5385,
+           10.3217,
+           1.3333
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s2node",
+        "radius": 10
+       },
+       "box": [
+        0,
+        1.9662,
+        2.7827,
+        1.08
+       ]
+      },
+      {
+       "shape": "chevron",
+       "decorative": true,
+       "fill": "s2violet",
+       "box": [
+        2.8508,
+        2.3815,
+        0.1459,
+        0.2215
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "Prepare",
+          "role": "h3",
+          "size": 20,
+          "font": "Helvetica Neue",
+          "tone": "s2frost",
+          "weight": "bold",
+          "box": [
+           0.8392,
+           1.0256,
+           10.3217,
+           1.9487
+          ]
+         },
+         {
+          "text": "Parse and chunk",
+          "role": "caption",
+          "size": 11,
+          "font": "Helvetica Neue",
+          "tone": "s2haze",
+          "box": [
+           0.8392,
+           3.5385,
+           10.3217,
+           1.3333
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s2node",
+        "radius": 10
+       },
+       "box": [
+        3.0746,
+        1.9662,
+        2.7827,
+        1.08
+       ]
+      },
+      {
+       "shape": "chevron",
+       "decorative": true,
+       "fill": "s2violet",
+       "box": [
+        5.9254,
+        2.3815,
+        0.1459,
+        0.2215
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "Embed",
+          "role": "h3",
+          "size": 20,
+          "font": "Helvetica Neue",
+          "tone": "s2frost",
+          "weight": "bold",
+          "box": [
+           0.8392,
+           1.0256,
+           10.3217,
+           1.9487
+          ]
+         },
+         {
+          "text": "Versioned model",
+          "role": "caption",
+          "size": 11,
+          "font": "Helvetica Neue",
+          "tone": "s2haze",
+          "box": [
+           0.8392,
+           3.5385,
+           10.3217,
+           1.3333
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s2node",
+        "radius": 10
+       },
+       "box": [
+        6.1492,
+        1.9662,
+        2.7827,
+        1.08
+       ]
+      },
+      {
+       "shape": "chevron",
+       "decorative": true,
+       "fill": "s2violet",
+       "box": [
+        9,
+        2.3815,
+        0.1459,
+        0.2215
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "Index",
+          "role": "h3",
+          "size": 20,
+          "font": "Helvetica Neue",
+          "tone": "s2frost",
+          "weight": "bold",
+          "box": [
+           0.8392,
+           1.0256,
+           10.3217,
+           1.9487
+          ]
+         },
+         {
+          "text": "Vector database",
+          "role": "caption",
+          "size": 11,
+          "font": "Helvetica Neue",
+          "tone": "s2haze",
+          "box": [
+           0.8392,
+           3.5385,
+           10.3217,
+           1.3333
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s2node",
+        "radius": 10
+       },
+       "box": [
+        9.2238,
+        1.9662,
+        2.7827,
+        1.08
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "Question",
+          "role": "h3",
+          "size": 20,
+          "font": "Helvetica Neue",
+          "tone": "s2frost",
+          "weight": "bold",
+          "box": [
+           0.8392,
+           1.0256,
+           10.3217,
+           1.9487
+          ]
+         },
+         {
+          "text": "User context",
+          "role": "caption",
+          "size": 11,
+          "font": "Helvetica Neue",
+          "tone": "s2haze",
+          "box": [
+           0.8392,
+           3.5385,
+           10.3217,
+           1.3333
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s2node",
+        "radius": 10
+       },
+       "box": [
+        0,
+        3.4154,
+        2.7827,
+        1.08
+       ]
+      },
+      {
+       "shape": "chevron",
+       "decorative": true,
+       "fill": "s2violet",
+       "box": [
+        2.8508,
+        3.8308,
+        0.1459,
+        0.2215
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "Retrieve",
+          "role": "h3",
+          "size": 20,
+          "font": "Helvetica Neue",
+          "tone": "s2frost",
+          "weight": "bold",
+          "box": [
+           0.8392,
+           1.0256,
+           10.3217,
+           1.9487
+          ]
+         },
+         {
+          "text": "Tenant filter",
+          "role": "caption",
+          "size": 11,
+          "font": "Helvetica Neue",
+          "tone": "s2haze",
+          "box": [
+           0.8392,
+           3.5385,
+           10.3217,
+           1.3333
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s2node",
+        "radius": 10
+       },
+       "box": [
+        3.0746,
+        3.4154,
+        2.7827,
+        1.08
+       ]
+      },
+      {
+       "shape": "chevron",
+       "decorative": true,
+       "fill": "s2violet",
+       "box": [
+        5.9254,
+        3.8308,
+        0.1459,
+        0.2215
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "Generate",
+          "role": "h3",
+          "size": 20,
+          "font": "Helvetica Neue",
+          "tone": "s2frost",
+          "weight": "bold",
+          "box": [
+           0.8392,
+           1.0256,
+           10.3217,
+           1.9487
+          ]
+         },
+         {
+          "text": "LLM + citations",
+          "role": "caption",
+          "size": 11,
+          "font": "Helvetica Neue",
+          "tone": "s2haze",
+          "box": [
+           0.8392,
+           3.5385,
+           10.3217,
+           1.3333
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s2node",
+        "radius": 10
+       },
+       "box": [
+        6.1492,
+        3.4154,
+        2.7827,
+        1.08
+       ]
+      },
+      {
+       "shape": "chevron",
+       "decorative": true,
+       "fill": "s2violet",
+       "box": [
+        9,
+        3.8308,
+        0.1459,
+        0.2215
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "Answer",
+          "role": "h3",
+          "size": 20,
+          "font": "Helvetica Neue",
+          "tone": "s2frost",
+          "weight": "bold",
+          "box": [
+           0.8392,
+           1.0256,
+           10.3217,
+           1.9487
+          ]
+         },
+         {
+          "text": "Source references",
+          "role": "caption",
+          "size": 11,
+          "font": "Helvetica Neue",
+          "tone": "s2haze",
+          "box": [
+           0.8392,
+           3.5385,
+           10.3217,
+           1.3333
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s2node",
+        "radius": 10
+       },
+       "box": [
+        9.2238,
+        3.4154,
+        2.7827,
+        1.08
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "Enforce document permissions during retrieval; cache only within a tenant boundary.",
+          "role": "h3",
+          "size": 17,
+          "font": "Helvetica Neue",
+          "tone": "s2sky",
+          "weight": "bold",
+          "box": [
+           0.253,
+           1.3151,
+           11.4842,
+           3.2877
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s2node",
+        "radius": 10
+       },
+       "box": [
+        0,
+        4.8185,
+        11.9968,
+        0.6738
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "security",
+   "message": "Identity, execution and audit form explicit trust boundaries.",
+   "notes": "Fictional demonstration data. Identity, execution and audit form explicit trust boundaries.",
+   "background": "s2night",
+   "compose": {
+    "free": {
+     "items": [
+      {
+       "text": "TECHNICAL ARCHITECTURE",
+       "role": "label",
+       "size": 10.5,
+       "font": "Helvetica Neue",
+       "tone": "s2sky",
+       "weight": "bold",
+       "box": [
+        0,
+        0,
+        9.7298,
+        0.2308
+       ]
+      },
+      {
+       "text": "Trust boundaries are part of the architecture.",
+       "role": "title",
+       "size": 30,
+       "font": "Helvetica Neue",
+       "tone": "s2frost",
+       "weight": "bold",
+       "box": [
+        0,
+        0.4431,
+        11.9968,
+        0.6
+       ]
+      },
+      {
+       "text": "Identity, policy and tool permissions are enforced before an action reaches a system.",
+       "role": "small",
+       "size": 15,
+       "font": "Helvetica Neue",
+       "tone": "s2haze",
+       "box": [
+        0,
+        1.08,
+        11.4811,
+        0.4615
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2edge",
+       "box": [
+        0,
+        5.7737,
+        11.9968,
+        0.0096
+       ]
+      },
+      {
+       "text": "AI Platform — Production Architecture  ·  Illustrative demo",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s2haze",
+       "box": [
+        0,
+        5.9077,
+        10.1189,
+        0.2308
+       ]
+      },
+      {
+       "text": "04 / 05",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s2haze",
+       "align": "right",
+       "box": [
+        10.9946,
+        5.9077,
+        1.0022,
+        0.2308
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "icon": "shield-check",
+          "tone": "s2sky",
+          "size": 28,
+          "width": 28,
+          "height": 28,
+          "box": [
+           0.7557,
+           0.4419,
+           1.2695,
+           0.7139
+          ]
+         },
+         {
+          "text": "Identity",
+          "role": "h3",
+          "size": 22,
+          "font": "Helvetica Neue",
+          "tone": "s2frost",
+          "weight": "bold",
+          "box": [
+           0.7557,
+           1.4958,
+           10.4887,
+           0.8499
+          ]
+         },
+         {
+          "text": "OIDC and short-lived tokens\nTenant-scoped service calls\nLeast-privilege credentials",
+          "role": "body",
+          "size": 14,
+          "font": "Helvetica Neue",
+          "tone": "s2haze",
+          "leading": 1.45,
+          "box": [
+           0.7557,
+           2.7875,
+           10.4887,
+           2.6346
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s2node",
+        "radius": 10
+       },
+       "box": [
+        0,
+        1.9385,
+        3.8627,
+        3.2585
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "icon": "lock-keyhole",
+          "tone": "s2violet",
+          "size": 28,
+          "width": 28,
+          "height": 28,
+          "box": [
+           0.7557,
+           0.4419,
+           1.2695,
+           0.7139
+          ]
+         },
+         {
+          "text": "Execution policy",
+          "role": "h3",
+          "size": 22,
+          "font": "Helvetica Neue",
+          "tone": "s2frost",
+          "weight": "bold",
+          "box": [
+           0.7557,
+           1.4958,
+           10.4887,
+           0.8499
+          ]
+         },
+         {
+          "text": "Tool allowlists and budgets\nHuman approval for writes\nSandboxed execution",
+          "role": "body",
+          "size": 14,
+          "font": "Helvetica Neue",
+          "tone": "s2haze",
+          "leading": 1.45,
+          "box": [
+           0.7557,
+           2.7875,
+           10.4887,
+           2.6346
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s2node",
+        "radius": 10
+       },
+       "box": [
+        4.067,
+        1.9385,
+        3.8627,
+        3.2585
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "icon": "database",
+          "tone": "s2teal",
+          "size": 28,
+          "width": 28,
+          "height": 28,
+          "box": [
+           0.7557,
+           0.4419,
+           1.2695,
+           0.7139
+          ]
+         },
+         {
+          "text": "Audit and data",
+          "role": "h3",
+          "size": 22,
+          "font": "Helvetica Neue",
+          "tone": "s2frost",
+          "weight": "bold",
+          "box": [
+           0.7557,
+           1.4958,
+           10.4887,
+           0.8499
+          ]
+         },
+         {
+          "text": "Encrypted storage and transport\nRedacted operational logs\nImmutable action history",
+          "role": "body",
+          "size": 14,
+          "font": "Helvetica Neue",
+          "tone": "s2haze",
+          "leading": 1.45,
+          "box": [
+           0.7557,
+           2.7875,
+           10.4887,
+           2.6346
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s2node",
+        "radius": 10
+       },
+       "box": [
+        8.1341,
+        1.9385,
+        3.8627,
+        3.2585
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "operations",
+   "message": "Canary releases and SLOs close the operating loop.",
+   "notes": "Fictional demonstration data. Canary releases and SLOs close the operating loop.",
+   "background": "s2night",
+   "compose": {
+    "free": {
+     "items": [
+      {
+       "text": "TECHNICAL ARCHITECTURE",
+       "role": "label",
+       "size": 10.5,
+       "font": "Helvetica Neue",
+       "tone": "s2sky",
+       "weight": "bold",
+       "box": [
+        0,
+        0,
+        9.7298,
+        0.2308
+       ]
+      },
+      {
+       "text": "Ship safely. Observe continuously.",
+       "role": "title",
+       "size": 30,
+       "font": "Helvetica Neue",
+       "tone": "s2frost",
+       "weight": "bold",
+       "box": [
+        0,
+        0.4431,
+        11.9968,
+        0.6
+       ]
+      },
+      {
+       "text": "Illustrative service targets: 99.9% availability and p95 first token below 1.5 seconds.",
+       "role": "small",
+       "size": 15,
+       "font": "Helvetica Neue",
+       "tone": "s2haze",
+       "box": [
+        0,
+        1.08,
+        11.4811,
+        0.4615
+       ]
+      },
+      {
+       "shape": "rect",
+       "decorative": true,
+       "fill": "s2edge",
+       "box": [
+        0,
+        5.7737,
+        11.9968,
+        0.0096
+       ]
+      },
+      {
+       "text": "AI Platform — Production Architecture  ·  Illustrative demo",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s2haze",
+       "box": [
+        0,
+        5.9077,
+        10.1189,
+        0.2308
+       ]
+      },
+      {
+       "text": "05 / 05",
+       "role": "caption",
+       "size": 10,
+       "font": "Helvetica Neue",
+       "tone": "s2haze",
+       "align": "right",
+       "box": [
+        10.9946,
+        5.9077,
+        1.0022,
+        0.2308
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "01",
+          "role": "small",
+          "size": 13,
+          "font": "Helvetica Neue",
+          "tone": "s2sky",
+          "weight": "bold",
+          "box": [
+           0.8392,
+           0.5143,
+           10.3217,
+           1
+          ]
+         },
+         {
+          "text": "Build",
+          "role": "h3",
+          "size": 18,
+          "font": "Helvetica Neue",
+          "tone": "s2frost",
+          "weight": "bold",
+          "box": [
+           0.8392,
+           2,
+           10.3217,
+           1.3714
+          ]
+         },
+         {
+          "text": "CI runs unit, integration and policy checks.",
+          "role": "small",
+          "size": 13,
+          "font": "Helvetica Neue",
+          "tone": "s2haze",
+          "box": [
+           0.8392,
+           3.5143,
+           10.3217,
+           1.7714
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s2node",
+        "radius": 10
+       },
+       "box": [
+        0,
+        2.0308,
+        2.7827,
+        1.9385
+       ]
+      },
+      {
+       "shape": "chevron",
+       "decorative": true,
+       "fill": "s2sky",
+       "box": [
+        2.8508,
+        2.8338,
+        0.1459,
+        0.2215
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "02",
+          "role": "small",
+          "size": 13,
+          "font": "Helvetica Neue",
+          "tone": "s2sky",
+          "weight": "bold",
+          "box": [
+           0.8392,
+           0.5143,
+           10.3217,
+           1
+          ]
+         },
+         {
+          "text": "Evaluate",
+          "role": "h3",
+          "size": 18,
+          "font": "Helvetica Neue",
+          "tone": "s2frost",
+          "weight": "bold",
+          "box": [
+           0.8392,
+           2,
+           10.3217,
+           1.3714
+          ]
+         },
+         {
+          "text": "Versioned datasets score quality and safety.",
+          "role": "small",
+          "size": 13,
+          "font": "Helvetica Neue",
+          "tone": "s2haze",
+          "box": [
+           0.8392,
+           3.5143,
+           10.3217,
+           1.7714
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s2node",
+        "radius": 10
+       },
+       "box": [
+        3.0746,
+        2.0308,
+        2.7827,
+        1.9385
+       ]
+      },
+      {
+       "shape": "chevron",
+       "decorative": true,
+       "fill": "s2sky",
+       "box": [
+        5.9254,
+        2.8338,
+        0.1459,
+        0.2215
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "03",
+          "role": "small",
+          "size": 13,
+          "font": "Helvetica Neue",
+          "tone": "s2sky",
+          "weight": "bold",
+          "box": [
+           0.8392,
+           0.5143,
+           10.3217,
+           1
+          ]
+         },
+         {
+          "text": "Canary",
+          "role": "h3",
+          "size": 18,
+          "font": "Helvetica Neue",
+          "tone": "s2frost",
+          "weight": "bold",
+          "box": [
+           0.8392,
+           2,
+           10.3217,
+           1.3714
+          ]
+         },
+         {
+          "text": "Route a small share of traffic to the new release.",
+          "role": "small",
+          "size": 13,
+          "font": "Helvetica Neue",
+          "tone": "s2haze",
+          "box": [
+           0.8392,
+           3.5143,
+           10.3217,
+           1.7714
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s2node",
+        "radius": 10
+       },
+       "box": [
+        6.1492,
+        2.0308,
+        2.7827,
+        1.9385
+       ]
+      },
+      {
+       "shape": "chevron",
+       "decorative": true,
+       "fill": "s2sky",
+       "box": [
+        9,
+        2.8338,
+        0.1459,
+        0.2215
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "04",
+          "role": "small",
+          "size": 13,
+          "font": "Helvetica Neue",
+          "tone": "s2sky",
+          "weight": "bold",
+          "box": [
+           0.8392,
+           0.5143,
+           10.3217,
+           1
+          ]
+         },
+         {
+          "text": "Operate",
+          "role": "h3",
+          "size": 18,
+          "font": "Helvetica Neue",
+          "tone": "s2frost",
+          "weight": "bold",
+          "box": [
+           0.8392,
+           2,
+           10.3217,
+           1.3714
+          ]
+         },
+         {
+          "text": "Alert on SLO burn and roll back on regression.",
+          "role": "small",
+          "size": 13,
+          "font": "Helvetica Neue",
+          "tone": "s2haze",
+          "box": [
+           0.8392,
+           3.5143,
+           10.3217,
+           1.7714
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s2node",
+        "radius": 10
+       },
+       "box": [
+        9.2238,
+        2.0308,
+        2.7827,
+        1.9385
+       ]
+      },
+      {
+       "free": {
+        "items": [
+         {
+          "text": "Kubernetes runs the platform; observability connects release versions to live behavior.",
+          "role": "h3",
+          "size": 17,
+          "font": "Helvetica Neue",
+          "tone": "s2sky",
+          "weight": "bold",
+          "box": [
+           0.253,
+           1.3151,
+           11.4842,
+           3.2877
+          ]
+         }
+        ]
+       },
+       "surface": {
+        "fill": "s2node",
+        "radius": 10
+       },
+       "box": [
+        0,
+        4.8185,
+        11.9968,
+        0.6738
+       ]
+      }
+     ]
+    }
+   }
+  }
+ ]
+}

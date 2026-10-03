@@ -1,0 +1,31 @@
+[
+ {
+  "id": "open",
+  "text": "Ask your AI agent for a presentation, and get a professionally designed deck. This is Slide Agent."
+ },
+ {
+  "id": "install",
+  "text": "Install it once in a supported agent, like Claude Code, Codex, or Gemini."
+ },
+ {
+  "id": "workflow",
+  "text": "Describe what you need. Your agent designs it. Slide Agent builds the deck, checks the layout, and exports it."
+ },
+ {
+  "id": "depth",
+  "text": "One design system, slide after slide: the timeline, the budget, and the risks."
+ },
+ {
+  "id": "range",
+  "text": "Ask for an architecture review, a strategy roadmap, or a data story, and the design changes with it."
+ },
+ {
+  "id": "deliver",
+  "text": "The result is a real PowerPoint file, with editable text and native charts."
+ },
+ {
+  "id": "close",
+  "text": "Create professional presentations directly through your AI agent. Explore examples and install it at slide-agent.ghassen.io.",
+  "rate": "+12%"
+ }
+]

@@ -1,0 +1,12 @@
+{
+  "method": "librosa beat grid least-squares fit refined against inlier kick attacks; validation against kick/snare/hat union",
+  "rawTempo": [
+    123.046875
+  ],
+  "fittedBpm": 122.02504628062081,
+  "meanAbsoluteMs": 9.54448664986633,
+  "maxAbsoluteMs": 125.26149498306438,
+  "matchWithin33ms": 0.9811320754716981,
+  "cumulativeDriftMs": 4.239547685438773,
+  "note": "Sparse attacks are reported honestly; key impacts use measured hit times."
+}

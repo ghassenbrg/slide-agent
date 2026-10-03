@@ -1,0 +1,68 @@
+[
+  {
+    "id": "hook",
+    "start": 0.14,
+    "end": 2.4,
+    "text": "Presentations take time."
+  },
+  {
+    "id": "intro",
+    "start": 2.72,
+    "end": 7.9,
+    "text": "Meet Slide Agent. Create professional presentations directly through your AI agent."
+  },
+  {
+    "id": "connect",
+    "start": 8.03,
+    "end": 10.77,
+    "text": "Add it to a supported agent."
+  },
+  {
+    "id": "create",
+    "start": 11.06,
+    "end": 14.6,
+    "text": "Describe your presentation, audience, and style."
+  },
+  {
+    "id": "preview",
+    "start": 18.12,
+    "end": 20.45,
+    "text": "Preview the complete deck."
+  },
+  {
+    "id": "edit",
+    "start": 24.92,
+    "end": 28.7,
+    "text": "Want a different headline? Ask your agent."
+  },
+  {
+    "id": "range-project",
+    "start": 31.72,
+    "end": 33.65,
+    "text": "Project updates."
+  },
+  {
+    "id": "range-technical",
+    "start": 34.13,
+    "end": 36.12,
+    "text": "Technical reviews."
+  },
+  {
+    "id": "range-data",
+    "start": 36.6,
+    "end": 38.7,
+    "text": "Data stories."
+  },
+  {
+    "id": "export",
+    "start": 39.58,
+    "end": 42.2,
+    "text": "Export an editable PowerPoint."
+  },
+  {
+    "id": "close",
+    "start": 45.5,
+    "end": 51.65,
+    "text": "Slide Agent. Explore examples and installation at slide-agent dot ghassen dot io."
+  }
+]
