@@ -79,7 +79,7 @@
  "modelCalls": [],
  "verdict": {
   "run": "adf453be-567c-493b-bc1e-5bbed5735d9e",
-  "deck": "/Users/ghassenbrg/git/slide-agent/promo/follow-the-idea/evidence/architecture-rebuild",
+  "deck": "promo/follow-the-idea/evidence/architecture-rebuild",
   "state": "ready-unrendered",
   "slides": 5,
   "changed": [
@@ -121,8 +121,8 @@
    }
   ],
   "views": {
-   "sheet": "/Users/ghassenbrg/git/slide-agent/promo/follow-the-idea/evidence/architecture-rebuild/previews/sheet.png",
-   "pptx": "/Users/ghassenbrg/git/slide-agent/promo/follow-the-idea/evidence/architecture-rebuild/deck.pptx"
+   "sheet": "promo/follow-the-idea/evidence/architecture-rebuild/previews/sheet.png",
+   "pptx": "promo/follow-the-idea/evidence/architecture-rebuild/deck.pptx"
   },
   "cost": {
    "engineMs": 3384

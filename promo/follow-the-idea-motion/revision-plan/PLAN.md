@@ -79,7 +79,7 @@ Two 16-second samples, extracted from 00:24 and normalized to the same target lo
 
 These are audition samples, not mixed-to-picture proofs. The user selected A; B is retained only as an earlier alternative. Tempo descriptions come from the catalog and need beat-grid verification before animation. Audition page: `audition.html`.
 
-Source URLs and local provenance: House Vibez `https://assets.mixkit.co/music/745/745.mp3`; Cat Walk `https://assets.mixkit.co/music/371/371.mp3`. Both are recorded under Mixkit Stock Music Free License in `/Users/ghassenbrg/.agents/skills/video-shotcraft/assets/audio/ATTRIBUTION.md`. Official license page checked October 3, 2026: https://mixkit.co/license/ . Preserve attribution and license records with the eventual delivery.
+Source URLs and local provenance: House Vibez `https://assets.mixkit.co/music/745/745.mp3`; Cat Walk `https://assets.mixkit.co/music/371/371.mp3`. Both are recorded under Mixkit Stock Music Free License in `~/.agents/skills/video-shotcraft/assets/audio/ATTRIBUTION.md`. Official license page checked October 3, 2026: https://mixkit.co/license/ . Preserve attribution and license records with the eventual delivery.
 
 Mix music clearly beneath speech using local ducking; raise it during speech gaps. Arrange a build into the deck reveal, a small edit break, a range lift, and a clean resolution. Add restrained keyboard/send, card movement, edit snap, and export accents. Avoid an effect on every beat. Target final loudness near −14 LUFS with true peak at or below −1 dBTP, followed by listening on headphones and a phone speaker. These targets alone do not establish a good mix.
 

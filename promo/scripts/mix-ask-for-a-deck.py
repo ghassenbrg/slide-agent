@@ -32,7 +32,7 @@ for r in records:
 env*=.32+.68*opening
 env*=np.clip(tt/.10,0,1)*np.clip((52-tt)/.65,0,1)
 music*=env[:,None]
-library=pathlib.Path('/Users/ghassenbrg/.agents/skills/video-shotcraft/assets/audio/sfx')
+library=pathlib.Path.home()/'.agents/skills/video-shotcraft/assets/audio/sfx'
 sources={'tap':'ui/switch-tap.mp3','sweep':'transition/sweep-fast-small.mp3','paper':'paper/paper-move-quick.mp3','impact':'impact/impact-zoom-quick.mp3'}
 samples={};source_records=[]
 for key,p in sources.items():
